@@ -137,6 +137,61 @@ typedef struct {
                                 //      [31]: Toggle bit
 } EventRecord_t;
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+
+/* Event Record Types (Log) */
+#define EVENT_TYPE_DATA         0x0001U  // EventRecordData
+#define EVENT_TYPE_VAL2         0x0002U  // EventRecord2
+#define EVENT_TYPE_VAL4         0x0003U  // EventRecord4
+
+/* Event Record Header (Log) */
+typedef struct __PACKED {
+  uint16_t      type;           // Type (EVENT_TYPE_xxx)
+  uint16_t    length;           // Total length (in bytes)
+} EventRecordHead_t;
+
+/* Event Record for EventRecord2 (Log) */
+typedef struct __PACKED {
+  uint64_t        ts;           // Timestamp
+  struct __PACKED {             // Record Information
+    uint32_t      id : 16;      //  [ 7.. 0]: Message ID (8-bit)
+                                //  [15.. 8]: Component ID (8-bit)
+    uint32_t   rsrvd : 15;      // Reserved
+    uint32_t     irq :  1;      // IRQ Flag
+  } info;
+  uint32_t val1;                // Value 1
+  uint32_t val2;                // Value 2
+} EventRecord2_t;
+
+/* Event Record for EventRecord4 (Log) */
+typedef struct __PACKED {
+  uint64_t        ts;           // Timestamp
+  struct __PACKED {             // Record Information
+    uint32_t      id : 16;      //  [ 7.. 0]: Message ID (8-bit)
+                                //  [15.. 8]: Component ID (8-bit)
+    uint32_t   rsrvd : 15;      // Reserved
+    uint32_t     irq :  1;      // IRQ Flag
+  } info;
+  uint32_t val1;                // Value 1
+  uint32_t val2;                // Value 2
+  uint32_t val3;                // Value 3
+  uint32_t val4;                // Value 4
+} EventRecord4_t;
+
+/* Event Record for EventRecordData (Log) */
+typedef struct __PACKED {
+  uint64_t        ts;           // Timestamp
+  struct __PACKED{              // Record Information
+    uint32_t      id : 16;      //  [ 7.. 0]: Message ID (8-bit)
+                                //  [15.. 8]: Component ID (8-bit)
+    uint32_t  length : 15;      //  Data Length
+    uint32_t     irq :  1;      // IRQ Flag
+  } info;
+//uint8_t data[info.length];    // Data
+} EventRecordData_t;
+
+#endif
+
 /* Event Buffer */
 static EventRecord_t EventBuffer[EVENT_RECORD_COUNT] __NO_INIT __ALIGNED(16);
 
@@ -225,7 +280,21 @@ __STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
   return ret;
 }
 
-__STATIC_INLINE uint32_t atomic_xch32 (uint32_t *mem, uint32_t val) {
+__STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
+  uint32_t primask = __get_PRIMASK();
+  uint8_t  ret;
+
+  __disable_irq();
+  ret = *mem;
+  *mem = val;
+  if (primask == 0U) {
+    __enable_irq();
+  }
+
+  return ret;
+}
+
+__STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
   uint32_t primask = __get_PRIMASK();
   uint32_t ret;
 
@@ -318,7 +387,42 @@ __STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
 #endif
 
 #if defined(__CC_ARM)
-static __asm    uint32_t atomic_xch32 (uint32_t *mem, uint32_t val) {
+static __asm    uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
+  mov    r2,r0
+1
+  ldrexb r0,[r2]
+  strexb r3,r1,[r2]
+  cbz    r3,%F2
+  b      %B1
+2
+  bx     lr
+}
+#else
+__STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
+  register uint32_t res;
+  register uint8_t  ret;
+
+  __ASM volatile (
+  ".syntax unified\n"
+  "1:\n\t"
+    "ldrexb %[ret],[%[mem]]\n\t"
+    "strexb %[res],%[val],[%[mem]]\n\t"
+    "cbz    %[res],2f\n\t"
+    "b      1b\n"
+  "2:"
+  : [ret] "=&l" (ret),
+    [res] "=&l" (res)
+  : [mem] "l"   (mem),
+    [val] "l"   (val)
+  : "memory"
+  );
+
+  return ret;
+}
+#endif
+
+#if defined(__CC_ARM)
+static __asm    uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
   mov   r2,r0
 1
   ldrex r0,[r2]
@@ -329,7 +433,7 @@ static __asm    uint32_t atomic_xch32 (uint32_t *mem, uint32_t val) {
   bx    lr
 }
 #else
-__STATIC_INLINE uint32_t atomic_xch32 (uint32_t *mem, uint32_t val) {
+__STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
   register uint32_t res;
   register uint32_t ret;
 
@@ -345,7 +449,7 @@ __STATIC_INLINE uint32_t atomic_xch32 (uint32_t *mem, uint32_t val) {
     [res] "=&l" (res)
   : [mem] "l"   (mem),
     [val] "l"   (val)
-  : "cc", "memory"
+  : "memory"
   );
 
   return ret;
@@ -355,7 +459,8 @@ __STATIC_INLINE uint32_t atomic_xch32 (uint32_t *mem, uint32_t val) {
 //lint --flb
 
 #endif
- 
+
+
 __STATIC_INLINE uint32_t GetContext (void) {
   return ((uint32_t)atomic_inc8(&EventStatus.context));
 }
@@ -365,11 +470,17 @@ __STATIC_INLINE uint32_t GetRecordIndex (void) {
 }
 
 __STATIC_INLINE uint32_t UpdateTS (uint32_t ts) {
-  return (atomic_xch32(&EventStatus.ts_last, ts));
+  return (atomic_wr32(&EventStatus.ts_last, ts));
 }
 
-__STATIC_INLINE void IncrementOverflowTS (void) {
-  (void)atomic_inc32(&EventStatus.ts_overflow);
+static uint8_t TS_OverflowLock;
+
+__STATIC_INLINE uint8_t LockTS_Overflow (void) {
+  return (atomic_wr8(&TS_OverflowLock, 1U));
+}
+
+__STATIC_INLINE void UnlockTS_Overflow (void) {
+  (void) (atomic_wr8(&TS_OverflowLock, 0U));
 }
 
 __STATIC_INLINE void IncrementRecordsWritten (void) {
@@ -379,7 +490,8 @@ __STATIC_INLINE void IncrementRecordsWritten (void) {
 __STATIC_INLINE void IncrementRecordsDumped (void) {
   (void)atomic_inc32(&EventStatus.records_dumped);
 }
- 
+
+
 #if (__CORTEX_M < 3U)
 
 __STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
@@ -544,6 +656,86 @@ __STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
 #endif
 
 
+/* Semihosting */
+
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+
+#ifndef EVENT_LOG_FILENAME
+#define EVENT_LOG_FILENAME      "EventRecorder.log"
+#endif
+
+#define SYS_OPEN                0x01U
+#define SYS_CLOSE               0x02U
+#define SYS_WRITE               0x05U
+
+#define MODE_wb                 5U
+
+#if defined(__CC_ARM)
+static __asm    int32_t semihosting_call (uint32_t operation, void *args) {
+  bkpt  0xab
+  bx    lr
+}
+#else
+__STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {
+  //lint --e{438} "Last value assigned to variable not used"
+  //lint --e{529} "Symbol not subsequently referenced"
+  //lint --e{923} "cast from pointer to unsigned int"
+  register uint32_t __r0 __ASM("r0") = operation;
+  register uint32_t __r1 __ASM("r1") = (uint32_t)args;
+
+  __ASM volatile (
+    "bkpt 0xab" : "=r"(__r0) : "r"(__r0), "r"(__r1) :
+  );
+ 
+  return (int32_t)__r0;
+}
+#endif
+
+typedef int32_t FILEHANDLE;
+
+static FILEHANDLE FileHandle = -1;
+
+static FILEHANDLE sys_open (const char *name, uint32_t openmode) {
+  //lint --e{446}  "side effect in initializer"
+  //lint --e{934}  "Taking address of near auto variable"
+  struct {
+    const char    *name;
+    uint32_t       openmode;
+    size_t         len;
+  } args = { name, openmode, strlen(name) };
+  (void)args.name;
+  (void)args.openmode;
+  (void)args.len;
+  return semihosting_call(SYS_OPEN, &args);
+}
+
+/*
+static int32_t sys_close (FILEHANDLE fh) {
+  //lint --e{934}  "Taking address of near auto variable"
+  struct {
+    FILEHANDLE     fh;
+  } args = { fh };
+  (void)args.fh;
+  return semihosting_call(SYS_CLOSE, &args);
+}
+*/
+
+static int32_t sys_write (FILEHANDLE fh, const uint8_t *buf, uint32_t len) {
+  //lint --e{934}  "Taking address of near auto variable"
+  struct {
+    FILEHANDLE     fh;
+    const uint8_t *buf;
+    uint32_t       len;
+  } args = { fh, buf, len };
+  (void)args.fh;
+  (void)args.buf;
+  (void)args.len;
+  return semihosting_call(SYS_WRITE, &args);
+}
+
+#endif
+
+
 /**
   Record a single item
   \param[in]    id     event identifier (component, message with context & first/last flags)
@@ -558,7 +750,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
   uint32_t info;
   uint32_t tbit;
   uint32_t seq;
- 
+
   for (cnt = EVENT_RECORD_MAX_LOCKED; cnt != 0U; cnt--) {
     i = GetRecordIndex();
     record = &EventBuffer[i & (EVENT_RECORD_COUNT - 1U)];
@@ -592,6 +784,137 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
   return 0U;
 }
 
+
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+ 
+/**
+  Record an event with variable data size to a log file
+  \param[in]    id     event identifier (component number, message number)
+  \param[in]    data   event data buffer
+  \param[in]    len    event data length
+  \param[in]    ts     timestamp
+*/
+static void EventRecordData_Log (uint32_t id,
+                                 const void *data, uint32_t len,
+                                 uint64_t ts) {
+  //lint --e{934}  "Taking address of near auto variable"
+  struct {
+    EventRecordHead_t head;
+    EventRecordData_t record;
+  } event;
+
+  event.head.type          = EVENT_TYPE_DATA;
+  event.head.length        = (uint16_t)(sizeof(event.record) + len); 
+  event.record.ts          = ts;
+  event.record.info.id     = (uint16_t)id;
+  //lint -e{9034} "Expression assigned to a narrower or different essential type"
+  event.record.info.length = len;
+  event.record.info.irq    = (__get_IPSR() != 0U) ? 1U : 0U;
+
+  (void)sys_write(FileHandle, (uint8_t *)&event,  sizeof(event));
+  //lint -e{9079} "conversion from pointer to void to pointer to other type"
+  (void)sys_write(FileHandle,             data,   len);
+}
+
+/**
+  Record an event with two 32-bit data values to a log file
+  \param[in]    id     event identifier (component number, message number)
+  \param[in]    val1   first data value
+  \param[in]    val2   second data value
+  \param[in]    ts     timestamp
+*/
+static void EventRecord2_Log (uint32_t id,
+                              uint32_t val1, uint32_t val2,
+                              uint64_t ts) {
+  //lint --e{934}  "Taking address of near auto variable"
+  struct {
+    EventRecordHead_t head;
+    EventRecord2_t    record;
+  } event;
+
+  event.head.type          = EVENT_TYPE_VAL2;
+  event.head.length        = (uint16_t)sizeof(event.record);
+  event.record.ts          = ts;
+  event.record.info.id     = (uint16_t)id;
+  event.record.info.rsrvd  = 0U;
+  event.record.info.irq    = (__get_IPSR() != 0U) ? 1U : 0U;
+  event.record.val1        = val1;
+  event.record.val2        = val2;
+
+  (void)sys_write(FileHandle, (uint8_t *)&event,  sizeof(event));
+}
+ 
+/**
+  Record an event with four 32-bit data values a log file
+  \param[in]    id     event identifier (component number, message number)
+  \param[in]    val1   first data value
+  \param[in]    val2   second data value
+  \param[in]    val3   third data value
+  \param[in]    val4   fourth data value
+  \param[in]    ts     timestamp
+*/
+static void EventRecord4_Log (uint32_t id,
+                              uint32_t val1, uint32_t val2, uint32_t val3, uint32_t val4,
+                              uint64_t ts) {
+  //lint --e{934}  "Taking address of near auto variable"
+  struct {
+    EventRecordHead_t head;
+    EventRecord4_t    record;
+  } event;
+
+  event.head.type          = EVENT_TYPE_VAL4;
+  event.head.length        = (uint16_t)sizeof(event.record);
+  event.record.ts          = ts;
+  event.record.info.id     = (uint16_t)id;
+  event.record.info.rsrvd  = 0U;
+  event.record.info.irq    = (__get_IPSR() != 0U) ? 1U : 0U;
+  event.record.val1        = val1;
+  event.record.val2        = val2;
+  event.record.val3        = val3;
+  event.record.val4        = val4;
+
+  (void)sys_write(FileHandle, (uint8_t *)&event,  sizeof(event));
+}
+
+#endif
+
+
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+
+/**
+  Get timestamp and handle overflow
+
+  \return       timestamp (64-bit)
+*/
+static uint64_t EventGetTS64 (void) {
+  uint32_t ts;
+  uint32_t ts_last;
+  uint32_t ts_last_prev;
+  uint32_t ts_overflow;
+
+  do {
+    ts_overflow = *((volatile uint32_t *)&EventStatus.ts_overflow);
+    ts_last     = *((volatile uint32_t *)&EventStatus.ts_last);
+    ts = EventRecorderTimerGetCount();
+    if (ts < ts_last) {
+      if (LockTS_Overflow() == 0U) {
+        EventStatus.ts_overflow++;
+        UnlockTS_Overflow();
+      }
+      ts_overflow++;
+    } else {
+      if (TS_OverflowLock != 0U) {
+        ts_overflow++;
+      }
+    }
+    ts_last_prev = UpdateTS(ts);
+  } while (ts_last != ts_last_prev);
+
+  return (ts | ((uint64_t)ts_overflow << 32));
+}
+
+#else
+
 /**
   Get timestamp and handle overflow
 
@@ -603,17 +926,22 @@ static uint32_t EventGetTS (void) {
   uint32_t ts_last_prev;
 
   do {
-    ts_last_prev = *((volatile uint32_t *)&EventStatus.ts_last);
+    ts_last = *((volatile uint32_t *)&EventStatus.ts_last);
     ts = EventRecorderTimerGetCount();
-    ts_last = UpdateTS(ts);
+    if (ts < ts_last) {
+      if (LockTS_Overflow() == 0U) {
+        EventStatus.ts_overflow++;
+        UnlockTS_Overflow();
+      }
+    }
+    ts_last_prev = UpdateTS(ts);
   } while (ts_last != ts_last_prev);
-
-  if (ts < ts_last) {
-    IncrementOverflowTS();
-  }
 
   return (ts);
 }
+
+#endif
+
 
 /**
   Check event filter based on specified level and component
@@ -850,6 +1178,9 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     EventStatus.records_written = 0U;
     EventStatus.records_dumped  = 0U;
     memset(&EventBuffer[0], 0, sizeof(EventBuffer));
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+    FileHandle = sys_open(EVENT_LOG_FILENAME, MODE_wb);
+#endif
   } else {
     for (n = 0U; n < EVENT_RECORD_COUNT; n++) {
       record = &EventBuffer[n];
@@ -873,6 +1204,7 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     EventStatus.ts_freq     = freq;
     EventStatus.ts_last     = 0U;
     EventStatus.ts_overflow = 0U;
+    TS_OverflowLock         = 0U;
   } else {
 #if    (EVENT_TIMESTAMP_SOURCE == 0)
   #if ((__CORTEX_M >= 3U) && (__CORTEX_M != 23U))
@@ -894,6 +1226,7 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     EventStatus.ts_freq     = freq;
     EventStatus.ts_last     = 0U;
     EventStatus.ts_overflow = 0U;
+    TS_OverflowLock         = 0U;
 #else
     ret = 1U;
 #endif
@@ -905,7 +1238,13 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     (void)EventRecorderEnable(EventRecordAll, EvtStatistics_No, EvtStatistics_No);
     (void)EventRecorderEnable(EventRecordOp,  EvtPrintf_No,     EvtPrintf_No);
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+    uint64_t ts64 = EventGetTS64();
+    EventRecord2_Log(ID_EVENT_INIT & EVENT_RECORD_ID_MASK, EventStatus.init_count, 0U, ts64);
+    ts = (uint32_t)ts64;
+#else
     ts = EventGetTS();
+#endif
 
     (void)EventRecordItem(ID_EVENT_INIT, ts, EventStatus.init_count, 0U);
 
@@ -988,7 +1327,13 @@ uint32_t EventRecorderStart (void) {
   }
   EventStatus.state = 1U;
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+  uint64_t ts64 = EventGetTS64();
+  EventRecord2_Log(ID_EVENT_START & EVENT_RECORD_ID_MASK, 0U, 0U, ts64);
+  ts = (uint32_t)ts64;
+#else
   ts = EventGetTS();
+#endif
 
   (void)EventRecordItem(ID_EVENT_START, ts, 0U, 0U);
 
@@ -1008,7 +1353,13 @@ uint32_t EventRecorderStop (void) {
   }
   EventStatus.state = 0U;
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+  uint64_t ts64 = EventGetTS64();
+  EventRecord2_Log(ID_EVENT_STOP & EVENT_RECORD_ID_MASK, 0U, 0U, ts64);
+  ts = (uint32_t)ts64;
+#else
   ts = EventGetTS();
+#endif
 
   (void)EventRecordItem(ID_EVENT_STOP, ts, 0U, 0U);
 
@@ -1024,7 +1375,13 @@ uint32_t EventRecorderClockUpdate (void) {
 
   EventStatus.ts_freq = EventRecorderTimerGetFreq();
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+  uint64_t ts64 = EventGetTS64();
+  EventRecord2_Log(ID_EVENT_CLOCK & EVENT_RECORD_ID_MASK, EventStatus.ts_freq, 0U, ts64);
+  ts = (uint32_t)ts64;
+#else
   ts = EventGetTS();
+#endif
 
   (void)EventRecordItem(ID_EVENT_CLOCK, ts, EventStatus.ts_freq, 0U);
 
@@ -1057,7 +1414,13 @@ uint32_t EventRecordData (uint32_t id, const void *data, uint32_t len) {
     return 1U;
   }
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+  uint64_t ts64 = EventGetTS64();
+  EventRecordData_Log(id, data, len, ts64);
+  ts = (uint32_t)ts64;
+#else
   ts = EventGetTS();
+#endif
 
   id &= EVENT_RECORD_ID_MASK;
   id |= (__get_IPSR() != 0U) ? EVENT_RECORD_IRQ : 0U;
@@ -1133,7 +1496,13 @@ uint32_t EventRecord2 (uint32_t id, uint32_t val1, uint32_t val2) {
     return 1U;
   }
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+  uint64_t ts64 = EventGetTS64();
+  EventRecord2_Log(id, val1, val2, ts64);
+  ts = (uint32_t)ts64;
+#else
   ts = EventGetTS();
+#endif
 
   id &= EVENT_RECORD_ID_MASK;
   id |= (__get_IPSR() != 0U) ? EVENT_RECORD_IRQ : 0U;
@@ -1163,7 +1532,13 @@ uint32_t EventRecord4 (uint32_t id,
     return 1U;
   }
 
+#ifdef RTE_Compiler_EventRecorder_Semihosting
+  uint64_t ts64 = EventGetTS64();
+  EventRecord4_Log(id, val1, val2, val3, val4, ts64);
+  ts = (uint32_t)ts64;
+#else
   ts = EventGetTS();
+#endif
 
   id &= EVENT_RECORD_ID_MASK;
   id |= (__get_IPSR() != 0U) ? EVENT_RECORD_IRQ : 0U;
