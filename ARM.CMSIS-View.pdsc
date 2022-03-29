@@ -8,8 +8,11 @@
   <repository type="git">https:/github.com/arm-software/CMSIS-View.git</repository>
 
   <releases>
+    <release version="1.1.1" date="2022-03-31" tag="1.1.1" url="https://github.com/ARM-software/CMSIS-View/archive/1.1.1.zip">
+      Added clock frequency to internal Event Recorder Initialization message.
+    </release>
     <release version="1.1.0" date="2022-02-25" tag="1.1.0" url="https://github.com/ARM-software/CMSIS-View/archive/1.1.0.zip">
-      Added Event Recorder logging via Semihosting
+      Added Event Recorder logging via Semihosting.
     </release>
     <release version="1.0.0" date="2021-01-26" tag="1.0.0" url="https://github.com/ARM-software/CMSIS-View/archive/1.0.0.zip">
       Open Source Version of Event Recorder Version 1.4.0 under Apache 2.0.
@@ -38,7 +41,7 @@
   </conditions>
 
   <components>
-    <component Cvendor="ARM" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.0" condition="Cortex-M Device">
+    <component Cvendor="ARM" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.1" condition="Cortex-M Device">
       <description>Event Recording and Component Viewer via Debug Access Port (DAP)</description>
       <RTE_Components_h>
         #define RTE_Compiler_EventRecorder
@@ -52,7 +55,7 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cvendor="ARM" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.0" condition="Cortex-M Device">
+    <component Cvendor="ARM" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.1" condition="Cortex-M Device">
       <description>Event Recording and Component Viewer via Debug Access Port (DAP) and Semihosting</description>
       <RTE_Components_h>
         #define RTE_Compiler_EventRecorder

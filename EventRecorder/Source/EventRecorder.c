@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 Arm Limited. All rights reserved.
+ * Copyright (c) 2016-2022 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -1240,13 +1240,13 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
 
 #ifdef RTE_Compiler_EventRecorder_Semihosting
     uint64_t ts64 = EventGetTS64();
-    EventRecord2_Log(ID_EVENT_INIT & EVENT_RECORD_ID_MASK, EventStatus.init_count, 0U, ts64);
+    EventRecord2_Log(ID_EVENT_INIT & EVENT_RECORD_ID_MASK, EventStatus.init_count, EventStatus.ts_freq, ts64);
     ts = (uint32_t)ts64;
 #else
     ts = EventGetTS();
 #endif
 
-    (void)EventRecordItem(ID_EVENT_INIT, ts, EventStatus.init_count, 0U);
+    (void)EventRecordItem(ID_EVENT_INIT, ts, EventStatus.init_count, EventStatus.ts_freq);
 
     if (start != 0U) {
       (void)EventRecorderStart();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright (c) 2016-2021 Arm Limited. All rights reserved.
+  Copyright (c) 2016-2022 Arm Limited. All rights reserved.
 
   SPDX-License-Identifier: Apache-2.0
  
@@ -19,7 +19,7 @@
 
 <component_viewer schemaVersion="1.0.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
 
-<component name="EventRecorderStub" version="1.0.0"/>       <!--name and version of the component-->
+<component name="EventRecorderStub" version="1.0.1"/>       <!--name and version of the component-->
   <events>
     <group name="Event Statistics">
       <component name="Start/Stop Statistics" prefix="Event" brief="EvStat" no="0xEF" info="Event Statistics for EventStart/EventStop"/>
@@ -307,10 +307,10 @@
     <group name="Recorder Control" >
       <component name="Event Recorder Control" brief="EvCtrl" no="0xFF" info="Event Recorder Control Events"/>
     </group>
-    <event id="0xFF00+0x00" level="Op" property="EventRecorderInitialize" value="Restart Count = %d[val1]"       info="Initialize the Event Recorder"/>
-    <event id="0xFF00+0x01" level="Op" property="EventRecorderStart"                                             info="Start the Event Recorder"/>
-    <event id="0xFF00+0x02" level="Op" property="EventRecorderStop"                                              info="Stop the Event Recorder"/>
-    <event id="0xFF00+0x03" level="Op" property="EventRecorderClock"      value="Timestamp Frequency = %d[val1]" info="Update the Event Recorder Clock"/>
+    <event id="0xFF00+0x00" level="Op" property="EventRecorderInitialize" value="Restart Count = %d[val1], Timestamp Frequency = %d[val2]" info="Initialize the Event Recorder"/>
+    <event id="0xFF00+0x01" level="Op" property="EventRecorderStart"                                                                       info="Start the Event Recorder"/>
+    <event id="0xFF00+0x02" level="Op" property="EventRecorderStop"                                                                        info="Stop the Event Recorder"/>
+    <event id="0xFF00+0x03" level="Op" property="EventRecorderClock"      value="Timestamp Frequency = %d[val1]"                           info="Update the Event Recorder Clock"/>
 
   </events>
 
