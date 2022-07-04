@@ -5,7 +5,7 @@
 With CMSIS-View developers can collect time-accurate event-based information as well as see the real-time program execution status. The data can be observed in real-time in an IDE or can be saved as a log file during program execution. It allows to analyze  execution flows, debug potential issues, and measure execution times.
 
 Key elements of CMSIS-View are:
-- \ref er_use "Event Recorder" - is an embedded software component that provides an [API (function calls](Modules.html) for event annotations in the code.
+- \ref er_use "Event Recorder" - is an embedded software component that provides an [API (function calls)](Modules.html) for event annotations in the code.
 - \ref SCVD_Format "SCVD file specification" defines the content that is displayed.
 
 A **Software Component Viewer Description** (*.SCVD) file in \ref SCVD_Format (XML) defines the content that is displayed in the **Component Viewer** and **Event Recorder**.
@@ -19,7 +19,7 @@ The debugger can load multiple *.SCVD files as typically each software component
 # Content {#content}
 
 This user's guide contains the following chapters:
- - \subpage er_rev_history : lists EventRecorder releases
+ - \subpage er_rev_history : lists CMSIS-View releases
  - \subpage evr : explores the features and operation of the **Event Recorder** including
    configuration, technical data, and theory of operation.
  - \subpage ev_stat : describes how to use Event Statistics to create statistical data on code execution and power consumption.
@@ -30,7 +30,7 @@ This user's guide contains the following chapters:
 
 \page er_rev_history Revision History
 
-Table below provides revision history for Event Recorder software component.
+Table below provides revision history for CMSIS-View software component.
 
 <table>
     <tr>
@@ -38,61 +38,21 @@ Table below provides revision history for Event Recorder software component.
       <th>Description</th>
     </tr>
     <tr>
-      <td>V1.5.1</td>
+      <td>V1.1.1</td>
       <td>
         Added clock frequency to internal Event Recorder Initialization message.
       </td>
     </tr>
     <tr>
-      <td>V1.5.0</td>
+      <td>V1.1.0</td>
       <td>
         Added Event Recorder logging via Semihosting.
       </td>
     </tr>
     <tr>
-      <td>V1.4.0</td>
-      <td>
-        Extended SCVD file format with \refelem{elem_group_component_state,state} information.\n
-        Changed protocol version to 1.1.
-      </td>
-    </tr>
-    <tr>
-      <td>V1.3.0</td>
-      <td>
-        Added CMSIS RTOS2 as Time Stamp Source.\n
-        Extended Time Stamp Timer interface.\n
-        Added EventRecorderClockUpdate function.\n
-        Enhanced MISRA Compliance.\n
-        Improved robustness.
-      </td>
-    </tr>
-    <tr>
-      <td>V1.2.1</td>
-      <td>
-        Added support for Cortex-M23.
-      </td>
-    </tr>
-    <tr>
-      <td>V1.2.0-Beta</td>
-      <td>
-        Added support for Event Filtering.\n
-        Added Event_Enable/Disable function.\n
-        Added Event_Start/Stop function.\n
-        Removed Event_Record0/1/3/5/6/7/8 function.\n
-        Added Time Stamp Sources (Cycle Counter, SysTick, User provided).\n
-        Internal reorganization.
-      </td>
-    </tr>
-    <tr>
-      <td>V1.1.0</td>
-      <td>
-        Added Event_Record function.
-      </td>
-    </tr>
-    <tr>
       <td>V1.0.0</td>
       <td>
-        Initial public release.
+        Open Source Version of Event Recorder Version 1.4.0 under Apache 2.0.
       </td>
     </tr>
  </table>
