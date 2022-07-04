@@ -1,0 +1,447 @@
+/**
+\defgroup EventRecorder_Setup Event Recorder Setup
+\brief Functions that initialize and control the event recorder and configure event filtering
+\details
+This section contains the functions that initialize and control the event recorder and configure event filtering.
+
+
+@{
+*/
+
+/**
+\defgroup EventRecorder_recdefs Recording Control 
+\brief Defines for parameter \em recording of \ref EventRecorder_Setup functions.
+\details
+The following controls specify event recording levels and supply values for the parameter \em recording of \ref EventRecorder_Setup functions.
+
+\note
+Multiple recording levels can be added: \ref EventRecordAPI + \ref EventRecordOp specifies API and Operation.
+
+@{
+\def EventRecordNone
+\def EventRecordError
+\def EventRecordAPI
+\def EventRecordOp
+\def EventRecordDetail
+\def EventRecordAll
+@}
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start)
+\details 
+Call the function \b EventRecorderInitialize from the user code to set up the Event Recorder.
+The function initializes all buffers and configures the timer (if configured).
+
+The parameter \em \b recording takes values from \ref EventRecorder_recdefs.
+
+\b Code \b Example
+\code
+int main (void) {                               // main function
+                                                
+  HAL_Init();                                   // initialize hardware abstraction layer
+  SystemClock_Config();                         // configure the system clock
+  MemoryBus_Config();                           // configure the memory bus system
+
+  EventRecorderInitialize (EventRecordAll, 1);	// initialize and start Event Recorder
+
+  ...
+}
+\endcode
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderEnable (uint32_t recording, uint32_t comp_start, uint32_t comp_end)
+\details 
+The function \b EventRecorderEnable configures the event filter for a software component. 
+The events will be generated for the event level \em \b recording and between the range specified with \em comp_start and \em comp_end. 
+The parameter \em \b recording takes values from \ref EventRecorder_recdefs.
+
+Multiple calls to \b EventRecorderEnable are permitted and enable the recording of different event messages.
+
+\b Code \b Example
+\code
+  EventRecorderEnable (EventRecordAll, 0, 0xF);                    // record all events of component 0 - 15
+    :
+  EventRecorderEnable (EventRecordError, 0x80, 0xFE);              // record 'Error' events of component 0x80 - 0xFE
+  EventRecorderEnable (EventRecordAPI+EventRecordOp, 0xC0, 0xC3);  // and record 'API' and 'Op' events of component groups 0xC0 - 0xC3
+\endcode
+*/
+
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderDisable (uint32_t recording, uint32_t comp_start, uint32_t comp_end)
+\details 
+The function \ref EventRecorderDisable configures the event filter for a software component.
+The events will be generated for the event level \em \b recording and between the range specified with \em comp_start and \em comp_end. 
+The parameter \em \b recording takes values from \ref EventRecorder_recdefs.
+
+Multiple calls to \ref EventRecorderDisable are permitted and disable the recording of event messages.
+
+\b Code \b Example
+\code
+  EventRecorderDisable (EventRecordDetail, 0, 0xFE);                 // stop recording 'Detail' events of component number 0 - 0xFE
+    :
+  EventRecorderDisable (EventRecordAPI+EventRecordOp, 0x80, 0xBF);   // stop recording 'API' and 'Op' events of component number 0x80 - 0xFE
+  EventRecorderDisable (EventRecordAll, 0xC0, 0xCF);                 // stop recording all events of component number 0xC0 - 0xCF
+\endcode
+*/
+
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderStart (void)
+\details 
+The function \b EventRecorderStart enables the recording of the events that are configured for recording using \ref EventRecorderEnable or \ref EventRecorderInitialize
+
+\b Code \b Example
+\code
+  EventRecorderStart ();        // start with the recording of events that pass filtering
+\endcode
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderStop (void)
+\details 
+The function \b EventRecorderStop disables the recording of all events. 
+
+\b Code \b Example
+\code
+  EventRecorderStop ();        // stop the recording of any events
+\endcode
+*/
+
+
+/**
+@}
+*/
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+
+/**
+\defgroup EventRecorder_Data Event Data Recording
+\brief Functions that record events along with data information
+\details
+This section describes the functions that are called from the user application or middleware libraries to record
+events. 
+
+Each event has an \em id that combines \em level, \em component \em number, and \em message \em number:
+  - \em level is a \em EventLevelXxxx value that is used for filtering of the event recording (see \ref EventRecorder_Setup).
+  - \em component \em number identifies the software component and is used for filtering of event recording (see \ref EventRecorder_Setup).
+  - \em message \em number identifies the event.
+  
+
+can have an additional event level that is used for filtering.  The event level value is 
+defined by \ref EventLevelError, \ref EventLevelAPI, \ref EventLevelOp, or \ref EventLevelDetail and added
+to the event ID number.  
+
+\note Before using these functions, the Event Recorder must be initialized with \ref EventRecorderInitialize.
+
+<b>Code example</b>
+  - Refer to \ref Event_Annotations
+
+*/
+
+/**
+\addtogroup EventRecorder_Data
+@{
+*/
+
+/**
+
+\def EventID
+\param level \ref EventRecorder_leveldefs of the \em id
+\param comp_no  component number of the \em id
+\param msg_no   message number of the \em id
+\details
+The macro \ref EventID generates an \em id value that combines \em level, \em component \em number, and \em message \em number.
+The \em level value should be set to \ref EventLevelError, \ref EventLevelAPI, \ref EventLevelOp, or \ref EventLevelDetail.
+
+The \em id value is used by the functions \ref EventRecordData, \ref EventRecord2, and \ref EventRecord4.
+
+The example \ref MyComponent shows the usage of \ref EventID in combination with a help system.
+*/
+
+/**
+\defgroup EventRecorder_leveldefs Event level
+\brief Defines for parameter \em level for \ref EventID
+\details
+The following defines specify the \em level for the \em id. This defines may be used for:
+ - \ref EventRecorder_Setup functions as parameter \em recording 
+ - \ref EventID as parameter \em level
+
+\ref er_filtering may be used to change the settings in the debugger. The event level define settings map as described in the following table:
+
+Recording level            | Error                 | API                 | Op                 | Data
+:--------------------------|:---------------------:|:-------------------:|:------------------:|:-----------------------:
+Event level define setting | \ref EventRecordError | \ref EventRecordAPI | \ref EventRecordOp | \ref EventRecordDetail
+
+@{
+\def EventLevelError
+\def EventLevelAPI
+\def EventLevelOp
+\def EventLevelDetail
+@}
+*/
+
+/**
+\defgroup EventRecorder_CompNoDefs Component number
+\brief Defines for parameter \em comp_no for \ref EventID
+\details
+The following defines refer to various component numbers.  A list of component numbers is provided under \ref er_theory.
+
+@{
+\def EvtStatistics_No
+\def EvtPrintf_No
+@}
+*/
+
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecord2 (uint32_t id, uint32_t val1, uint32_t val2)
+\details 
+
+\b Code \b Example
+\code
+EventRecord2 (2+EventLevelError, 0, 0);  
+\endcode
+
+\note
+The \em id may be defined using the macro \ref EventID.
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecord4 (uint32_t id, uint32_t val1, uint32_t val2, uint32_t val3, uint32_t val4)
+\details 
+
+\b Code \b Example
+\code
+EventRecord2 (2+EventLevelAPI, value1, 0, 0, value4);  
+\endcode
+
+\note
+The \em id may be defined using the macro \ref EventID.
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecordData (uint32_t id, const void *data, uint32_t len)
+\details 
+
+\b Code \b Example
+\code
+char string[10] = "MyTest";
+ : 
+EventRecordData (3+EventLevelOp, string, sizeof(string));
+\endcode
+
+\note
+The \em id may be defined using the macro \ref EventID.
+
+*/
+
+/**
+@}
+*/
+/**
+\defgroup Event_Execution_Statistic Event Execution Statistics
+\brief Macros that record start/stop events for the execution statistic display
+\details
+This section describes the macros that call event recorder functions from the user application to record start/stop events
+for program execution statistics. 
+
+The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (<i>G</i> = A - D). The
+call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer.  A call to EventStop with slot 15 
+stops the timers of all slots in the specific group.
+
+The macros allow to record either:
+  - Filename and line number of the function call by using the variant EventStart<i>G</i> or EventStop<i>G</i>.
+  - Integer values v1 and v2 by using the variant EventStart<i>G</i>v or EventStop<i>G</i>v.
+  
+The start/stop events are using The four event groups (<i>G</i> = A - D) that are available to the user are mapped to the level information in \ref EventID and may be used for
+filtering. The mapping is as shown in the table below.
+
+Start/stop group         | A                     | B                   | C                  | D
+:------------------------|:---------------------:|:-------------------:|:------------------:|:-----------------------:
+Event level              | Error                 | API                 | Op                 | Data
+Parameter \em recording  | \ref EventRecordError | \ref EventRecordAPI | \ref EventRecordOp | \ref EventRecordDetail
+
+It is required to call the \ref EventRecorderInitialize function before using start/stop events. The parameter \em recording from the 
+table above can be used in the functions \ref EventRecorderInitialize, \ref EventRecorderEnable, and \ref EventRecorderDisable. \ref er_filtering may 
+be used to change the settings in the debugger.
+
+The following code shows the setup of the Event Recorder for start/stop events:
+
+- Record all events:
+\code
+EventRecorderInitialize (EventRecordAll, 1);               // enable recording for all events 
+\endcode
+
+- Record only start/stop events for group A and group B.
+\code
+EventRecorderInitialize (EventRecordNone, 1U);             // Initialize and start Event Recorder, record no events
+EventRecorderEnable (EventRecordError+EventRecordAPI,      // Record group A and group B
+                     EvtStatistics_No, EvtStatistics_No);  // for start/stop events
+\endcode
+
+<b>Code example</b>
+ - Refer to \ref es_use
+
+*/
+
+/**
+\addtogroup Event_Execution_Statistic
+@{
+*/
+
+/**
+
+\def EventStartA
+\details
+The macro \b EventStartA generates a start event for group A with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStartAv
+\details
+The macro \b EventStartAv generates a start event for group A with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStopA
+\details
+The macro \b EventStopA generates a stop event for group A with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStopAv
+\details
+The macro \b EventStopAv generates a stop event for group A with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStartB
+\details
+The macro \b EventStartB generates a start event for group B with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStartBv
+\details
+The macro \b EventStartBv generates a start event for group B with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStopB
+\details
+The macro \b EventStopB generates a stop event for group B with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStopBv
+\details
+The macro \b EventStopBv generates a stop event for group B with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStartC
+\details
+The macro \b EventStartC generates a start event for group C with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStartCv
+\details
+The macro \b EventStartCv generates a start event for group C with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStopC
+\details
+The macro \b EventStopC generates a stop event for group C with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStopCv
+\details
+The macro \b EventStopCv generates a stop event for group C with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStartD
+\details
+The macro \b EventStartD generates a start event for group D with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStartDv
+\details
+The macro \b EventStartDv generates a start event for group D with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+\def EventStopD
+\details
+The macro \b EventStopD generates a stop event for group D with the specified \a slot number. The Event Recorder stores filename and line number of the call.
+
+\def EventStopDv
+\details
+The macro \b EventStopDv generates a stop event for group D with the specified \a slot number. The Event Recorder stores the integer value parameters \a v1, \a v2.
+
+
+*/
+
+/**
+@}
+*/
+
+/**
+\defgroup EventRecorder_Time Event Recorder - Timer
+\brief Functions that access a configurable hardware timer
+\details
+This section contains user-provided functions, which configure and provide timing information for recorded events.
+It is required to implement these functions, when \ref TimeStampSource "User Timer" is selected as time stamp source.
+
+The source file <b>EventRecorder.c</b> implements \c __WEAK functions for \ref EventRecorderTimerSetup, \ref EventRecorderTimerGetFreq and \ref EventRecorderTimerGetCount.
+This allows to overwrite the functions by a user application.
+
+\note ARM Cortex-M3/M4/M7/M33 processors provide a debug timer (DWT CYCCNT) that can be used during debug. Refer to
+<a href="http://infocenter.arm.com/help/topic/com.arm.doc.100165_0201_00_en/ric1417175941906.html">DWT Programmers' model</a>
+for more information.
+
+\b Code \b Example
+\code
+\endcode
+*/
+
+/**
+\addtogroup EventRecorder_Time
+@{
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderTimerSetup (void)
+\details 
+This function is called by \ref EventRecorderInitialize to initialize the timer that is used by the Event Recorder.
+For time stamp source \ref TimeStampSource "User Timer (Power-On Reset)" this function is only called for the first call to \ref EventRecorderInitialize.
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderTimerGetFreq (void)
+\details 
+This function is called by \ref EventRecorderInitialize to initialize the timer that is used by the Event Recorder.
+For time stamp source \ref TimeStampSource "User Timer (Power-On Reset)" this function is only called for the first call to \ref EventRecorderInitialize.
+
+\note
+MDK is using currently a fixed frequency that is defined by \c EVENT_TIMESTAMP_FREQ.
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn  uint32_t EventRecorderTimerGetCount (void)
+\details 
+This function should return a 32-bit timer value that is used to generate time stamp information for the Event Recorder.
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
+\fn uint32_t EventRecorderClockUpdate (void)
+\details
+Call this function when a clock change of the Event Recorder timer source has occurred. Typically, this happens when a clock
+source is switched (i.e. from XTAL to low-power clock).
+
+\note
+- When using \ref er_config "CMSIS-RTOS2 System Timer" as the clock source for Event Recorder, call this function in the
+  first thread that is running after \b osKernelStart.
+- Updating the clock frequency of the Event Recorder will lead to a recalculation of previously received packets and thus to
+  wrong display of earlier data in the µVision debugger.
+*/
+
+/**
+@}
+*/
+ 

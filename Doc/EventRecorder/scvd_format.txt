@@ -1,0 +1,3204 @@
+/* ========================================================================================================================== */
+/** 
+\page SCVD_Format SCVD File Format
+
+The SCVD (Software Component View Description) files are formatted in XML and based on the schema file \b Component_Viewer.xsd. 
+The schema file \b Component_Viewer.xsd is part of the Keil MDK installation and available in the folder <b>..\\UV4</b>.
+
+The SCVD file format is described in the following sections:
+ - \subpage xml_elements : specifies the structure and top level elements of an SCVD file.
+ - \subpage Symbol_Access : explains how to refer to application symbols when reading program variables.
+ - \subpage data_type : lists available scalar data types used in XML elements and explains how complex data types are defined.
+ - \subpage scvd_expression : describes supported expressions for making calculations in an SCVD file. 
+ - \subpage builtin_function : lists built-in functions that can be used for  calculating stack memory usage, accessing CPU registers or application program symbols. 
+ - \subpage value_output : shows how to format output data for display in the \cviewer or \erecorder.
+
+
+
+\section scvd_validate SCVD File Validation
+
+An *.SCVD file is validated with the following steps:
+
+-# The schema file <b>Component_Viewer.xsd</b> specifies the XML format. Use this schema file together with XML tools to check correctness of an *.scvd file. 
+-# Start the <b>uVision Debugger</b> and verify that no error messages are displayed in the debug command window and when opening the software component watch window.
+
+\section scvd_in_debug Using SCVD Files in the Debugger
+
+To use a *.SCVD file in the uVision Debugger:
+ - Add the SCVD file to uVision as described in <a href="http://www.keil.com/support/man/docs/uv4/uv4_ca_manage_scvd.htm" target="_blank"><b>Manage Component Viewer Description Files</b></a>. 
+ - Use the debug windows as described in \cviewer.
+
+\section scvd_in_packs SCVD Files in Software Packs
+
+Software components which are part of Software Packs may add related *.SCVD files directly in the Package Description file (*.pdsc) using the \<file\> element category \token{other}.
+In the *.pdsc file example below \token{Network.scvd} is added to the debugger when the component \token{:Network:Core} is selected. For details, refer to
+<a href="http://www.keil.com/pack/doc/CMSIS/Pack/html/pdsc_components_pg.html#element_file" target="_blank"><b>CMSIS-Pack - Pack Description (*.PDSC) Format</b></a>.
+
+\code
+<component CClass="Network" Cgroup="Core">
+  <files>
+    <file category="library"  name="Network/Lib/ARM/Network.lib"/>
+    <file category="other"    name="Network/Network.scvd"/>
+  </files>
+</component>
+\endcode
+
+<br/>
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page xml_elements XML Elements
+
+The top level elements of an SCVD file are:
+ - \subpage elem_component_viewer "<component_viewer>" &mdash; the root element enclosing all other elements
+ - \subpage elem_component "<component>" &mdash; defines the component for which the viewer is created
+ - \subpage elem_typedefs  "<typedefs>" &mdash; definitions for data types and structures of the software component.
+ - \subpage elem_objects  "<objects>" &mdash; defines the data collection and the output for software component objects.
+ - \subpage elem_events   "<events>" &mdash; defines the output for events (system and thread information).
+
+The overall XML structure of an SCVD file is shown below.
+
+\image html SCVDExample.png "Example of an SCVD File"
+ 
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_component_viewer  \elemhead{component_viewer}
+
+The element \elem{component_viewer} provides the outermost frame of the description. All elements are described within this scope. 
+
+<table class="cmtable" summary="Root Element: component_viewer">
+  <tr>
+    <th style="white-space:nowrap;"> Parent Element </th>
+    <th colspan="3"> Element Chain </th>
+  </tr>
+  <tr>
+    <td> root </td>
+    <td colspan="3"> Document root </td>
+  </tr>
+  <tr>
+    <th> Attributes </th>
+    <th> Description </th>
+    <th> Type </th>
+    <th> Use </th>
+  </tr>
+  <tr>
+    <td> xmlns:xs </td>
+    <td> Specifies the underlying XML schema to which the SCVD schema is compliant. 
+    Has to be set to: \token{"http://www.w3.org/2001/XMLSchema-instance"}. </td>
+    <td> xs:decimal </td>
+    <td> required </td>
+  </tr>
+  <tr>
+    <td> xs:noNamespaceSchemaLocation </td>
+    <td> Specifies the file name of the SCVD Schema: \token{"Component_Viewer.xsd"}. </td>
+    <td> xs:string </td>
+    <td> required </td>
+  </tr>
+  <tr>
+    <td> schemaVersion </td>
+    <td> Specifies the compliant SCVD schema version (for example, \token{"1.1"}). </td>
+    <td> xs:string </td>
+    <td> required </td>
+  </tr>
+  <tr>
+    <th> Child Elements </th>
+    <th> Description </th>
+    <th> Type </th>
+    <th> Occurrence </th>
+  </tr>
+  <tr>
+    <td> \refelem{component} </td>
+    <td> Name of the component and version of this SCVD file. </td>
+    <td> ComponentsType </td>
+    <td> 0..1 </td>
+  </tr>
+  <tr>
+    <td> \refelem{typedefs} </td>
+    <td> Group element for one or more \refelem{typedef} elements. </td>
+    <td> TypedefsType </td>
+    <td> 0..1 </td>
+  <tr>
+    <td> \refelem{objects} </td>
+    <td> Group element for one or more \refelem{object} elements. </td>
+    <td> ObjectsType </td>
+    <td> 0..1 </td>
+  </tr>
+  <tr>
+    <td> \refelem{events} </td>
+    <td> Group element for one or more \refelem{event} elements. </td>
+    <td> EventsType </td>
+    <td> 0..1 </td>
+  </tr>
+</table>
+
+\b Example:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance "xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  
+  <component name="MyView" version="0.0.1"/>    <!-- name and version of the component  -->
+  
+  <typedefs>
+    <typedef  name="MyType"                    size="8"  info="This is MyType with 2 members">
+      <member name="hi"      type="uint32_t" offset="0"  info="member hi"/>
+      <member name="low"     type="uint32_t" offset="4"  info="member low"/>
+    </typedef>
+  </typedefs>
+  
+  <objects>
+    <object name="MyObject">
+      <read name="MySymbol" type="MyType" symbol="mysymbol" const="0"/>
+  
+      <out name="MyObjectView">
+        <item property="MyObject">
+          <item property="Low" value="%x[MySymbol.low]"/>
+          <item property="Hi"  value="%d[MySymbol.hi]"/>
+        </item>
+      </out>
+    </object>   
+  </objects>
+  
+</component_viewer>
+\endcode
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_component \elemhead{component_viewer/component}
+
+Define the name of component that is described in this SCVD file.  This element specifies also the version of the SCVD file.
+
+<table class="cmtable" summary="Element: Component">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{component_viewer}</td>
+    <td colspan="3">\ref elem_component_viewer</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Alphanumeric string identifying the component. Used as menu entry to open viewers.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>version</td>
+    <td>Alphanumeric string identifying the version of the component description.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+
+\b Example:
+\code
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+ 
+  <component name="RTOS" version="1.21.23"/>    <!-- name and version of the component  -->
+  ...
+</component_viewer>
+\endcode
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_typedefs \elemhead{component_viewer/typedefs}
+
+Is the enclosing element for data type definitions.
+
+<table class="cmtable" summary="Element: typedefs">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{component_viewer}</td>
+    <td colspan="3">\ref elem_component_viewer</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{typedef}</td>
+    <td>Define complex data types.</td>
+    <td>TypedefType</td>
+    <td>1..*</td>
+  </tr>
+</table>
+&nbsp;
+<hr>
+
+
+\section elem_typedef \elemhead{component_viewer/typedefs/typedef}
+
+\todo <var> does not accept complex data types.  Is this a bug in UV or intentional?
+
+Define complex data types that may be used in \refelem{read} and \refelem{readlist} elements.  This data type definition is used
+to read information from the target memory of the application. Optionally it may include also \spref{elem_var,var} elements that
+create temporary helper variables for calculations at the debugger level.
+
+\todo
+explain that \ref complex_data_type referenced via a  \refelem{typedef} pointer using  \token{type=\"*&lt;name of typedef>\"}. </td>
+
+
+<table class="cmtable" summary="Element: typedef">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>typedefs</td>
+    <td colspan="3">\ref elem_typedefs</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Define the name of a data type. This name is used in \refelem{read} and \refelem{readlist} elements.</td>
+    <td>xs:anySimpleType</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>size</td>
+    <td>\ref scvd_expression "Expression" that specifies the size (in \token{[Bytes]}) to read from target memory.</td>
+    <td>xs:anySimpleType</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:anySimpleType</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>import</td>
+    <td>Name of a \ref Symbol_Access "symbol" in the user application which is loaded into the debugger. The underlaying data type of this symbol is used to:
+ - recalculate the value of the \attr{size} of this \refelem{typedef} element.
+ - for \refelem{elem_member,member} elements with no explicit \attr{offset}, the offset value of matching \refelem{elem_member,member} is set. If the \refelem{elem_member,member} is not part 
+   of the symbol in the user application the \attr{offset} value is set to \token{-1}. \ref __Offset_of can be used to check this value.
+
+\b Example: Use the data type information of \ref Symbol_Access "symbol" \em tcb in source module \em main.c
+\code
+<typedef name="tcb_type" size="12"  import="main.c/tcb">  // size is recalculated from symbol tcb
+  <member name="type"  type="uint8_t"  offset="0"/>       // offset not updated, because specified
+  <member name="name"  type="uint8_t"  size="16" />       // offset updated, because not specified
+</typedef>
+\endcode
+    </td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr class="choice">
+    <td>\spref{elem_member,member}</td>
+    <td>Name of a member variable in target memory.</td>
+    <td>MemberType</td>
+    <td>0..*</td>
+  </tr>
+  <tr class="choice">
+    <td>\spref{elem_var,var}</td>
+    <td>Temporary variables for local calculations in component viewer.</td>
+    <td>VarType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+&nbsp;
+
+<b> Example: Using \em var</b>
+
+\code
+  <typedefs>
+    
+    <!-- Structure reflecting an array -->
+    <typedef name="TypeArray1" size="8">  
+      <member name="type_ref"      type="uint32_t"   offset="0"  info="Pointer to array"/>
+      <member name="id1"           type="uint8_t"    offset="4"  info="Type ID"/>
+      <member name="attr"          type="uint8_t"    offset="5"  info="Type Attribute"/>
+      <var    name="idx"           type="uint32_t"               info="Index in array"/>
+    </typedef>
+    
+    <!-- Helper variables for Stack-usage calculation -->
+    <typedef name="TypeArray2" size="8">  
+       <var   name="XcurSP"        type="uint32_t"   value="0"/>
+       <var   name="bSimpleStk"    type="int32_t"/>
+     </typedef>
+    
+  </typedefs>
+\endcode
+
+<b>Example: Using \em read</b>
+
+<b>main.c file</b>
+\code
+struct MyComp_info_t {
+  int version;             // component version
+  int channels;            // number of communication channels available
+  int buffersize;          // size of the communication buffer
+};
+ 
+struct MyComp_info_t MyComp_info;
+ 
+void MyComp_initialize (void) {
+  MyComp_info.version = 3;                         // Set information
+  MyComp_info.channels = 1;
+  MyComp_info.buffersize = sizeof(MyComp_data.buf);
+}
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<objects>
+  <object name="MyComponent">
+    <read name="MyComp_info" type="MyComp_info" symbol="MyComp_info"/>
+    <out name="MyComponent Overview">
+      <item property="Generic">
+        <item property="Version"            value="%d[MyComp_info.version]"/>
+        <item property="Channels"           value="%d[MyComp_info.channels]"/>
+        <item property="Max. Transmit Size" value="%d[MyComp_info.buffersize] Bytes"/>		
+      </item>
+    </out>
+  </object>
+</objects>
+\endcode
+
+
+<b>Example: Using \em import</b>
+
+<b>main.c File</b>
+\code
+// Configuration defines 
+#define CONDITION_0             (0)
+#define CONFIG_NAME_SZ   (8)
+#define CONDITION_1             (0)
+ 
+// Example structure 
+typedef struct {
+  uint32_t Member_0;
+  uint32_t Member_1;
+} StructA_t;
+ 
+// Structure of variable size 
+typedef struct {
+  uint32_t Var_0;
+ 
+  #if (CONDITION_0 == 1)
+   StructA_t Sample0;        // Conditionally included 
+  #endif
+  StructA_t Sample1;
+  char Name[CONFIG_NAME_SZ];  // Variable size: size defined by CONFIG_NAME_SZ (default: CONFIG_NAME_SZ=4) 
+ 
+  #if (CONDITION_1 == 1)
+    uint32_t Var_1;           // Conditionally included 
+  #endif
+  uint32_t Var_2;
+ 
+} StructOfVarSz;
+StructofVarSz MyVarStruct;
+\endcode
+
+<b>SCVD File</b>
+\code
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyView2" version="0.0.1"/>    <!-- name and version of the component  -->
+  
+  <typedefs>
+    <typedef name="StructOfVarSz" size="32" import="MyVarStruct" info="Structure Of Variable Size">
+      <member name="Var_0" type="uint32_t" offset="0" info="Variable 0 (always present)"/>
+  
+      <!-- StructA_t inlined -->
+      <member name="Sample0_Member0" type="uint32_t"    info="Structure Sample0, member Member0 (included conditionally)"/>
+      <member name="Sample0_Member1" type="uint32_t"    info="Structure Sample0, member Member1 (included conditionally)"/>
+  
+      <!-- StructA_t inlined -->
+      <member name="Sample1_Member0" type="uint16_t"    info="Structure Sample1, member Member0 (always included)"/>
+      <member name="Sample1_Member1" type="uint16_t"    info="Structure Sample1, member Member1 (always included)"/>
+  
+      <member name="Name"  type="uint8_t"  size="4"     info="Array Name, actual size=CONFIG_NAME_SZ"/>
+      <member name="Var_1" type="uint32_t"              info="Variable 1 (conditionally included)"/>
+      <member name="Var_2" type="uint32_t"              info="Variable 2 (always present)"/>
+   </typedef>
+  
+   // After import (taking "Configuration defines" into account) the typedef above would have the following properties:
+  
+  <typedef name="StructOfVarSz" size="28" import="MyVarStruct" info="Size is updated">
+    <member name="Var_0" type="uint32_t" offset="0" info=""/>
+   
+    <!-- StructA_t inlined -->
+    <member name="Sample0_Member0" type="uint32_t" offset="-1" info=""/>
+    <member name="Sample0_Member1" type="uint32_t" offset="-1" info=""/>
+    
+    <!-- StructA_t inlined -->
+    <member name="Sample1_Member0" type="uint16_t" offset="4"  info=""/>
+    <member name="Sample1_Member1" type="uint16_t" offset="8"  info=""/>
+     
+    <member name="Name"  type="uint8_t"  size="8"  offset="12" info="Size is updated (if possible)"/>
+    <member name="Var_1" type="uint32_t"           offset="-1" info=""/>
+    <member name="Var_2" type="uint32_t"           offset="20" info=""/>
+  </typedef>
+  
+</component_viewer>
+\endcode
+
+
+&nbsp;
+<hr>
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_member \elemhead{component_viewer/typedefs/typedef/member}
+
+Define the member of a \refelem{typedef}; typically a \em struct, \em class member, or enumeration.
+
+<table class="cmtable" summary="Element: member">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{typedef}</td>
+    <td colspan="3">\ref elem_typedef</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of member variable. Is shown as text in the \cviewer.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>\ref scalar_data_type or pointer to \ref complex_data_type to access chained lists.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>offset</td>
+    <td>Offset to base address in \token{[Bytes]}. Use the uVision debug dialog \b Symbols to find the offset. You can use \ref scvd_expression.
+        For imported members, the offset is recalculated. Refer to the description of \attr{import} in \refelem{typedef}.
+    </td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>size</td>
+    <td>Size in target memory in \token{[Bytes]}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{enum}</td>
+    <td>Name of an enumeration that is displayed as text instead of a value.</td>
+    <td>EnumType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+&nbsp;
+\b Example:
+\code
+    <typedef name="Thread_CB"      size="52"                             info="RTOS Task Control Block">
+   
+      <member name="p_lnk"         type="*Thread_CB" offset="4"          info="Pointer to linked list"/>
+  
+      <member name="Entry"         type="uint32_t"   offset="40 + 8"     info="Calculated Entry Address"/>
+     
+      <member name="Priority"      type="int8_t"     offset="2"          info="Thread Priority">
+        <enum name="None"              value="0"                         info="No Priority"/>
+        <enum name="Idle"              value="1"                         info="osPriorityIdle (lowest)"/>
+        <enum name="Low"               value="2"                         info="osPriorityLow"/>
+        <enum name="BelowNormal"       value="3"                         info="osPriorityBelowNormal"/>
+        <enum name="Normal"            value="4"                         info="osPriorityNormal (default)"/>
+        <enum name="AboveNormal"       value="5"                         info="osPriorityAboveNormal"/>
+        <enum name="High"              value="6"                         info="osPriorityHigh"/>
+        <enum name="Realtime"          value="7"                         info="osPriorityRealtime (highest)"/>
+      </member>
+   
+    </typedef>
+\endcode
+&nbsp;
+<hr>
+\section elem_enum \elemhead{component_viewer/typedefs/typedef/member/enum}
+
+Defines an enumeration name that is displayed as text instead of a value.
+A symbolic enumerator name represents a constant value that can be 
+referenced using the syntax \token{typedef_name:member_name:enum_name}.
+
+<table class="cmtable" summary="Element: enum">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{member}</td>
+    <td colspan="3">\ref elem_member</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of enumeration. Is shown as text in the \cviewer.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>\ref scvd_expression "Expression" that specifies the enum value.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+    <typedef name="Thread_CB"   size="52"   info="RTOS Task Control Block">
+    
+      <member name="Priority"      type="int8_t"     offset="2"    info="Thread Priority">
+        <enum name="None"              value="0"                         info="No Priority"/>
+        <enum name="Idle"              value="1"                         info="osPriorityIdle (lowest)"/>
+        <enum name="Low"               value="2"                         info="osPriorityLow"/>
+        <enum name="BelowNormal"       value="3"                         info="osPriorityBelowNormal"/>
+        <enum name="Normal"            value="4"                         info="osPriorityNormal (default)"/>
+        <enum name="AboveNormal"       value="5"                         info="osPriorityAboveNormal"/>
+        <enum name="High"              value="6"                         info="osPriorityHigh"/>
+        <enum name="Realtime"          value="7"                         info="osPriorityRealtime (highest)"/>
+      </member>
+      
+    </typedef>
+\endcode
+&nbsp;
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_objects \elemhead{component_viewer/objects}
+
+Is the enclosing element for objects that define the output for the \cviewer.
+
+<table class="cmtable" summary="Element: objects">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{component_viewer}</td>
+    <td colspan="3">\ref elem_component_viewer</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td>Define the output object for the Component Viewer.</td>
+    <td>ObjectType</td>
+    <td>1</td>
+  </tr>
+</table>
+&nbsp;
+<hr>
+\section elem_object \elemhead{component_viewer/objects/object}
+
+Define variables, calculations, and the viewer output for a software component.
+
+<table class="cmtable" summary="Element: object">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{objects}</td>
+    <td colspan="3">\ref elem_objects</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of the object (this name is used to open the view)</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{elem_var,var}</td>
+    <td>Define temporary variables.</td>
+    <td>VarType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_calc,calc}</td>
+    <td>Calculate temporary variables.</td>
+    <td>CalcType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_list,list}</td>
+    <td>Iterate a loop (for or while construct).</td>
+    <td>ListTypeO</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_read,read}</td>
+    <td>Read scalar variables or arrays from application program.</td>
+    <td>ReadType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_readlist,readlist}</td>
+    <td>Read a list of structured variables (arrays or linked list) from application program.</td>
+    <td>ReadlistType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_out,out}</td>
+    <td>Generate output for this object.</td>
+    <td>OutType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+
+See \ref complex_scvd
+
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_calc \elemhead{component_viewer/objects/object/.../calc}
+
+Execute calculations using \ref scvd_expression.
+
+<table class="cmtable" summary="Element: calc">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td colspan="3">\ref elem_object</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_list,list}</td>
+    <td colspan="3">\ref elem_list</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}. </td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Body</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td><i>text</i></td>
+    <td> \ref scvd_expression that are calculated. No XML-comments are allowed in this section.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+
+\b Example:
+\code
+    <object name="MyCalculations">
+       <var  name="y"  type="int32_t" value="0"  />
+       <var  name="z"  type="int32_t" value="0"  />
+ 
+       <calc>
+         y = 1;
+         z = 1;
+       </calc>
+ 
+       <calc cond="z != 0" >
+         z = (z == 1) ? 100 : 200;
+         y = z / 4;
+       </calc>
+   
+    <object>
+\endcode
+&nbsp;
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_list \elemhead{component_viewer/objects/object/.../list}
+
+The element \refelem{list} allows to create a:
+  - \em for loop that increments in each iteration a loop variable by \token{1} until it reaches the \em limit.
+  - \em while loop that stops executing when a \em while condition becomes \token{0}. 
+
+The child elements of the \refelem{list} element are executed therefore multiple times.
+
+\note  It is not possible to combine \em limit and \em while in the same \refelem{list} element.
+
+<table class="cmtable" summary="Element: list">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td colspan="3">\ref elem_object</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_list,list}</td>
+    <td colspan="3">\ref elem_list</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>The name of a loop variable that is defined previously defined with the element \refelem{var}. When \em limit is specified, this variable is incremented by \token{1} with every loop iteration.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td>\ref scvd_expression "Expression" that specifies the initial value of the loop variable.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>limit</td>
+    <td>\ref scvd_expression "Expression" that specifies the limit value of the loop variable. The loop is terminated when \token{limit} >= \token{loop variable}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>while</td>
+    <td>\ref scvd_expression "Expression" that terminates loop execution when the result is \token{0}.  Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{elem_list,list}</td>
+    <td>Iterate a loop (for or while construct).</td>
+    <td>ListTypeO</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\refelem{readlist}</td>
+    <td>Read a list of structured variables (arrays or linked list) from application program.</td>
+    <td>ReadlistType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\refelem{read}</td>
+    <td>Read scalar variables or arrays from application program.</td>
+    <td>ReadType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\refelem{var}</td>
+    <td>Define temporary variables.</td>
+    <td>VarType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\refelem{calc}</td>
+    <td>Calculate temporary variables.</td>
+    <td>CalcType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+
+\b Examples:
+
+\em for loop execution:
+
+\code
+<object name="For_Loop">
+  <var  name="i"   type="uint32_t"            />
+  <var  name="j"   type="uint8_t"  value="5"  />
+  <list name="i" start="0" limit="10" >
+    <calc>
+      j = j + i;
+    </calc>
+   </list>
+</object>
+\endcode
+
+\em while loop execution:
+
+\code
+<object name="While_Loop">
+  <list cond="Threads:TCB[i].State==WaitingMutex" name="m" start="Threads:TCB[i].OS_MUCB" while="Threads:MCB(m).p_mlnk"> 		   
+            <item property="Mutex : %x[Threads:MCB(m).index]" value="Owner=%s[Threads:TCB_DEF(Threads:TCB(Threads:MCB(m).owner).Thread_Def).name"/>
+          </list>
+  <var  name="i"   type="uint32_t"            />
+  <var  name="j"   type="uint8_t"  value="5"  />
+  <list name="i" start="0" limit="10" >
+    <calc>
+      j = j + i;
+    </calc>
+   </list>
+</object>
+\endcode
+
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_read \elemhead{component_viewer/objects/object/.../read}
+
+Read values of scalar variables or arrays from application program that runs in the target system. A redefinition of a \elem{read} element is not permitted and creates an error.
+
+\elem{read} manages a \elem{member} variable with the following name:
+  - <b><i>name</i>._count</b>  &mdash;         number of element in an array \token{(0 .. n-1)}.
+
+Refer to \ref predefined_variable.
+
+<table class="cmtable" summary="Element: read">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td colspan="3">\ref elem_object</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_list,list}</td>
+    <td colspan="3">\ref elem_list</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of variable. Can be used in \ref scvd_expression.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>Data type read from memory, following types are possible:
+          - \ref scalar_data_type, no pointers allowed
+          - \ref complex_data_type defined with \refelem{typedef}</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>size</td>
+    <td>Is an \ref scvd_expression representing the array size or the number of values to read from target. 
+        The maximum array size is limited to \token{512}. Default value is \token{1}. </td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>\ref Symbol_Access "symbol"</td>
+    <td>Symbol name to access memory in the \ref Symbol_Access "target system" which is used to calculate a memory address.
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>offset</td>
+    <td>Offset to the \attr{symbol} address. If no \attr{symbol} is not specified, then it is the memory address. Default value is \token{0}.
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>const</td>
+    <td>Variables with \attr{const} set to \token{"1"} are constants that are read only once after debugger start. Default value is \token{0}.
+    <td>xs:int</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>endian</td>
+    <td>Endianness for scalar data types. \token{endian="L"} &mdash; little endian. \token{endian="B"} &mdash; big endian. Default is \em automatic.
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+
+\b Example:
+\code
+<objects>
+  <object name="MyObject">
+    <read name="MySymbol" type="MyType" symbol="mysymbol" const="0"/>
+  </object>
+  
+  <object name="Threads">
+    <read name="main"           type="uint8_t"     symbol="main"          size="64"    const="1" /> 
+    <read name="szText"         type="uint8_t"     symbol="szText"        size="64"    const="1"   cond="0"   info="ignored because of condition" />
+    <read name="My_TCB"         type="Thread_CB"      offset="adr_os_idle_TCB + 4"   info="indirect address via offset-expression" />
+  
+    <list name="Tsk_List">
+      <read name="cur_tsk"     type="uint32_t"    symbol="os_tsk"        offset="0"      info="index current running task"    />
+      <read name="next_tsk"    type="uint32_t"    symbol="os_tsk"        offset="4"      info="index task that will run next" />
+    </list>
+  <object>
+<objects>
+\endcode
+\todo add example with _count.
+&nbsp;
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_readlist \elemhead{component_viewer/objects/object/.../readlist}
+
+Read a list of structured elements from application program memory in the target system. This list can be used in \ref scvd_expression "expressions" or \refelem{out} elements.
+The structured element is based on a data type that is defined with \refelem{typedef}. This \refelem{typedef} may contain temporary variables defined with \refelem{var} that are used for calculations 
+(temporary variables are not read from the target system).
+
+The individual data type elements of the \elem{readlist} are referenced using <b><em>name[index].member</em></b>.  
+\elem{readlist} manages two \ref predefined_variable "predefined member variables" with the following names:
+  - <b><em>name</em>._count</b>       &mdash; number of list items. Used as index limit, valid index values are: \token{(0 .. number-1)}.
+  - <b><em>name[index]</em>._addr</b> &mdash; start address of the list item that was read from target memory.
+
+The attribute \attr{symbol} together with \attr{offset} specifies the start address in target memory of the list. When attribute \attr{based}:
+  - is not specified or false (\token{based="1"}) the target memory content is interpreted as a structured element.
+  - is true (\token{based="1"}) the target memory content is interpreted as pointer to a structured element.
+
+\elem{readlist} is able to read:
+  - an array where the \attr{count} specifies the number of items read from the array.
+  - linked list elements where the \attr{next} specifies the link pointer.
+
+\elem{readlist} can be used multiple times to add list items. The attribute \token{init="1"} clears the list and any list items collected on previous \elem{readlist} calls is discarded.
+  
+\note The maximum number of list items is limited to \token{1024}.
+
+<table class="cmtable" summary="Element: readlist">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td colspan="3">/component_viewer/objects/object</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_list,list}</td>
+    <td colspan="3">/component_viewer/objects/object/.../list</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of the list variable for usage in \ref scvd_expression.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>A \ref scalar_data_type "scalar data type" or \ref complex_data_type "complex data type" defined with \refelem{typedef}.
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>count</td>
+    <td>Number of list items to read from an array. Default value is \token{1}. </td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>next</td>
+    <td>Name of a <em>member</em> element in the list that is used as next pointer. This is used to read a linked list. \elem{readlist} stops reading on a \token{NULL} pointer.
+        The maximum number of list items is limited to \token{1024}. </td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>\ref Symbol_Access "symbol"</td>
+    <td>Symbol name used to calculate the memory address in the \ref Symbol_Access "target system".
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>offset</td>
+    <td>Offset to the memory address specified with \attr{symbol} address. If \attr{symbol} is not specified it is the memory address. 
+        Default value is \token{0}.
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>const</td>
+    <td>When \token{const="1"} the memory is read when the \refelem{object} is created the first time. Default value is \token{0}.
+    <td>xs:int</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>init</td>
+    <td>When \token{init="1"} previous read items in the list are discarded. Default value is \token{0}.</td>
+    <td>xs:boolean</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>based</td>
+    <td>When \token{based="1"} the \attr{symbol} and \attr{offset} specifies a pointer (or pointer array). Default value is \token{0}.</td>
+    <td>xs:boolean</td>
+    <td>optional</td>
+  </tr>
+</table>
+
+\b Example
+
+C source file:
+\code
+typedef struct _MyList {
+	struct _MyList    *nextL;
+	uint32_t          valueL;
+	char              *nameL;
+} MyList;
+ 
+__USED MyList ValueC     = { NULL,    50, "List Value C" };
+__USED MyList ValueB     = { &ValueC, 12, "List Value B" };
+__USED MyList ValueA     = { &ValueB,  4, "List Value A" };
+__USED MyList *ListStart = &ValueA;
+ 
+__USED MyList ValueArray[3] = { { NULL,  10, "Value[0]" }, 
+                                { NULL,  20, "Value[1]" }, 
+                                { NULL,  30, "Value[2]" },  };
+ 																
+__USED MyList *pArray[5] = { &ValueA, &ValueB, &ValueC, &ValueArray[0], &ValueArray[1] };
+\endcode
+
+The data type of the list is defined with \refelem{typedef}. The \refelem{var} element is a variable used to store a string.
+\code
+  <typedefs>
+    <typedef name="MyList" size="12" >
+      <member name="nextL"   type="*MyList"  offset="0" />
+      <member name="valueL"  type="uint32_t" offset="4" />
+      <member name="nameL"   type="uint32_t" offset="8" />
+	  <var    name="nameS"   type="int8_t"   size="20"  />
+    </typedef>
+  </typedefs>
+\endcode
+
+Read the linked list starting with \b ValueA:
+\code
+<readlist name="MyListA" type="MyList" symbol="ValueA" next="nextL" />
+\endcode
+
+Read the linked list starting with head pointer \b ListStart:
+\code
+<readlist name="MyListB" type="MyList" symbol="ListStart" based="1" next="nextL" />
+\endcode
+
+Clear a previous list and read \b ValueA, \b ValueB, and \b ValueArray.
+\code
+<readlist name="MyListC" type="MyList" symbol="ValueA" init="1"                          /> 
+<readlist name="MyListC" type="MyList" symbol="ValueB"                                   />
+<readlist name="MyListC" type="MyList" symbol="ValueArray" count="__size_of(ValueArray)" />
+\endcode
+
+Read the list based on the pointers stored in \b pArray:
+\code
+<readlist name="MyListD" type="MyList" symbol="pArray" based="1" count="__size_of(pArray)" />
+\endcode
+
+Read the \b pArray using \refelem{read} and read the list items addressed with pArray[1] and pArray[2].
+\code
+<read name="pArray" type="*MyList" symbol="pArray" count="__size_of(pArray)" /> 
+<readlist name="MyListE" type="MyList" offset="pArray[1]"  />
+<readlist name="MyListE" type="MyList" offset="pArray[2]"  />
+\endcode
+
+*/
+
+
+/* ========================================================================================================================== */
+/** 
+\page elem_out \elemhead{component_viewer/objects/object/out}
+
+Define the output for an object.
+
+<table class="cmtable" summary="Element: out">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td colspan="3">\ref elem_object</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>The name used for menu titles and window titles of the \cviewer.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>Is the assigned value.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>Value type. One of the \ref data_type.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\spref{elem_item,item}</td>
+    <td>Output a line to the Component Viewer window.</td>
+    <td>ItemType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_listout,list}</td>
+    <td>Iterate a loop (for or while construct).</td>
+    <td>ListType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+    <object>
+      <out name="System and Threads"  cond="__Symbol_exists ('os_active_TCB')">     <!-- Window title -->
+        <item property="System" cond="__Symbol_exists ('os_active_TCB')">
+          <item property="Tick Timer"                value="%T[((float) clockrate / 1000)] mSec" />
+          <item property="Round Robin Timeout"       value="%T[((float) (rrobin &amp; 0xFFFF) * (float) clockrate / 1000)] mSec" />
+  
+          <item property="Test values" >
+            <item property="__Running=%d[__Running]"               value="%t[__Running ? 'Yes' : 'No']" />
+            <item property="__Symbol_exists ('os_active_TCB')"     value="%t[__Symbol_exists ('os_active_TCB') ? 'Yes' : 'No']" />
+          </item>
+        </item>
+       </out>
+    </object>
+\endcode
+&nbsp;
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_item \elemhead{component_viewer/objects/object/out/.../item}
+
+Outputs a single line. Child elements create a display block [+] in the \cviewer.
+The \attr{property} and \attr{value} can consist of ASCII characters and \ref format_specifiers "format specifiers".
+
+<table class="cmtable" summary="Element: item">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{out}</td>
+    <td colspan="3">\ref elem_out</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_listout,list}</td>
+    <td colspan="3">\ref elem_listout</td>
+  </tr>
+  <tr>
+    <td>\refelem{item}</td>
+    <td colspan="3">\ref elem_item (self reference)</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>property</td>
+    <td>Shown in the \b Property column of the \cviewer window. Use \ref format_specifiers "specifiers" to format the output.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>Shown in the \b Value column of the \cviewer window. Use \ref format_specifiers "specifiers" to format the output.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text, comment. Shown when hovered over the item in the \cviewer window.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>bold</td>
+    <td>Output in the \b Value column is displayed in \b bold when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{0}. See also \ref alert_bold.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>alert</td>
+    <td>Output in the \b Value column is displayed in \b red when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{0}. See also \ref alert_bold.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{item}</td>
+    <td>Output a single line. An \elem{item} in an \elem{item} creates a tree structure in \cviewer.</td>
+    <td>ItemType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_listout,list}</td>
+    <td>Read complex variables, arrays, or linked lists. Walk through \refelem{readlist} arrays. </td>
+    <td>ListType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_print,print}</td>
+    <td>Use different output formats for single line output lines. See \ref print_spec. </td>
+    <td>PrintType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<object>
+  <out name="System and Threads">                       <!-- Window title -->
+    <item property="System">                            <!-- Creates a group item for the following items -->
+      
+      <item property="SystemTimer" cond="__Symbol_exists (&quot;os_active_TCB&quot;)">    <!-- small group -->
+        <item property="Tick Timer" value="%T[((float) clockrate / 1000)] mSec" />         
+      </item>
+        // The "SystemTimer" property is only created when the condition is true,
+        // that is when the user symbol "os_active_TCB" exists. Otherwise
+        // the property is not created and any nested statements are skipped.
+  
+      <read name="USB_Desc"  type="uint8_t" symbol="usb_desc" size="128" const="1" />
+        ...
+      <item property="USB_Desc" value="%U[USB_Desc]" />
+        // The property value will show a Keil-USB descriptor using the format -
+        // { length, type, "descriptor_name" }, e.g. { 10, 3, "Keil" }.
+ 
+    </item>
+  </out>
+</object>
+\endcode
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_print \elemhead{component_viewer/objects/object/out/.../item/print}
+
+\ref print_spec are supported using the "<print>" element. It works as child element of \refelem{item} "item" and allows conditional 
+output formats.
+
+<table class="cmtable" summary="Element: item">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{item}</td>
+    <td colspan="3">\ref elem_item</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. If executed all consecutive "<print>" elements are skipped. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>  
+  <tr>
+    <td>property</td>
+    <td>Shown in the \b Property column of the \cviewer window. Use \ref format_specifiers "specifiers" to format the output.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>Shown in the \b Value column of the \cviewer window. Use \ref format_specifiers "specifiers" to format the output.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>bold</td>
+    <td>Output in the \b Value column is displayed in \b bold when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{0}. See also \ref alert_bold.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>alert</td>
+    <td>Output in the \b Value column is displayed in \b red when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{0}. See also \ref alert_bold.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<object>
+  <out name="FreeRTOS RTOS">
+    <item property="Running Task" value="" cond="xSchedulerRunning">
+       <item property="h: %x[pxCurrentTCB] %t[Running_TCB.pcTaskName]" value="">
+       <item property="Stack Top"   value="%x[Running_TCB.pxTopOfStack]" />
+       <item>
+          <print cond="Running_TCB.StackOverflow == 0" property="Stack Available" value="%d[Running_TCB.StackAvailable] bytes"/>
+          <print cond="Running_TCB.StackOverflow != 0" property="Stack Overflow"  value="%d[Running_TCB.StackAvailable] bytes" bold="1" alert="1"/>
+       </item>
+    </item>
+  </out>
+</object>
+\endcode
+*/
+
+
+/* ========================================================================================================================== */
+/** 
+\page elem_listout \elemhead{component_viewer/objects/object/out/.../list}
+
+Walk through \elem{readlist} arrays.
+
+\note
+This element is different from \ref elem_list.
+
+ 
+<table class="cmtable" summary="Element: list">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{out}</td>
+    <td colspan="3">\ref elem_out</td>
+  </tr>
+  <tr>
+    <td>\refelem{item}</td>
+    <td colspan="3">\ref elem_item</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_listout,list}</td>
+    <td colspan="3">\ref elem_listout</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of the list. Can be used in \ref scvd_expression. Must be of type \token{int}.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>start</td>
+    <td>Starting value.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>limit</td>
+    <td>The end value is \token{limit-1}. If \token{limit=<0}, then the list is skipped.         
+        Cannot be used with \attr{while} in the same \elem{list} element.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>while</td>
+    <td>Specifies the next value for iterations. When using \attr{while}, iteration does not start if \token{start==0}. 
+        Cannot be used with \attr{limit} in the same \elem{list} element.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\refelem{item}</td>
+    <td>Output a line.</td>
+    <td>ItemType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_listout,list}</td>
+    <td>Read complex variables, arrays, or linked lists. Walk through \refelem{readlist} arrays.</td>
+    <td>ListType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<object>
+  <out>
+    <list name="ListX" start="Threads:TCB[i].OS_MUCB" while="Threads:MCB(m).p_mlnk">  // walk through pointer lists
+  </out>
+</object>
+\endcode
+
+<hr>
+&nbsp;
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_var \elemhead{component_viewer/.../.../var}
+\note 
+Define variables that are used locally for temporary calculations.
+A redefinition of a \elem{var} element using the same \em name is not permitted and creates an error.
+
+<table class="cmtable" summary="Element: var">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{typedef}</td>
+    <td colspan="3">\ref elem_typedef</td>
+  </tr>
+  <tr>
+    <td>\refelem{object}</td>
+    <td colspan="3">\ref elem_object</td>
+  </tr>
+  <tr>
+    <td>\refelem{elem_list,list}</td>
+    <td colspan="3">\ref elem_list</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Name of variable. The name can be used in \ref scvd_expression.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>\ref scvd_expression "Expression" that specifies the initial value.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>\ref scalar_data_type or pointer to \ref complex_data_type to access chained lists.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+
+\b Example:
+\code
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+     
+  <typedefs>
+    <typedef name="DefVars">
+      <member name="stack_frame"   type="uint8_t"       offset="37"          info="Stack frame: 0=Basic, 1=Extended, (2=VFP/D16 stacked, 4=NEON/D32 stacked)"/>
+      <member name="SP"            type="uint32_t"      offset="40"          info="Current task Stack pointer (R13)"/>
+      <member name="Stack"         type="uint32_t"      offset="44"          info="Pointer to Task Stack memory block"/>
+
+      <!-- calculated offset -->
+      <member name="Entry"         type="uint32_t"       offset="40 + 8"     info="Thread Entry Address"/>
+    </typedef>
+  <typedefs>
+  
+  <objects>
+    <object name="VarExamples">
+      <!-- indirected read example -->
+      <var  name="adr_os_idle_TCB"  type="uint32_t"    value="__FindSymbol (&quot;os_idle_TCB&quot;)"     info="find symbol 'os_idle_TCB', result is the address"/>
+      <!-- or -->
+      <var  name="adr_os_idle_TCB"  type="uint32_t"    value="__FindSymbol ('os_idle_TCB')" />
+
+      <var  name="array"            type="uint8_t"     size="10"  />
+      <var  name="free_space"       type="uint64_t"    value="0x1D9988000" />
+    <object>
+  
+    <object name="ListVars">
+      <list name="i" start="0" limit="10" >
+        <var  name="j"              type="uint8_t"     value="5"  />
+        <calc>
+          j += j+i;
+        </calc>
+      </list>
+       
+    </object>
+  <objects>
+   
+</component_viewer>
+\endcode
+&nbsp;
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_events \elemhead{component_viewer/events}
+
+Is the enclosing element for objects that define the output for \erecorder.
+
+<table class="cmtable" summary="Element: events">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{component_viewer}</td>
+    <td colspan="3">\ref elem_component_viewer</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\spref{elem_event,event}</td>
+    <td>Define an event.</td>
+    <td>EventType</td>
+    <td>0..*</td>
+  </tr>
+  <tr>
+    <td>\spref{elem_group,group}</td>
+    <td>Create an event group.</td>
+    <td>GroupType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+ 
+    <events>
+      <group name="My Events Group">
+         <component name="MyApp"      brief="My Application"    no="0x00" prefix="EvrNetMM_"    info="Network - System - Dynamic Memory Management"/>
+      </group> 	
+ 
+      <event id="1" level="API"   property="MyFunction"        value="parameter=%x[val1]"     info="Event on start of MyFunction"  />
+      <event id="2" level="Error" property="MyFunctionError"                                  info="Event on error in MyFunction" />
+      <event id="3" level="Op"    property="MyFunctionProcess" value="string=%t[val1]"        info="Event on operation in MyFunction"  />
+    </events>
+ 
+</component_viewer>
+\endcode
+&nbsp;
+&nbsp;
+<hr>
+
+\page  elem_group \elemhead{component_viewer/events/group}
+
+Define groups of software components that are shown together.
+
+<table class="cmtable" summary="Element: group">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>events</td>
+    <td colspan="3">\ref elem_events</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Define the name of a group. This name is used for filtering.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr class="choice">
+    <td>\refelem{elem_group_component,component}</td>
+    <td>Component within the group.</td>
+    <td>ComponentType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+&nbsp;
+<hr>
+
+\section  elem_group_component \elemhead{component_viewer/events/group/component}
+
+Define software components that are tied to an event number.
+
+<table class="cmtable" summary="Element: component">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>group</td>
+    <td colspan="3">\ref elem_group</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>Descriptive component name.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>brief</td>
+    <td>Short component name for display purposes.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>no</td>
+    <td>Event id component number (bits 8..15). See \ref er_theory.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>prefix</td>
+    <td>Added to hyperlink in context sensitive help system before the \<event name\>.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text shown when hovering over the component brief.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr class="choice">
+    <td>\refelem{elem_group_component_state,state}</td>
+    <td>State information for a component</td>
+    <td>ComponentType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<events>	  
+<!-- event groups for Network Component --> 
+  <group name="Network">
+    <group name="System Events">
+      <component name="Memory Management"      brief="NetMM"    no="0x80" prefix="EvrNetMM_"    info="Network - System - Dynamic Memory Management"/>
+      <component name="ETH Interface"          brief="NetETH"   no="0x81" prefix="EvrNetETH_"   info="Network - System - Ethernet Interface"/>
+      <component name="PPP Interface"          brief="NetPPP"   no="0x82" prefix="EvrNetPPP_"   info="Network - System - Serial PPP Interface"/>
+      <component name="SLIP Interface"         brief="NetSLIP"  no="0x83" prefix="EvrNetSLIP_"  info="Network - System - Serial SLIP Interface"/>
+      <component name="Loopback Interface"     brief="NetLB"    no="0x84" prefix="EvrNetLB_"    info="Network - System - Local Loopback Interface"/> 
+    </group>
+ 
+    <group name="IPv4 Core Events">
+      <component name="IP4 Core"               brief="NetIP4C"  no="0x85" prefix="EvrNetIP4C_"  info="Network - IPv4 - Core/localhost"/>
+      <component name="ICMP Control"           brief="NetICMP"  no="0x86" prefix="EvrNetICMP_"  info="Network - IPv4 - Internet Control Message"/>
+      <component name="IGMP Management"        brief="NetIGMP"  no="0x87" prefix="EvrNetIGMP_"  info="Network - IPv4 - Internet Group Message (multicast)"/>
+      <component name="NBNS Client"            brief="NetNBNS"  no="0x88" prefix="EvrNetNBNS_"  info="Network - IPv4 - NetBIOS Name Service Client"/>
+      <component name="DHCP Client"            brief="NetDHCP"  no="0x89" prefix="EvrNetDHCP_"  info="Network - IPv4 - Dynamic Host Client"/>
+      <component name="ARP Address Resolution" brief="NetARP"   no="0x8A" prefix="EvrNetARP_"   info="Network - IPv4 - Ethernet Address Resolution"/>
+    </group>
+  
+   <group name="IPv6 Core Events">
+      <component name="IP6 Core"               brief="NetIP6C"  no="0x8B" prefix="EvrNetIP6C_"  info="Network - IPv6 - Core/localhost"/>
+      <component name="ICMP6 Control"          brief="NetICMP6" no="0x8C" prefix="EvrNetICMP6_" info="Network - IPv6 - Internet Control Message"/>
+      <component name="DHCP6 Client"           brief="NetDHCP6" no="0x8D" prefix="EvrNetDHCP6_" info="Network - IPv6 - Dynamic Host Client"/>
+      <component name="NDP Neighbor Discovery" brief="NetNDP"   no="0x8E" prefix="EvrNetNDP_"   info="Network - IPv4 - Neighbor Discovery"/>
+    </group>
+  </group>
+  :
+  :
+</events>
+\endcode
+&nbsp;
+
+<hr>
+\section  elem_group_component_state \elemhead{component_viewer/events/group/component/state}
+
+Define state information for an event group.  This state information is used for:
+  - graphic display of a time-line (for example in the System Analyzer of uVision).
+  - collecting statistical information about an event group.
+  
+The state information is referenced by the element \refelem{elem_event,event} and associated with an handle and a handle name.
+State information is for example used to display the activity of RTOS threads. But this implementation is generic and allows it
+to use also for any type of software component.
+
+<table class="cmtable" summary="Element: state">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>group</td>
+    <td colspan="3">\ref elem_component</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>State name that is displayed and used for reference in \refelem{elem_event,event}</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>plot</td>
+    <td>Output in graphic time-line display (System Analyzer) with values:\n
+&nbsp;&nbsp;"off" for empty display [no line or box] (default).\n
+&nbsp;&nbsp;"line" for display a line.\n
+&nbsp;&nbsp;"box" for display a box.
+	</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>color</td>
+    <td>Color for the line or box in graphic time-line display (System Analyzer) with values: "blue" (default), "red", "green", "black".</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>unique</td>
+    <td>"1" indicates that only handle from this group can have this state. Event handles that had this state previously are set to state that is marked with dormant="1". (default "0")</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>dormant</td>
+    <td>"1" indicates the state to fall back from the state that is marked with unique="1". (default "0")</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>ssel</td>
+    <td>"1" indicates the state is selected for top-level view of events and statistics. (default "0")</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<events>	 
+  <group>
+    <component name="MyEventComponent1"  brief="MyC1"    no="0x0B"  prefix="EvrMyC1_"     info="My Component - Demo example">
+      <state name="Clear"       plot="box"  color="red"    />
+      <state name="Create"      plot="box"                 />
+      <state name="Delete"      plot="off"                 />
+      <state name="Waiting"     plot="box"  color="green"  />
+      <state name="Active"      plot="box"  bold="1"       />
+      <state name="Idle"        plot="line"                 />
+      <state name="Stalled"     plot="line" color="black"  />
+	</component>
+    <component name="MyEventComponent2"  brief="MyC2"    no="0x0C"  prefix="EvrMyC2_"     info="My Component - Demo example"/>
+  </group>
+  <event id="0xB00" level="API"  property="Clear"     state="Clear"    handle="val1"                                    value="h=%x[val1]"            info="Event on Clear"/>
+  <event id="0xB01" level="API"  property="Create"    state="Create"   handle="val1" hname="%N[val2]"  tracking="Start" value="h=%x[val1] n=%N[val2]" info="Event on Create"/>
+  <event id="0xB02" level="API"  property="Delete"    state="Delete"   handle="val1"                   tracking="Stop"  value="h=%x[val1]"            info="Event on Delete"/>
+  <event id="0xB03" level="API"  property="Active"    state="Active"   handle="val1"                                    value="h=%x[val1]"            info="Event on Active"/>
+  <event id="0xB04" level="API"  property="Waiting"   state="Waiting"  handle="val1"                                    value="h=%x[val1]"            info="Event on Waiting"/>
+  <event id="0xB05" level="API"  property="Idle"      state="Idle"     handle="val1"                                    value="h=%x[val1]"            info="Event on Idle"/>
+  <event id="0xB06" level="API"  property="Stalled"   state="Stalled"  handle="val1"           
+</events>
+\endcode
+&nbsp;
+
+<hr>
+
+\page  elem_event \elemhead{component_viewer/events/event}
+
+Define an event that can occur for the software component. The attributes \b property and \b value can consist of ASCII characters and \ref format_specifiers "format specifiers".
+
+<table class="cmtable" summary="Element: event">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>events</td>
+    <td colspan="3">\ref elem_events</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>16-bit event id (message and component number) value. See \ref er_theory.</td>
+    <td>xs:anySimpleType</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>level</td>
+    <td>Event severance level (OP, API, Error, Detail) used for filtering. See \ref er_theory.</td>
+    <td>xs:anySimpleType</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>property</td>
+    <td>\ref value_output shown in the \b Event \b Property column of the \erecorder window.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>\ref value_output shown in the \b Value column of the \erecorder window.</td>
+    <td>xs:anySimpleType</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>info</td>
+    <td>Descriptive text with additional information (comment).</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>doc</td>
+    <td>Explicit link to documentation.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+    <tr>
+    <td>handle</td>
+    <td>Specifies the value that identifies the object handle and is used to associated the state information. This refers for example a RTOS thread or IP socket.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>hname</td>
+    <td>Specifies a human readable name that represents the handle. This could be a thread name or a file name. A name can referenced in two different ways:\n
+&nbsp;&nbsp;hname=\"%N[<i>val</i>]\"   <i>val</i> is the pointer value that addresses a const string in the address space of the target.\n
+&nbsp;&nbsp;hname=\"%S[<i>val</i>]\"   <i>val</i> is the address of a symbol name (for example a function) in a loaded ELF image.
+	</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>state</td>
+    <td>Reference to a state name in the element \refelem{elem_group_component_state,state}. When state is specified, a handle value is required.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>tracking</td>
+    <td>Specifies the tracking for an event handle wiht the values:\n
+&nbsp;&nbsp;tracking="Start"; start the state tracking for an event handle.\n
+&nbsp;&nbsp;tracking="Stop"; stop the state tracking for an event handle.\n
+&nbsp;&nbsp;tracking="Reset"; initialize the tracking for all event handles of that component to "Stop".
+	</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+    <tr>
+    <th>Child Element</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Occurrence</th>
+  </tr>
+  <tr>
+    <td>\spref{elem_event_print,print}</td>
+    <td>Use different output formats for single line output lines. See \ref print_spec. </td>
+    <td>PrintType</td>
+    <td>0..*</td>
+  </tr>
+</table>
+ 
+\b Example:
+\code
+<events>
+  :
+  :
+    <event id="0xA00" level="API"   property="InitEntry"                             info="Event on MyComp_initialize start"/>
+    <event id="0xA01" level="API"   property="InitStatus"                            info="Event on MyComp_initialize return"/>
+    <event id="0xA0A" level="Error" property="SendNoData"                            info="Event on MyComp_initialize return"/>
+    <event id="0xA0B" level="Op"    property="SendComplete"    value="size=%d[val1]" info="Event on MyComp_send - completed"/>
+    <event id="0xA0C" level="Error" property="SendFailed"      value=""              info="Event on MyComp_send - send failed"/>
+    <event id="0xA15" level="Error" property="ReceiveNoData"   value=""              info="Event on MyComp_receive - no data received"/>
+    <event id="0xA16" level="Op"    property="ReceiveComplete" value="size=%d[val1]" info="Event on MyComp_receive - completed"/>
+    <event id="0xA17" level="Error" property="ReceiveFailed"   value=""              info="Event on MyComp_receive - receive failed"/>
+</events>
+\endcode
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page elem_event_print \elemhead{component_viewer/events/event/../print}
+
+\ref print_spec are supported using the "<print>" element. It works as child element of \refelem{event} and allows conditional output.
+
+<table class="cmtable" summary="Element: event">
+  <tr>
+    <th style="white-space:nowrap;">Parent Element</th>
+    <th colspan="3">Element Chain</th>
+  </tr>
+  <tr>
+    <td>\refelem{event}</td>
+    <td colspan="3">\ref elem_event</td>
+  </tr>
+  <tr>
+    <th>Attributes</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>cond</td>
+    <td>Conditional execution: element is executed when \ref scvd_expression "expression" result is not \token{0}. If executed all consecutive "<print>" elements are skipped. Default value is \token{1}.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>property</td>
+    <td>Shown in the \b Property column of the \erecorder window. Use \ref format_specifiers "specifiers" to format the output.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>Shown in the \b Value column of the \erecorder window. Use \ref format_specifiers "specifiers" to format the output.</td>
+    <td>xs:string</td>
+    <td>required</td>
+  </tr>
+  <tr>
+    <td>bold</td>
+    <td>Output in the \b Value column is displayed in \b bold when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{0}. See also \ref alert_bold.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+  <tr>
+    <td>alert</td>
+    <td>Output in the \b Value column is displayed in \b red when \ref scvd_expression "expression" result is not \token{0}. Default value is \token{0}. See also \ref alert_bold.</td>
+    <td>xs:string</td>
+    <td>optional</td>
+  </tr>
+</table>
+ 
+\b Example:
+On "ShowNetAddress" event print IP address in different format depending whether it is IPv4 or IPv6 network.
+\code
+<event id="15 + 0xD100" level="Op" property="ShowNetAddress" info="Display IP address and port number">
+ <print cond="!(val1 & 0x1)"       property="ShowNetAddress" value="ip=%I[val1, NetAddr:addr], port=%d[val1, NetAddr:port]"/>
+ <print cond=" (val1 & 0x1)"       property="ShowNetAddress" value="ip=%J[val1, NetAddr:addr], port=%d[val1, NetAddr:port]"/>
+</event>
+\endcode
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page data_type Data types
+ 
+\section scalar_data_type Scalar Data Types
+The following scalar data types are supported and can be used in \refelem{read}, \refelem{typedef}, and \refelem{var} elements.
+\refelem{read} and \refelem{var} also support arrays based on scalar data types.
+
+Table with supported scalar types:
+
+ Data Type  | Description
+------------|----------------------------------------------------------------------
+ uint8_t    | unsigned char (8-bit)
+ int8_t     | signed char (8-bit)
+ uint16_t   | unsigned short (16-bit)
+ int16_t    | signed short (16-bit)
+ uint32_t   | unsigned int (32-bit)
+ int32_t    | signed int (32-bit)
+ uint64_t   | unsigned long long (64-bit)
+ int64_t    | signed long long (64-bit)
+ float      | single precision floating number (32-bit)
+ double     | double precision floating number (64-bit)
+
+\b Code \b Example
+\code
+<read name="main"        type="uint8_t"     symbol="main"    size="64"    const="1"  />
+<var  name="ObjSum"      type="uint32_t"                                  value="0"  />
+<var  name="i"           type="int32_t"                                   value="0"  />       <!-- helper -->
+  
+<!-- sum up object code bytes starting from main() with the given size in <read main>: -->
+<list name="i" start="0" limit="main._count" >
+   <calc>
+      ObjSum += main[i];
+   </calc>
+</list>
+\endcode
+
+ 
+\section complex_data_type Complex Data Types
+Complex data types are defined using a \refelem{typedef} element and
+can be used in \refelem{read}, \refelem{readlist}, and \refelem{var} elements.
+
+\refelem{var} and \refelem{read} define a single variable or array based on a data type. 
+
+\refelem{readlist} defines a list of variables or arrays.
+The first instance of <kbd>\<readlist name="var"></kbd> will define 'var', 
+the following use of <kbd>\<readlist name="var"></kbd> will use the definition.
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page scvd_expression Expressions
+
+The SCVD interpreter has built-in evaluation for expressions that are used in various XML elements and attributes.
+An expression is a combination of operands and \ref expr_operator that evaluate to a resulting value
+where the type of the result is derived from the expression.
+
+An operand may be a \ref numeric_constant "numeric constant", a \ref expr_variable "variable", a
+\ref builtin_function "built-in function",  a \ref predefined_variable "predefined variable", or an expression. Operators are
+used to combine and compare operands.
+
+
+\section expr_operator Operators
+
+Operators combine and compare operands. Operators may be unary (requiring one operand) or binary (requiring two operands).
+The combination of an operator and its operands is an expression. Parentheses can be used in expressions with multiple
+operators to specify the order of evaluation. If no parentheses are used in an expression, then the operator precedence
+determines the evaluation order.
+
+ Operators                          | Precedence | Description
+------------------------------------|:----------:|---------------------------------------------------
+ ( )                                |     1      | Parentheses can be used to specify the order of evaluation
+ <i>.member</i>                     |     2      | Type member
+ \em typedef_name:member:enum       |     2      | Enumerator value; refer to \refelem{enum}
+ \em typedef_name:member            |     2      | Type-member selector for use in \ref __Offset_of intrinsic; refer to \refelem{member}
+ Unary +, Unary &mdash;             |     3      | Unary plus or minus applied to the following operand 
+ \* / %                             |     4      | Multiplication, Division, or Modulo
+ +  &mdash;                         |     5      | Addition, Subtraction
+ <<  >>                             |     6      | Shift left, Shift right
+ & \| ^                             |     7      | Binary AND, OR, XOR
+ == != > >= < <=                    |     8      | Comparisons
+ && \|\|                            |     9      | Logical AND, OR
+ e ? e : e                          |    10      | Conditional operator
+ = \|= &= ^= += -= *= /= %=         |    11      | Assignment operators
+
+\note
+ - Because the character <b>&</b> is reserved in XML, it is required for logical operations to use <b>\&amp;</b> instead.
+ - Use <b>\&quot;</b> whenever this quote is not part of an XML structure.
+
+\b Code \b Examples
+\code
+<item property="Wait" cond="TCB[i].p_blnk &amp;&amp; TCB[i].State == Thread_CB:State:WaitingSemaphore" value="%S[TCB[i].p_blnk]" />
+ 
+<item property="Round Robin Timeout"                         value="%T[((float) (rrobin &amp; 0xFFFF) * (float) clockrate / 1000)] mSec" />
+ 
+<item property="__Symbol_exists (&quot;os_active_TCB&quot;)" value="%t[__Symbol_exists (&quot;os_active_TCB&quot;) ? &quot;Yes&quot; : &quot;No&quot;]" />
+\endcode
+
+\section numeric_constant Numeric Constants
+
+Numeric constants are supported in standard 'C' format, for example: \token{13}, \token{0xF8}, \token{1.5}, \token{1E+10}.
+
+\section enumerator Enumerator Values
+ 
+A symbolic enumerator name (\refelem{enum}) represents a constant value that can be referenced using the syntax \token{:typedef_name:member:enum}.
+
+\section expr_variable Variables
+
+The SCVD interpreter has the following ways to define local variables that can be used in expressions:
+  - Element \refelem{var} in the \refelem{typedef} section defines variables which are used in context with typedef, typically for temporary calculations.  
+    These are automatically generated with \refelem{read} and \refelem{readlist}.
+  - Element \refelem{var} in the \refelem{objects} section defines scalar or array variables.  
+  
+  
+
+\section predefined_variable Predefined Variables
+
+Predefined variables can be used without a declaration or definition.
+
+ Predefined Variable | Description
+---------------------|-------------------------------------------------------------
+ __Running           | Indicates program execution at target: \token{1=run, 0=stop}
+ _count              | Counts the number of items in \refelem{readlist} and \refelem{read} elements.
+ _addr               | Returns the memory address of a \refelem{readlist} member. 
+
+
+\page Symbol_Access Symbol Access
+
+The SCVD interpreter can access symbol information from the user application that is loaded into the debugger.
+This symbol information is used to:
+  - generate address for reading memory content from the target system with the elements \refelem{read} and \refelem{readlist}
+  - map member offsets in the element \refelem{typedef} using the \attr{import}.
+  
+Symbols can be referenced with:
+  - <em>test.c/MySymbol</em>  - to access a static symbol in a specific file.
+  - \em MySymbol - to access a public symbol.
+
+This symbol information is used to read the content of static and public variables. 
+
+The SCVD interpreter supports the scalar and complex \ref data_type "data types". Complex data types such as struct and enum are defined using the element \refelem{typedef}.
+The element \refelem{read} accesses variables or arrays from the target system. The element \refelem{readlist} accesses linked lists or dynamic arrays from the target system.
+
+\b Example:
+
+The following example code is an excerpt from the FreeRTOS source code. The CMSIS-RTOS complaint FreeRTOS implementation is available as Software Pack from <a href="http://www.keil.com/dd2/pack/#/ARM.CMSIS-FreeRTOS" target="_blank"><b>www.keil.com/pack</b></a>.
+ 
+C Code:
+\code
+// Module Device::tasks.c
+// file private variables
+...
+   static volatile BaseType_t  xSchedulerRunning    = pdFALSE;
+   static volatile UBaseType_t uxPendedTicks        = ( UBaseType_t ) 0U;
+   static volatile TickType_t  xTickCount           = ( TickType_t ) 0U;
+...
+ 
+ 
+// module Device::timers.c
+...
+  // definition; Value is  set in a function.
+  static TaskHandle_t xTimerTaskHandle = NULL;
+ 
+  // definition; Queue to send commands to the timer service task. Value is  set in a function.
+  static QueueHandle_t xTimerQueue = NULL;
+...  
+\endcode
+
+*.SCVD file XML elements:
+\code
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyFirstComponent" version="0.0.1"/>    <!-- name and version of the component  -->
+ 
+  <objects>
+    <object name="FreeRTOS Object">
+      <var name="i"  type="uint32_t" value="0"/>
+      <var name="j"  type="uint32_t" value="0"/>
+      <var name="sp" type="uint32_t" value="0"/>
+  
+      <read name="xSchedulerRunning"      type="uint32_t" symbol="tasks.c/xSchedulerRunning"/>
+      <read name="uxPendedTicks"          type="uint32_t" symbol="tasks.c/uxPendedTicks"/>
+      <read name="xTickCount"             type="uint32_t" symbol="tasks.c/xTickCount"/>
+   
+      <read name="xTimerTaskHandle"       type="uint32_t" symbol="timers.c/xTimerTaskHandle"/>
+      <read name="xTimerQueue"            type="uint32_t" symbol="timers.c/xTimerQueue"/>
+    </object>
+  </objects>
+ 
+</component_viewer>
+\endcode
+
+ 
+\page builtin_function Built-in Functions
+
+The SCVD interpreter has the following built-in functions for calculation of stack memory usage, access to CPU registers and application program symbols. 
+
+Function Name        | Description
+---------------------|-------------------------------
+\ref __CalcMemUsed   | Provide memory usage information for stack area in user application program.
+\ref __FindSymbol    | Get address value of a symbol in user application program.
+\ref __GetRegVal     | Read the value of processor register from the target processor.
+\ref __Offset_of     | Get offset of type member defined with the \refelem{typedef}.
+\ref __size_of       | Number of elements of an array defined by a symbol in user application.
+\ref __Symbol_exists | Check if a specific symbol exists in the user application program.
+
+&nbsp;
+<hr>
+
+\section __CalcMemUsed __CalcMemUsed
+
+Provide memory usage information for stack area in user application program.
+
+\code
+uint32_t __CalcMemUsed 	(uint32_t StackAddress, uint32_t StackSize, uint32_t FillPattern, uint32_t MagicValue) 	
+\endcode
+\param    StackAddress    Start address of memory area
+\param    StackSize       Size of memory area in Bytes
+\param    FillPattern     Initial value of memory area, used to identify memory usage
+\param    MagicValue      Initial value at start address of memory area, used to identify memory (stack) overflow
+
+\returns  A packed 32-bit integer value that indicates memory usage in bytes, in percent, and memory overflow:
+            - Bit \token{0..19}     Used memory in Bytes (how many bytes of \em \b FillPattern are overwritten) 
+            - Bit \token{20..28}    Used memory in percent  (how many percent of \em \b FillPattern are overwritten) 
+            - Bit \token{31}        Memory overflow (\em \b MagicValue is overwritten)
+
+\details
+The function provides information about the memory usage of a stack area and is typically applied to calculate the utilization of RTOS thread stacks.
+It assumes that the memory has been filled with a pattern value. Optionally there might be a value (called magic value) at the start of the memory 
+that is used to detect stack overflows.
+
+<b>Example 1</b>
+
+<b>C source file</b>
+\code
+uint32_t tstack[200/4];      // 200 bytes stack space
+
+void StackTest (void) {
+  uint32_t  i;
+  
+  memset (tstack, 0x8A, sizeof (tstack));
+  tstack[0] = 0xE25A2EA5;
+  for (i=(200/4)-1; i >= 10; i--)  {
+    tstack[i] = i;
+  }
+}
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+ 
+  <objects>
+    <object name="MyProgram">
+      <var  name="StackStart"  type="int32_t" value="0"  />
+      <var  name="StackSize"   type="int32_t" value="0"  />
+      <var  name="StackUsage"  type="int32_t" value="0"  />
+ 
+      <calc>
+        StackStart = __FindSymbol ("tstack");
+        StackSize  = __size_of ("tstack") * 4;
+        StackUsage = __CalcMemUsed (StackStart, StackSize, 0x8A8A8A8A, 0xE25A2EA5);
+      </calc>
+   
+      <out name="MyProgram">
+        <item alert="(StackUsage >> 31)"    
+              property="tstack @%x[StackStart] size=%x[StackSize]"
+              value="Usage %x[StackUsage &amp; 0xFFFFF] %d[(StackUsage>>20) &amp; 0xFF]%%" />
+      </out>
+    </object>
+  </objects>
+</component_viewer>
+\endcode
+
+<b>Output</b>
+\image html "CalcMemUsed.png"
+
+
+<b>Example 2</b>
+
+Typical usage with an RTOS thread control block.
+
+\code
+<component_viewer...>
+ 
+  <typedefs>
+    <!-- Task/Thread Control Block, debugger reads 52 bytes -->
+    <typedef name="Thread_CB" info="RTOS Task Control Block" size="52">
+      :
+      <member name="Stack"          type="uint32_t"       offset="44"  info="Pointer to Task Stack memory block"/>
+      :
+  <!-- Helper variables for Stack-usage calculation -->
+       <var  name="StackSize"        type="uint32_t"    />
+       <var  name="StkUse"           type="uint32_t"    />
+       <var  name="BytesUsed"        type="uint32_t"    />
+       <var  name="Percentage"       type="uint32_t"    />
+       <var  name="StkOverflow"      type="int32_t"     />
+       <var  name="ShowStackInfo"    type="int32_t"     />
+     </typedef>
+  </typedefs>
+ 
+  </objects>
+    <object name="Threads">
+       <readlist name="TCB"    type="*Thread_CB"  symbol="os_TCB" based="1" count="10" init="1" />
+ 
+  <!-- Stack Usage Calculation when watermark check is enabled (ShowStackInfo) -->
+        <calc cond="TCB[i].ShowStackInfo && ((i != (TCB._count - 1)) && ((stackinfo >> 28) & 0x01))" >
+          StkUse               = __CalcMemUsed (TCB[i].Stack, TCB[i].StackSize, 0xCCCCCCCC, 0xE25A2EA5);
+          TCB[i].StkOverflow   = (StkUse & 0x80000000) ? 1 : 0;
+          TCB[i].StkUse       &= ~0x80000000;
+          TCB[i].BytesUsed     = (StkUse & 0xFFFFF);
+          TCB[i].Percentage    = (StkUse >> 20) & 0xFF;
+        </calc>
+     </object>
+  </objects>
+</component_viewer>
+\endcode
+
+&nbsp;
+<hr>
+
+\section __FindSymbol __FindSymbol
+
+Get address value of a symbol in the user application program.
+
+\code
+int32_t __FindSymbol (symbol_name)
+\endcode
+\param    symbol_name       Reference to a \ref Symbol_Access "symbol" (examples: "main", "os_active_TCB", "tasks.c/xSchedulerRunning").
+\returns 
+          \token{address value}  Address of the symbol.
+\details
+The function searches for a symbol and returns the address value of the symbol in the user application.
+
+\note If the symbol cannot be found, then an error in the \cviewer is displayed.
+
+\todo rework
+<b>Example:</b>
+
+<b>C source file</b>
+\code
+uint32_t tstack[200/4];      // 200 bytes stack space
+
+void StackTest (void) {
+  uint32_t  i;
+  
+  memset (tstack, 0x8A, sizeof (tstack));
+  tstack[0] = 0xE25A2EA5;
+  for (i=(200/4)-1; i >= 10; i--)  {
+    tstack[i] = i;
+  }
+}
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+ 
+  <objects>
+    <object name="MyProgram">
+      <var  name="StackStart"  type="int32_t" value="0"  />
+      <var  name="StackSize"   type="int32_t" value="0"  />
+      <var  name="StackUsage"  type="int32_t" value="0"  />
+ 
+      <calc>
+        StackStart = __FindSymbol ("tstack");
+        StackSize  = __size_of ("tstack") * 4;
+        StackUsage = __CalcMemUsed (StackStart, StackSize, 0x8A8A8A8A, 0xE25A2EA5);
+      </calc>
+   
+      <out name="MyProgram">
+        <item alert="(StackUsage >> 31)"    
+              property="tstack @%x[StackStart] size=%x[StackSize]"
+              value="Usage %x[StackUsage &amp; 0xFFFFF] %d[(StackUsage>>20) &amp; 0xFF]%%" />
+      </out>
+    </object>
+  </objects>
+</component_viewer>
+\endcode
+
+<b>Output</b>
+\image html "CalcMemUsed.png"
+
+&nbsp;
+<hr>
+
+
+\section __GetRegVal __GetRegVal
+
+__GetRegVal     | Read the value of processor register from the target processor.
+
+
+\code
+uint32_t __GetRegVal (char * RegisterName)
+\endcode
+\brief    Read CPU register value
+\param    RegisterName       Pointer to the name of a CPU register: "PSP", "MSP", ....
+\returns                     Value of the CPU register
+\details
+The function reads the value of a CPU register.
+ 
+ Register Name | Description
+---------------|-------------------------------------------------------------
+ R0 - R12      | General-purpose registers
+ R13           | Stack pointer (SP)
+ R14           | Link Register (LR)
+ R15           | Program Counter (PC)
+ XPSR          | Combined Program Status Register
+ MSP           | Main Stack Pointer 
+ PSP           | Process Stack Pointer
+ BASEPRI       | Base Priority Mask Register
+ PRIMASK       | Exception Mask Register
+ FAULTMASK     | Fault Mask Register
+ CONTROL       | Control Register
+ 
+Domain specifier \token{x} is required on ARMv8-M architecture for some registers to specify
+Non-Secure (\token{x=NS}) or Secure (\token{x=S}) access domain. Names of these registers then
+become as follows:
+ 
+ Register Name       | Description
+---------------------|-------------------------------------------------------------
+ MSP_\token{x}       | Main Stack Pointer 
+ PSP_\token{x}       | Process Stack Pointer
+ MSPLIM_\token{x}    | Main Stack Pointer Limit Register
+ PSPLIM_\token{x}    | Process Stack Pointer Limit Register
+ BASEPRI_\token{x}   | Base Priority Mask Register
+ PRIMASK_\token{x}   | Exception Mask Register
+ FAULTMASK_\token{x} | Fault Mask Register
+ CONTROL_\token{x}   | Control Register 
+ 
+\b Example:
+\code
+  <objects>
+    <object name="CPU Registers">
+      <var name="R0"   type="uint32_t" value="0"/> 
+      <var name="R1"   type="uint32_t" value="0"/> 
+      <var name="R2"   type="uint32_t" value="0"/> 
+      <var name="R3"   type="uint32_t" value="0"/> 
+      <var name="XPSR" type="uint32_t" value="0"/> 
+      
+      <!-- ARMv8M registers -->
+      <var name="PSP_NS"      type="uint32_t" value="0"/> 
+      <var name="PSP_S"       type="uint32_t" value="0"/> 
+      
+      <!-- Read registers -->
+      <calc>
+        R0  = __GetRegVal ("R0");
+        R1  = __GetRegVal ("R1");
+        R2  = __GetRegVal ("R2");
+        R3  = __GetRegVal ("R3");
+        XPSR = __GetRegVal ("XPSR");
+      </calc>
+      
+      <calc cond="NonSecure">
+        PSP_NS = __GetRegVal ("PSP_NS");
+      </calc>
+      
+      <calc cond="Secure">
+        PSP_S = __GetRegVal ("PSP_S");
+      </calc>
+      
+    </object>
+  </objects>
+\endcode
+<hr>
+
+\section __Symbol_exists __Symbol_exists
+\code
+int32_t __Symbol_exists (symbol_name)
+\endcode
+\brief    Search for symbol
+\param    symbol_name       Reference to a \ref Symbol_Access "symbol" (examples: "main", "os_active_TCB", "tasks.c/xSchedulerRunning").
+\returns  
+          - \token{1} for true - symbol present in user application
+          - \token{0} for false - symbol not found
+\details
+The function searches for a debug symbol in the loaded user application. 
+
+ and returns \token{1} when the symbol was found, otherwise \token{0} for false.
+&nbsp;
+<hr>
+
+
+\section __Offset_of __Offset_of
+\code
+uint32_t __Offset_of (typedef_mem_name)
+\endcode
+\brief    Get offset of type member
+\param    typedef_mem_name Is the member name of a specified type and has the form <i>typedef_name:typedef_member_name</i>.
+\returns  The offset value of the specified typedef member.
+\details 
+The function returns the offset value of the specified typedef member. When using a \ref elem_typedefs "<typedef>" element with the <i>import</i> attribute, __Offset_of 
+returns for members that are defined in the SCVD file but not present in the compiled image the value -1.  The value -1 indicates that a member does not exist in the image.
+
+\b Example: 
+\code
+__Offset_of (Thread_CB:Task_ID)
+\endcode
+
+
+<hr>
+\section __size_of __size_of
+\code
+int32_t __size_of (symbol_name)
+\endcode
+\brief    Number of elements of an array defined by a symbol in user application
+\param    symbol_name       Reference to a \ref Symbol_Access "symbol" (examples: "main", "os_active_TCB", "tasks.c/xSchedulerRunning").
+\returns  number of elements of an array defined in a user application
+\details
+The function searches for a debug symbol in the loaded user application. 
+If the symbol is found it returns the number of elements of an array that is addressed by this symbol.
+If the symbol is not found, an error message is displayed.
+
+\b Example:
+
+User application code (file MyTest.c):
+\code
+struct {
+  unsigned char   c0;
+  unsigned char   c1;
+  unsigned int     i;
+} MyList [20];
+
+static int MyVar[10];  
+\endcode
+
+The following statements in the SCVD file output the number of elements of each variable. For 'MyList' the value is 20.  The value 20 for 'MyVar' is only displayed when the variable exists.
+
+\code 
+  <out name="MyTest">
+    <item property="Elements of 'MyList'"   value="%d[__size_of(&quot;MyList&quot;)]"/>
+    <item cond="__Symbol_exists(&quot;MyTest.c/MyVar&quot;)"  property="Elements of 'MyVar'"    value="%d[__size_of(&quot;MyTest.c/MyVar&quot;)]"/>
+  </out>
+\endcode
+
+
+
+<hr>
+
+*/
+
+/* ========================================================================================================================== */
+/** 
+\page value_output Value Output
+
+The elements \refelem{event} and \refelem{item} use the attributes \b property and \b value to output information
+in the \cviewer or \erecorder. The string data of these attributes may contain \ref format_specifiers "format specifiers" to output 
+values, strings, or symbolic information.
+
+\section format_specifiers Format Specifiers
+
+A format specifier starts with a percent sign followed by a format selector followed by an \ref scvd_expression "expression" enclosed in brackets.
+
+\b Examples:
+\code
+  <item property="State=%d[TCB.state]"  value="delay=%x[time_ticks/10]" />
+ 
+  <item property="%S [TCB[i].Entry] : %d[i]" 
+           value="ThreadId=%d[TCB[i].Task_ID] | State=%E[TCB[i].State] | Priority=%E[TCB[i].Priority] | Delay=%d[TCB[i].DelaySum]">
+\endcode
+
+The following format specifiers are available:
+
+Format specifier       | Description
+:----------------------|:------------------------------------------------
+\ref d_spec "\%d"      | \ref d_spec "Integer value" as a signed decimal number
+\ref d_spec "\%u"      | \ref d_spec "Integer value" as an unsigned decimal number
+\ref t_spec "\%t"      | \ref t_spec "Text output" from ASCII characters
+\ref d_spec "\%x"      | \ref d_spec "Integer value" as hexadecimal number
+\ref c_spec "\%C"      | \ref c_spec "Address value" as symbolic name with file context, if fails in hexadecimal format
+\ref e_spec "\%E"      | \ref e_spec "Symbolic enumerator value", if fails in decimal format
+\ref i_spec "\%I"      | \ref i_spec "IPv4 address", example: \token{192.168.150.99}
+\ref i_spec "\%J"      | \ref i_spec "IPv6 address", example: \token{2a00:ee0:d::13}
+\ref i_spec "\%N"      | \ref n_spec "String address (name)", example: \token{Instance 1}
+\ref i_spec "\%M"      | \ref i_spec "MAC address", example: \token{1E-30-6C-A2-45-5F}
+\ref c_spec "\%S"      | \ref c_spec "Address value" as symbolic name, if fails in hexadecimal format
+\ref d_spec "\%T"      | \ref d_spec "Value in format derived from expression type" (hexadecimal or floating number)
+\ref t_spec "\%U"      | \ref t_spec "Text output from USB descriptor"
+\ref p_spec "\%\%"     | \ref p_spec "Output \% character"
+
+\note
+- Format specifiers are only used by the \ref cv_use "Component Viewer". \ref er_use "Event Recorder" does not support
+  format specifiers and displays all values as is. 
+- You may emphasis output values using \ref alert_bold attributes to emphasis the displayed output values.
+- \ref print_spec are supported using the \ref elem_print "<print>" element.
+
+ 
+\section format_examples Examples
+
+The following examples show the usage of the various format specifiers.
+&nbsp;
+<hr>
+
+\subsection d_spec \%d, \%x, \%T format specifier
+
+The following example shows how to output integer values using:
+ - <b>\%d</b> for decimal number format.
+ - <b>\%x</b> for hexadecimal number format.
+ - <b>\%T</b> for number format that depends on the data type.
+
+<b>Example</b>
+
+C source file:
+\code
+  uint8_t   cval   = 1;
+  uint16_t  sval   = 0x2;
+  uint32_t  ival   = 0x46;
+  uint64_t  llval  = 0xFF12001612LL;
+  
+  int8_t    scval  = 1;
+  int16_t   ssval  = -2;
+  int32_t   sival  = 46;
+  int64_t   sllval = -6899123456;
+  
+  float     fval   = 3.14156;
+  double    dval   = 15300.6711123;
+\endcode
+
+SCVD file:
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>
+ 
+  <objects>
+    <object name="MyProgram">
+      <read name="c_value"     type="uint8_t"  symbol="cval"               />
+      <read name="s_value"     type="uint16_t" symbol="sval"               />
+      <read name="i_value"     type="uint32_t" symbol="ival"               />
+      <read name="ll_value"    type="uint64_t" symbol="llval"              />
+ 
+      <read name="sc_value"    type="int8_t"   symbol="scval"               />
+      <read name="ss_value"    type="int16_t"  symbol="ssval"               />
+      <read name="si_value"    type="int32_t"  symbol="sival"               />
+      <read name="sll_value"   type="int64_t"  symbol="sllval"              />
+ 
+      <read name="f_value"     type="float"    symbol="fval"                />
+      <read name="d_value"     type="double"   symbol="dval"                />
+ 
+      <out name="MyProgram">
+        <item property="Unsigned integer format %%d"
+              value="cval=%d[c_value] | sval=%d[s_value] | ival=%d[i_value] | llval=%d[ll_value]" />
+        <item property="Unsigned integer format %%x"
+              value="cval=%x[c_value] | sval=%x[s_value] | ival=%x[i_value] | llval=%x[ll_value]" />
+        <item property="Unsigned integer format  %%T"
+              value="cval=%T[c_value] | sval=%T[s_value] | ival=%T[i_value] | llval=%T[ll_value] " />
+  
+        <item property="Signed integer format %%d"
+              value="scval=%d[sc_value] | ssval=%d[ss_value] | sival=%d[si_value] | sllval=%d[sll_value]" />
+        <item property="Signed integer format %%x"
+              value="scval=%x[sc_value] | ssval=%x[ss_value] | sival=%x[si_value] | sllval=%x[sll_value]" />
+        <item property="Signed integer format %%T"
+              value="scval=%T[sc_value] | ssval=%T[ss_value] | sival=%T[si_value] | sllval=%T[sll_value] " />
+  
+        <item property="Floating point format %%d"
+              value="fval=%d[f_value] | dval=%d[d_value]" />
+        <item property="Floating point format %%x"
+              value="fval=%x[f_value] | dval=%x[d_value]" />
+        <item property="Floating point format %%T"
+              value="fval=%T[f_value] | dval=%T[d_value]" />
+      </out>
+    <object>
+  </objects>
+ 
+</component_viewer>
+\endcode
+
+Output:
+\image html "d_spec.png" "Output of \%d, \%x, \%T format specifiers"
+
+&nbsp;
+<hr>
+
+
+
+\subsection t_spec \%t, \%U format specifiers
+
+\todo verify U
+
+The following example shows how to output ASCII text, including an USB string:
+
+<b>C source file</b>
+\code
+  volatile char string[10] = "MyTest";
+  unsigned short wString[15] = L"USB_MSC1";
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>
+ 
+  <objects>
+    <object name="MyProgram">
+      <read name="string_val"  type="int8_t"   symbol="string"  size="10"   />
+      <read name="wstring_val" type="int16_t"  symbol="wString" size="15"   />
+ 
+      <out name="MyProgram">
+        <item property="string %%t"     value="%t[string_val]" /> 
+        <item property="string %%t"     value="Status=%t[i_value==0 ? &quot;Free&quot; : &quot;Busy&quot;]" /> 
+        <item property="wString %%U"    value="%U[wstring_val]" /> 
+      </out>
+    </object>
+  </objects>
+ 
+</component_viewer>
+\endcode
+
+<b>Output</b>
+\image html "t_spec.png" "Output of \%t, \%U format specifiers"
+
+&nbsp;
+<hr>
+
+
+
+
+\subsection e_spec \%E format specifier
+
+The following example shows how to output integer values as symbolic enumerator value.
+
+<b>C source file</b>
+\code
+// <!-- \%E Format Specifier -->	  
+enum color { red=1, yellow=2, green=3, };
+ 
+enum color light1;
+enum color light2 = yellow;
+\endcode
+
+<b>*.SCVD File</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+  
+<!-- \%E Format Specifier -->	  
+  <typedefs>
+    <typedef name="Color"    size="4"      info="enum color">
+      <member name="val"     type="uint32_t"   offset="0">
+        <enum name="red (alert)"         value="1"     info="alert color"     />
+        <enum name="yellow (attention)"  value="2"     info="attention color" />
+        <enum name="green (working)"     value="3"     info="working color"   />
+      </member>
+    </typedef>
+  </typedefs>
+ 
+  <objects>
+    <object name="MyProgram">
+      <!-- \%E Format Specifier -->	  
+      <read name="light1"      type="Color"   symbol="light1"       />
+      <read name="light2"      type="Color"   symbol="light2"       />
+   
+      <out name="MyProgram">
+        <!-- \%E Format Specifier -->	  
+        <item property="Enum format %%E"  value="light1=%E[light1.val] | light2=%E[light2.val]" />
+      </out>
+    </object>
+  </objects>
+   
+</component_viewer>
+\endcode
+
+
+<b>Output</b>
+\image html "e_spec.png" "Output of \%E format specifiers"
+
+&nbsp;
+<hr>
+
+\subsection c_spec \%C, \%S format specifier
+
+The following example show how to output an address value as symbol that is part of the user application using:
+ - <b>\%C</b> as symbolic name with file context.
+ - <b>\%S</b> as symbolic name.
+
+<b>C source file</b>
+\code
+// <!-- \%C, \%S Format Specifier -->  
+static void myFunction (void)  {
+   ;
+}
+ 	
+typedef  void (*function_t) (void);
+function_t myFunction_p = myFunction;
+ 
+int32_t * pival=&sival;
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+  
+  <objects>
+    <object name="MyProgram">
+      <!-- \%C, \%S Format Specifier -->	  
+      <read name="p_func"      type="uint32_t" symbol="myFunction_p"        />
+      <read name="p_ival"      type="uint32_t" symbol="pival"               />
+  
+      <out name="MyProgram">
+        <!-- \%C, \%S Format Specifier -->	  
+        <item property="Pointer format %%S"   value="myFunction_p=%S[p_func] | pival=%S[p_ival]" />
+        <item property="Pointer format %%C"   value="myFunction_p=%C[p_func] | pival=%C[p_ival]" />
+      </out>
+    </object>
+  </objects>
+   
+</component_viewer>
+\endcode
+
+<b>Output</b>
+\image html "c_spec.png" "Output of \%C, %S format specifiers"
+
+&nbsp;
+<hr>
+
+\subsection n_spec \%N format specifier
+
+The following example show how to output an name string from the target application using the \%N format specifier.
+
+<b>C source file</b>
+\code
+volatile char *name = "MyName";
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+  
+  <objects>
+    <object name="MyProgram">
+      <read name="name_val"  type="uint32_t"   symbol="name"   />
+ 
+      <out name="MyProgram">
+        <item property="name %%N"     value="%N[name_val]" /> 
+      </out>
+    </object>
+  </objects>
+   
+</component_viewer>
+\endcode
+
+\todo picture incorrect
+
+<b>Output</b>
+\image html "n_spec.png" "Output of \%N format specifier"
+
+&nbsp;
+<hr>
+
+\subsection i_spec \%I, \%J, %M format specifier
+
+The following example show how to output MAC and IP addresses that are part of the user application using:
+ - <b>\%I</b> for IPv4 address information, example: \token{192.168.150.99}.
+ - <b>\%J</b> for IPv6 address information, example: \token{2a00:ee0:d::13}
+ - <b>\%M</b> for MAC address information, example: \token{1E-30-6C-A2-45-5F}
+
+<b>C source file</b>
+\code
+// \%I, \%J, %M Format Specifier
+ uint8_t ip4_addr[4]  = {192, 168, 0, 1};
+ uint8_t ip6_addr[16] = {0xFF, 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x02 };
+ uint8_t mac_addr[6]  = {0x5F, 0x3F, 0x10, 0xFF, 0x00, 0x01};
+\endcode
+
+<<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>    <!-- name and version of the component  -->
+   
+  <objects>
+    <object name="MyProgram">
+<!-- \%I, \%J, %M Format Specifier -->	  
+      <read name="IPv4val"     type="uint8_t" symbol="ip4_addr"  size="4"    />
+      <read name="IPv6val"     type="uint8_t" symbol="ip6_addr"  size="16"   />
+      <read name="MAC_val"     type="uint8_t" symbol="mac_addr"  size="6"    />
+  
+      <out name="MyProgram">
+<!-- \%I, \%J, %M Format Specifier -->	  
+        <item property="IPv4 format %%I"  value="ip4_addr=%I[IPv4val]" />
+        <item property="IPv6 format %%J"  value="ip6_addr=%J[IPv6val]" />
+        <item property="MAC format %%M"   value="mac_addr=%M[MAC_val]" />
+
+      </out>
+    </object>
+  </objects>
+   
+</component_viewer>
+\endcode
+
+<b>Output</b>
+\image html "i_spec.png" "Output of \%I, \%J, %M format specifiers"
+
+&nbsp;
+<hr>
+
+
+\subsection p_spec \%%  format specifier
+
+The following example show how to output a percentage sign. 
+
+<b>C source file</b>
+\code
+  volatile char string[10] = "MyTest";
+  unsigned short wString[15] = L"USB_MSC1";
+\endcode
+
+<b>*.SCVD file</b>
+\code
+<?xml version="1.0" encoding="utf-8"?>
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyExample" version="1.0.0"/>
+ 
+  <objects>
+    <object name="MyProgram">
+      <read name="string_val"  type="int8_t"   symbol="string"  size="10"   />
+      <read name="wstring_val" type="int16_t"  symbol="wString" size="15"   />
+ 
+      <out name="MyProgram">
+        <item property="string %%t"     value="%t[string_val]" /> 
+        <item property="string %%t"     value="Status=%t[i_value==0 ? &quot;Free&quot; : &quot;Busy&quot;]" /> 
+        <item property="wString %%U"    value="%U[wstring_val]" /> 
+      </out>
+    </object>
+  </objects>
+ 
+</component_viewer>
+\endcode
+
+<b>Output</b>
+
+The example shows the <b>%</b>-sign output in the \em Property column.
+
+\image html "t_spec.png" "Output of \% format specifier"
+
+&nbsp;
+<hr>
+
+\subsection alert_bold alert and bold output
+
+The following example is based on the \ref simple_scvd and shows how to emphasis output with the \b bold and \b alert attribute of the
+\ref elem_item "<item>" element.
+
+<b>*.SCVD file</b>
+\code
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyFirstComponent" version="0.0.1"/>    <!-- name and version of the component  -->
+
+  <typedefs>
+    <typedef  name="MyGeneralType" info="This is MyType with 2 members" size="12">
+      <member name="hi"   type="uint32_t"  offset="0"  info="member 'mysymbol.hi'"/>
+      <member name="low"  type="uint32_t"  offset="4"  info="member 'mysymbol.low'"/>
+    </typedef>
+  </typedefs>
+
+  <objects>
+    <object name="MyFirstObject">
+      <read name="MyFirstSymbol" type="MyGeneralType" symbol="mysymbol" const="0"/>
+     
+      <out name="My First Viewer">                                                        <!-- Window name -->
+        <item property="Square of numbers [0..30]">                                       <!-- Property entry -->
+                                                                                          <!-- These items extend the entry above -->
+          <item property="Hi  [dec]"   value="%d[MyFirstSymbol.hi]"  info="Show decimal value of 'mysymbol.hi'"  alert="MyFirstSymbol.hi &gt; 100" />
+          <item property="Low [dec]"   value="%d[MyFirstSymbol.low]" info="Show decimal value of 'mysymbol.low'" bold="MyFirstSymbol.low &lt; 20"/>
+          <item property="Hi  [hex]"   value="%x[MyFirstSymbol.hi]"  info="Show HEX value of 'mysymbol.hi'"/>
+          <item property="Low [hex]"   value="%x[MyFirstSymbol.low]" info="Show HEX value of 'mysymbol.low'"     bold="1" alert="1"/>
+        </item>
+      </out>
+    </object>   
+  </objects>
+ 
+</component_viewer>
+\endcode
+
+<b>Output</b>
+
+Depending on the values, the item:
+  - "Hi [dec]" is displayed in alert color red when the value is > 100
+  - "Low [dec]" is displayed in \b bold when the value is < 20
+
+The value "Low [hex]" is shown in red and \b bold (both attributes are set).
+
+\image html "alert_bold_spec.png" "Output using bold and alert attributes"
+&nbsp;
+<hr>
+
+\subsection print_spec Dynamic output formats
+
+The following example is based on the \ref simple_scvd and shows how to dynamically change the output format of an \ref elem_item "<item>" element 
+using a \ref elem_print "<print>" child element.
+
+<b>*.SCVD file</b>
+\code
+<component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+  <component name="MyFirstComponent" version="0.0.1"/>    <!-- name and version of the component  -->
+
+  <typedefs>
+    <typedef  name="MyGeneralType" info="This is MyType with 2 members" size="12">
+      <member name="hi"   type="uint32_t"  offset="0"  info="member 'mysymbol.hi'"/>
+      <member name="low"  type="uint32_t"  offset="4"  info="member 'mysymbol.low'"/>
+    </typedef>
+  </typedefs>
+
+  <objects>
+    <object name="MyFirstObject">
+      <read name="MyFirstSymbol" type="MyGeneralType" symbol="mysymbol" const="0"/>
+     
+      <out name="My First Viewer">                                                        <!-- Window name -->
+        <item property="Square of numbers [0..30]">                                       <!-- Property entry -->
+                                                                                          <!-- These items extend the entry above -->
+          <item>
+		    <print cond="MyFirstSymbol.hi &lt;= 100" property="Hi  [hex]"   value="%x[MyFirstSymbol.hi]"  info="Show HEX value of 'mysymbol.hi' bold="1" alert="1" />
+            <print cond="MyFirstSymbol.hi &gt; 100"  property="Hi  [dec]"   value="%d[MyFirstSymbol.hi]"  info="Show decimal value of 'mysymbol.hi'" />
+		  </item>
+
+          <item property="Low [dec]"   value="%d[MyFirstSymbol.low]" info="Show decimal value of 'mysymbol.low'" />
+          <item property="Low [hex]"   value="%x[MyFirstSymbol.low]" info="Show HEX value of 'mysymbol.low'" />
+        </item>
+      </out>
+    </object>   
+  </objects>
+ 
+</component_viewer>
+\endcode
+
+<b>Output</b>
+
+Depending on the values, the item "Hi" is displayed as:
+  - "Hi [hex]" and hex formant with \b bold and alert color red when the value is <= 100
+  - "Hi [dec]" and decimal format when the value is > 100
+
+\image html "print_spec.png" "Dynamic output format changes"
+&nbsp;
+<hr>
+
+*/
