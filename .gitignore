@@ -7,6 +7,8 @@
 *.dylib
 
 Local_Release
+Doxygen/html
+Doxygen/view.dxy
 
 # Test binary, built with `go test -c`
 *.test
