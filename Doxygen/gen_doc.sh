@@ -34,23 +34,22 @@ if [ -z $VERSION ]; then
   VERSION=${VERSION_FULL%+*}
 fi
 
-pushd ${DIRNAME}
+pushd ${DIRNAME} > /dev/null
 
 echo "Generating documentation ..."
 
-sed -e "s/{projectNumber}/${VERSION}/" "view.dxy.in" \
-  > "view.dxy"
+sed -e "s/{projectNumber}/${VERSION}/" view.dxy.in > view.dxy
 
 echo "${DOXYGEN} view.dxy"
-"${DOXYGEN}" "view.dxy"
+${DOXYGEN} view.dxy
 
 if [[ $2 != 0 ]]; then
   mkdir -p "${DIRNAME}/html/search/"
   cp -f "${DIRNAME}/templates/search.css" "${DIRNAME}/html/search/"
 fi
     
-projectName=$(grep -E "PROJECT_NAME\s+=" $1 | sed -r -e 's/[^"]*"([^"]+)".*/\1/')
-projectNumber=$(grep -E "PROJECT_NUMBER\s+=" $1 | sed -r -e 's/[^"]*"([^"]+)".*/\1/')
+projectName=$(grep -E "PROJECT_NAME\s+=" view.dxy | sed -r -e 's/[^"]*"([^"]+)".*/\1/')
+projectNumber=$(grep -E "PROJECT_NUMBER\s+=" view.dxy | sed -r -e 's/[^"]*"([^"]+)".*/\1/')
 datetime=$(date -u +'%a %b %e %Y %H:%M:%S')
 year=$(date -u +'%Y')
 sed -e "s/{datetime}/${datetime}/" "${DIRNAME}/templates/footer.js.in" \
@@ -60,4 +59,6 @@ sed -e "s/{datetime}/${datetime}/" "${DIRNAME}/templates/footer.js.in" \
   | sed -e "s/{projectNumberFull}/${VERSION_FULL}/" \
   > "${DIRNAME}/html/footer.js"    
   
-popd
+popd  > /dev/null
+
+exit 0
