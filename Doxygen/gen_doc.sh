@@ -40,6 +40,9 @@ echo "Generating documentation ..."
 
 sed -e "s/{projectNumber}/${VERSION}/" view.dxy.in > view.dxy
 
+echo "${CHANGELOG} -f dxy > src/history.md"
+${CHANGELOG} -f dxy > src/history.md
+
 echo "${DOXYGEN} view.dxy"
 ${DOXYGEN} view.dxy
 

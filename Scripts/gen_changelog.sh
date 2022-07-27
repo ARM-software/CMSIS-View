@@ -66,25 +66,27 @@ function print_pdsc_tail {
 }
 
 function print_dxy_head {
-  echo "/**"
-  echo "\page ChangeLog_pg Revision History of CMSIS-DSP"
+  echo "\page er_rev_history Revision History"
   echo ""
-  echo "Version    | Description"
-  echo ":----------|:------------------------------------------"
+  echo "Table below provides revision history for CMSIS-View software component."
+  echo ""
+  echo "Version     | Description"
+  echo ":-----------|:------------------------------------------"
 }
 
 function print_dxy {
-  printf "%-10s | %s\n" "$1" "$3"
+  printf "v%-10s | %s\n" "$1" "$3"
 }
 
 function print_dxy_tail {
   echo ""
-  echo "*/"
 }
 
 function print_html_head {
   echo "/**"
-  echo "\page ChangeLog_pg Revision History"
+  echo "\page er_rev_history Revision History"
+  echo ""
+  echo "Table below provides revision history for CMSIS-View software component."
   echo ""
   echo "<table class=\"cmtable\" summary=\"Revision History\">"
   echo "<tr>"

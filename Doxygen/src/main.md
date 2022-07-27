@@ -28,36 +28,6 @@ This user's guide contains the following chapters:
  - \subpage ExampleProjects are available demonstrating standard use cases.
  - **[References](Modules.html)** describes the API and the functions of the **Event Recorder** in details.
 
-\page er_rev_history Revision History
-
-Table below provides revision history for CMSIS-View software component.
-
-<table>
-    <tr>
-      <th>Version</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td>V1.1.1</td>
-      <td>
-        Added clock frequency to internal Event Recorder Initialization message.
-      </td>
-    </tr>
-    <tr>
-      <td>V1.1.0</td>
-      <td>
-        Added Event Recorder logging via Semihosting.
-      </td>
-    </tr>
-    <tr>
-      <td>V1.0.0</td>
-      <td>
-        Open Source Version of Event Recorder Version 1.4.0 under Apache 2.0.
-      </td>
-    </tr>
- </table>
-
-
 \page ExampleProjects Examples
 
 The software pack <a href="https://www.keil.com/dd2/pack/#/Keil.ARM_Compiler" target="_blank"><b>Keil:ARM_Compiler</b></a> contains several example projects that show the usage of Component Viewer and Event Recorder. These example projects contain Software Component Viewer Description (*.SCVD) files. Use the \packinstaller to copy the projects to working folder. Build the selected project and enter a debug session. All projects run in simulation and do not require hardware.
