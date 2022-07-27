@@ -2,9 +2,9 @@ name: Build documentation and pack
 on:
   workflow_dispatch:
   push:
-    branches: [ main, developing ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, developing ]
+    branches: [ main ]
   release:
     types: [published]
 jobs:
@@ -48,28 +48,28 @@ jobs:
           echo "::add-matcher::.github/doxygen.json"
           ./gen_doc.sh
           echo "::remove-matcher owner=doxygen::"
-        working-directory: ./documentation
+        working-directory: ./Doxygen
 
       - name: Run linkchecker
         run: |
           echo "::add-matcher::.github/linkchecker.json"
-          ../Scripts/git/check_links.sh ./html/index.html ./
+          ../Scripts/check_links.sh ./html/index.html ./
           echo "::remove-matcher owner=linkchecker::"
-        working-directory: ./documentation
+        working-directory: ./Doxygen
 
       - name: Archive documentation
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v2
         with:
           name: documentation
-          path: documentation/html/
+          path: Doxygen/html/
           retention-days: 1
           if-no-files-found: error
           
       - name: Archive documentation
         if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         run: |
-          cd documentation/html
+          cd Doxygen/html
           tar -cvjf /tmp/doc.tbz2 .
         
       - name: Generate pack
@@ -78,7 +78,7 @@ jobs:
           mkdir -p ~/.arm/Packs/.Web
           wget -O ~/.arm/Packs/.Web/ARM.CMSIS.pdsc https://www.keil.com/pack/ARM.CMSIS.pdsc
           echo "::add-matcher::.github/packchk.json"
-          ./Scripts/git/gen_pack.sh
+          ./Scripts/gen_pack.sh
           echo "::remove-matcher owner=packchk::"
       
       - name: Archive pack

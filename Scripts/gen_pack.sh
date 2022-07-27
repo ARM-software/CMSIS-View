@@ -20,7 +20,7 @@ set -o pipefail
 DIRNAME=$(dirname $(readlink -f $0))
 CHANGELOG=$(readlink -f ${DIRNAME}/gen_changelog.sh)
 DESCRIBE=$(readlink -f ${DIRNAME}/git_describe.sh)
-VERSION=$(/bin/bash ${DESCRIBE} v)
+VERSION=$(/bin/bash ${DESCRIBE})
 
 function usage {
   echo "$(basename $0) [-h|--help] [<pdsc>]"
@@ -99,31 +99,20 @@ PACK_BUILD=./build
 
 # Specify directory names to be added to pack base directory
 PACK_DIRS="
-  documentation/html
-  examples/common
-  Helper
-  Library
-  tools
+  Doxygen/html
+  EventRecorder
 "
 
 # Specify file names to be added to pack base directory
 PACK_BASE_FILES="
-  documentation/index.html
-  documentation/version.css
-  documentation/version.js
+  Doxygen/index.html
+  Doxygen/version.js
   LICENSE
   README.md
 "
 
 # Specify file names to be deleted from pack build directory
 PACK_DELETE_FILES="
-  Library/Include/__arm_2d_cde.h
-  Library/Source/arm_2d_cde.c
-  examples/common/platform
-  examples/common/*.pack
-  examples/common/asset/*.png
-  examples/common/asset/*.PNG
-  examples/common/asset/*.jpg
 "
 
 # Specify patches to be applied
