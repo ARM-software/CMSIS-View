@@ -18,8 +18,8 @@
 set -o pipefail
 
 DIRNAME=$(dirname $(readlink -f $0))
-CHANGELOG=$(readlink -f ${DIRNAME}/gen_changelog.sh)
-DESCRIBE=$(readlink -f ${DIRNAME}/git_describe.sh)
+CHANGELOG=$(readlink -f "${DIRNAME}/Scripts/gen_changelog.sh")
+DESCRIBE=$(readlink -f "${DIRNAME}/Scripts/git_describe.sh")
 VERSION=$(/bin/bash ${DESCRIBE})
 
 function usage {
@@ -99,16 +99,13 @@ PACK_BUILD=./build
 
 # Specify directory names to be added to pack base directory
 PACK_DIRS="
-  Doxygen/html
+  Documentation
   EventRecorder
 "
 
 # Specify file names to be added to pack base directory
 PACK_BASE_FILES="
-  Doxygen/index.html
-  Doxygen/version.js
   LICENSE
-  README.md
 "
 
 # Specify file names to be deleted from pack build directory

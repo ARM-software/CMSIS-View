@@ -12,8 +12,8 @@ set -o pipefail
 
 DIRNAME=$(dirname $(readlink -f $0))
 DOXYGEN=$(which doxygen 2>/dev/null)
-DESCRIBE=$(readlink -f ${DIRNAME}/../Scripts/git_describe.sh)
-CHANGELOG=$(readlink -f ${DIRNAME}/../Scripts/gen_changelog.sh)
+DESCRIBE=$(readlink -f "${DIRNAME}/../Scripts/git_describe.sh")
+CHANGELOG=$(readlink -f "${DIRNAME}/../Scripts/gen_changelog.sh")
 REQ_DXY_VERSION="1.9.2"
 
 if [[ ! -f "${DOXYGEN}" ]]; then
@@ -34,21 +34,21 @@ if [ -z $VERSION ]; then
   VERSION=${VERSION_FULL%+*}
 fi
 
-pushd ${DIRNAME} > /dev/null
+pushd "${DIRNAME}" > /dev/null
 
 echo "Generating documentation ..."
 
 sed -e "s/{projectNumber}/${VERSION}/" view.dxy.in > view.dxy
 
-echo "${CHANGELOG} -f dxy > src/history.md"
-${CHANGELOG} -f dxy > src/history.md
+echo "\"${CHANGELOG}\" -f html > src/history.md"
+"${CHANGELOG}" -f html > src/history.md
 
-echo "${DOXYGEN} view.dxy"
-${DOXYGEN} view.dxy
+echo "\"${DOXYGEN}\" view.dxy"
+"${DOXYGEN}" view.dxy
 
 if [[ $2 != 0 ]]; then
-  mkdir -p "${DIRNAME}/html/search/"
-  cp -f "${DIRNAME}/templates/search.css" "${DIRNAME}/html/search/"
+  mkdir -p "${DIRNAME}/../Documentation/html/search/"
+  cp -f "${DIRNAME}/templates/search.css" "${DIRNAME}/../Documentation/html/search/"
 fi
     
 projectName=$(grep -E "PROJECT_NAME\s+=" view.dxy | sed -r -e 's/[^"]*"([^"]+)".*/\1/')
@@ -60,7 +60,7 @@ sed -e "s/{datetime}/${datetime}/" "${DIRNAME}/templates/footer.js.in" \
   | sed -e "s/{projectName}/${projectName}/" \
   | sed -e "s/{projectNumber}/${VERSION}/" \
   | sed -e "s/{projectNumberFull}/${VERSION_FULL}/" \
-  > "${DIRNAME}/html/footer.js"    
+  > "${DIRNAME}/../Documentation/html/footer.js"    
   
 popd  > /dev/null
 

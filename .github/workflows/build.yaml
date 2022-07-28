@@ -55,21 +55,21 @@ jobs:
           echo "::add-matcher::.github/linkchecker.json"
           ../Scripts/check_links.sh ./html/index.html ./
           echo "::remove-matcher owner=linkchecker::"
-        working-directory: ./Doxygen
+        working-directory: ./Documentation
 
       - name: Archive documentation
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v2
         with:
           name: documentation
-          path: Doxygen/html/
+          path: Documentation/html/
           retention-days: 1
           if-no-files-found: error
           
       - name: Archive documentation
         if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         run: |
-          cd Doxygen/html
+          cd Documentation/html
           tar -cvjf /tmp/doc.tbz2 .
         
       - name: Generate pack
@@ -78,7 +78,7 @@ jobs:
           mkdir -p ~/.arm/Packs/.Web
           wget -O ~/.arm/Packs/.Web/ARM.CMSIS.pdsc https://www.keil.com/pack/ARM.CMSIS.pdsc
           echo "::add-matcher::.github/packchk.json"
-          ./Scripts/gen_pack.sh
+          ./gen_pack.sh
           echo "::remove-matcher owner=packchk::"
       
       - name: Archive pack
@@ -98,6 +98,15 @@ jobs:
           file: output/*.pack
           tag: ${{ github.ref }}
           overwrite: true
+
+      - name: Update release description
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          CURRENT="$(gh release view ${{ github.ref }} --json body -t "{{.body}}")"
+          if [[ -z "$CURRENT" ]]; then
+            DESC=$(git tag -l -n99 --format "%(contents)" ${{ github.ref }})
+            gh release edit -n "$DESC"
+          fi
 
       - uses: actions/checkout@v2
         if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}

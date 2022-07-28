@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIRNAME=$(dirname $(readlink -f $0))
-DESCRIBE=$(readlink -f ${DIRNAME}/git_describe.sh)
+DESCRIBE=$(readlink -f "${DIRNAME}/git_describe.sh")
 
 function usage {
   echo "$(basename $0) [-h|--help] [-f|--format <format>] [tag-prefix]"
@@ -83,7 +83,6 @@ function print_dxy_tail {
 }
 
 function print_html_head {
-  echo "/**"
   echo "\page er_rev_history Revision History"
   echo ""
   echo "Table below provides revision history for CMSIS-View software component."
@@ -97,7 +96,7 @@ function print_html_head {
 
 function print_html {
   echo "<tr>"
-  echo "  <td>$1</td>"
+  echo "  <td>v$1</td>"
   echo "  <td>"
   echo -e "$3" | sed "s/^/    /"
   echo "  </td>"
@@ -107,7 +106,6 @@ function print_html {
 function print_html_tail {
   echo "</table>"
   echo ""
-  echo "*/"
 }
 
 POSITIONAL=()
@@ -146,7 +144,7 @@ if [ -n "$1" ]; then
   PREFIX=$1
 fi
 TAGS=$(git for-each-ref --format "%(objecttype) %(refname)" --sort="-v:refname" "refs/tags/${PREFIX}*" 2>/dev/null | cut -d\  -f2)
-LATEST=$(/bin/bash ${DESCRIBE} "${PREFIX}")
+LATEST=$(/bin/bash "${DESCRIBE}" "${PREFIX}")
 
 print_${FORMAT}_head
 
