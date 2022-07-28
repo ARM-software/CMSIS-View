@@ -53,7 +53,7 @@ jobs:
       - name: Run linkchecker
         run: |
           echo "::add-matcher::.github/linkchecker.json"
-          ../Scripts/check_links.sh ./html/index.html ./
+          ../Scripts/check_links.sh ./html/index.html ../Doxygen
           echo "::remove-matcher owner=linkchecker::"
         working-directory: ./Documentation
 

@@ -5,7 +5,7 @@
 With CMSIS-View developers can collect time-accurate event-based information as well as see the real-time program execution status. The data can be observed in real-time in an IDE or can be saved as a log file during program execution. It allows to analyze  execution flows, debug potential issues, and measure execution times.
 
 Key elements of CMSIS-View are:
-- \ref er_use "Event Recorder" - is an embedded software component that provides an [API (function calls)](Modules.html) for event annotations in the code.
+- \ref er_use "Event Recorder" - is an embedded software component that provides an [API (function calls)](modules.html) for event annotations in the code.
 - \ref SCVD_Format "SCVD file specification" defines the content that is displayed.
 
 A **Software Component Viewer Description** (*.SCVD) file in \ref SCVD_Format (XML) defines the content that is displayed in the **Component Viewer** and **Event Recorder**.
@@ -26,7 +26,7 @@ This user's guide contains the following chapters:
  - \subpage cmp_viewer : explains the use of Component Viewer.
  - \subpage SCVD_Format : describes the format of the Software Component View Description (*.SCVD) files that define the output of the MDK debugger views.
  - \subpage ExampleProjects are available demonstrating standard use cases.
- - **[References](Modules.html)** describes the API and the functions of the **Event Recorder** in details.
+ - **[API References](modules.html)** describes the API and the functions of the **Event Recorder** in details.
 
 \page ExampleProjects Examples
 
@@ -389,7 +389,7 @@ The SCVD file for MyComponent uses this message number information to display th
 Software components are frequently a black-box to the application programmer and event annotations need additional
 descriptions that interlinks with API related documentation.
 
-<a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a> is frequently used to generate API documentation. Using this
+<a href="https://doxygen.nl/">Doxygen</a> is frequently used to generate API documentation. Using this
 approach, event annotations can be documented in a similar way. Once the software component is framed as a
 \ref create_pack "CMSIS-Pack", the documentation for event annotations opens using hyperlinks in the Event Recorder.
 
@@ -399,7 +399,7 @@ documentation.
 
 # Create a pack {#create_pack}
 
-<a href="https://arm-software.github.io/CMSIS_5/Pack/html/index.html">CMSIS-Pack</a> describes a mechanism to deliver
+<a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/index.html">Open-CMSIS-Pack</a> describes a mechanism to deliver
 software components, device parameters, and evaluation board support. The XML-based package description file (PDSC) describes
 the content of a software pack (file collection) that may include:
  - Source code, header files, and software libraries
