@@ -148,7 +148,6 @@ jobs:
 
       - name: Run unit test
         run: |
-          mkdir -p build
           go test -v 2>&1 ./... | go-junit-report -set-exit-code > build/evenlistunittest-${{ matrix.os }}.xml
         working-directory: ./tools/eventlist
 
