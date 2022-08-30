@@ -159,6 +159,7 @@ jobs:
           if-no-files-found: error
 
   publish-test-results:
+    if: github.event_name != 'release'
     name: "Publish Tests Results"
     needs: [ test ]
     runs-on: ubuntu-20.04
@@ -231,37 +232,37 @@ jobs:
 
       - name: Create distribution folders
         run: |
-          mkdir -p release/evetlist-linux64/docs release/evetlist-darwin64/docs release/evetlist-windows64/docs
-          cp LICENSE release/evetlist-linux64/
-          cp LICENSE release/evetlist-darwin64/
-          cp LICENSE release/evetlist-windows64/
-          cp tools/eventlist/docs/index.html release/evetlist-linux64/docs/
-          cp tools/eventlist/docs/index.html release/evetlist-darwin64/docs/
-          cp tools/eventlist/docs/index.html release/evetlist-windows64/docs/
+          mkdir -p release/eventlist-linux64/docs release/eventlist-darwin64/docs release/eventlist-windows64/docs
+          cp LICENSE release/eventlist-linux64/
+          cp LICENSE release/eventlist-darwin64/
+          cp LICENSE release/eventlist-windows64/
+          cp tools/eventlist/docs/index.html release/eventlist-linux64/docs/
+          cp tools/eventlist/docs/index.html release/eventlist-darwin64/docs/
+          cp tools/eventlist/docs/index.html release/eventlist-windows64/docs/
 
       - name: Download eventlist linux
         uses: actions/download-artifact@v2
         with:
           name: eventlist-linux64
-          path: release/evetlist-linux64/
+          path: release/eventlist-linux64/
 
       - name: Download eventlist macos
         uses: actions/download-artifact@v2
         with:
           name: eventlist-darwin64
-          path: release/evetlist-darwin64/
+          path: release/eventlist-darwin64/
 
       - name: Download eventlist windows
         uses: actions/download-artifact@v2
         with:
           name: eventlist-windows64
-          path: release/evetlist-windows64/
+          path: release/eventlist-windows64/
 
       - name: Zip folders
         run: |
-          zip -r eventlist-windows64.zip evetlist-windows64/eventlist.exe evetlist-windows64/docs evetlist-windows64/LICENSE
-          tar -czvf eventlist-linux64.tar.gz  evetlist-linux64/eventlist evetlist-linux64/docs evetlist-linux64/LICENSE
-          tar -czvf eventlist-darwin64.tar.gz evetlist-darwin64/eventlist evetlist-darwin64/docs evetlist-darwin64/LICENSE
+          zip -r eventlist-windows64.zip eventlist-windows64/eventlist.exe eventlist-windows64/docs eventlist-windows64/LICENSE
+          tar -czvf eventlist-linux64.tar.gz  eventlist-linux64/eventlist eventlist-linux64/docs eventlist-linux64/LICENSE
+          tar -czvf eventlist-darwin64.tar.gz eventlist-darwin64/eventlist eventlist-darwin64/docs eventlist-darwin64/LICENSE
         working-directory: release
 
       - name: Calculate checksums
