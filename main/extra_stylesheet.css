@@ -153,6 +153,7 @@ table.cmtable {
 table.cmtable td, table.cmtable th {
 	border: 1px solid var(--arm_dark_gray);
 	padding: 3px 7px 2px;
+    vertical-align: text-top;
 }
 
 table.cmtable th {

@@ -22,7 +22,6 @@
   $(document).ready(function() { init_search(); });
 /* @license-end */
 </script>
-<link href="$extra_stylesheet" rel="stylesheet" type="text/css" />
 <link href="extra_stylesheet.css" rel="stylesheet" type="text/css"/>
 <link href="version.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="../version.js"></script>
@@ -161,11 +160,11 @@ Create an SCVD file</h1>
 <h1><a class="anchor" id="create_doxy"></a>
 Generate documentation</h1>
 <p >Software components are frequently a black-box to the application programmer and event annotations need additional descriptions that interlinks with API related documentation.</p>
-<p ><a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a> is frequently used to generate API documentation. Using this approach, event annotations can be documented in a similar way. Once the software component is framed as a <a class="el" href="MyComponent.html#create_pack">CMSIS-Pack</a>, the documentation for event annotations opens using hyperlinks in the Event Recorder.</p>
+<p ><a href="https://doxygen.nl/">Doxygen</a> is frequently used to generate API documentation. Using this approach, event annotations can be documented in a similar way. Once the software component is framed as a <a class="el" href="MyComponent.html#create_pack">CMSIS-Pack</a>, the documentation for event annotations opens using hyperlinks in the Event Recorder.</p>
 <p >A full documentation of the software component is available in the software pack that is built in the next step. You will find the Doxygen source code in ./SCVD_Examples/MyComponent/Doxygen. Run the script <code>gen_doc.bat</code> to create the documentation.</p>
 <h1><a class="anchor" id="create_pack"></a>
 Create a pack</h1>
-<p ><a href="https://arm-software.github.io/CMSIS_5/Pack/html/index.html">CMSIS-Pack</a> describes a mechanism to deliver software components, device parameters, and evaluation board support. The XML-based package description file (PDSC) describes the content of a software pack (file collection) that may include:</p><ul>
+<p ><a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/index.html">Open-CMSIS-Pack</a> describes a mechanism to deliver software components, device parameters, and evaluation board support. The XML-based package description file (PDSC) describes the content of a software pack (file collection) that may include:</p><ul>
 <li>Source code, header files, and software libraries</li>
 <li>Documentation and source code templates</li>
 <li>Device parameters along with startup code and programming algorithms</li>

@@ -41,7 +41,7 @@ var NAVTREE =
     ] ],
     [ "SCVD File Format", "SCVD_Format.html", "SCVD_Format" ],
     [ "Examples", "ExampleProjects.html", "ExampleProjects" ],
-    [ "Reference", "modules.html", "modules" ]
+    [ "API Reference", "modules.html", "modules" ]
   ] ]
 ];
 
