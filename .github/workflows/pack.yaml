@@ -3,12 +3,32 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    paths:
+      - '.github/workflows/pack.yml'
+      - '.github/doxygen.json'
+      - '.github/linkchecker.json'
+      - '.github/packchk.json'
+      - 'Documentation/**'
+      - 'Doxygen/**'
+      - 'EventRecorder/**'     
   pull_request:
     branches: [ main ]
+    paths:
+      - '.github/workflows/pack.yml'
+      - '.github/doxygen.json'
+      - '.github/linkchecker.json'
+      - '.github/packchk.json'
+      - 'Documentation/**'
+      - 'Doxygen/**'
+      - 'EventRecorder/**'
   release:
     types: [published]
+    
 jobs:
   pack:
+    if: |
+      github.event_name != 'release' ||
+      (github.event_name == 'release' && startsWith(github.ref, 'refs/tags/pack/'))
     name: Generate pack
     runs-on: ubuntu-20.04
     steps:
@@ -17,7 +37,7 @@ jobs:
           fetch-depth: 0
           
       - name: Fetch tags
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name == 'release'
         run: |
           git fetch --tags --force
 
@@ -58,7 +78,7 @@ jobs:
         working-directory: ./Documentation
 
       - name: Archive documentation
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v2
         with:
           name: documentation
@@ -82,7 +102,7 @@ jobs:
           echo "::remove-matcher owner=packchk::"
       
       - name: Archive pack
-        if: ${{ github.event_name != 'release' }}
+        if: github.event_name != 'release'
         uses: actions/upload-artifact@v2
         with:
           path: output/*.pack
@@ -90,7 +110,7 @@ jobs:
           if-no-files-found: error
 
       - name: Attach pack to release assets
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -100,7 +120,7 @@ jobs:
           overwrite: true
 
       - name: Update release description
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name == 'release'
         run: |
           CURRENT="$(gh release view ${{ github.ref }} --json body -t "{{.body}}")"
           if [[ -z "$CURRENT" ]]; then
@@ -109,12 +129,12 @@ jobs:
           fi
 
       - uses: actions/checkout@v2
-        if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+        if: github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         with:
           ref: gh-pages
 
       - name: Publish documentation
-        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           rm -rf main
           mkdir main
@@ -129,7 +149,7 @@ jobs:
           git push
 
       - name: Publish documentation
-        if: ${{ github.event_name == 'release' }}
+        if: github.event_name == 'release'
         run: |
           RELEASE=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
           rm -rf ${RELEASE}

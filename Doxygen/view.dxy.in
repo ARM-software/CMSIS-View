@@ -887,7 +887,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = src/main.md \
-                         src/history.md \
+                         src/history.txt \
                          src/EventRecorder.md \
                          src/ev_stat.md \
                          src/cmp_viewer.md \

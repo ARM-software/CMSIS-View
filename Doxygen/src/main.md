@@ -19,7 +19,7 @@ The debugger can load multiple *.SCVD files as typically each software component
 # Content {#content}
 
 This user's guide contains the following chapters:
- - \subpage er_rev_history : lists CMSIS-View releases
+ - \subpage rev_hist : lists CMSIS-View releases
  - \subpage evr : explores the features and operation of the **Event Recorder** including
    configuration, technical data, and theory of operation.
  - \subpage ev_stat : describes how to use Event Statistics to create statistical data on code execution and power consumption.

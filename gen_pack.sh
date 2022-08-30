@@ -9,9 +9,8 @@ set -o pipefail
 # Set version of gen pack library
 REQUIRED_GEN_PACK_LIB="0.2.0"
 
-
 # Set default command line arguments
-DEFAULT_ARGS=(-c "")
+DEFAULT_ARGS=(-c "pack/")
 
 # Pack warehouse directory - destination
 PACK_OUTPUT=./output
@@ -36,6 +35,9 @@ PACK_DELETE_FILES="
 
 # Specify patches to be applied
 PACK_PATCH_FILES=""
+
+# Specify addition argument to packchk
+PACKCHK_ARGS=()
 
 ############ DO NOT EDIT BELOW ###########
 

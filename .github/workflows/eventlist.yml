@@ -16,7 +16,9 @@ on:
 
 jobs:
   build:
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'release') }}
+    if: |
+      github.event_name != 'release' ||
+      startsWith(github.ref, 'refs/tags/tools/eventlist/')
     strategy:
       matrix:
         os: [ubuntu-20.04]
@@ -32,6 +34,13 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
+      - name: Initialize CodeQL
+        if: github.event_name != 'release'
+        uses: github/codeql-action/init@v2
+        with:
+          languages: go
+          queries: security-and-quality
+
       - name: Create build folder
         run: mkdir build
         working-directory: ./tools/eventlist
@@ -42,6 +51,10 @@ jobs:
           GOOS=darwin GOARCH=amd64 go build -o darwin64/eventlist ./..
           GOOS=windows GOARCH=amd64 go build -o windows64/eventlist.exe ./..
         working-directory: ./tools/eventlist/build
+
+      - name: Perform CodeQL Analysis
+        if: github.event_name != 'release'
+        uses: github/codeql-action/analyze@v2
 
       - name: Archive eventlist
         uses: actions/upload-artifact@v2
@@ -68,6 +81,7 @@ jobs:
           if-no-files-found: error
 
   lint:
+    if: github.event_name == 'pull_request'
     name: Lint
     timeout-minutes: 10
     strategy:
@@ -92,6 +106,7 @@ jobs:
           working-directory: ./tools/eventlist
 
   format:
+    if: github.event_name != 'pull_request'
     name: Format
     strategy:
       matrix:
@@ -119,10 +134,8 @@ jobs:
 
   test:
     if: |
-      ${{
-        github.event_name == 'pull_request' ||
-        github.event_name == 'release'
-      }}
+      github.event_name != 'release' ||
+      startsWith(github.ref, 'refs/tags/tools/eventlist/')
     needs: [ build ]
     strategy:
       matrix:
@@ -191,11 +204,8 @@ jobs:
 
   coverage:
     if: |
-      ${{
-        github.event_name == 'pull_request' ||
-        github.event_name == 'push' ||
-        github.event_name == 'release'
-      }}
+      github.event_name != 'release' ||
+      startsWith(github.ref, 'refs/tags/tools/eventlist/')
     needs: [ build ]
     strategy:
       matrix:
@@ -224,7 +234,7 @@ jobs:
 
   release:
     needs: [ build, test, coverage ]
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/tools/eventlist/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout devtools

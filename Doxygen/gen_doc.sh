@@ -1,19 +1,19 @@
 #!/bin/bash
-# Version: 1.0
-# Date: 2022-01-12
-# This bash script generates IoT Socket documentation
+# Version: 2.0
+# Date: 2022-08-30
+# This bash script generates CMSIS-View documentation
 #
 # Pre-requisites:
 # - bash shell (for Windows: install git for Windows)
 # - doxygen 1.9.2
 
-
 set -o pipefail
+
+# Set version of gen pack library
+REQUIRED_GEN_PACK_LIB="0.2.0"
 
 DIRNAME=$(dirname $(readlink -f $0))
 DOXYGEN=$(which doxygen 2>/dev/null)
-DESCRIBE=$(readlink -f "${DIRNAME}/../Scripts/git_describe.sh")
-CHANGELOG=$(readlink -f "${DIRNAME}/../Scripts/gen_changelog.sh")
 REQ_DXY_VERSION="1.9.2"
 
 if [[ ! -f "${DOXYGEN}" ]]; then
@@ -29,8 +29,38 @@ else
     fi
 fi
 
+############ DO NOT EDIT BELOW ###########
+
+function install_lib() {
+  local URL="https://github.com/Open-CMSIS-Pack/gen-pack/archive/refs/tags/v$1.tar.gz"
+  echo "Downloading gen_pack lib to '$2'"
+  mkdir -p "$2"
+  curl -L "${URL}" -s | tar -xzf - --strip-components 1 -C "$2" || exit 1
+}
+
+function load_lib() {
+  local GLOBAL_LIB="/usr/local/share/gen-pack/${REQUIRED_GEN_PACK_LIB}"
+  local USER_LIB="${HOME}/.local/share/gen-pack/${REQUIRED_GEN_PACK_LIB}"
+  if [[ ! -d "${GLOBAL_LIB}" && ! -d "${USER_LIB}" ]]; then
+    echo "Required gen-pack lib not found!" >&2
+    install_lib "${REQUIRED_GEN_PACK_LIB}" "${USER_LIB}"
+  fi 
+  
+  if [[ -d "${GLOBAL_LIB}" ]]; then
+    . "${GLOBAL_LIB}/gen-pack"
+  elif [[ -d "${USER_LIB}" ]]; then
+    . "${USER_LIB}/gen-pack"
+  else
+    echo "Required gen-pack lib is not installed!" >&2
+    exit 1
+  fi
+}
+
+load_lib
+find_git
+
 if [ -z $VERSION ]; then
-  VERSION_FULL=$(/bin/bash ${DESCRIBE})
+  VERSION_FULL=$(git_describe "pack/")
   VERSION=${VERSION_FULL%+*}
 fi
 
@@ -40,8 +70,7 @@ echo "Generating documentation ..."
 
 sed -e "s/{projectNumber}/${VERSION}/" view.dxy.in > view.dxy
 
-echo "\"${CHANGELOG}\" -f html > src/history.md"
-"${CHANGELOG}" -f html > src/history.md
+git_changelog -f html -p "pack/" > src/history.txt
 
 echo "\"${DOXYGEN}\" view.dxy"
 "${DOXYGEN}" view.dxy
