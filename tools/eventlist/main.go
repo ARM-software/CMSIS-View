@@ -99,11 +99,9 @@ func main() {
 	testRun := flag.Lookup("test.run")
 	if testRun != nil {
 		commFlag = flag.NewFlagSet("test", flag.ContinueOnError)
-		_ = commFlag.String("test.run", "", "")
-		_ = commFlag.String("test.testlogfile", "", "")
-		_ = commFlag.Bool("test.paniconexit0", false, "")
-		_ = commFlag.String("test.timeout", "", "")
-		_ = commFlag.String("test.coverprofile", "", "")
+		flag.CommandLine.VisitAll(func(flag *flag.Flag) {
+			commFlag.Var(flag.Value, flag.Name, flag.Usage)
+		})
 	}
 	// ---
 

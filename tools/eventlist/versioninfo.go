@@ -18,13 +18,13 @@ var versionInfo = unmarshalGoVersionInfo([]byte(`{
 		"FileVersion": {
 			"Major": 1,
 			"Minor": 0,
-			"Patch": 9,
+			"Patch": 10,
 			"Build": 0
 		},
 		"ProductVersion": {
 			"Major": 1,
 			"Minor": 0,
-			"Patch": 9,
+			"Patch": 10,
 			"Build": 0
 		},
 		"FileFlagsMask": "3f",
@@ -37,14 +37,14 @@ var versionInfo = unmarshalGoVersionInfo([]byte(`{
 		"Comments": "",
 		"CompanyName": "ARM Limited",
 		"FileDescription": "",
-		"FileVersion": "1.0.9.0",
+		"FileVersion": "1.0.10.0",
 		"InternalName": "eventlist",
 		"LegalCopyright": "Copyright (C) 2022 ARM Limited or its Affiliates. All rights reserved.",
 		"LegalTrademarks": "",
 		"OriginalFilename": "eventlist",
 		"PrivateBuild": "",
 		"ProductName": "eventlist",
-		"ProductVersion": "1.0.9.0",
+		"ProductVersion": "1.0.10.0",
 		"SpecialBuild": ""
 	},
 	"VarFileInfo":{
