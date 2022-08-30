@@ -38,7 +38,7 @@ PROJECT_NAME           = "CMSIS-View"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = "Version 1.1.1"
+PROJECT_NUMBER         = "Version {projectNumber}"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -51,14 +51,14 @@ PROJECT_BRIEF          = "Debugger Views for Status and Event Information"
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = ../DoxyTemplates/cmsis_logo_white_small.png
+PROJECT_LOGO           = ./templates/cmsis_logo_white_small.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = ../
+OUTPUT_DIRECTORY       = ../Documentation
 
 # If the CREATE_SUBDIRS tag is set to YES then doxygen will create 4096 sub-
 # directories (in 2 levels) under the output directory of each output format and
@@ -787,7 +787,7 @@ FILE_VERSION_FILTER    =
 # DoxygenLayout.xml, doxygen will parse it automatically even if the LAYOUT_FILE
 # tag is left empty.
 
-LAYOUT_FILE            = ../DoxyTemplates/Layout_forUser.xml
+LAYOUT_FILE            = ./templates/Layout_forUser.xml
 
 # The CITE_BIB_FILES tag can be used to specify one or more bib files containing
 # the reference definitions. This must be a list of .bib files. The .bib
@@ -886,14 +886,15 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = main.md \
-                         EventRecorder.md \
-                         ev_stat.md \
-                         cmp_viewer.md \
-                         EventRecorder_fn.txt \
-                         scvd_format.txt \
-                         ../../EventRecorder/Include/EventRecorder.h \
-                         ../../EventRecorder/Config/EventRecorderConf.h
+INPUT                  = src/main.md \
+                         src/history.md \
+                         src/EventRecorder.md \
+                         src/ev_stat.md \
+                         src/cmp_viewer.md \
+                         src/EventRecorder_fn.txt \
+                         src/scvd_format.txt \
+                         ../EventRecorder/Include/EventRecorder.h \
+                         ../EventRecorder/Config/EventRecorderConf.h
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -1015,8 +1016,8 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = ..\..\EventRecorder\Source \
-                         ..\..\EventRecorder\Include \
+EXAMPLE_PATH           = ..\EventRecorder\Source \
+                         ..\EventRecorder\Include \
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
@@ -1036,7 +1037,7 @@ EXAMPLE_RECURSIVE      = NO
 # that contain images that are to be included in the documentation (see the
 # \image command).
 
-IMAGE_PATH             = images
+IMAGE_PATH             = src/images
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program
@@ -1281,7 +1282,7 @@ HTML_FILE_EXTENSION    = .html
 # of the possible markers and block names see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_HEADER            = ../DoxyTemplates/header.html
+HTML_HEADER            = ./templates/header.html
 
 # The HTML_FOOTER tag can be used to specify a user-defined HTML footer for each
 # generated HTML page. If the tag is left blank doxygen will generate a standard
@@ -1291,7 +1292,7 @@ HTML_HEADER            = ../DoxyTemplates/header.html
 # that doxygen normally uses.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_FOOTER            = ../DoxyTemplates/footer.html
+HTML_FOOTER            = ./templates/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading style
 # sheet that is used by each HTML page. It can be used to fine-tune the look of
@@ -1316,7 +1317,7 @@ HTML_STYLESHEET        =
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = ../DoxyTemplates/extra_stylesheet.css
+HTML_EXTRA_STYLESHEET  = ./templates/extra_stylesheet.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1326,12 +1327,13 @@ HTML_EXTRA_STYLESHEET  = ../DoxyTemplates/extra_stylesheet.css
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = ../DoxyTemplates/tabs.css \
-                         ../DoxyTemplates/search.css \
-                         ../DoxyTemplates/navtree.css \
-                         ../DoxyTemplates/tab_b.png \
-                         ../DoxyTemplates/printComponentTabs.js \
-                         ../DoxyTemplates/navtree.js \
+HTML_EXTRA_FILES       = ./templates/tabs.css \
+                         ./templates/search.css \
+                         ./templates/navtree.css \
+                         ./templates/tab_b.png \
+                         ./templates/navtree.js \
+                         ./templates/version.css \
+                         ./templates/dropdown.png
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
