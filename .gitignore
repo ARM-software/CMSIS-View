@@ -1,3 +1,24 @@
+# Binaries
 *.o
 *.lib
+*.exe
+*.dll
+*.so
+*.dylib
+
 Local_Release
+
+# Test binary, built with `go test -c`
+*.test
+__debug_bin
+
+# Output of the go coverage tool
+*.out
+
+*.sw*
+**/.trunk
+**/.vscode
+
+*.bak
+*.syso
+*.log

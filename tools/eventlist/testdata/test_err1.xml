@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component_viewer schemaVersion="1.0.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+
+<component name="EventRecorderStub" version="1.0.0"/>
+  <typedefs>
+    <typedef name="attr" info="" size="36">
+      <member name="member" type="uint32_t" offset="0"  info="name of the member">
+        <enum name="ready"   value="1"  info=""/>
+      </member>
+    </typedef>
+  </typedefs>
+
+   <events>
+    <group name="Event Statistics">
+      <component name="Start/Stop Statistics" prefix="Event" brief="EvStat" no="nix" info="Event"/>
+    </group>
+    <event id="0xEF00" level="Detail" property="StartA(0)"   value="File=fff" info="Call"/>
+
+    <group name="STDIO">
+      <component name="C Standard I/O" brief="STDIO" no="0xFE" info="C Standard I/O Events"/>
+    </group>
+    <event id="0xFE00+0x00" level="Op" property="stdout" value="%x[(uint8_t)val1],%x[(uint8_t)(val1 &gt;&gt; 8)],%x[(uint8_t)(val1 &gt;&gt; 16)],%x[(uint8_t)(val1 &gt;&gt; 24)],%x[(uint8_t)val2],%x[(uint8_t)(val2 &gt;&gt; 8)],%x[(uint8_t)(val2 &gt;&gt; 16)],%x[(uint8_t)(val2 &gt;&gt; 24)]" info="stdout as HEX."/>
+
+  </events>
+
+</component_viewer>
