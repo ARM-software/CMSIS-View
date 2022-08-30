@@ -26,7 +26,7 @@ var NAVTREE =
 [
   [ "CMSIS-View", "index.html", [
     [ "Content", "index.html#content", null ],
-    [ "Revision History", "er_rev_history.html", null ],
+    [ "Revision History", "rev_hist.html", null ],
     [ "Event Recorder", "evr.html", "evr" ],
     [ "Event Statistics", "ev_stat.html", [
       [ "Overview", "ev_stat.html#about_event_statistics", null ],
