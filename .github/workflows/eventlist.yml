@@ -1,0 +1,282 @@
+name: eventlist
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/eventlist.yml'
+      - 'tools/eventlist/**'
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/eventlist.yml'
+      - 'tools/eventlist/**'
+  release:
+    types: [published]
+
+jobs:
+  build:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'release') }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        go: [1.17.x]
+    name: 'Build'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install go 1.17
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Create build folder
+        run: mkdir build
+        working-directory: ./tools/eventlist
+
+      - name: Build executable
+        run: |
+          GOOS=linux GOARCH=amd64 go build -o linux64/eventlist ./..
+          GOOS=darwin GOARCH=amd64 go build -o darwin64/eventlist ./..
+          GOOS=windows GOARCH=amd64 go build -o windows64/eventlist.exe ./..
+        working-directory: ./tools/eventlist/build
+
+      - name: Archive eventlist
+        uses: actions/upload-artifact@v2
+        with:
+          name: eventlist-linux64
+          path: ./tools/eventlist/build/linux64
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Archive eventlist
+        uses: actions/upload-artifact@v2
+        with:
+          name: eventlist-darwin64
+          path: ./tools/eventlist/build/darwin64
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Archive eventlist
+        uses: actions/upload-artifact@v2
+        with:
+          name: eventlist-windows64
+          path: ./tools/eventlist/build/windows64
+          retention-days: 1
+          if-no-files-found: error
+
+  lint:
+    name: Lint
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        go-version: [1.17.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
+          version: latest
+          working-directory: ./tools/eventlist
+
+  format:
+    name: Format
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        go: [1.17.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install go 1.17
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Create build folder
+        run: mkdir build
+        working-directory: ./tools/eventlist
+
+      - name: Check formatting
+        run: |
+          gofmt -d . | tee build/format-check.out
+          test ! -s build/format-check.out
+        working-directory: ./tools/eventlist
+
+  test:
+    if: |
+      ${{
+        github.event_name == 'pull_request' ||
+        github.event_name == 'release'
+      }}
+    needs: [ build ]
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-12]
+        go: [1.17.x]
+    name: 'Test (${{ matrix.os }}, ${{ matrix.go }})'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install go 1.17
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Create build folder
+        run: mkdir build
+        working-directory: ./tools/eventlist
+
+      - name: Install go-junit-report
+        run: go install github.com/jstemmer/go-junit-report/v2@latest
+
+      - name: Run unit test
+        run: |
+          mkdir -p build
+          go test -v 2>&1 ./... | go-junit-report -set-exit-code > build/evenlistunittest-${{ matrix.os }}.xml
+        working-directory: ./tools/eventlist
+
+      - name: Archive unit test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-test-result-${{ matrix.os }}
+          path: ./tools/eventlist/build/evenlistunittest-*.xml
+          if-no-files-found: error
+
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: [ test ]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download unit test report windows
+        uses: actions/download-artifact@v2
+        with:
+          name: unit-test-result-windows-2019
+          path: testreports/
+
+      - name: Download unit test report linux
+        uses: actions/download-artifact@v2
+        with:
+          name: unit-test-result-ubuntu-20.04
+          path: testreports/
+
+      - name: Download unit test report macos
+        uses: actions/download-artifact@v2
+        with:
+          name: unit-test-result-macos-12
+          path: testreports/
+
+      - name: publish test results
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        with:
+          commit: ${{ github.event.workflow_run.head_sha }}
+          report_individual_runs: true
+          junit_files: "testreports/*.xml"
+
+  coverage:
+    if: |
+      ${{
+        github.event_name == 'pull_request' ||
+        github.event_name == 'push' ||
+        github.event_name == 'release'
+      }}
+    needs: [ build ]
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        go: [1.17.x]
+    name: 'Coverage check'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install go 1.17
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Create build folder
+        run: mkdir build
+        working-directory: ./tools/eventlist
+
+      - name: Check coverage
+        run: |
+          go test ./... -coverprofile build/cover.out
+          test `go tool cover -func build/cover.out | tail -1 | awk '{print ($3 + 0)*10}'` -gt 980
+        working-directory: ./tools/eventlist
+
+  release:
+    needs: [ build, test, coverage ]
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout devtools
+        uses: actions/checkout@v2
+
+      - name: Create distribution folders
+        run: |
+          mkdir -p release/evetlist-linux64/docs release/evetlist-darwin64/docs release/evetlist-windows64/docs
+          cp LICENSE release/evetlist-linux64/
+          cp LICENSE release/evetlist-darwin64/
+          cp LICENSE release/evetlist-windows64/
+          cp tools/eventlist/docs/index.html release/evetlist-linux64/docs/
+          cp tools/eventlist/docs/index.html release/evetlist-darwin64/docs/
+          cp tools/eventlist/docs/index.html release/evetlist-windows64/docs/
+
+      - name: Download eventlist linux
+        uses: actions/download-artifact@v2
+        with:
+          name: eventlist-linux64
+          path: release/evetlist-linux64/
+
+      - name: Download eventlist macos
+        uses: actions/download-artifact@v2
+        with:
+          name: eventlist-darwin64
+          path: release/evetlist-darwin64/
+
+      - name: Download eventlist windows
+        uses: actions/download-artifact@v2
+        with:
+          name: eventlist-windows64
+          path: release/evetlist-windows64/
+
+      - name: Zip folders
+        run: |
+          zip -r eventlist-windows64.zip evetlist-windows64/eventlist.exe evetlist-windows64/docs evetlist-windows64/LICENSE
+          tar -czvf eventlist-linux64.tar.gz  evetlist-linux64/eventlist evetlist-linux64/docs evetlist-linux64/LICENSE
+          tar -czvf eventlist-darwin64.tar.gz evetlist-darwin64/eventlist evetlist-darwin64/docs evetlist-darwin64/LICENSE
+        working-directory: release
+
+      - name: Calculate checksums
+        run: |
+          sha256sum eventlist-windows64.zip --text > eventlist-checksums.txt
+          sha256sum eventlist-linux64.tar.gz --text >> eventlist-checksums.txt
+          sha256sum eventlist-darwin64.tar.gz --text >> eventlist-checksums.txt
+        working-directory: release
+
+      - name: Attach installer to release assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: release/eventlist-*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true

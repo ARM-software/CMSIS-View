@@ -1,0 +1,15 @@
+linters:
+    enable:
+        - errname
+        - errorlint
+        - goerr113
+        - makezero
+        - nilerr
+        - paralleltest
+        - prealloc
+        - predeclared
+        - revive
+        - thelper
+        - unconvert
+        - unparam
+        - wastedassign
