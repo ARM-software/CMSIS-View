@@ -45,8 +45,7 @@ jobs:
         run: mkdir build
         working-directory: ./tools/eventlist
 
-      - name: Generate windows resources
-        if: github.event_name == 'release'
+      - name: Generate version information
         run: |
           go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
           go generate
