@@ -147,8 +147,8 @@ func getOne(filename *string, events map[uint16]Event,
 		// create a components map indexed by "no" to speed up things
 		components := make(map[uint8]*GroupComponent)
 		for _, component := range viewer.Events.Group.Component {
-			var no int64
-			no, err = strconv.ParseInt(component.No, 0, 0)
+			var no uint64
+			no, err = strconv.ParseUint(component.No, 0, 8)
 			if err != nil {
 				break
 			}
