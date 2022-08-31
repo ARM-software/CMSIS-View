@@ -45,6 +45,12 @@ jobs:
         run: mkdir build
         working-directory: ./tools/eventlist
 
+      - name: Generate version information
+        run: |
+          go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+          go generate
+        working-directory: ./tools/eventlist
+
       - name: Build executable
         run: |
           GOOS=linux GOARCH=amd64 go build -o linux64/eventlist ./..
