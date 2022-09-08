@@ -1,0 +1,64 @@
+
+
+/* Common Trace Format (CTF) TSDL description 1.8 */
+// TSDL of log file format used by EventList
+// Maps to definitions in EventRecorder.h
+
+integer {
+    size = 16;
+    align = 16;
+    byte_order = le;
+    signed = false;
+};
+
+typealias integer {
+    size = 64;
+} := time;
+
+typealias integer {
+    size = 16;
+} := uint16;
+
+typealias integer {
+    size = 32;
+} := uint32;
+
+typealias struct {
+    uint16  class:8;
+    uint16  group:3;
+    uint16  stop:1;
+    uint16  idx:4;
+} := id;
+
+typealias struct {
+    uint16  irq:1;
+    uint16  length:15;
+} := len;
+
+typealias struct {
+    id      _id;
+    len     _len;
+} := info;
+
+struct {
+    enum: uint16 { EventRecordData = 1, EventRecord2,  EventRecord4 } tag;
+    uint16  size;
+    time    _time;
+    info    _info;
+    variant <tag> {
+        struct {                 // EventRecordData
+            char    data[_info.length];
+        } EventRecordData;
+        struct {                 // EventRecord2
+            uint32  value1;
+            uint32  value2;
+        } EventRecord2;
+        struct {                 // EventRecord4
+            uint32  value1;
+            uint32  value2;
+            uint32  value3;
+            uint32  value4;
+        } EventRecord4;
+    } v;
+};
+

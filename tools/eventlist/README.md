@@ -45,7 +45,7 @@ Note that some of the required tools are platform dependent:
 
 ## Clone repository
 
-Clone github repository to create a local copy on your computer to make
+Clone GitHub repository to create a local copy on your computer to make
 it easier to develop and test. Cloning of repository can be done by following
 the below git command:
 
@@ -80,3 +80,9 @@ One can directly run the tests from command line.
 ## License
 
 **eventlist** is licensed under Apache 2.0.
+
+## Log File Format
+
+The log file is expected to use the [Common Trace Format](https://diamon.org/ctf/#specification). The binary trace
+stream layout is describes using the *Trace Stream Description Language* (TSDL) in
+[eventlist.tsdl](docs/eventlist.tsdl).
