@@ -1,0 +1,8 @@
+# Parameters:
+# instance.parameter=value       #(type, mode) default = 'def value' : description : [min..max]
+#------------------------------------------------------------------------------
+core_clk.mul=100000000                                # (int   , init-time) default = '0x17d7840' : Clock Rate Multiplier. This parameter is not exposed via CADI and can only be set in LISA
+cpu0.semihosting-enable=1                             # (bool  , init-time) default = '1'      : Enable semihosting SVC traps. Applications that do not use semihosting must set this parameter to false.
+mps3_board.telnetterminal0.start_telnet=1             # (bool  , init-time) default = '1'      : Start telnet if nothing connected
+mps3_board.visualisation.disable-visualisation=1      # (bool  , init-time) default = '0'      : Enable/disable visualisation
+#------------------------------------------------------------------------------
