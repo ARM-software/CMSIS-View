@@ -1,6 +1,10 @@
 # CMSIS-View
 
-Repository of CMSIS Software Pack for software event recorder and input/output redirection.
+The [**Keil MDK Event Recoder**](https://www2.keil.com/mdk5/debug) is now available as open source component along with tooling.
+This repository contains the source code of:
+  - [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the event recorder software component.
+  - [**EventList**](./tools/eventlist) command line utility that allows to dump the events on command line.
+  - [**Example Projects**](./examples) that show the usage of the Event Recorder.
 
 ## Repository toplevel structure
 
@@ -10,20 +14,12 @@ Repository of CMSIS Software Pack for software event recorder and input/output r
     ┣ 📂 Documentation    Target directory for generated documentation
     ┣ 📂 Doxygen          Source directory for documentation
     ┣ 📂 EventRecorder    Source code of EventRecorder software component
-    ┣ 📂 tools            Command line tool source code
+    ┣ 📂 Examples         Usage examples of the EventRecorder component
+    ┣ 📂 tools            EventList command line tool source code
     ┗ 📂 Scripts          Helper scripts
 ```
 
-## Command line tools
-
-For processing of event recorder records, the following command tool is provided:
-
-- [**eventlist**](./tools/eventlist) - Process event recoder records.
-
-**Refer to:**
-  - [README.md](./tools/eventlist/README.md) for eventlist usage and build instructions.
-
-## Generating Documentation and Pack
+## Generating Software Pack
 
 Some helper scripts are provided to generate the release artifacts from this repository.
 
