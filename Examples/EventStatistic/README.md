@@ -33,6 +33,11 @@ As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https:
 
 You may need to install missing software packs with this command sequence:
 
+```txt
+> csolution list packs -s .\EventStatistic.csolution.yml -m >packs.txt
+> cpackget add -f packs.txt
+```
+
 The following commands convert and build the project:
 
 ```txt
