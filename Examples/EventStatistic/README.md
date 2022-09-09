@@ -81,7 +81,7 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Max: Start: 0.00000000 val1=0x10004d43, val2=0x00000057 Stop: 180.67371888 val1=0x10004d43, val2=0x00000062
 ```
 
-When adding the AXF file to the `eventlist` command the context of the program is shown
+When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
 ```
 > eventlist -a .\out\EventStatistic\AVH\Debug\EventStatistic.Debug+AVH.axf -I ...\Local\Arm\Packs\Keil\ARM_Compiler\1.7.2\EventRecorder.scvd .\EventRecorder.log
 
