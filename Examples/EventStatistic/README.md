@@ -50,7 +50,7 @@ The following commands convert and build the project:
 
 ## Execute
 
-The following command runs the example on the VHT simulation model:
+The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
 
 ```txt
 > C:/Keil_v5/ARM/VHT/VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 -C cpu0.semihosting-enable=1 -a ./out/EventStatistic/AVH/Debug/EventStatistic.Debug+AVH.axf
