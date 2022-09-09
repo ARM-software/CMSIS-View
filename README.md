@@ -4,7 +4,7 @@ The [**Keil MDK Event Recoder**](https://www2.keil.com/mdk5/debug) is now availa
 This repository contains the source code of:
   - [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the event recorder software component.
   - [**EventList**](./tools/eventlist) command line utility that allows to dump the events on command line.
-  - [**Example Projects**](./examples) that show the usage of the Event Recorder.
+  - [**Example Projects**](./Examples) that show the usage of the Event Recorder.
 
 ## Repository toplevel structure
 
