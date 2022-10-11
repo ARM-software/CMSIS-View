@@ -223,7 +223,7 @@ The \em id may be defined using the macro \ref EventID.
 
 \b Code \b Example
 \code
-EventRecord2 (2+EventLevelAPI, value1, 0, 0, value4);  
+EventRecord4 (2+EventLevelAPI, value1, 0, 0, value4);  
 \endcode
 
 \note
@@ -444,4 +444,3 @@ source is switched (i.e. from XTAL to low-power clock).
 /**
 @}
 */
- 
