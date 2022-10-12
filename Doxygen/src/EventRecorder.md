@@ -176,7 +176,16 @@ Target: Cortex-M3 using DWT cycle counter as timer
 |\ref EventRecordData (id+32bytes) | 888 cycles   | 862 cycles   | 685 cycles    | 643 cycles 
 
 \note ROM size is specified for image with all Event Recorder functions being used.
+\note RAM size can be calculated as `164 + 16 * <Number of Records> (defined by EVENT_RECORD_COUNT in EventRecorderConf.h)`.
 \note Timing measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered.
+
+**Usage of records by Event Recorder functions**
+
+|Function                          | Number of Records used
+|:---------------------------------|-----------------------------
+|\ref EventRecord2                 | 1
+|\ref EventRecord4                 | 2
+|\ref EventRecordData              | (event data length + 7) / 8
 
 \page er_use Using Event Recorder
 
