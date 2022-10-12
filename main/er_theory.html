@@ -256,7 +256,20 @@ Resource requirements</h1>
 </table>
 <dl class="section note"><dt>Note</dt><dd>ROM size is specified for image with all Event Recorder functions being used. </dd>
 <dd>
-Timing measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered. </dd></dl>
+RAM size can be calculated as <code>164 + 16 * &lt;Number of Records&gt; (defined by EVENT_RECORD_COUNT in EventRecorderConf.h)</code>. </dd>
+<dd>
+Timing measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered.</dd></dl>
+<p><b>Usage of records by Event Recorder functions</b></p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Function   </th><th class="markdownTableHeadNone">Number of Records used    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a>   </td><td class="markdownTableBodyNone">1    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga1807e8d9b62b51f862a3d3fe36e611f8">EventRecord4</a>   </td><td class="markdownTableBodyNone">2    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a>   </td><td class="markdownTableBodyNone">(event data length + 7) / 8   </td></tr>
+</table>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
