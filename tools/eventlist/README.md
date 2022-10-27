@@ -50,15 +50,15 @@ it easier to develop and test. Cloning of repository can be done by following
 the below git command:
 
 ```bash
-git clone git@github.com:Arm-Debug/eventlist.git
+git clone git@github.com:ARM-software/CMSIS-View.git
 ```
 
 ## Build components
 
 The commands below demonstrate how to build and create executable:
 
-  - Go to root directory
-    > cd \<**root**\>
+  - Go to eventlist directory
+    > cd \<**root**\>/tools/eventlist
   - Create and switch to build directory
     ```bash
     mkdir build
@@ -70,8 +70,8 @@ The commands below demonstrate how to build and create executable:
 ## Run Tests
 
 One can directly run the tests from command line.
-  - Go to root directory
-    > cd \<**root**\>
+  - Go to eventlist directory
+    > cd \<**root**\>/tools/eventlist
   - Clean existing cache test results
     > go clean -cache
   - Run the executable
