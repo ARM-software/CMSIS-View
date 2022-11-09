@@ -257,9 +257,16 @@ jobs:
 
       - name: Check coverage
         run: |
-          go test ./... -coverprofile build/cover.out
+          go test -race -coverprofile=build/cover.out -covermode=atomic
           test `go tool cover -func build/cover.out | tail -1 | awk '{print ($3 + 0)*10}'` -gt 980
         working-directory: ./tools/eventlist
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./tools/eventlist/build/cover.out
+          fail_ci_if_error: true
+          functionalities: fix
 
   release:
     needs: [ build, test, coverage ]
