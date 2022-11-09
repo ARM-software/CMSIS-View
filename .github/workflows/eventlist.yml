@@ -27,10 +27,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install go 1.17
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
 
@@ -51,38 +51,61 @@ jobs:
           go generate
         working-directory: ./tools/eventlist
 
-      - name: Build executable
+      - name: Build linux-amd64 executable
         run: |
-          GOOS=linux GOARCH=amd64 go build -o linux64/eventlist ./..
-          GOOS=darwin GOARCH=amd64 go build -o darwin64/eventlist ./..
-          GOOS=windows GOARCH=amd64 go build -o windows64/eventlist.exe ./..
+          GOOS=linux GOARCH=amd64 go build -o linux-amd64/eventlist ./..
         working-directory: ./tools/eventlist/build
 
       - name: Perform CodeQL Analysis
         if: github.event_name != 'release'
         uses: github/codeql-action/analyze@v2
 
+      - name: Build remaining executables
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o linux-arm64/eventlist ./..
+          GOOS=darwin GOARCH=amd64 go build -o darwin-amd64/eventlist ./..
+          GOOS=darwin GOARCH=arm64 go build -o darwin-arm64/eventlist ./..
+          GOOS=windows GOARCH=amd64 go build -o windows-amd64/eventlist.exe ./..
+        working-directory: ./tools/eventlist/build
+
+
       - name: Archive eventlist
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: eventlist-linux64
-          path: ./tools/eventlist/build/linux64
+          name: eventlist-linux-amd64
+          path: ./tools/eventlist/build/linux-amd64
           retention-days: 1
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: eventlist-darwin64
-          path: ./tools/eventlist/build/darwin64
+          name: eventlist-linux-arm64
+          path: ./tools/eventlist/build/linux-arm64
           retention-days: 1
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: eventlist-windows64
-          path: ./tools/eventlist/build/windows64
+          name: eventlist-darwin-amd64
+          path: ./tools/eventlist/build/darwin-amd64
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Archive eventlist
+        uses: actions/upload-artifact@v3
+        with:
+          name: eventlist-darwin-arm64
+          path: ./tools/eventlist/build/darwin-arm64
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Archive eventlist
+        uses: actions/upload-artifact@v3
+        with:
+          name: eventlist-windows-amd64
+          path: ./tools/eventlist/build/windows-amd64
           retention-days: 1
           if-no-files-found: error
 
@@ -102,7 +125,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
@@ -121,10 +144,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install go 1.17
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
 
@@ -151,10 +174,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install go 1.17
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
 
@@ -171,7 +194,7 @@ jobs:
         working-directory: ./tools/eventlist
 
       - name: Archive unit test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: unit-test-result-${{ matrix.os }}
           path: ./tools/eventlist/build/evenlistunittest-*.xml
@@ -184,19 +207,19 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Download unit test report windows
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: unit-test-result-windows-2019
           path: testreports/
 
       - name: Download unit test report linux
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: unit-test-result-ubuntu-20.04
           path: testreports/
 
       - name: Download unit test report macos
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: unit-test-result-macos-12
           path: testreports/
@@ -221,10 +244,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install go 1.17
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
 
@@ -251,48 +274,72 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout devtools
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create distribution folders
         run: |
-          mkdir -p release/eventlist-linux64/docs release/eventlist-darwin64/docs release/eventlist-windows64/docs
-          cp LICENSE release/eventlist-linux64/
-          cp LICENSE release/eventlist-darwin64/
-          cp LICENSE release/eventlist-windows64/
-          cp tools/eventlist/docs/index.html release/eventlist-linux64/docs/
-          cp tools/eventlist/docs/index.html release/eventlist-darwin64/docs/
-          cp tools/eventlist/docs/index.html release/eventlist-windows64/docs/
+          mkdir -p release/eventlist-linux-amd64/docs
+          mkdir -p release/eventlist-linux-arm64/docs
+          mkdir -p release/eventlist-darwin-amd64/docs
+          mkdir -p release/eventlist-darwin-arm64/docs
+          mkdir -p release/eventlist-windows-amd64/docs
+          cp LICENSE release/eventlist-linux-amd64/
+          cp LICENSE release/eventlist-linux-arm64/
+          cp LICENSE release/eventlist-darwin-amd64/
+          cp LICENSE release/eventlist-darwin-arm64/
+          cp LICENSE release/eventlist-windows-amd64/
+          cp tools/eventlist/docs/* release/eventlist-linux-amd64/docs/
+          cp tools/eventlist/docs/* release/eventlist-linux-arm64/docs/
+          cp tools/eventlist/docs/* release/eventlist-darwin-amd64/docs/
+          cp tools/eventlist/docs/* release/eventlist-darwin-arm64/docs/
+          cp tools/eventlist/docs/* release/eventlist-windows-amd64/docs/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          name: eventlist-linux64
-          path: release/eventlist-linux64/
+          name: eventlist-linux-amd64
+          path: release/eventlist-linux-amd64/
+
+      - name: Download eventlist linux
+        uses: actions/download-artifact@v3
+        with:
+          name: eventlist-linux-arm64
+          path: release/eventlist-linux-arm64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          name: eventlist-darwin64
-          path: release/eventlist-darwin64/
+          name: eventlist-darwin-amd64
+          path: release/eventlist-darwin-amd64/
+
+      - name: Download eventlist macos
+        uses: actions/download-artifact@v3
+        with:
+          name: eventlist-darwin-arm64
+          path: release/eventlist-darwin-arm64/
 
       - name: Download eventlist windows
         uses: actions/download-artifact@v2
         with:
-          name: eventlist-windows64
-          path: release/eventlist-windows64/
+          name: eventlist-windows-amd64
+          path: release/eventlist-windows-amd64/
 
       - name: Zip folders
         run: |
-          zip -r eventlist-windows64.zip eventlist-windows64/eventlist.exe eventlist-windows64/docs eventlist-windows64/LICENSE
-          tar -czvf eventlist-linux64.tar.gz  eventlist-linux64/eventlist eventlist-linux64/docs eventlist-linux64/LICENSE
-          tar -czvf eventlist-darwin64.tar.gz eventlist-darwin64/eventlist eventlist-darwin64/docs eventlist-darwin64/LICENSE
+          zip -r eventlist-windows-amd64.zip eventlist-windows-amd64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
+          tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE
+          tar -czvf eventlist-linux-arm64.tar.gz  eventlist-linux-arm64/eventlist eventlist-linux-arm64/docs eventlist-linux-arm64/LICENSE
+          tar -czvf eventlist-darwin-amd64.tar.gz eventlist-darwin-amd64/eventlist eventlist-darwin-amd64/docs eventlist-darwin-amd64/LICENSE
+          tar -czvf eventlist-darwin-arm64.tar.gz eventlist-darwin-arm64/eventlist eventlist-darwin-arm64/docs eventlist-darwin-arm64/LICENSE
         working-directory: release
 
       - name: Calculate checksums
         run: |
-          sha256sum eventlist-windows64.zip --text > eventlist-checksums.txt
-          sha256sum eventlist-linux64.tar.gz --text >> eventlist-checksums.txt
-          sha256sum eventlist-darwin64.tar.gz --text >> eventlist-checksums.txt
+          sha256sum eventlist-windows-amd64.zip --text > eventlist-checksums.txt
+          sha256sum eventlist-linux-amd64.tar.gz --text >> eventlist-checksums.txt
+          sha256sum eventlist-linux-arm64.tar.gz --text >> eventlist-checksums.txt
+          sha256sum eventlist-darwin-amd64.tar.gz --text >> eventlist-checksums.txt
+          sha256sum eventlist-darwin-arm64.tar.gz --text >> eventlist-checksums.txt
         working-directory: release
 
       - name: Attach installer to release assets
