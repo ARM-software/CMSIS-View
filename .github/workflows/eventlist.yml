@@ -60,7 +60,7 @@ jobs:
         if: github.event_name != 'release'
         uses: github/codeql-action/analyze@v2
 
-      - name: Build remaining executable
+      - name: Build remaining executables
         run: |
           GOOS=linux GOARCH=arm64 go build -o linux-arm64/eventlist ./..
           GOOS=darwin GOARCH=amd64 go build -o darwin-amd64/eventlist ./..

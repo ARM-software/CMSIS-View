@@ -18,7 +18,7 @@
 
 package main
 
-//go:generate goversioninfo -gofile=versioninfo.go
+//go:generate goversioninfo -gofile=versioninfo.go -arm=true
 
 import (
 	"eventlist/elf"
