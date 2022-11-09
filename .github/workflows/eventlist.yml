@@ -51,18 +51,23 @@ jobs:
           go generate
         working-directory: ./tools/eventlist
 
-      - name: Build executable
+      - name: Build linux-amd64 executable
         run: |
           GOOS=linux GOARCH=amd64 go build -o linux-amd64/eventlist ./..
+        working-directory: ./tools/eventlist/build
+
+      - name: Perform CodeQL Analysis
+        if: github.event_name != 'release'
+        uses: github/codeql-action/analyze@v2
+
+      - name: Build remaining executable
+        run: |
           GOOS=linux GOARCH=arm64 go build -o linux-arm64/eventlist ./..
           GOOS=darwin GOARCH=amd64 go build -o darwin-amd64/eventlist ./..
           GOOS=darwin GOARCH=arm64 go build -o darwin-arm64/eventlist ./..
           GOOS=windows GOARCH=amd64 go build -o windows-amd64/eventlist.exe ./..
         working-directory: ./tools/eventlist/build
 
-      - name: Perform CodeQL Analysis
-        if: github.event_name != 'release'
-        uses: github/codeql-action/analyze@v2
 
       - name: Archive eventlist
         uses: actions/upload-artifact@v3
