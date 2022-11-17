@@ -14,6 +14,10 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     if: |
@@ -41,20 +45,10 @@ jobs:
           languages: go
           queries: security-and-quality
 
-      - name: Create build folder
-        run: mkdir build
-        working-directory: ./tools/eventlist
-
-      - name: Generate version information
-        run: |
-          go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-          go generate
-        working-directory: ./tools/eventlist
-
       - name: Build linux-amd64 executable
         run: |
-          GOOS=linux GOARCH=amd64 go build -o linux-amd64/eventlist ./..
-        working-directory: ./tools/eventlist/build
+          ./make.sh build -os linux -arch amd64 -outdir build/linux-amd64/eventlist
+        working-directory: ./tools/eventlist
 
       - name: Perform CodeQL Analysis
         if: github.event_name != 'release'
@@ -62,12 +56,11 @@ jobs:
 
       - name: Build remaining executables
         run: |
-          GOOS=linux GOARCH=arm64 go build -o linux-arm64/eventlist ./..
-          GOOS=darwin GOARCH=amd64 go build -o darwin-amd64/eventlist ./..
-          GOOS=darwin GOARCH=arm64 go build -o darwin-arm64/eventlist ./..
-          GOOS=windows GOARCH=amd64 go build -o windows-amd64/eventlist.exe ./..
-        working-directory: ./tools/eventlist/build
-
+          ./make.sh build -os linux -arch arm64 -outdir build/linux-arm64
+          ./make.sh build -os darwin -arch amd64 -outdir build/darwin-amd64
+          ./make.sh build -os darwin -arch arm64 -outdir build/darwin-arm64
+          ./make.sh build -os windows -arch amd64 -outdir build/windows-amd64
+        working-directory: ./tools/eventlist
 
       - name: Archive eventlist
         uses: actions/upload-artifact@v3

@@ -24,9 +24,9 @@ import (
 )
 
 func Test_sections_Readelf(t *testing.T) { //nolint:golint,paralleltest
-	fileTest := "../testdata/elftest.elf"
-	fileNix := "../testdata/nix.elf"
-	fileSym := "../testdata/elfsym.elf"
+	fileTest := "../../testdata/elftest.elf"
+	fileNix := "../../testdata/nix.elf"
+	fileSym := "../../testdata/elfsym.elf"
 
 	type args struct {
 		name   *string

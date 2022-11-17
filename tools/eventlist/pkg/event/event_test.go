@@ -21,9 +21,9 @@ package event
 import (
 	"bufio"
 	"errors"
-	"eventlist/elf"
-	"eventlist/eval"
-	"eventlist/xml/scvd"
+	"eventlist/pkg/elf"
+	"eventlist/pkg/eval"
+	"eventlist/pkg/xml/scvd"
 	"reflect"
 	"testing"
 )
@@ -169,7 +169,7 @@ func TestInfo_SplitID(t *testing.T) {
 func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,paralleltest
 	var i int
 
-	fileTest := "../testdata/elftest.elf"
+	fileTest := "../../testdata/elftest.elf"
 
 	type fields struct {
 		Time   uint64
@@ -517,13 +517,13 @@ func Test_convert64(t *testing.T) {
 func TestEventData_Read(t *testing.T) {
 	t.Parallel()
 
-	var s0 = "../testdata/test0.binary"
-	var s1 = "../testdata/test1.binary"
-	var s2 = "../testdata/test2.binary"
-	var sNix = "../testdata/xxxx"
-	var s3 = "../testdata/test3.binary"
-	var s4 = "../testdata/test4.binary"
-	var s5 = "../testdata/test5.binary"
+	var s0 = "../../testdata/test0.binary"
+	var s1 = "../../testdata/test1.binary"
+	var s2 = "../../testdata/test2.binary"
+	var sNix = "../../testdata/xxxx"
+	var s3 = "../../testdata/test3.binary"
+	var s4 = "../../testdata/test4.binary"
+	var s5 = "../../testdata/test5.binary"
 
 	var b0 = []uint8("hello wo")
 
