@@ -92,7 +92,6 @@ func main() {
 	}
 
 	commFlag := flag.CommandLine
-	fmt.Println(os.Args)
 
 	// --- this is only for unit tests of main()
 	testRun := flag.Lookup("test.run")
