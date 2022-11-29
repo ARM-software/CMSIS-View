@@ -543,20 +543,20 @@ func TestExpression_lex(t *testing.T) {
 		wantErr bool
 	}{
 		{s0, fields{&s0, 0, Value{}}, Value{t: Add}, 1, false},
-		{s1, fields{&s1, 0, Value{}}, Value{t: Integer, i: 123}, 3, false},
+		{s1, fields{&s1, 0, Value{}}, Value{t: I64, i: 123}, 3, false},
 		{s2, fields{&s2, 0, Value{}}, Value{}, 2, true},
-		{s3, fields{&s3, 0, Value{}}, Value{t: Floating, f: 1.2}, 3, false},
-		{s4, fields{&s4, 0, Value{}}, Value{t: Floating, f: 2.77}, 8, false},
+		{s3, fields{&s3, 0, Value{}}, Value{t: F64, f: 1.2}, 3, false},
+		{s4, fields{&s4, 0, Value{}}, Value{t: F64, f: 2.77}, 8, false},
 		{s5, fields{&s5, 0, Value{}}, Value{t: Identifier, s: "abc"}, 3, false},
 		{s6, fields{&s6, 0, Value{}}, Value{t: Identifier, s: "a6Z_c"}, 5, false},
-		{s7, fields{&s7, 0, Value{}}, Value{t: Floating, f: math.Inf(0)}, 3, false},
-		{s8, fields{&s8, 0, Value{}}, Value{t: Floating, f: math.NaN()}, 3, false},
+		{s7, fields{&s7, 0, Value{}}, Value{t: F64, f: math.Inf(0)}, 3, false},
+		{s8, fields{&s8, 0, Value{}}, Value{t: F64, f: math.NaN()}, 3, false},
 		{s9, fields{&s9, 0, Value{}}, Value{t: String, s: "a\ax\by\x1bq\ft\nb\rg\tz\vsc"}, 28, false},
-		{s10, fields{&s10, 0, Value{}}, Value{t: Integer, i: 'X'}, 3, false},
+		{s10, fields{&s10, 0, Value{}}, Value{t: I8, i: 'X'}, 3, false},
 		{s11, fields{&s11, 0, Value{}}, Value{t: String, s: "x\xef\xbf\xbdX"}, 14, false},
 		{s12, fields{&s12, 0, Value{}}, Value{t: String, s: "q\xe3\x92\xafQ"}, 10, false},
-		{s13, fields{&s13, 0, Value{}}, Value{t: Integer, i: 0x4711}, 8, false},
-		{s14, fields{&s14, 0, Value{}}, Value{t: Integer, i: 0x001234af}, 12, false},
+		{s13, fields{&s13, 0, Value{}}, Value{t: I16, i: 0x4711}, 8, false},
+		{s14, fields{&s14, 0, Value{}}, Value{t: I32, i: 0x001234af}, 12, false},
 		{s15, fields{&s15, 0, Value{}}, Value{t: Nix}, 13, true},
 		{s16, fields{&s16, 0, Value{}}, Value{t: ShrAssign}, 3, false},
 		{s17, fields{&s17, 0, Value{}}, Value{t: Nix}, 4, true},
@@ -579,32 +579,32 @@ func TestExpression_lex(t *testing.T) {
 		{s34, fields{&s34, 0, Value{}}, Value{t: Nix}, 3, true},
 		{s35, fields{&s35, 0, Value{}}, Value{t: Nix}, 4, true},
 		{s36, fields{&s36, 0, Value{}}, Value{t: Nix}, 5, true},
-		{s37, fields{&s37, 0, Value{}}, Value{t: Integer, i: 7}, 5, false},
-		{s38, fields{&s38, 0, Value{}}, Value{t: Integer, i: 7}, 4, false},
-		{s39, fields{&s39, 0, Value{}}, Value{t: Integer, i: 0xa}, 5, false},
-		{s40, fields{&s40, 0, Value{}}, Value{t: Integer, i: 0x2a}, 6, false},
-		{s41, fields{&s41, 0, Value{}}, Value{t: Integer, i: 0x4d}, 7, false},
-		{s42, fields{&s42, 0, Value{}}, Value{t: Integer, i: 0x5a}, 8, false},
+		{s37, fields{&s37, 0, Value{}}, Value{t: I8, i: 7}, 5, false},
+		{s38, fields{&s38, 0, Value{}}, Value{t: I8, i: 7}, 4, false},
+		{s39, fields{&s39, 0, Value{}}, Value{t: I8, i: 0xa}, 5, false},
+		{s40, fields{&s40, 0, Value{}}, Value{t: I8, i: 0x2a}, 6, false},
+		{s41, fields{&s41, 0, Value{}}, Value{t: I8, i: 0x4d}, 7, false},
+		{s42, fields{&s42, 0, Value{}}, Value{t: I8, i: 0x5a}, 8, false},
 		{s43, fields{&s43, 0, Value{}}, Value{t: Nix}, 7, true},
 		{s44, fields{&s44, 0, Value{}}, Value{t: Nix}, 9, true},
 		{s45, fields{&s45, 0, Value{}}, Value{t: Nix}, 2, true},
 		{s46, fields{&s46, 0, Value{}}, Value{t: Greater}, 1, false},
 		{s47, fields{&s47, 0, Value{}}, Value{t: Shr}, 2, false},
-		{s48, fields{&s48, 0, Value{}}, Value{t: Integer, i: 0x27}, 4, false},
-		{s49, fields{&s49, 0, Value{}}, Value{t: Integer, i: 0x22}, 4, false},
-		{s50, fields{&s50, 0, Value{}}, Value{t: Integer, i: 7}, 4, false},
-		{s51, fields{&s51, 0, Value{}}, Value{t: Integer, i: 8}, 4, false},
-		{s52, fields{&s52, 0, Value{}}, Value{t: Integer, i: 0x1b}, 4, false},
-		{s53, fields{&s53, 0, Value{}}, Value{t: Integer, i: 0xc}, 4, false},
-		{s54, fields{&s54, 0, Value{}}, Value{t: Integer, i: 0xa}, 4, false},
-		{s55, fields{&s55, 0, Value{}}, Value{t: Integer, i: 0xd}, 4, false},
-		{s56, fields{&s56, 0, Value{}}, Value{t: Integer, i: 9}, 4, false},
-		{s57, fields{&s57, 0, Value{}}, Value{t: Integer, i: 11}, 4, false},
+		{s48, fields{&s48, 0, Value{}}, Value{t: I8, i: 0x27}, 4, false},
+		{s49, fields{&s49, 0, Value{}}, Value{t: I8, i: 0x22}, 4, false},
+		{s50, fields{&s50, 0, Value{}}, Value{t: I8, i: 7}, 4, false},
+		{s51, fields{&s51, 0, Value{}}, Value{t: I8, i: 8}, 4, false},
+		{s52, fields{&s52, 0, Value{}}, Value{t: I8, i: 0x1b}, 4, false},
+		{s53, fields{&s53, 0, Value{}}, Value{t: I8, i: 0xc}, 4, false},
+		{s54, fields{&s54, 0, Value{}}, Value{t: I8, i: 0xa}, 4, false},
+		{s55, fields{&s55, 0, Value{}}, Value{t: I8, i: 0xd}, 4, false},
+		{s56, fields{&s56, 0, Value{}}, Value{t: I8, i: 9}, 4, false},
+		{s57, fields{&s57, 0, Value{}}, Value{t: I8, i: 11}, 4, false},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
+//			t.Parallel()
 
 			ex := &Expression{
 				in:   tt.fields.in,
@@ -617,7 +617,7 @@ func TestExpression_lex(t *testing.T) {
 				return
 			}
 			if tt.name == "NaN$" { // special case, DeepEqual does not work with NaN
-				if got.t != Floating || got.t != tt.want.t ||
+				if got.t != F64 || got.t != tt.want.t ||
 					!math.IsNaN(got.f) || !math.IsNaN(tt.want.f) {
 					t.Errorf("Expression.lex() %s = %v, want %v", tt.name, got, tt.want)
 				}
@@ -652,19 +652,19 @@ func TestExpression_primary(t *testing.T) {
 		wantEOF bool
 		wantErr bool
 	}{
-		{"Integer", fields{&s0, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, false},
-		{"Floating", fields{&s0, 0, Value{t: Floating, f: 1.2345}}, Value{t: Floating, f: 1.2345}, false, false},
+		{"Integer", fields{&s0, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, false},
+		{"Floating", fields{&s0, 0, Value{t: F32, f: 1.2345}}, Value{t: F32, f: 1.2345}, false, false},
 		{"Identifier", fields{&s0, 0, Value{t: Identifier, s: "vari"}}, Value{t: Identifier, s: "vari"}, false, false},
 		{"String", fields{&s0, 0, Value{t: String, s: "abc"}}, Value{t: String, s: "abc"}, false, false},
-		{"subExpression", fields{&s1, 0, Value{t: ParenO}}, Value{t: Integer, i: 4711}, false, false},
-		{"Integer_fail", fields{&s2, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, true},
-		{"Floating_fail", fields{&s2, 0, Value{t: Floating, f: 1.2345}}, Value{t: Floating, f: 1.2345}, false, true},
+		{"subExpression", fields{&s1, 0, Value{t: ParenO}}, Value{t: I64, i: 4711}, false, false},
+		{"Integer_fail", fields{&s2, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
+		{"Floating_fail", fields{&s2, 0, Value{t: F32, f: 1.2345}}, Value{t: F32, f: 1.2345}, false, true},
 		{"Identifier_fail", fields{&s2, 0, Value{t: Identifier, s: "vari"}}, Value{t: Identifier, s: "vari"}, false, true},
 		{"String_fail", fields{&s2, 0, Value{t: String, s: "abc"}}, Value{t: String, s: "abc"}, false, true},
 		{"subExpression_fail1", fields{&s2, 0, Value{t: ParenO}}, Value{t: Nix}, false, true},
 		{"subExpression_fail2", fields{&s0, 0, Value{t: ParenO}}, Value{t: Nix}, false, true},
-		{"subExpression_fail3", fields{&s3, 0, Value{t: ParenO}}, Value{t: Integer, i: 5}, false, true},
-		{"subExpression_fail4", fields{&s4, 0, Value{t: ParenO}}, Value{t: Integer, i: 6}, true, true},
+		{"subExpression_fail3", fields{&s3, 0, Value{t: ParenO}}, Value{t: I64, i: 5}, false, true},
+		{"subExpression_fail4", fields{&s4, 0, Value{t: ParenO}}, Value{t: I64, i: 6}, true, true},
 		{"fail", fields{&s0, 0, Value{t: Add}}, Value{t: Add}, false, true},
 	}
 	for _, tt := range tests {
@@ -717,10 +717,10 @@ func TestExpression_arguments(t *testing.T) {
 		wantErr bool
 	}{
 		{"0 arg", fields{&s0, 0, Value{}}, Value{t: Nix}, false, false},
-		{"1 arg", fields{&s0, 0, Value{t: Integer, i: 1}}, Value{t: List, l: []Value{{t: Integer, i: 1}}}, false, false},
-		{"2 arg", fields{&s1, 0, Value{t: Integer, i: 1}}, Value{t: List, l: []Value{{t: Integer, i: 1}, {t: Integer, i: 123}}}, false, false},
-		{"arg err", fields{&s2, 0, Value{t: Integer, i: 1}}, Value{t: List, l: []Value{{t: Integer, i: 1}}}, false, true},
-		{"arg err1", fields{&s3, 0, Value{t: Integer, i: 1}}, Value{t: Nix}, false, true},
+		{"1 arg", fields{&s0, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}}}, false, false},
+		{"2 arg", fields{&s1, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}, {t: I64, i: 123}}}, false, false},
+		{"arg err", fields{&s2, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}}}, false, true},
+		{"arg err1", fields{&s3, 0, Value{t: I8, i: 1}}, Value{t: Nix}, false, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -792,30 +792,30 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 		wantErr bool
 	}{
 		{"Postincrement", fields{&s0, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, false, false},
-		{"Postincrement_fail", fields{&s1, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, true},
+		{"Postincrement_fail", fields{&s1, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Postincrement_eof", fields{&s2, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, true, false},
 		{"Postincrement_fail1", fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
 		{"Postincrement_fail2", fields{&s0, 0, Value{t: Identifier, s: "PostfixName1"}}, Value{t: Nix}, false, true},
 		{"Postdecrement", fields{&s3, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, false, false},
-		{"Postdecrement_fail", fields{&s4, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, true},
+		{"Postdecrement_fail", fields{&s4, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Postdecrement_eof", fields{&s5, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, true, false},
 		{"Postdecrement_fail1", fields{&s3, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
 		{"Postdecrement_fail2", fields{&s3, 0, Value{t: Identifier, s: "PostfixName1"}}, Value{t: Nix}, false, true},
 		{"Dot", fields{&s6, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
-		{"Dot_fail", fields{&s6, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, true},
+		{"Dot_fail", fields{&s6, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Dot_eof_fail", fields{&s7, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, true},
-		{"Dot_fail1", fields{&s8, 0, Value{t: Identifier, s: "name"}}, Value{t: Integer, i: 123}, false, true},
+		{"Dot_fail1", fields{&s8, 0, Value{t: Identifier, s: "name"}}, Value{t: I64, i: 123}, false, true},
 		{"Dot_eof", fields{&s9, 0, Value{t: Identifier, s: "name"}}, Value{t: Nix}, true, false},
 		{"Pointer", fields{&s10, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
-		{"Pointer_fail", fields{&s10, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, true},
+		{"Pointer_fail", fields{&s10, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Pointer_eof_fail", fields{&s11, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, true},
-		{"Pointer_fail1", fields{&s12, 0, Value{t: Identifier, s: "name"}}, Value{t: Integer, i: 123}, false, true},
+		{"Pointer_fail1", fields{&s12, 0, Value{t: Identifier, s: "name"}}, Value{t: I64, i: 123}, false, true},
 		{"Pointer_eof", fields{&s13, 0, Value{t: Identifier, s: "name"}}, Value{t: Nix}, true, false},
 		{"Function", fields{&s14, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
 		{"Function_eof", fields{&s15, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, false},
-		{"Function1_eof", fields{&s17, 0, Value{t: Identifier, s: "__GetRegVal"}}, Value{t: Integer, i: 0}, true, false},
-		{"Function_GetRegVal", fields{&s29, 0, Value{t: Identifier, s: "__GetRegVal"}}, Value{t: Integer, i: 0}, false, false},
-		{"Function_CalcMemUsed", fields{&s28, 0, Value{t: Identifier, s: "__CalcMemUsed"}}, Value{t: Integer, i: 0}, false, false},
+		{"Function1_eof", fields{&s17, 0, Value{t: Identifier, s: "__GetRegVal"}}, Value{t: I32, i: 0}, true, false},
+		{"Function_GetRegVal", fields{&s29, 0, Value{t: Identifier, s: "__GetRegVal"}}, Value{t: I32, i: 0}, false, false},
+		{"Function_CalcMemUsed", fields{&s28, 0, Value{t: Identifier, s: "__CalcMemUsed"}}, Value{t: I32, i: 0}, false, false},
 		{"Function_FcntErr", fields{&s29, 0, Value{t: Identifier, s: "xxx"}}, Value{t: Identifier, s: "xxx"}, false, true},
 		{"Function_err", fields{&s18, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
 		{"Function_err1", fields{&s19, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
@@ -837,7 +837,7 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 				next: tt.fields.next,
 			}
 			ClearNames()
-			vari := SetVar("PostfixName", Value{t: Integer, i: 789})
+			vari := SetVar("PostfixName", Value{t: I16, i: 789})
 			if tt.fields.next.t == Identifier && tt.fields.next.s == "PostfixName" {
 				tt.fields.next.v = vari
 				tt.want.v = vari // return value should be the same as input because of postinc
@@ -885,40 +885,40 @@ func TestExpression_unary(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"+IntExpr", fields{&s0, 0, Value{t: Add}}, Value{t: Integer, i: 0x12345}, false},
+		{"+IntExpr", fields{&s0, 0, Value{t: Add}}, Value{t: I64, i: 0x12345}, false},
 		{"+IntExpr_err", fields{&s3, 0, Value{t: Add}}, Value{t: Nix}, true},
 		{"+IntExpr_eof", fields{&s4, 0, Value{t: Add}}, Value{t: Nix}, true},
 		{"+IntExpr_err1", fields{&s5, 0, Value{t: Add}}, Value{t: AddAdd}, true},
 		{"+IntExpr_err2", fields{&s6, 0, Value{t: Add}}, Value{t: Identifier, s: "name"}, true},
 		{"+IntExpr_err3", fields{&s7, 0, Value{t: Add}}, Value{t: String, s: "string"}, true},
-		{"-IntExpr", fields{&s0, 0, Value{t: Sub}}, Value{t: Integer, i: -0x12345}, false},
+		{"-IntExpr", fields{&s0, 0, Value{t: Sub}}, Value{t: I64, i: -0x12345}, false},
 		{"-IntExpr_err", fields{&s3, 0, Value{t: Sub}}, Value{t: Nix}, true},
 		{"-IntExpr_eof", fields{&s4, 0, Value{t: Sub}}, Value{t: Nix}, true},
 		{"-IntExpr_err1", fields{&s5, 0, Value{t: Sub}}, Value{t: AddAdd}, true},
 		{"-IntExpr_err2", fields{&s6, 0, Value{t: Sub}}, Value{t: Identifier, s: "name"}, true},
 		{"-IntExpr_err3", fields{&s7, 0, Value{t: Sub}}, Value{t: String, s: "string"}, true},
-		{"~IntExpr", fields{&s0, 0, Value{t: Compl}}, Value{t: Integer, i: 0x12345 ^ -1}, false},
+		{"~IntExpr", fields{&s0, 0, Value{t: Compl}}, Value{t: I64, i: 0x12345 ^ -1}, false},
 		{"~IntExpr_err", fields{&s3, 0, Value{t: Compl}}, Value{t: Nix}, true},
 		{"~IntExpr_eof", fields{&s4, 0, Value{t: Compl}}, Value{t: Nix}, true},
 		{"~IntExpr_err1", fields{&s5, 0, Value{t: Compl}}, Value{t: AddAdd}, true},
 		{"~IntExpr_err2", fields{&s6, 0, Value{t: Compl}}, Value{t: Identifier, s: "name"}, true},
 		{"~IntExpr_err3", fields{&s7, 0, Value{t: Compl}}, Value{t: String, s: "string"}, true},
-		{"!IntExpr", fields{&s0, 0, Value{t: Not}}, Value{t: Integer, i: 0}, false},
+		{"!IntExpr", fields{&s0, 0, Value{t: Not}}, Value{t: U8, i: 0}, false},
 		{"!IntExpr_err", fields{&s3, 0, Value{t: Not}}, Value{t: Nix}, true},
 		{"!IntExpr_eof", fields{&s4, 0, Value{t: Not}}, Value{t: Nix}, true},
 		{"!IntExpr_err1", fields{&s5, 0, Value{t: Not}}, Value{t: AddAdd}, true},
 		{"!IntExpr_err2", fields{&s6, 0, Value{t: Not}}, Value{t: Identifier, s: "name"}, true},
 		{"!IntExpr_err3", fields{&s7, 0, Value{t: Not}}, Value{t: String, s: "string"}, true},
-		{"IntExpr", fields{&s0, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false},
-		{"+FloatExpr", fields{&s1, 0, Value{t: Add}}, Value{t: Floating, f: 12.345}, false},
-		{"-FloatExpr", fields{&s1, 0, Value{t: Sub}}, Value{t: Floating, f: -12.345}, false},
-		{"+v1", fields{&s2, 0, Value{t: Add}}, Value{t: Integer, i: 0xa2b3}, false},
-		{"-v1", fields{&s2, 0, Value{t: Sub}}, Value{t: Integer, i: -0xa2b3}, false},
-		{"~v1", fields{&s2, 0, Value{t: Compl}}, Value{t: Integer, i: 0xa2b3 ^ -1}, false},
-		{"!v1", fields{&s2, 0, Value{t: Not}}, Value{t: Integer, i: 0}, false},
+		{"IntExpr", fields{&s0, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false},
+		{"+FloatExpr", fields{&s1, 0, Value{t: Add}}, Value{t: F64, f: 12.345}, false},
+		{"-FloatExpr", fields{&s1, 0, Value{t: Sub}}, Value{t: F64, f: -12.345}, false},
+		{"+v1", fields{&s2, 0, Value{t: Add}}, Value{t: I32, i: 0xa2b3}, false},
+		{"-v1", fields{&s2, 0, Value{t: Sub}}, Value{t: I32, i: -0xa2b3}, false},
+		{"~v1", fields{&s2, 0, Value{t: Compl}}, Value{t: I32, i: 0xa2b3 ^ -1}, false},
+		{"!v1", fields{&s2, 0, Value{t: Not}}, Value{t: U8, i: 0}, false},
 		{"v1", fields{&s2, 0, Value{t: Identifier, s: "v1"}}, Value{t: Identifier, s: "v1"}, false},
 	}
-	SetVar("v_unary", Value{t: Integer, i: 0xa2b3})
+	SetVar("v_unary", Value{t: I32, i: 0xa2b3})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -980,22 +980,22 @@ func TestExpression_castExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{s0, fields{&s0, 1, Value{t: ParenO}}, Value{t: Integer, i: 0xE3}, false},
-		{s1, fields{&s1, 1, Value{t: ParenO}}, Value{t: Integer, i: 0x45}, false},
-		{s2, fields{&s2, 1, Value{t: ParenO}}, Value{t: Integer, i: 0x2345}, false},
-		{s3, fields{&s3, 1, Value{t: ParenO}}, Value{t: Integer, i: 0x23456789}, false},
-		{s4, fields{&s4, 1, Value{t: ParenO}}, Value{t: Integer, i: 456}, false},
-		{s5, fields{&s5, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x12345) & 0xFF}, false},
-		{s6, fields{&s6, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x12345) & 0xFFFF}, false},
-		{s7, fields{&s7, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x23456789) & 0xFFFFFFFF}, false},
-		{s8, fields{&s8, 1, Value{t: ParenO}}, Value{t: Integer, i: -456}, false},
-		{s9, fields{&s9, 1, Value{t: ParenO}}, Value{t: Floating, f: 12345789.0}, false},
-		{s10, fields{&s10, 1, Value{t: ParenO}}, Value{t: Floating, f: 123456792.0}, false},
+		{s0, fields{&s0, 1, Value{t: ParenO}}, Value{t: U8, i: 0xE3}, false},
+		{s1, fields{&s1, 1, Value{t: ParenO}}, Value{t: I8, i: 0x45}, false},
+		{s2, fields{&s2, 1, Value{t: ParenO}}, Value{t: I16, i: 0x2345}, false},
+		{s3, fields{&s3, 1, Value{t: ParenO}}, Value{t: I32, i: 0x23456789}, false},
+		{s4, fields{&s4, 1, Value{t: ParenO}}, Value{t: I64, i: 456}, false},
+		{s5, fields{&s5, 1, Value{t: ParenO}}, Value{t: U8, i: (-0x12345) & 0xFF}, false},
+		{s6, fields{&s6, 1, Value{t: ParenO}}, Value{t: U16, i: (-0x12345) & 0xFFFF}, false},
+		{s7, fields{&s7, 1, Value{t: ParenO}}, Value{t: U32, i: (-0x23456789) & 0xFFFFFFFF}, false},
+		{s8, fields{&s8, 1, Value{t: ParenO}}, Value{t: U64, i: -456}, false},
+		{s9, fields{&s9, 1, Value{t: ParenO}}, Value{t: F64, f: 12345789.0}, false},
+		{s10, fields{&s10, 1, Value{t: ParenO}}, Value{t: F32, f: 123456792.0}, false},
 		{s11, fields{&s11, 1, Value{t: ParenO}}, Value{t: Nix}, true},
 		{s12, fields{&s12, 1, Value{t: ParenO}}, Value{t: AddAdd}, true},
-		{s13, fields{&s13, 1, Value{t: ParenO}}, Value{t: Integer, i: 1}, false},
-		{s14, fields{&s14, 1, Value{t: ParenO}}, Value{t: Floating, f: 483.12}, true},
-		{s15, fields{&s15, 1, Value{t: ParenO}}, Value{t: Floating, f: 483.12}, false},
+		{s13, fields{&s13, 1, Value{t: ParenO}}, Value{t: I64, i: 1}, false},
+		{s14, fields{&s14, 1, Value{t: ParenO}}, Value{t: F32, f: 483.12}, true},
+		{s15, fields{&s15, 1, Value{t: ParenO}}, Value{t: F32, f: 483.12}, false},
 		{s16, fields{&s16, 1, Value{t: ParenO}}, Value{t: Nix}, true},
 		{s17, fields{&s17, 1, Value{t: ParenO}}, Value{t: Nix}, true},
 		{s18, fields{&s18, 1, Value{t: ParenO}}, Value{t: Nix}, true},
@@ -1004,7 +1004,7 @@ func TestExpression_castExpr(t *testing.T) {
 		{s21, fields{&s21, 1, Value{t: ParenO}}, Value{t: String, s: "string"}, true},
 		{s22, fields{&s22, 1, Value{t: ParenO}}, Value{t: Add}, true},
 	}
-	SetVar("v_castExpr", Value{t: Floating, f: 483.12})
+	SetVar("v_castExpr", Value{t: F32, f: 483.12})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1062,37 +1062,37 @@ func TestExpression_mulExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{s0, fields{&s0, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 425.73}, false},
-		{"I*I", fields{&s1, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 233910}, false},
-		{"I*F", fields{&s2, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 2339.1}, false},
-		{"F*I", fields{&s1, 0, Value{t: Floating, f: 3.4}}, Value{t: Floating, f: 2305.2}, false},
-		{"F*F", fields{&s2, 0, Value{t: Floating, f: 3.4}}, Value{t: Floating, f: 23.052}, false},
-		{s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 230}, false},
-		{"I/I", fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 23}, false},
-		{"I/F", fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 287.5}, false},
-		{"F/I", fields{&s4, 0, Value{t: Floating, f: 3.45}}, Value{t: Floating, f: 0.23}, false},
-		{"F/F", fields{&s5, 0, Value{t: Floating, f: 3.6}}, Value{t: Floating, f: 3}, false},
-		{s6, fields{&s6, 0, Value{t: Integer, i: 347}}, Value{t: Integer, i: 2}, false},
-		{"I%I", fields{&s7, 0, Value{t: Integer, i: 347}}, Value{t: Integer, i: 2}, false},
-		{s8, fields{&s8, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{s9, fields{&s9, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 431.25}, false},
+		{"I*I", fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 233910}, false},
+		{"I*F", fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 2339.1}, false},
+		{"F*I", fields{&s1, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 2288.25}, false},
+		{"F*F", fields{&s2, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 22.8825}, false},
+		{s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 230}, false},
+		{"I/I", fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 23}, false},
+		{"I/F", fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 287.5}, false},
+		{"F/I", fields{&s4, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 0.225}, false},
+		{"F/F", fields{&s5, 0, Value{t: F32, f: 3.75}}, Value{t: F64, f: 3.125}, false},
+		{s6, fields{&s6, 0, Value{t: I32, i: 347}}, Value{t: I32, i: 2}, false},
+		{"I%I", fields{&s7, 0, Value{t: I32, i: 347}}, Value{t: I64, i: 2}, false},
+		{s8, fields{&s8, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{s9, fields{&s9, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{s10, fields{&s10, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{s11, fields{&s11, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{s12, fields{&s12, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{s13, fields{&s13, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{s10, fields{&s10, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{s11, fields{&s11, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{s12, fields{&s12, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{s13, fields{&s13, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s3, fields{&s3, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{s14, fields{&s14, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{s15, fields{&s15, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{s16, fields{&s16, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{s17, fields{&s17, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{s14, fields{&s14, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{s15, fields{&s15, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{s16, fields{&s16, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{s17, fields{&s17, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s6, fields{&s6, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{s18, fields{&s18, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{s19, fields{&s19, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{s18, fields{&s18, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{s19, fields{&s19, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_mulExpr", Value{t: Floating, f: 1.234})
-	SetVar("v2_mulExpr", Value{t: Floating, f: 1.5})
-	SetVar("v3_mulExpr", Value{t: Integer, i: 15})
+	SetVar("v1_mulExpr", Value{t: F32, f: 1.25})
+	SetVar("v2_mulExpr", Value{t: F32, f: 1.5})
+	SetVar("v3_mulExpr", Value{t: I32, i: 15})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1120,7 +1120,7 @@ func TestExpression_addExpr(t *testing.T) {
 
 	var s0 = "+v1_addExpr"
 	var s1 = "+678"
-	var s2 = "+6.78"
+	var s2 = "+4.5"
 	var s3 = "-v2_addExpr"
 	var s4 = "-15"
 	var s5 = "-1.2"
@@ -1144,29 +1144,29 @@ func TestExpression_addExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{s0, fields{&s0, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 346.234}, false},
-		{"I+I", fields{&s1, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1023}, false},
-		{"I+F", fields{&s2, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 351.78}, false},
-		{"F+I", fields{&s1, 0, Value{t: Floating, f: 3.4}}, Value{t: Floating, f: 681.4}, false},
-		{"F+F", fields{&s2, 0, Value{t: Floating, f: 3.4}}, Value{t: Floating, f: 10.18}, false},
-		{s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 343.5}, false},
-		{"I-I", fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 330}, false},
-		{"I-F", fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Floating, f: 343.8}, false},
-		{"F-I", fields{&s4, 0, Value{t: Floating, f: 3.45}}, Value{t: Floating, f: -11.55}, false},
-		{"F-F", fields{&s5, 0, Value{t: Floating, f: 3.4}}, Value{t: Floating, f: 2.2}, false},
-		{s6, fields{&s6, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{s7, fields{&s7, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 346.25}, false},
+		{"I+I", fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 1023}, false},
+		{"I+F", fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 349.5}, false},
+		{"F+I", fields{&s1, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 681.375}, false},
+		{"F+F", fields{&s2, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 7.875}, false},
+		{s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 343.5}, false},
+		{"I-I", fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 330}, false},
+		{"I-F", fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 343.8}, false},
+		{"F-I", fields{&s4, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: -11.625}, false},
+		{"F-F", fields{&s5, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 2.175}, false},
+		{s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{s7, fields{&s7, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{s8, fields{&s8, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{s9, fields{&s9, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{s10, fields{&s10, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{s11, fields{&s11, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{s8, fields{&s8, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{s9, fields{&s9, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{s10, fields{&s10, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{s11, fields{&s11, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s3, fields{&s3, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{s12, fields{&s12, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{s13, fields{&s13, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{s12, fields{&s12, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{s13, fields{&s13, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_addExpr", Value{t: Floating, f: 1.234})
-	SetVar("v2_addExpr", Value{t: Floating, f: 1.5})
+	SetVar("v1_addExpr", Value{t: F32, f: 1.25})
+	SetVar("v2_addExpr", Value{t: F32, f: 1.5})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1216,22 +1216,22 @@ func TestExpression_shiftExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345" + s0, fields{&s0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 2760}, false},
-		{"345" + s1, fields{&s1, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 44160}, false},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 43}, false},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 172}, false},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s6, fields{&s6, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 2760}, false},
+		{"345" + s1, fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 44160}, false},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 43}, false},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 172}, false},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s7, fields{&s7, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s8, fields{&s8, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"345" + s9, fields{&s9, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s10, fields{&s10, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s7, fields{&s7, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s8, fields{&s8, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"345" + s9, fields{&s9, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s10, fields{&s10, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s3, fields{&s3, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s11, fields{&s11, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s12, fields{&s12, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s11, fields{&s11, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s12, fields{&s12, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_shiftExpr", Value{t: Integer, i: 3})
+	SetVar("v1_shiftExpr", Value{t: I32, i: 3})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1352,96 +1352,96 @@ func TestExpression_relExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345" + s000, fields{&s000, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s001, fields{&s001, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s002, fields{&s002, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s003, fields{&s003, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s004, fields{&s004, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s005, fields{&s005, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s006, fields{&s006, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s007, fields{&s007, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s008, fields{&s008, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s009, fields{&s009, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s010, fields{&s010, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s011, fields{&s011, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s012, fields{&s012, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s013, fields{&s013, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s014, fields{&s014, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s015, fields{&s015, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345" + s016, fields{&s016, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s017, fields{&s017, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s000, fields{&s000, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s001, fields{&s001, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s002, fields{&s002, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s003, fields{&s003, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s004, fields{&s004, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s005, fields{&s005, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s006, fields{&s006, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s007, fields{&s007, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s008, fields{&s008, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s009, fields{&s009, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s010, fields{&s010, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s011, fields{&s011, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s012, fields{&s012, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s013, fields{&s013, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s014, fields{&s014, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s015, fields{&s015, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345" + s016, fields{&s016, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s017, fields{&s017, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s000, fields{&s000, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s018, fields{&s018, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s019, fields{&s019, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s018, fields{&s018, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s019, fields{&s019, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 
-		{"345" + s100, fields{&s100, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s101, fields{&s101, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s102, fields{&s102, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s103, fields{&s103, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s104, fields{&s104, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s105, fields{&s105, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s106, fields{&s106, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s107, fields{&s107, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s108, fields{&s108, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s109, fields{&s109, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s110, fields{&s110, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s111, fields{&s111, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s112, fields{&s112, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s113, fields{&s113, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s114, fields{&s114, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s115, fields{&s115, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345" + s116, fields{&s116, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s117, fields{&s117, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s100, fields{&s100, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s101, fields{&s101, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s102, fields{&s102, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s103, fields{&s103, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s104, fields{&s104, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s105, fields{&s105, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s106, fields{&s106, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s107, fields{&s107, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s108, fields{&s108, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s109, fields{&s109, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s110, fields{&s110, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s111, fields{&s111, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s112, fields{&s112, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s113, fields{&s113, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s114, fields{&s114, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s115, fields{&s115, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345" + s116, fields{&s116, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s117, fields{&s117, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s100, fields{&s100, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s118, fields{&s118, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s119, fields{&s119, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s118, fields{&s118, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s119, fields{&s119, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 
-		{"345" + s200, fields{&s200, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s201, fields{&s201, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s202, fields{&s202, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s203, fields{&s203, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s204, fields{&s204, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s205, fields{&s205, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s206, fields{&s206, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s207, fields{&s207, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s208, fields{&s208, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s209, fields{&s209, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s210, fields{&s210, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s211, fields{&s211, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s212, fields{&s212, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s213, fields{&s213, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s214, fields{&s214, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s215, fields{&s215, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345" + s216, fields{&s216, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s217, fields{&s217, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s200, fields{&s200, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s201, fields{&s201, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s202, fields{&s202, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s203, fields{&s203, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s204, fields{&s204, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s205, fields{&s205, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s206, fields{&s206, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s207, fields{&s207, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s208, fields{&s208, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s209, fields{&s209, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s210, fields{&s210, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s211, fields{&s211, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s212, fields{&s212, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s213, fields{&s213, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s214, fields{&s214, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s215, fields{&s215, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345" + s216, fields{&s216, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s217, fields{&s217, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s200, fields{&s200, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s218, fields{&s218, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s219, fields{&s219, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s218, fields{&s218, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s219, fields{&s219, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 
-		{"345" + s300, fields{&s300, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s301, fields{&s301, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s302, fields{&s302, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s303, fields{&s303, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s304, fields{&s304, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s305, fields{&s305, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s306, fields{&s306, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s307, fields{&s307, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s308, fields{&s308, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s309, fields{&s309, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s310, fields{&s310, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s311, fields{&s311, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s312, fields{&s312, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s313, fields{&s313, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s314, fields{&s314, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s315, fields{&s315, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345" + s316, fields{&s316, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s317, fields{&s317, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s300, fields{&s300, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s301, fields{&s301, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s302, fields{&s302, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s303, fields{&s303, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s304, fields{&s304, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s305, fields{&s305, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s306, fields{&s306, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s307, fields{&s307, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s308, fields{&s308, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s309, fields{&s309, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s310, fields{&s310, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s311, fields{&s311, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s312, fields{&s312, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s313, fields{&s313, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s314, fields{&s314, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s315, fields{&s315, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345" + s316, fields{&s316, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s317, fields{&s317, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s300, fields{&s300, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s318, fields{&s318, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s319, fields{&s319, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s318, fields{&s318, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s319, fields{&s319, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_relExpr", Value{t: Integer, i: 3})
-	SetVar("v2_relExpr", Value{t: Floating, f: 1.5})
+	SetVar("v1_relExpr", Value{t: I32, i: 3})
+	SetVar("v2_relExpr", Value{t: F32, f: 1.5})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1520,52 +1520,52 @@ func TestExpression_equExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345" + s000, fields{&s000, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s001, fields{&s001, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s002, fields{&s002, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s003, fields{&s003, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s004, fields{&s004, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s005, fields{&s005, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s006, fields{&s006, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s007, fields{&s007, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s008, fields{&s008, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s009, fields{&s009, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s010, fields{&s010, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s011, fields{&s011, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s012, fields{&s012, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s013, fields{&s013, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s014, fields{&s014, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s015, fields{&s015, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345" + s016, fields{&s016, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s017, fields{&s017, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s000, fields{&s000, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s001, fields{&s001, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s002, fields{&s002, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s003, fields{&s003, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s004, fields{&s004, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s005, fields{&s005, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s006, fields{&s006, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s007, fields{&s007, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s008, fields{&s008, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s009, fields{&s009, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s010, fields{&s010, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s011, fields{&s011, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s012, fields{&s012, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s013, fields{&s013, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s014, fields{&s014, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s015, fields{&s015, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345" + s016, fields{&s016, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s017, fields{&s017, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s000, fields{&s000, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s018, fields{&s018, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s019, fields{&s019, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s018, fields{&s018, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s019, fields{&s019, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 
-		{"345" + s100, fields{&s100, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s101, fields{&s101, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s102, fields{&s102, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s103, fields{&s103, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345" + s104, fields{&s104, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s105, fields{&s105, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s106, fields{&s106, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345" + s107, fields{&s107, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s108, fields{&s108, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s109, fields{&s109, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s110, fields{&s110, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s111, fields{&s111, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0" + s112, fields{&s112, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s113, fields{&s113, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s114, fields{&s114, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0" + s115, fields{&s115, 0, Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345" + s116, fields{&s116, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s117, fields{&s117, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s100, fields{&s100, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s101, fields{&s101, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s102, fields{&s102, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s103, fields{&s103, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345" + s104, fields{&s104, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s105, fields{&s105, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s106, fields{&s106, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345" + s107, fields{&s107, 0, Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s108, fields{&s108, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s109, fields{&s109, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s110, fields{&s110, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s111, fields{&s111, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0" + s112, fields{&s112, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s113, fields{&s113, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s114, fields{&s114, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0" + s115, fields{&s115, 0, Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345" + s116, fields{&s116, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s117, fields{&s117, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s100, fields{&s100, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s118, fields{&s118, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s119, fields{&s119, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s118, fields{&s118, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s119, fields{&s119, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_equExpr", Value{t: Integer, i: 3})
-	SetVar("v2_equExpr", Value{t: Floating, f: 1.5})
+	SetVar("v1_equExpr", Value{t: I32, i: 3})
+	SetVar("v2_equExpr", Value{t: F32, f: 1.5})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1609,15 +1609,15 @@ func TestExpression_andExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0x55aa00ff" + s0, fields{&s0, 0, Value{t: Integer, i: 0x55aa00ff}}, Value{t: Integer, i: 0x050A00F0}, false},
-		{"0x55aa00ff" + s1, fields{&s1, 0, Value{t: Integer, i: 0x55aa00ff}}, Value{t: Integer, i: 0x050A00F0}, false},
-		{"345" + s2, fields{&s2, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"0x55aa00ff" + s0, fields{&s0, 0, Value{t: I32, i: 0x55aa00ff}}, Value{t: I32, i: 0x050A00F0}, false},
+		{"0x55aa00ff" + s1, fields{&s1, 0, Value{t: I32, i: 0x55aa00ff}}, Value{t: I64, i: 0x050A00F0}, false},
+		{"345" + s2, fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_andExpr", Value{t: Integer, i: 0xaf5f0ff0})
+	SetVar("v1_andExpr", Value{t: I32, i: 0xaf5f0ff0})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1661,15 +1661,15 @@ func TestExpression_xorExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0x55aa00ff" + s0, fields{&s0, 0, Value{t: Integer, i: 0x55aa00ff}}, Value{t: Integer, i: 0xFAF50F0F}, false},
-		{"0x55aa00ff" + s1, fields{&s1, 0, Value{t: Integer, i: 0x55aa00ff}}, Value{t: Integer, i: 0xFAF50F0F}, false},
-		{"345" + s2, fields{&s2, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"0x55aa00ff" + s0, fields{&s0, 0, Value{t: I32, i: 0x55aa00ff}}, Value{t: I32, i: 0xFAF50F0F}, false},
+		{"0x55aa00ff" + s1, fields{&s1, 0, Value{t: I32, i: 0x55aa00ff}}, Value{t: I64, i: 0xFAF50F0F}, false},
+		{"345" + s2, fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_xorExpr", Value{t: Integer, i: 0xaf5f0ff0})
+	SetVar("v1_xorExpr", Value{t: I32, i: 0xaf5f0ff0})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1713,15 +1713,15 @@ func TestExpression_orExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0x55aa00ff" + s0, fields{&s0, 0, Value{t: Integer, i: 0x55aa00ff}}, Value{t: Integer, i: 0xFFFF0FFF}, false},
-		{"0x55aa00ff" + s1, fields{&s1, 0, Value{t: Integer, i: 0x55aa00ff}}, Value{t: Integer, i: 0xFFFF0FFF}, false},
-		{"345" + s2, fields{&s2, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"0x55aa00ff" + s0, fields{&s0, 0, Value{t: I32, i: 0x55aa00ff}}, Value{t: I32, i: 0xFFFF0FFF}, false},
+		{"0x55aa00ff" + s1, fields{&s1, 0, Value{t: I32, i: 0x55aa00ff}}, Value{t: I64, i: 0xFFFF0FFF}, false},
+		{"345" + s2, fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_orExpr", Value{t: Integer, i: 0xaf5f0ff0})
+	SetVar("v1_orExpr", Value{t: I32, i: 0xaf5f0ff0})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1766,18 +1766,18 @@ func TestExpression_logAndExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"1" + s0, fields{&s0, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"0" + s1, fields{&s1, 0, Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"0" + s2, fields{&s2, 0, Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"1" + s1, fields{&s1, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 0}, false},
-		{"1" + s2, fields{&s2, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"1" + s0, fields{&s0, 0, Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"0" + s1, fields{&s1, 0, Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"0" + s2, fields{&s2, 0, Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"1" + s1, fields{&s1, 0, Value{t: I32, i: 1}}, Value{t: U8, i: 0}, false},
+		{"1" + s2, fields{&s2, 0, Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s6, fields{&s6, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_logAndExpr", Value{t: Integer, i: 1})
+	SetVar("v1_logAndExpr", Value{t: I32, i: 1})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1822,18 +1822,18 @@ func TestExpression_logOrExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"1" + s0, fields{&s0, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"0" + s1, fields{&s1, 0, Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"0" + s2, fields{&s2, 0, Value{t: Integer, i: 0}}, Value{t: Integer, i: 1}, false},
-		{"1" + s1, fields{&s1, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"1" + s2, fields{&s2, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: Nix}, true},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"1" + s0, fields{&s0, 0, Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"0" + s1, fields{&s1, 0, Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"0" + s2, fields{&s2, 0, Value{t: I32, i: 0}}, Value{t: U8, i: 1}, false},
+		{"1" + s1, fields{&s1, 0, Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"1" + s2, fields{&s2, 0, Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s6, fields{&s6, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 	}
-	SetVar("v1_logOrExpr", Value{t: Integer, i: 1})
+	SetVar("v1_logOrExpr", Value{t: I32, i: 1})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -1881,27 +1881,27 @@ func TestExpression_condExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0" + s9, fields{&s9, 0, Value{t: Integer, i: 0}}, Value{t: Identifier, s: "name"}, true},
-		{"1" + s0, fields{&s0, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 2}, false},
-		{"0" + s0, fields{&s0, 0, Value{t: Integer, i: 0}}, Value{t: Integer, i: 3}, false},
-		{"1" + s1, fields{&s1, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 2}, false},
-		{"0" + s1, fields{&s1, 0, Value{t: Integer, i: 0}}, Value{t: Integer, i: 3}, false},
-		{"1.23" + s1, fields{&s1, 0, Value{t: Floating, f: 1.23}}, Value{t: Integer, i: 2}, false},
-		{"0.0" + s1, fields{&s1, 0, Value{t: Floating, f: 0.0}}, Value{t: Integer, i: 3}, false},
-		{"1" + s2, fields{&s2, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, true},
-		{"345" + s3, fields{&s3, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"345" + s4, fields{&s4, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"0" + s9, fields{&s9, 0, Value{t: I32, i: 0}}, Value{t: Identifier, s: "name"}, true},
+		{"1" + s0, fields{&s0, 0, Value{t: I32, i: 1}}, Value{t: I32, i: 2}, false},
+		{"0" + s0, fields{&s0, 0, Value{t: I32, i: 0}}, Value{t: I32, i: 3}, false},
+		{"1" + s1, fields{&s1, 0, Value{t: I32, i: 1}}, Value{t: I64, i: 2}, false},
+		{"0" + s1, fields{&s1, 0, Value{t: I32, i: 0}}, Value{t: I64, i: 3}, false},
+		{"1.23" + s1, fields{&s1, 0, Value{t: F32, f: 1.23}}, Value{t: I64, i: 2}, false},
+		{"0.0" + s1, fields{&s1, 0, Value{t: F32, f: 0.0}}, Value{t: I64, i: 3}, false},
+		{"1" + s2, fields{&s2, 0, Value{t: I32, i: 1}}, Value{t: I32, i: 1}, true},
+		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s5, fields{&s5, 0, Value{t: Integer, i: 345}}, Value{t: Identifier, s: "name"}, true},
-		{"345" + s6, fields{&s6, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"1" + s7, fields{&s7, 0, Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, true},
-		{"345" + s8, fields{&s8, 0, Value{t: Integer, i: 345}}, Value{t: AddAdd}, true},
+		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
+		{"345" + s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"1" + s7, fields{&s7, 0, Value{t: I32, i: 1}}, Value{t: I64, i: 1}, true},
+		{"345" + s8, fields{&s8, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"\"string\"" + s1, fields{&s1, 0, Value{t: String, s: "string"}}, Value{t: String, s: "string"}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
-		SetVar("v1_condExpr", Value{t: Integer, i: 2})
-		SetVar("v2_condExpr", Value{t: Integer, i: 3})
+		SetVar("v1_condExpr", Value{t: I32, i: 2})
+		SetVar("v2_condExpr", Value{t: I32, i: 3})
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -2013,145 +2013,145 @@ func TestExpression_asnExpr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345" + shl0, fields{&shl0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v00_asnExpr" + shl0, fields{&shl0, 0, Value{t: Identifier, s: "v00_asnExpr"}}, Value{t: Integer, i: 2760}, false},
-		{"v01_asnExpr" + shl1, fields{&shl1, 0, Value{t: Identifier, s: "v01_asnExpr"}}, Value{t: Integer, i: 44160}, false},
-		{"345" + shl0, fields{&shl0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + shl0, fields{&shl0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v00_asnExpr" + shl0, fields{&shl0, 0, Value{t: Identifier, s: "v00_asnExpr"}}, Value{t: I32, i: 2760}, false},
+		{"v01_asnExpr" + shl1, fields{&shl1, 0, Value{t: Identifier, s: "v01_asnExpr"}}, Value{t: I32, i: 44160}, false},
+		{"345" + shl0, fields{&shl0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + shl2, fields{&shl2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + shl3, fields{&shl3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + shl0, fields{&shl0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + shl4, fields{&shl4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + shl5, fields{&shl5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + shr0, fields{&shr0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v02_asnExpr" + shr0, fields{&shr0, 0, Value{t: Identifier, s: "v02_asnExpr"}}, Value{t: Integer, i: 43}, false},
-		{"v03_asnExpr" + shr1, fields{&shr1, 0, Value{t: Identifier, s: "v03_asnExpr"}}, Value{t: Integer, i: 172}, false},
-		{"345" + shr0, fields{&shr0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + shr0, fields{&shr0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v02_asnExpr" + shr0, fields{&shr0, 0, Value{t: Identifier, s: "v02_asnExpr"}}, Value{t: I32, i: 43}, false},
+		{"v03_asnExpr" + shr1, fields{&shr1, 0, Value{t: Identifier, s: "v03_asnExpr"}}, Value{t: I32, i: 172}, false},
+		{"345" + shr0, fields{&shr0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + shr2, fields{&shr2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + shr3, fields{&shr3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + shr0, fields{&shr0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + shr4, fields{&shr4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + shr5, fields{&shr5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + plus0, fields{&plus0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v04_asnExpr" + plus0, fields{&plus0, 0, Value{t: Identifier, s: "v04_asnExpr"}}, Value{t: Integer, i: 348}, false},
-		{"v05_asnExpr" + plus1, fields{&plus1, 0, Value{t: Identifier, s: "v05_asnExpr"}}, Value{t: Integer, i: 346}, false},
-		{"345" + plus0, fields{&plus0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + plus0, fields{&plus0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v04_asnExpr" + plus0, fields{&plus0, 0, Value{t: Identifier, s: "v04_asnExpr"}}, Value{t: I32, i: 348}, false},
+		{"v05_asnExpr" + plus1, fields{&plus1, 0, Value{t: Identifier, s: "v05_asnExpr"}}, Value{t: I32, i: 346}, false},
+		{"345" + plus0, fields{&plus0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + plus2, fields{&plus2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + plus3, fields{&plus3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + plus0, fields{&plus0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + plus4, fields{&plus4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + plus5, fields{&plus5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + minus0, fields{&minus0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v06_asnExpr" + minus0, fields{&minus0, 0, Value{t: Identifier, s: "v06_asnExpr"}}, Value{t: Integer, i: 342}, false},
-		{"v07_asnExpr" + minus1, fields{&minus1, 0, Value{t: Identifier, s: "v07_asnExpr"}}, Value{t: Integer, i: 344}, false},
-		{"345" + minus0, fields{&minus0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + minus0, fields{&minus0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v06_asnExpr" + minus0, fields{&minus0, 0, Value{t: Identifier, s: "v06_asnExpr"}}, Value{t: I32, i: 342}, false},
+		{"v07_asnExpr" + minus1, fields{&minus1, 0, Value{t: Identifier, s: "v07_asnExpr"}}, Value{t: I32, i: 344}, false},
+		{"345" + minus0, fields{&minus0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + minus2, fields{&minus2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + minus3, fields{&minus3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + minus0, fields{&minus0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + minus4, fields{&minus4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + minus5, fields{&minus5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + or0, fields{&or0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v08_asnExpr" + or0, fields{&or0, 0, Value{t: Identifier, s: "v08_asnExpr"}}, Value{t: Integer, i: 0xffff0fff}, false},
-		{"v09_asnExpr" + or1, fields{&or1, 0, Value{t: Identifier, s: "v09_asnExpr"}}, Value{t: Integer, i: 0xffff0fff}, false},
-		{"345" + or0, fields{&or0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + or0, fields{&or0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v08_asnExpr" + or0, fields{&or0, 0, Value{t: Identifier, s: "v08_asnExpr"}}, Value{t: I32, i: -0xf001}, false},
+		{"v09_asnExpr" + or1, fields{&or1, 0, Value{t: Identifier, s: "v09_asnExpr"}}, Value{t: I32, i: -0xf001}, false},
+		{"345" + or0, fields{&or0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + or2, fields{&or2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + or3, fields{&or3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + or0, fields{&or0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + or4, fields{&or4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + or5, fields{&or5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + and0, fields{&and0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v010_asnExpr" + and0, fields{&and0, 0, Value{t: Identifier, s: "v010_asnExpr"}}, Value{t: Integer, i: 0x050a00f0}, false},
-		{"v011_asnExpr" + and1, fields{&and1, 0, Value{t: Identifier, s: "v011_asnExpr"}}, Value{t: Integer, i: 0x050a00f0}, false},
-		{"345" + and0, fields{&and0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + and0, fields{&and0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v010_asnExpr" + and0, fields{&and0, 0, Value{t: Identifier, s: "v010_asnExpr"}}, Value{t: I32, i: 0x050a00f0}, false},
+		{"v011_asnExpr" + and1, fields{&and1, 0, Value{t: Identifier, s: "v011_asnExpr"}}, Value{t: I32, i: 0x050a00f0}, false},
+		{"345" + and0, fields{&and0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + and2, fields{&and2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + and3, fields{&and3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + and0, fields{&and0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + and4, fields{&and4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + and5, fields{&and5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + xor0, fields{&xor0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v012_asnExpr" + xor0, fields{&xor0, 0, Value{t: Identifier, s: "v012_asnExpr"}}, Value{t: Integer, i: 0xFAF50F0F}, false},
-		{"v013_asnExpr" + xor1, fields{&xor1, 0, Value{t: Identifier, s: "v013_asnExpr"}}, Value{t: Integer, i: 0xFAF50F0F}, false},
-		{"345" + xor0, fields{&xor0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + xor0, fields{&xor0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v012_asnExpr" + xor0, fields{&xor0, 0, Value{t: Identifier, s: "v012_asnExpr"}}, Value{t: I32, i: -0x50AF0F1}, false},
+		{"v013_asnExpr" + xor1, fields{&xor1, 0, Value{t: Identifier, s: "v013_asnExpr"}}, Value{t: I32, i: -0x50AF0F1}, false},
+		{"345" + xor0, fields{&xor0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + xor2, fields{&xor2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + xor3, fields{&xor3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + xor0, fields{&xor0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + xor4, fields{&xor4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + xor5, fields{&xor5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + mul0, fields{&mul0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v014_asnExpr" + mul0, fields{&mul0, 0, Value{t: Identifier, s: "v014_asnExpr"}}, Value{t: Integer, i: 1035}, false},
-		{"v015_asnExpr" + mul1, fields{&mul1, 0, Value{t: Identifier, s: "v015_asnExpr"}}, Value{t: Integer, i: 2415}, false},
-		{"345" + mul0, fields{&mul0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + mul0, fields{&mul0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v014_asnExpr" + mul0, fields{&mul0, 0, Value{t: Identifier, s: "v014_asnExpr"}}, Value{t: I32, i: 1035}, false},
+		{"v015_asnExpr" + mul1, fields{&mul1, 0, Value{t: Identifier, s: "v015_asnExpr"}}, Value{t: I32, i: 2415}, false},
+		{"345" + mul0, fields{&mul0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + mul2, fields{&mul2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + mul3, fields{&mul3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + mul0, fields{&mul0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + mul4, fields{&mul4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + mul5, fields{&mul5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + div0, fields{&div0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v016_asnExpr" + div0, fields{&div0, 0, Value{t: Identifier, s: "v016_asnExpr"}}, Value{t: Integer, i: 115}, false},
-		{"v017_asnExpr" + div1, fields{&div1, 0, Value{t: Identifier, s: "v017_asnExpr"}}, Value{t: Integer, i: 49}, false},
-		{"345" + div0, fields{&div0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + div0, fields{&div0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v016_asnExpr" + div0, fields{&div0, 0, Value{t: Identifier, s: "v016_asnExpr"}}, Value{t: I32, i: 115}, false},
+		{"v017_asnExpr" + div1, fields{&div1, 0, Value{t: Identifier, s: "v017_asnExpr"}}, Value{t: I32, i: 49}, false},
+		{"345" + div0, fields{&div0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + div2, fields{&div2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + div3, fields{&div3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + div0, fields{&div0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + div4, fields{&div4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + div5, fields{&div5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + mod0, fields{&mod0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v018_asnExpr" + mod0, fields{&mod0, 0, Value{t: Identifier, s: "v018_asnExpr"}}, Value{t: Integer, i: 9}, false},
-		{"v019_asnExpr" + mod1, fields{&mod1, 0, Value{t: Identifier, s: "v019_asnExpr"}}, Value{t: Integer, i: 9}, false},
-		{"345" + mod0, fields{&mod0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + mod0, fields{&mod0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v018_asnExpr" + mod0, fields{&mod0, 0, Value{t: Identifier, s: "v018_asnExpr"}}, Value{t: I32, i: 9}, false},
+		{"v019_asnExpr" + mod1, fields{&mod1, 0, Value{t: Identifier, s: "v019_asnExpr"}}, Value{t: I32, i: 9}, false},
+		{"345" + mod0, fields{&mod0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + mod2, fields{&mod2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + mod3, fields{&mod3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
 		{"name" + mod0, fields{&mod0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + mod4, fields{&mod4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + mod5, fields{&mod5, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 
-		{"345" + ass0, fields{&ass0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v020_asnExpr" + ass0, fields{&ass0, 0, Value{t: Identifier, s: "v020_asnExpr"}}, Value{t: Integer, i: 3}, false},
-		{"v021_asnExpr" + ass1, fields{&ass1, 0, Value{t: Identifier, s: "v021_asnExpr"}}, Value{t: Integer, i: 345}, false},
-		{"345" + ass0, fields{&ass0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
+		{"345" + ass0, fields{&ass0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v020_asnExpr" + ass0, fields{&ass0, 0, Value{t: Identifier, s: "v020_asnExpr"}}, Value{t: I32, i: 3}, false},
+		{"v021_asnExpr" + ass1, fields{&ass1, 0, Value{t: Identifier, s: "v021_asnExpr"}}, Value{t: I32, i: 345}, false},
+		{"345" + ass0, fields{&ass0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_asnExpr" + ass2, fields{&ass2, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "v0_asnExpr"}, true},
 		{"v0_asnExpr" + ass3, fields{&ass3, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: AddAdd}, true},
-		{"name" + ass0, fields{&ass0, 0, Value{t: Identifier, s: "name"}}, Value{t: Integer, i: 3}, true},
+		{"name" + ass0, fields{&ass0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"v0_asnExpr" + ass4, fields{&ass4, 0, Value{t: Identifier, s: "v0_asnExpr"}}, Value{t: Identifier, s: "name"}, true},
 		{"v022_asnExpr" + ass5, fields{&ass5, 0, Value{t: Identifier, s: "v022_asnExpr"}}, Value{t: String, s: "string"}, false},
 	}
 	for _, tt := range tests {
 		tt := tt
-		SetVar("v00_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v01_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v02_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v03_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v04_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v05_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v06_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v07_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v08_asnExpr", Value{t: Integer, i: 0x55aa00ff})
-		SetVar("v09_asnExpr", Value{t: Integer, i: 0x55aa00ff})
-		SetVar("v010_asnExpr", Value{t: Integer, i: 0x55aa00ff})
-		SetVar("v011_asnExpr", Value{t: Integer, i: 0x55aa00ff})
-		SetVar("v012_asnExpr", Value{t: Integer, i: 0x55aa00ff})
-		SetVar("v013_asnExpr", Value{t: Integer, i: 0x55aa00ff})
-		SetVar("v014_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v015_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v016_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v017_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v018_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v019_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v020_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v021_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v022_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v0_asnExpr", Value{t: Integer, i: 345})
-		SetVar("v1_asnExpr", Value{t: Integer, i: 3})
-		SetVar("v2_asnExpr", Value{t: Integer, i: 0xaf5f0ff0})
-		SetVar("v3_asnExpr", Value{t: Integer, i: 14})
+		SetVar("v00_asnExpr", Value{t: I32, i: 345})
+		SetVar("v01_asnExpr", Value{t: I32, i: 345})
+		SetVar("v02_asnExpr", Value{t: I32, i: 345})
+		SetVar("v03_asnExpr", Value{t: I32, i: 345})
+		SetVar("v04_asnExpr", Value{t: I32, i: 345})
+		SetVar("v05_asnExpr", Value{t: I32, i: 345})
+		SetVar("v06_asnExpr", Value{t: I32, i: 345})
+		SetVar("v07_asnExpr", Value{t: I32, i: 345})
+		SetVar("v08_asnExpr", Value{t: I32, i: 0x55aa00ff})
+		SetVar("v09_asnExpr", Value{t: I32, i: 0x55aa00ff})
+		SetVar("v010_asnExpr", Value{t: I32, i: 0x55aa00ff})
+		SetVar("v011_asnExpr", Value{t: I32, i: 0x55aa00ff})
+		SetVar("v012_asnExpr", Value{t: I32, i: 0x55aa00ff})
+		SetVar("v013_asnExpr", Value{t: I32, i: 0x55aa00ff})
+		SetVar("v014_asnExpr", Value{t: I32, i: 345})
+		SetVar("v015_asnExpr", Value{t: I32, i: 345})
+		SetVar("v016_asnExpr", Value{t: I32, i: 345})
+		SetVar("v017_asnExpr", Value{t: I32, i: 345})
+		SetVar("v018_asnExpr", Value{t: I32, i: 345})
+		SetVar("v019_asnExpr", Value{t: I32, i: 345})
+		SetVar("v020_asnExpr", Value{t: I32, i: 345})
+		SetVar("v021_asnExpr", Value{t: I32, i: 345})
+		SetVar("v022_asnExpr", Value{t: I32, i: 345})
+		SetVar("v0_asnExpr", Value{t: I32, i: 345})
+		SetVar("v1_asnExpr", Value{t: I32, i: 3})
+		SetVar("v2_asnExpr", Value{t: I32, i: 0xaf5f0ff0})
+		SetVar("v3_asnExpr", Value{t: I32, i: 14})
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -2192,17 +2192,17 @@ func TestExpression_expression(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345" + s0, fields{&s0, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, false},
-		{"v0_expExpr" + s0, fields{&s0, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: Integer, i: 1}, false},
-		{"345" + s1, fields{&s1, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, false},
-		{"v0_expExpr" + s1, fields{&s1, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: Integer, i: 1}, false},
-		{"345" + s2, fields{&s2, 0, Value{t: Integer, i: 345}}, Value{t: Integer, i: 345}, true},
-		{"v0_expExpr" + s3, fields{&s3, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: Integer, i: 1}, true},
+		{"345" + s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, false},
+		{"v0_expExpr" + s0, fields{&s0, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: I32, i: 1}, false},
+		{"345" + s1, fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, false},
+		{"v0_expExpr" + s1, fields{&s1, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: I32, i: 1}, false},
+		{"345" + s2, fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
+		{"v0_expExpr" + s3, fields{&s3, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: I32, i: 1}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
-		SetVar("v0_expExpr", Value{t: Integer, i: 1})
-		SetVar("v1_expExpr", Value{t: Integer, i: 345})
+		SetVar("v0_expExpr", Value{t: I32, i: 1})
+		SetVar("v1_expExpr", Value{t: I32, i: 345})
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 

@@ -126,12 +126,12 @@ func Test_getOne(t *testing.T) {
 	var nameErr2 = "../../testdata/test_err2.xml"
 	var nameErr3 = "../../testdata/test_err3.xml"
 	var evs = make(map[uint16]Event)
-	var tds = make(map[string]map[string]map[int16]string)
+	var tds = make(map[string]map[string]TdMember)
 
 	type args struct {
 		filename *string
 		events   map[uint16]Event
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]TdMember
 	}
 	tests := []struct {
 		name    string
@@ -158,8 +158,8 @@ func Test_getOne(t *testing.T) {
 			if string(evs[tt.ev].Value) != tt.evWant {
 				t.Errorf("getOne() event = %v, want %v", string(evs[tt.ev].Value), tt.evWant)
 			}
-			if tds[tt.td][tt.member][tt.enum] != tt.tdWant {
-				t.Errorf("getOne() enum = %v, want %v", tds[tt.td][tt.member][tt.enum], tt.tdWant)
+			if tds[tt.td][tt.member].Enum[tt.enum] != tt.tdWant {
+				t.Errorf("getOne() enum = %v, want %v", tds[tt.td][tt.member].Enum[tt.enum], tt.tdWant)
 			}
 		})
 	}
@@ -169,12 +169,12 @@ func TestGet(t *testing.T) {
 	var files = []string{"../../testdata/test.xml"}
 	var files1 = []string{"../../testdata/xxxxx"}
 	var evs = make(map[uint16]Event)
-	var tds = make(map[string]map[string]map[int16]string)
+	var tds = make(map[string]map[string]TdMember)
 
 	type args struct {
 		scvdFiles *[]string
 		events    map[uint16]Event
-		typedefs  map[string]map[string]map[int16]string
+		typedefs  map[string]map[string]TdMember
 	}
 	tests := []struct {
 		name    string

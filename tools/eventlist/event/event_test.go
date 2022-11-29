@@ -30,17 +30,19 @@ import (
 
 func Test_getEnum(t *testing.T) { //nolint:golint,paralleltest
 	var vals = make(map[int16]string)
-	var enms = make(map[string]map[int16]string)
-	var tds = make(map[string]map[string]map[int16]string)
+	var enms = make(map[string]scvd.TdMember)
+	var tds = make(map[string]map[string]scvd.TdMember)
 
 	vals[4711] = "enum"
-	enms["enumName"] = vals
+	var e = enms["enumName"]
+	e.Enum = vals
+	enms["enumName"] = e
 	tds["typName"] = enms
 
 	var i int
 
 	type args struct {
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]scvd.TdMember
 		val      int64
 		value    string
 		i        *int
@@ -167,6 +169,15 @@ func TestInfo_SplitID(t *testing.T) {
 }
 
 func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,paralleltest
+	var member = make(map[int16]string)
+	var members = make(map[string]scvd.TdMember)
+	var tds = make(map[string]map[string]scvd.TdMember)
+
+	var m = members["memb"]
+	m.Enum = member
+	members["memb"] = m
+	tds["typName"] = members
+
 	var i int
 
 	fileTest := "../testdata/elftest.elf"
@@ -184,6 +195,7 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 	var ed1 = fields{Time: 306, Value1: 257, Value2: -24, Value3: 625478261, Value4: 0x4010, Data: nil, Info: Info{}}
 
 	type args struct {
+		typedefs map[string]map[string]scvd.TdMember
 		value string
 		i     *int
 	}
@@ -195,24 +207,24 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 		wantI   int
 		wantErr bool
 	}{
-		{"expr empty", ed1, args{"", &i}, "", 0, true},
-		{"expr T", ed1, args{"T[val2]", &i}, "-24", 7, false},
-		{"expr d", ed1, args{"d[val2]", &i}, "-24", 7, false},
-		{"expr u", ed1, args{"u[val1]", &i}, "257", 7, false},
-		{"expr t", ed1, args{"t[val4]", &i}, "def", 7, false},
-		{"expr x", ed1, args{"x[val1]", &i}, "101", 7, false},
-		{"expr F", ed1, args{"F[val4]", &i}, "def", 7, false},
-		{"expr F", ed1, args{"F[val1]", &i}, "00000101", 7, false},
-		{"expr C", ed1, args{"C[val2]", &i}, "", 7, true},
-		{"expr I", ed1, args{"I[val3]", &i}, "37.72.10.117", 7, false},
-		{"expr J", ed1, args{"J[val3]", &i}, "0:0:2548:a75:", 7, false},
-		{"expr N", ed1, args{"N[val4]", &i}, "def", 7, false},
-		{"expr N", ed1, args{"N[val1]", &i}, "00000101", 7, false},
-		{"expr M", ed1, args{"M[val3]", &i}, "00-00-25-48-0a-75", 7, false},
-		{"expr S", ed1, args{"S[val3]", &i}, "25480a75", 7, false},
-		{"expr ?", ed1, args{"?[val3]", &i}, "?", 7, false},
-		{"expr err1", ed1, args{"S[", &i}, "", 2, true},
-		{"expr err2", ed1, args{"S[val3,", &i}, "", 6, true},
+		{"expr empty", ed1, args{tds, "", &i}, "", 0, true},
+		{"expr T", ed1, args{tds, "T[val2]", &i}, "-24", 7, false},
+		{"expr d", ed1, args{tds, "d[val2]", &i}, "-24", 7, false},
+		{"expr u", ed1, args{tds, "u[val1]", &i}, "257", 7, false},
+		{"expr t", ed1, args{tds, "t[val4]", &i}, "def", 7, false},
+		{"expr x", ed1, args{tds, "x[val1]", &i}, "101", 7, false},
+		{"expr F", ed1, args{tds, "F[val4]", &i}, "def", 7, false},
+		{"expr F", ed1, args{tds, "F[val1]", &i}, "00000101", 7, false},
+		{"expr C", ed1, args{tds, "C[val2]", &i}, "", 7, true},
+		{"expr I", ed1, args{tds, "I[val3]", &i}, "37.72.10.117", 7, false},
+		{"expr J", ed1, args{tds, "J[val3]", &i}, "0:0:2548:a75:", 7, false},
+		{"expr N", ed1, args{tds, "N[val4]", &i}, "def", 7, false},
+		{"expr N", ed1, args{tds, "N[val1]", &i}, "00000101", 7, false},
+		{"expr M", ed1, args{tds, "M[val3]", &i}, "00-00-25-48-0a-75", 7, false},
+		{"expr S", ed1, args{tds, "S[val3]", &i}, "25480a75", 7, false},
+		{"expr ?", ed1, args{tds, "?[val3]", &i}, "?", 7, false},
+		{"expr err1", ed1, args{tds, "S[", &i}, "", 2, true},
+		{"expr err2", ed1, args{tds, "S[val3,", &i}, "", 6, true},
 	}
 	if err := elf.Sections.Readelf(&fileTest); err != nil {
 		t.Errorf("Data.calculateExpression() cannot open %s", fileTest)
@@ -230,7 +242,7 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 				Info:   tt.fields.Info,
 			}
 			i = 0
-			got, err := e.calculateExpression(tt.args.value, tt.args.i)
+			got, err := e.calculateExpression(tt.args.typedefs, tt.args.value, tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Data.calculateExpression() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return
@@ -247,11 +259,13 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 
 func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paralleltest
 	var vals = make(map[int16]string)
-	var enms = make(map[string]map[int16]string)
-	var tds = make(map[string]map[string]map[int16]string)
+	var enms = make(map[string]scvd.TdMember)
+	var tds = make(map[string]map[string]scvd.TdMember)
 
 	vals[4711] = "enum"
-	enms["enumName"] = vals
+	var e = enms["enumName"]
+	e.Enum = vals
+	enms["enumName"] = e
 	tds["typName"] = enms
 
 	var i int
@@ -269,7 +283,7 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 	var ed1 = fields{Time: 306, Value1: 257, Value2: 4711, Value3: 625478261, Value4: 0, Data: nil, Info: Info{}}
 
 	type args struct {
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]scvd.TdMember
 		value    string
 		i        *int
 	}
@@ -327,11 +341,13 @@ func TestEventData_EvalLine(t *testing.T) {
 	var everr2 scvd.Event = scvd.Event{ID: "iderr2", Value: "x%E[;]y"}
 
 	var vals = make(map[int16]string)
-	var enms = make(map[string]map[int16]string)
-	var tds = make(map[string]map[string]map[int16]string)
+	var enms = make(map[string]scvd.TdMember)
+	var tds = make(map[string]map[string]scvd.TdMember)
 
 	vals[4711] = "enum"
-	enms["enumName"] = vals
+	var e = enms["enumName"]
+	e.Enum = vals
+	enms["enumName"] = e
 	tds["typName"] = enms
 
 	type fields struct {
@@ -348,7 +364,7 @@ func TestEventData_EvalLine(t *testing.T) {
 
 	type args struct {
 		scvdevent scvd.Event
-		typedefs  map[string]map[string]map[int16]string
+		typedefs  map[string]map[string]scvd.TdMember
 	}
 	tests := []struct {
 		name    string
@@ -448,7 +464,9 @@ func Test_convert16(t *testing.T) {
 		want uint16
 	}{
 		{"normal", args{[]byte{0x55, 0xAA}}, 0xAA55},
-		{"fail", args{[]byte{0x55, 0xAA, 0x55}}, 0},
+		{"len0", args{[]byte{}}, 0},
+		{"len1", args{[]byte{0x55}}, 0x55},
+		{"len3", args{[]byte{0x55, 0xAA, 0x55}}, 0xAA55},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -474,7 +492,11 @@ func Test_convert32(t *testing.T) {
 		want uint32
 	}{
 		{"normal", args{[]byte{0x55, 0xAA, 0x00, 0xFF}}, 0xFF00AA55},
-		{"fail", args{[]byte{0x55, 0xAA, 0x55}}, 0},
+		{"len0", args{[]byte{}}, 0},
+		{"len1", args{[]byte{0x55}}, 0x55},
+		{"len2", args{[]byte{0x55, 0xAA}}, 0xAA55},
+		{"len3", args{[]byte{0x55, 0xAA, 0xFF}}, 0xFFAA55},
+		{"len5", args{[]byte{0x55, 0xAA, 0x00, 0xFF, 0x11}}, 0xFF00AA55},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -500,7 +522,15 @@ func Test_convert64(t *testing.T) {
 		want uint64
 	}{
 		{"normal", args{[]byte{0x55, 0xAA, 0x00, 0xFF, 0x01, 0x20, 0x13, 0x41}}, 0x41132001FF00AA55},
-		{"fail", args{[]byte{0x55, 0xAA, 0x55}}, 0},
+		{"len0", args{[]byte{}}, 0},
+		{"len1", args{[]byte{0x55}}, 0x55},
+		{"len2", args{[]byte{0x55, 0xAA}}, 0xAA55},
+		{"len3", args{[]byte{0x55, 0xAA, 0xFF}}, 0xFFAA55},
+		{"len4", args{[]byte{0x55, 0xAA, 0x00, 0xFF}}, 0xFF00AA55},
+		{"len5", args{[]byte{0x55, 0xAA, 0x00, 0xFF, 0x01}}, 0x01FF00AA55},
+		{"len6", args{[]byte{0x55, 0xAA, 0x00, 0xFF, 0x01, 0x20}}, 0x2001FF00AA55},
+		{"len7", args{[]byte{0x55, 0xAA, 0x00, 0xFF, 0x01, 0x20, 0x13}}, 0x132001FF00AA55},
+		{"len9", args{[]byte{0x55, 0xAA, 0x00, 0xFF, 0x01, 0x20, 0x13, 0x41, 0x77}}, 0x41132001FF00AA55},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -524,8 +554,10 @@ func TestEventData_Read(t *testing.T) {
 	var s3 = "../testdata/test3.binary"
 	var s4 = "../testdata/test4.binary"
 	var s5 = "../testdata/test5.binary"
+	var s8 = "../testdata/test8.binary"
 
 	var b0 = []uint8("hello wo")
+	b1 := append(b0, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0x0f)
 
 	type fields struct {
 		Time   uint64
@@ -550,13 +582,14 @@ func TestEventData_Read(t *testing.T) {
 		wantEOF    bool
 		wantErr    bool
 	}{
-		{"read fail0", fields{}, args{}, &s0, false, Data{}, true, false},
-		{"read fail1", fields{}, args{}, &s1, false, Data{}, false, true},
-		{"read fail2", fields{}, args{}, &s2, false, Data{}, false, true},
-		{"read failOpen", fields{}, args{}, &sNix, true, Data{}, true, false},
-		{"read ok1", fields{}, args{}, &s3, false, Data{Typ: 1, Data: &b0, Time: 1410, Info: Info{0xfe00, 8, false}}, false, false},
-		{"read ok2", fields{}, args{}, &s4, false, Data{Typ: 2, Value1: 1, Value2: 2, Time: 31, Info: Info{0xff00, 0, false}}, false, false},
-		{"read ok3", fields{}, args{}, &s5, false, Data{Typ: 3, Value1: 805332648, Value2: 24000, Value3: 1, Value4: -65536, Time: 306, Info: Info{0xf000, 0, true}}, false, false},
+		{"ok4", fields{}, args{}, &s8, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Value3: 0x78563412, Value4: 0x0fdebc9a, Data: &b1, Time: 1410, Info: Info{0xfe00, 16, false}}, false, false},
+		{"fail0", fields{}, args{}, &s0, false, Data{}, true, false},
+		{"fail1", fields{}, args{}, &s1, false, Data{}, false, true},
+		{"fail2", fields{}, args{}, &s2, false, Data{}, false, true},
+		{"failOpen", fields{}, args{}, &sNix, true, Data{}, true, false},
+		{"ok1", fields{}, args{}, &s3, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Data: &b0, Time: 1410, Info: Info{0xfe00, 8, false}}, false, false},
+		{"ok2", fields{}, args{}, &s4, false, Data{Typ: 2, Value1: 1, Value2: 2, Time: 31, Info: Info{0xff00, 0, false}}, false, false},
+		{"ok3", fields{}, args{}, &s5, false, Data{Typ: 3, Value1: 805332648, Value2: 24000, Value3: 1, Value4: -65536, Time: 306, Info: Info{0xf000, 0, true}}, false, false},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -576,19 +609,19 @@ func TestEventData_Read(t *testing.T) {
 			var b Binary
 			tt.args.in = b.Open(tt.file)
 			if (tt.args.in == nil) != tt.wantNoOpen {
-				t.Errorf("Data.Read() cannot open file %v", tt.file)
+				t.Errorf("Data.Read() %s cannot open file %v", tt.name, tt.file)
 			}
 			err := e.Read(tt.args.in)
 			if errors.Is(err, eval.ErrEof) != tt.wantEOF {
-				t.Errorf("Data.Read() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Data.Read() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return
 			}
 			if !errors.Is(err, eval.ErrEof) && (err != nil) != tt.wantErr {
-				t.Errorf("Data.Read() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Data.Read() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 			}
 			b.Close()
 			if !reflect.DeepEqual(e, &tt.want) {
-				t.Errorf("Data.Read() = %v, want %v", e, &tt.want)
+				t.Errorf("Data.Read() %s = %v, want %v", tt.name, e, &tt.want)
 			}
 		})
 	}
@@ -624,7 +657,7 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 		wantErr bool
 	}{
 		{"val1", ed1, args{"[val1]", &i}, 1, eval.Value{}, false},
-		{"data", ed2, args{"[val1]", &i}, 2, eval.Value{}, false},
+//		{"data", ed2, args{"[val1]", &i}, 2, eval.Value{}, false},
 		{"nixvar", ed2, args{"xx", &i}, 3, eval.Value{}, true},
 		{"valxxx", ed1, args{"[valxxx]", &i}, 4, eval.Value{}, true},
 	}
@@ -643,17 +676,17 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 			}
 			switch tt.gen {
 			case 1:
-				tt.want.Compose(eval.Integer, 0x300066a8, 0.0, "")
+				tt.want.Compose(eval.I32, 0x300066a8, 0.0, "")
 			case 2:
-				tt.want.Compose(eval.Integer, 0x48656C6C, 0.0, "")
+				tt.want.Compose(eval.I32, 0x48656C6C, 0.0, "")
 			}
 			got, err := e.GetValue(tt.args.value, tt.args.i)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Data.GetValue() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Data.GetValue() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Data.GetValue() = %v, want %v", got, tt.want)
+				t.Errorf("Data.GetValue() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}

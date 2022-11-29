@@ -211,7 +211,7 @@ type Output struct {
 }
 
 func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string) int {
+	typedefs map[string]map[string]scvd.TdMember) int {
 	o.componentSize = len(o.columns[2]) // use minimum width of header
 	o.propertySize = len(o.columns[3])
 	for i := uint16(0); i < uint16(len(o.evProps)); i++ {
@@ -376,7 +376,7 @@ func escapeGen(s string) string {
 }
 
 func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string) error {
+	typedefs map[string]map[string]scvd.TdMember) error {
 	if out == nil || in == nil {
 		return nil
 	}
@@ -473,7 +473,7 @@ func (o *Output) printHeader(out *bufio.Writer) error {
 }
 
 func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
+	typedefs map[string]map[string]scvd.TdMember, statBegin bool, showStatistic bool) error {
 	var b event.Binary
 	var err error
 	var eventCount int
@@ -531,7 +531,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 }
 
 func Print(filename *string, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
+	typedefs map[string]map[string]scvd.TdMember, statBegin bool, showStatistic bool) error {
 	var file *os.File
 	var err error
 	var o Output

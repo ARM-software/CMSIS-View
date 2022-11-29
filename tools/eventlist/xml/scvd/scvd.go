@@ -139,16 +139,23 @@ func (id *ID) getIdValue() (uint16, error) { //nolint:golint,revive
 	return uint16(n.GetInt()), nil
 }
 
+type TdMember struct {
+	Type	eval.Token
+	Enum	map[int16]string
+	Offset  int32
+	Info	string
+}
+
 func getOne(filename *string, events map[uint16]Event,
-	typedefs map[string]map[string]map[int16]string) error {
+	typedefs map[string]map[string]TdMember) error {
 	var viewer ComponentViewer
 	var err error
 	if err = viewer.getFromFile(filename); err == nil {
 		// create a components map indexed by "no" to speed up things
 		components := make(map[uint8]*GroupComponent)
 		for _, component := range viewer.Events.Group.Component {
-			var no uint64
-			no, err = strconv.ParseUint(component.No, 0, 8)
+			var no int64
+			no, err = strconv.ParseInt(component.No, 0, 0)
 			if err != nil {
 				break
 			}
@@ -170,18 +177,23 @@ func getOne(filename *string, events map[uint16]Event,
 		// extract enums from typedefs
 		for _, typedef := range viewer.Typedefs.Typedef {
 			if len(typedef.Members) > 0 {
-				members := make(map[string]map[int16]string)
+				members := make(map[string]TdMember)
 				for _, member := range typedef.Members {
 					if len(member.Enums) > 0 {
-						enums := make(map[int16]string)
+						if m, ok := members[member.Name]; ok {
+							m.Enum = make(map[int16]string)
+							members[member.Name] = m
+						}
 						for _, enum := range member.Enums {
 							var en int16
 							if en, err = enum.getInfo(); err != nil {
 								return err
 							}
-							enums[en] = enum.Name
+							t := members[member.Name]
+							t.Enum = make(map[int16]string)
+							t.Enum[en] = enum.Name
+							members[member.Name] = t
 						}
-						members[member.Name] = enums
 					}
 				}
 				if len(members) > 0 {
@@ -195,7 +207,7 @@ func getOne(filename *string, events map[uint16]Event,
 
 // returns the events and typedef map
 func Get(scvdFiles *[]string, events map[uint16]Event,
-	typedefs map[string]map[string]map[int16]string) error {
+	typedefs map[string]map[string]TdMember) error {
 	if scvdFiles != nil {
 		for _, scvdFile := range *scvdFiles {
 			if err := getOne(&scvdFile, events, typedefs); err != nil {

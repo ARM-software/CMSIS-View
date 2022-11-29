@@ -46,14 +46,14 @@ func formatError(fn, str string) *eval.NumError {
 
 // get the enum value as string
 // count closing ]
-func getEnum(typedefs map[string]map[string]map[int16]string, val int64, value string, i *int) (string, error) {
+func getEnum(typedefs map[string]map[string]scvd.TdMember, val int64, value string, i *int) (string, error) {
 	j := strings.IndexAny(value[*i:], ":]")
 	if j == -1 {
 		return "", formatError("getEnum", value[*i:])
 	}
 	td := strings.TrimSpace(value[*i : *i+j])
-	if value[*i+j] == ':' {
-		members := typedefs[td] // select members of typedef
+	if value[*i+j] == ':' { 	// select a specific member of typedef
+		members := typedefs[td]
 		if members == nil {
 			return "", enumError("getEnum", td)
 		}
@@ -64,10 +64,10 @@ func getEnum(typedefs map[string]map[string]map[int16]string, val int64, value s
 		}
 		md := strings.TrimSpace(value[*i : *i+j])
 		entry := members[md]
-		if entry == nil {
+		if entry.Enum == nil {
 			return "", enumError("getEnum", md)
 		}
-		name, ok := entry[int16(val)]
+		name, ok := entry.Enum[int16(val)]
 		if !ok {
 			return "", enumError("getEnum", strconv.Itoa(int(val)))
 		}
@@ -75,8 +75,8 @@ func getEnum(typedefs map[string]map[string]map[int16]string, val int64, value s
 		return name, nil
 	}
 	*i += j + 1 // only enum name, no member
-	for _, mm := range typedefs[td] {
-		if name, ok := mm[int16(val)]; ok {
+	for _, mm := range typedefs[td] {	// search through all enums of this typedef
+		if name, ok := mm.Enum[int16(val)]; ok {
 			return name, nil
 		}
 	}
@@ -118,7 +118,7 @@ type Data struct {
 
 // calculate a format expression and return the result
 // if unknown code then return the code only
-func (e *Data) calculateExpression(value string, i *int) (string, error) {
+func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember, value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
 	var err error
@@ -184,7 +184,7 @@ func (e *Data) calculateExpression(value string, i *int) (string, error) {
 	return out, nil
 }
 
-func (e *Data) calculateEnumExpression(typedefs map[string]map[string]map[int16]string,
+func (e *Data) calculateEnumExpression(typedefs map[string]map[string]scvd.TdMember,
 	value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
@@ -216,7 +216,7 @@ func (e *Data) calculateEnumExpression(typedefs map[string]map[string]map[int16]
 	return out, nil
 }
 
-func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]map[int16]string) (string, error) {
+func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]scvd.TdMember) (string, error) {
 	var s string
 	for i := 0; i < len(scvdevent.Value); i++ {
 		c := scvdevent.Value[i]
@@ -253,7 +253,7 @@ func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]map
 				case 'T': // type dependant
 					fallthrough
 				case 'U': // USB descriptor
-					out, err := e.calculateExpression(string(scvdevent.Value), &i)
+					out, err := e.calculateExpression(typedefs, string(scvdevent.Value), &i)
 					if err != nil {
 						return "", err
 					}
@@ -297,24 +297,33 @@ type Binary struct {
 }
 
 func convert16(data []byte) uint16 {
-	if len(data) != 2 {
+	if len(data) < 1 {
 		return 0
 	}
-	return binary.LittleEndian.Uint16([]byte{data[0], data[1]})
+	if len(data) < 2 {
+		return binary.LittleEndian.Uint16([]byte{data[0], 0})
+	}
+	return binary.LittleEndian.Uint16(data)
 }
 
 func convert32(data []byte) uint32 {
-	if len(data) != 4 {
+	if len(data) < 1 {
 		return 0
 	}
-	return binary.LittleEndian.Uint32([]byte{data[0], data[1], data[2], data[3]})
+	if len(data) < 4 {
+		return binary.LittleEndian.Uint32(append(data, 0, 0, 0))
+	}
+	return binary.LittleEndian.Uint32(data)
 }
 
 func convert64(data []byte) uint64 {
-	if len(data) != 8 {
+	if len(data) < 1 {
 		return 0
 	}
-	return binary.LittleEndian.Uint64([]byte{data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]})
+	if len(data) < 8 {
+		return binary.LittleEndian.Uint64(append(data, 0, 0, 0, 0, 0, 0, 0))
+	}
+	return binary.LittleEndian.Uint64(data)
 }
 
 // get one data record
@@ -345,6 +354,16 @@ func (e *Data) Read(in *bufio.Reader) error {
 	case 1: // EventrecordData
 		e.Data = new([]uint8)
 		*e.Data = data[12 : 12+int(e.Info.length)]
+		e.Value1 = int32(convert32((*e.Data)[0:]))
+		if e.Info.length >= 4 {
+			e.Value2 = int32(convert32((*e.Data)[4:]))
+			if e.Info.length >= 8 {
+				e.Value3 = int32(convert32((*e.Data)[8:]))
+				if e.Info.length >= 12 {
+					e.Value4 = int32(convert32((*e.Data)[12:]))
+				}
+			}
+		}
 	case 2: // Eventrecord2
 		e.Value1 = int32(convert32(data[12:16]))
 		e.Value2 = int32(convert32(data[16:20]))
@@ -359,22 +378,22 @@ func (e *Data) Read(in *bufio.Reader) error {
 
 func (e *Data) GetValue(value string, i *int) (eval.Value, error) {
 	if *i < len(value) && value[*i] == '[' {
-		if e.Data == nil {
-			eval.SetVarI("val1", int64(e.Value1))
-			eval.SetVarI("val2", int64(e.Value2))
-			eval.SetVarI("val3", int64(e.Value3))
-			eval.SetVarI("val4", int64(e.Value4))
-		} else {
+//		if e.Data == nil {
+			eval.SetVarI32("val1", int64(e.Value1))
+			eval.SetVarI32("val2", int64(e.Value2))
+			eval.SetVarI32("val3", int64(e.Value3))
+			eval.SetVarI32("val4", int64(e.Value4))
+/*		} else {
 			ed := *e.Data
 			var ed8 [8]uint8
 			copy(ed8[:8], ed)
 			v := uint32(ed8[0])<<24 | uint32(ed8[1])<<16 | uint32(ed8[2])<<8 | uint32(ed8[3])
-			eval.SetVarI("val1", int64(v))
+			eval.SetVarI32("val1", int64(v))
 			v = uint32(ed8[4])<<24 | uint32(ed8[5])<<16 | uint32(ed8[6])<<8 | uint32(ed8[7])
-			eval.SetVarI("val2", int64(v))
-			eval.SetVarI("val3", 0)
-			eval.SetVarI("val4", 0)
-		}
+			eval.SetVarI32("val2", int64(v))
+			eval.SetVarI32("val3", 0)
+			eval.SetVarI32("val4", 0)
+		}*/
 		*i++ // skip [
 		j := strings.IndexAny(value[*i:], ",]")
 		var n eval.Value

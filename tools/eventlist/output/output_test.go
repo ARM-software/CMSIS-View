@@ -607,7 +607,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	eds := make(map[uint16]scvd.Event)
 	eds[0xEF00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
-	tds := make(map[string]map[string]map[int16]string)
+	tds := make(map[string]map[string]scvd.TdMember)
 
 	var s1 = "../testdata/test1.binary"
 	var s3 = "../testdata/test3.binary"
@@ -624,7 +624,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		file     string
 		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]scvd.TdMember
 	}
 	tests := []struct {
 		name   string
@@ -789,7 +789,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		out      *bufio.Writer
 		in       *bufio.Reader
 		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]scvd.TdMember
 	}
 	tests := []struct {
 		name    string
@@ -936,7 +936,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 		out           *bufio.Writer
 		eventFile     *string
 		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		typedefs      map[string]map[string]scvd.TdMember
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1002,7 +1002,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		filename      *string
 		eventFile     *string
 		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		typedefs      map[string]map[string]scvd.TdMember
 		statBegin     bool
 		showStatistic bool
 	}

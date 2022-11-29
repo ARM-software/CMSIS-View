@@ -18,7 +18,7 @@
 
 package main
 
-//go:generate goversioninfo -gofile=versioninfo.go -arm=true
+//go:generate goversioninfo -gofile=versioninfo.go
 
 import (
 	"eventlist/elf"
@@ -168,7 +168,7 @@ func main() {
 		}
 	}
 	evdefs := make(map[uint16]scvd.Event)
-	typedefs := make(map[string]map[string]map[int16]string)
+	typedefs := make(map[string]map[string]scvd.TdMember)
 
 	var p []string = paths
 	if err = scvd.Get(&p, evdefs, typedefs); err != nil {
