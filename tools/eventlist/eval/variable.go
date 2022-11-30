@@ -51,8 +51,8 @@ func GetVar(n string) (*Variable, error) {
 	return v, nil
 }
 
-func SetVarI32(n string, i int64) *Variable {
-	val := Value{t: I32, i: i}
+func SetVarI32(n string, i int32) *Variable {
+	val := Value{t: I32, i: int64(i)}
 	v := new(Variable)
 	v.n = n
 	v.v = val

@@ -225,7 +225,7 @@ func TestValue_addList(t *testing.T) {
 	}
 }
 
-func TestValue_GetInt(t *testing.T) {
+func TestValue_GetInt64(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
@@ -260,14 +260,14 @@ func TestValue_GetInt(t *testing.T) {
 				v: tt.fields.v,
 				l: tt.fields.l,
 			}
-			if got := v.GetInt(); got != tt.want {
-				t.Errorf("Value.GetInt() %s = %v, want %v", tt.name, got, tt.want)
+			if got := v.GetInt64(); got != tt.want {
+				t.Errorf("Value.GetInt64() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
 }
 
-func TestValue_GetUInt(t *testing.T) {
+func TestValue_GetUInt64(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
@@ -300,14 +300,14 @@ func TestValue_GetUInt(t *testing.T) {
 				v: tt.fields.v,
 				l: tt.fields.l,
 			}
-			if got := v.GetUInt(); got != tt.want {
-				t.Errorf("Value.GetUInt() %s = %v, want %v", tt.name, got, tt.want)
+			if got := v.GetUInt64(); got != tt.want {
+				t.Errorf("Value.GetUInt64() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
 }
 
-func TestValue_GetFloat(t *testing.T) {
+func TestValue_GetFloat64(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
@@ -340,8 +340,8 @@ func TestValue_GetFloat(t *testing.T) {
 				v: tt.fields.v,
 				l: tt.fields.l,
 			}
-			if got := v.GetFloat(); got != tt.want {
-				t.Errorf("Value.GetFloat() %s = %v, want %v", tt.name, got, tt.want)
+			if got := v.GetFloat64(); got != tt.want {
+				t.Errorf("Value.GetFloat64() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}

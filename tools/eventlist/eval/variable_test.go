@@ -99,10 +99,10 @@ func TestGetVar(t *testing.T) {
 	}
 }
 
-func TestSetVarI64(t *testing.T) {
+func TestSetVarI32(t *testing.T) {
 	type args struct {
 		n string
-		i int64
+		i int32
 	}
 	tests := []struct {
 		name  string
@@ -120,7 +120,7 @@ func TestSetVarI64(t *testing.T) {
 			}
 			SetVarI32(tt.args.n, tt.args.i)
 			v := Variable{tt.args.n, Value{}}
-			vari := Value{t: I32, i: tt.args.i}
+			vari := Value{t: I32, i: int64(tt.args.i)}
 			got, err := v.getValue()
 			if err != nil {
 				t.Errorf("SetVarI32() %s = %v", tt.name, err)

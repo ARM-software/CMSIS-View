@@ -18,7 +18,9 @@
 
 package eval
 
-import "eventlist/elf"
+import (
+	"eventlist/elf"
+)
 
 type Value struct {
 	t Token
@@ -81,7 +83,7 @@ func (v *Value) addList(v1 Value) error {
 	return nil
 }
 
-func (v *Value) GetInt() int64 {
+func (v *Value) GetInt64() int64 {
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
 		return v.i
@@ -91,7 +93,7 @@ func (v *Value) GetInt() int64 {
 	return 0
 }
 
-func (v *Value) GetUInt() uint64 {
+func (v *Value) GetUInt64() uint64 {
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
 		return uint64(v.i)
@@ -101,7 +103,7 @@ func (v *Value) GetUInt() uint64 {
 	return 0
 }
 
-func (v *Value) GetFloat() float64 {
+func (v *Value) GetFloat64() float64 {
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
 		return float64(v.i)
@@ -166,32 +168,34 @@ var fctMap = map[string]Function{
 }
 
 func (v *Value) Function(v1 *Value) error {
+	const fnFunction = "Function"
+
 	if v1 == nil {
-		return typeError("Function", "")
+		return typeError(fnFunction, "")
 	}
 	if !v.IsIdentifier() {
-		return typeError("Function", "")
+		return typeError(fnFunction, "")
 	}
 	if !v1.IsList() {
-		return typeError("Function", "")
+		return typeError(fnFunction, "")
 	}
 	var f Function
 	var found bool
 	if f, found = fctMap[v.s]; !found {
-		return typeError("Function", "")
+		return typeError(fnFunction, "")
 	}
 	if f.params != len(v1.GetList()) {
-		return typeError("Function", "")
+		return typeError(fnFunction, "")
 	}
 	for _, par := range v1.GetList() {
 		if f.parType == String && par.t != String {
-			return typeError("Function", "")
+			return typeError(fnFunction, "")
 		}
 		if f.parType >= I8 && f.parType <= U64 && !(par.t >= I8 && par.t <= U64) {
-			return typeError("Function", "")
+			return typeError(fnFunction, "")
 		}
 		if f.parType >= F32 && f.parType <= F64 && !(par.t >= F32 && par.t <=F64) {
-			return typeError("Function", "")
+			return typeError(fnFunction, "")
 		}
 	}
 	switch f.fno {
@@ -303,6 +307,8 @@ func (v *Value) Not() error {
 }
 
 func (v *Value) Cast(t Token) error {
+	const fnCast = "Cast"
+
 	switch t {
 	case U8:
 		switch v.t {
@@ -318,7 +324,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = U8
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case I8:
 		switch v.t {
@@ -334,7 +340,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = I8
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case U16:
 		switch v.t {
@@ -350,7 +356,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = U16
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case I16:
 		switch v.t {
@@ -366,7 +372,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = I16
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case U32:
 		switch v.t {
@@ -382,7 +388,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = U32
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case I32:
 		switch v.t {
@@ -398,7 +404,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = I32
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case U64:
 		switch v.t {
@@ -414,7 +420,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = U64
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case I64:
 		switch v.t {
@@ -429,7 +435,7 @@ func (v *Value) Cast(t Token) error {
 			v.t = I64
 			v.f = 0
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case F32:
 		switch v.t {
@@ -472,7 +478,7 @@ func (v *Value) Cast(t Token) error {
 			v.f = float64(float32(v.f))
 			v.t = F32
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	case F64:
 		switch v.t {
@@ -512,26 +518,27 @@ func (v *Value) Cast(t Token) error {
 			v.t = F64
 		case F64:
 		default:
-			return typeError("Cast", "")
+			return typeError(fnCast, "")
 		}
 	default:
-		return typeError("Cast", "")
+		return typeError(fnCast, "")
 	}
 	return nil
 }
 
 func (v *Value) Mul(v1 *Value) error {
+	const fnMul = "Mul"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnMul, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Mul", "")
+		return typeError(fnMul, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Mul", "")
+		return typeError(fnMul, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -539,23 +546,24 @@ func (v *Value) Mul(v1 *Value) error {
 	case F32, F64:
 		v.f *= vy.f
 	default:
-		return typeError("Mul", "")
+		return typeError(fnMul, "")
 	}
 	return nil
 }
 
 func (v *Value) Div(v1 *Value) error {
+	const fnDiv = "Div"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnDiv, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Div", "")
+		return typeError(fnDiv, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Div", "")
+		return typeError(fnDiv, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -569,23 +577,24 @@ func (v *Value) Div(v1 *Value) error {
 		}
 		v.f /= vy.f
 	default:
-		return typeError("Div", "")
+		return typeError(fnDiv, "")
 	}
 	return nil
 }
 
 func (v *Value) Mod(v1 *Value) error {
+	const fnMod = "Mod"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnMod, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Mod", "")
+		return typeError(fnMod, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Mod", "")
+		return typeError(fnMod, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -596,23 +605,24 @@ func (v *Value) Mod(v1 *Value) error {
 	case F32, F64:
 		return typeError("mod with floatings", "")
 	default:
-		return typeError("Mod", "")
+		return typeError(fnMod, "")
 	}
 	return nil
 }
 
 func (v *Value) Add(v1 *Value) error {
+	const fnAdd = "Add"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnAdd, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Add", "")
+		return typeError(fnAdd, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Add", "")
+		return typeError(fnAdd, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -620,23 +630,24 @@ func (v *Value) Add(v1 *Value) error {
 	case F32, F64:
 		v.f += vy.f
 	default:
-		return typeError("Add", "")
+		return typeError(fnAdd, "")
 	}
 	return nil
 }
 
 func (v *Value) Sub(v1 *Value) error {
+	const fnSub = "Sub"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnSub, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Mul", "")
+		return typeError(fnSub, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Mul", "")
+		return typeError(fnSub, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -644,7 +655,7 @@ func (v *Value) Sub(v1 *Value) error {
 	case F32, F64:
 		v.f -= vy.f
 	default:
-		return typeError("Sub", "")
+		return typeError(fnSub, "")
 	}
 	return nil
 }
@@ -666,17 +677,18 @@ func (v *Value) Shr(v1 *Value) error {
 }
 
 func (v *Value) Less(v1 *Value) error {
+	const fnLess = "Less"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnLess, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Less", "")
+		return typeError(fnLess, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Less", "")
+		return typeError(fnLess, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -695,23 +707,24 @@ func (v *Value) Less(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError("Less", "")
+		return typeError(fnLess, "")
 	}
 	return nil
 }
 
 func (v *Value) LessEqual(v1 *Value) error {
+	const fnLessEqual = "LessEqual"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnLessEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("LessEqual", "")
+		return typeError(fnLessEqual, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("LessEqual", "")
+		return typeError(fnLessEqual, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -730,23 +743,24 @@ func (v *Value) LessEqual(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError("LessEqual", "")
+		return typeError(fnLessEqual, "")
 	}
 	return nil
 }
 
 func (v *Value) Greater(v1 *Value) error {
+	const fnGreater = "Greater"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnGreater, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Greater", "")
+		return typeError(fnGreater, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Greater", "")
+		return typeError(fnGreater, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -765,23 +779,24 @@ func (v *Value) Greater(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError("Greater", "")
+		return typeError(fnGreater, "")
 	}
 	return nil
 }
 
 func (v *Value) GreaterEqual(v1 *Value) error {
+	const fnGreaterEqual = "GreaterEqual"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnGreaterEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("GreaterEqual", "")
+		return typeError(fnGreaterEqual, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("GreaterEqual", "")
+		return typeError(fnGreaterEqual, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -800,23 +815,24 @@ func (v *Value) GreaterEqual(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError("GreaterEqual", "")
+		return typeError(fnGreaterEqual, "")
 	}
 	return nil
 }
 
 func (v *Value) Equal(v1 *Value) error {
+	const fnEqual = "Equal"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("Equal", "")
+		return typeError(fnEqual, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("Equal", "")
+		return typeError(fnEqual, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -835,23 +851,24 @@ func (v *Value) Equal(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError("Equal", "")
+		return typeError(fnEqual, "")
 	}
 	return nil
 }
 
 func (v *Value) NotEqual(v1 *Value) error {
+	const fnNotEqual = "NotEqual"
 	var resultT	Token
 	var err	error
 	if resultT, err = calcResult(v.t, v1.t); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnNotEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnNotEqual, "")
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError("NotEqual", "")
+		return typeError(fnNotEqual, "")
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -870,7 +887,7 @@ func (v *Value) NotEqual(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError("NotEqual", "")
+		return typeError(fnNotEqual, "")
 	}
 	return nil
 }

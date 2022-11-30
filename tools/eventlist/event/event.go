@@ -140,42 +140,42 @@ func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember,
 	}
 	switch c {
 	case 'd': // signed decimal
-		out = fmt.Sprintf("%d", val.GetInt())
+		out = fmt.Sprintf("%d", val.GetInt64())
 	case 'u': // unsigned decimal
-		out = fmt.Sprintf("%d", val.GetUInt())
+		out = fmt.Sprintf("%d", val.GetUInt64())
 	case 't': // text
-		out = elf.Sections.GetString(val.GetUInt())
+		out = elf.Sections.GetString(val.GetUInt64())
 	case 'x': // hexadecimal
-		out = fmt.Sprintf("%02x", val.GetUInt())
+		out = fmt.Sprintf("%02x", val.GetUInt64())
 	case 'F': // File
-		out = elf.Sections.GetString(val.GetUInt())
+		out = elf.Sections.GetString(val.GetUInt64())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt())
+			out = fmt.Sprintf("%08x", val.GetUInt64())
 		}
 	case 'C': // address with file
 		return "", eval.ErrSyntax
 	case 'I': // IPV4
-		out = fmt.Sprintf("%d.%d.%d.%d", val.GetUInt()>>24&0xFF, val.GetUInt()>>16&0xFF,
-			val.GetUInt()>>8&0xFF, val.GetUInt()&0xFF)
+		out = fmt.Sprintf("%d.%d.%d.%d", val.GetUInt64()>>24&0xFF, val.GetUInt64()>>16&0xFF,
+			val.GetUInt64()>>8&0xFF, val.GetUInt64()&0xFF)
 	case 'J': // IPV6			TODO: only part of IPV6
-		out = fmt.Sprintf("%x:%x:%x:%x:", val.GetUInt()>>48&0xFFFF, val.GetUInt()>>32&0xFFFF,
-			val.GetUInt()>>16&0xFFFF, val.GetUInt()&0xFFFF)
+		out = fmt.Sprintf("%x:%x:%x:%x:", val.GetUInt64()>>48&0xFFFF, val.GetUInt64()>>32&0xFFFF,
+			val.GetUInt64()>>16&0xFFFF, val.GetUInt64()&0xFFFF)
 	case 'N': // string address
-		out = elf.Sections.GetString(val.GetUInt())
+		out = elf.Sections.GetString(val.GetUInt64())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt())
+			out = fmt.Sprintf("%08x", val.GetUInt64())
 		}
 	case 'M': // MAC address
-		out = fmt.Sprintf("%02x-%02x-%02x-%02x-%02x-%02x", val.GetUInt()>>40&0xFF, val.GetUInt()>>32&0xFF,
-			val.GetUInt()>>24&0xFF, val.GetUInt()>>16&0xFF, val.GetUInt()>>8&0xFF, val.GetUInt()&0xFF)
+		out = fmt.Sprintf("%02x-%02x-%02x-%02x-%02x-%02x", val.GetUInt64()>>40&0xFF, val.GetUInt64()>>32&0xFF,
+			val.GetUInt64()>>24&0xFF, val.GetUInt64()>>16&0xFF, val.GetUInt64()>>8&0xFF, val.GetUInt64()&0xFF)
 	case 'S': // address
-		out = fmt.Sprintf("%08x", val.GetUInt())
+		out = fmt.Sprintf("%08x", val.GetUInt64())
 	case 'T': // type dependant
 		switch {
 		case val.IsFloating(): // TODO: Float not yet possible because of event record format
-			out = fmt.Sprintf("%f", val.GetFloat())
+			out = fmt.Sprintf("%f", val.GetFloat64())
 		case val.IsInteger():
-			out = fmt.Sprintf("%d", val.GetInt())
+			out = fmt.Sprintf("%d", val.GetInt64())
 		}
 	case 'U': // USB descriptor
 	default:
@@ -206,7 +206,7 @@ func (e *Data) calculateEnumExpression(typedefs map[string]map[string]scvd.TdMem
 		*i++
 	}
 	if c == 'E' {
-		out, err = getEnum(typedefs, val.GetInt(), value, i)
+		out, err = getEnum(typedefs, val.GetInt64(), value, i)
 		if err != nil {
 			return "", err
 		}
@@ -379,18 +379,18 @@ func (e *Data) Read(in *bufio.Reader) error {
 func (e *Data) GetValue(value string, i *int) (eval.Value, error) {
 	if *i < len(value) && value[*i] == '[' {
 //		if e.Data == nil {
-			eval.SetVarI32("val1", int64(e.Value1))
-			eval.SetVarI32("val2", int64(e.Value2))
-			eval.SetVarI32("val3", int64(e.Value3))
-			eval.SetVarI32("val4", int64(e.Value4))
+			eval.SetVarI32("val1", int32(e.Value1))
+			eval.SetVarI32("val2", int32(e.Value2))
+			eval.SetVarI32("val3", int32(e.Value3))
+			eval.SetVarI32("val4", int32(e.Value4))
 /*		} else {
 			ed := *e.Data
 			var ed8 [8]uint8
 			copy(ed8[:8], ed)
 			v := uint32(ed8[0])<<24 | uint32(ed8[1])<<16 | uint32(ed8[2])<<8 | uint32(ed8[3])
-			eval.SetVarI32("val1", int64(v))
+			eval.SetVarI32("val1", int32(v))
 			v = uint32(ed8[4])<<24 | uint32(ed8[5])<<16 | uint32(ed8[6])<<8 | uint32(ed8[7])
-			eval.SetVarI32("val2", int64(v))
+			eval.SetVarI32("val2", int32(v))
 			eval.SetVarI32("val3", 0)
 			eval.SetVarI32("val4", 0)
 		}*/

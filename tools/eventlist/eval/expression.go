@@ -967,7 +967,7 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 				return left, err
 			}
 		}
-		left.i = v.GetInt() // TODO: noch nicht implementiert
+		left.i = v.GetInt64() // TODO: noch nicht implementiert
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
 		}

@@ -127,7 +127,7 @@ func (enum *Enum) getInfo() (int16, error) {
 	if err != nil && !errors.Is(err, eval.ErrEof) {
 		return 0, err
 	}
-	return int16(n.GetInt()), nil
+	return int16(n.GetInt64()), nil
 }
 
 func (id *ID) getIdValue() (uint16, error) { //nolint:golint,revive
@@ -136,7 +136,7 @@ func (id *ID) getIdValue() (uint16, error) { //nolint:golint,revive
 	if err != nil && !errors.Is(err, eval.ErrEof) {
 		return 0, err
 	}
-	return uint16(n.GetInt()), nil
+	return uint16(n.GetInt64()), nil
 }
 
 type TdMember struct {
