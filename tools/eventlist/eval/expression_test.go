@@ -604,7 +604,7 @@ func TestExpression_lex(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-//			t.Parallel()
+			t.Parallel()
 
 			ex := &Expression{
 				in:   tt.fields.in,
@@ -791,14 +791,14 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 		wantEOF bool
 		wantErr bool
 	}{
-		{"Postincrement", fields{&s0, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, false, false},
+		{"Postincrement", fields{&s0, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: I16, i: 789}, false, false},
 		{"Postincrement_fail", fields{&s1, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
-		{"Postincrement_eof", fields{&s2, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, true, false},
+		{"Postincrement_eof", fields{&s2, 0, Value{t: Identifier, s: "PostfixName2"}}, Value{t: Identifier, s: "PostfixName2"}, true, false},
 		{"Postincrement_fail1", fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
 		{"Postincrement_fail2", fields{&s0, 0, Value{t: Identifier, s: "PostfixName1"}}, Value{t: Nix}, false, true},
-		{"Postdecrement", fields{&s3, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, false, false},
+		{"Postdecrement", fields{&s3, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: I16, i: 789}, false, false},
 		{"Postdecrement_fail", fields{&s4, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
-		{"Postdecrement_eof", fields{&s5, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: Identifier, s: "PostfixName"}, true, false},
+		{"Postdecrement_eof", fields{&s5, 0, Value{t: Identifier, s: "PostfixName2"}}, Value{t: Identifier, s: "PostfixName2"}, true, false},
 		{"Postdecrement_fail1", fields{&s3, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
 		{"Postdecrement_fail2", fields{&s3, 0, Value{t: Identifier, s: "PostfixName1"}}, Value{t: Nix}, false, true},
 		{"Dot", fields{&s6, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
@@ -840,11 +840,15 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 			vari := SetVar("PostfixName", Value{t: I16, i: 789})
 			if tt.fields.next.t == Identifier && tt.fields.next.s == "PostfixName" {
 				tt.fields.next.v = vari
-				tt.want.v = vari // return value should be the same as input because of postinc
 			}
 			vari1 := SetVar("PostfixName1", Value{t: Nix})
 			if tt.fields.next.t == Identifier && tt.fields.next.s == "PostfixName1" {
 				tt.fields.next.v = vari1
+			}
+			vari2 := SetVar("PostfixName2", Value{t: I16, i: 789})
+			if tt.fields.next.t == Identifier && tt.fields.next.s == "PostfixName2" {
+				tt.fields.next.v = vari2
+				tt.want.v = vari2
 			}
 			got, err := ex.postfix()
 			if errors.Is(err, ErrEof) != tt.wantEOF {

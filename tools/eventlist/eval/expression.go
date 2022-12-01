@@ -882,15 +882,17 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		if v, err = left.getValue(); err != nil {
 			return left, err
 		}
-		if err = v.Inc(); err != nil {
+		right = v
+		if err = right.Inc(); err != nil {
 			return v, err
 		}
-		if err = left.setValue(&v); err != nil { // do not change left, it is postincrement
+		if err = left.setValue(&right); err != nil {
 			return left, err // cannot happen because of working getValue
 		}
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
 		}
+		return v, nil
 	case SubSub:
 		if !left.IsIdentifier() {
 			return left, syntaxError("identifier expected", "")
@@ -898,15 +900,17 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		if v, err = left.getValue(); err != nil {
 			return left, err
 		}
-		if err = v.Dec(); err != nil {
+		right = v;
+		if err = right.Dec(); err != nil {
 			return v, err
 		}
-		if err = left.setValue(&v); err != nil { // do not change left, it is postdecrement
+		if err = left.setValue(&right); err != nil {
 			return left, err // cannot happen because of working getValue
 		}
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
 		}
+		return v, nil
 	case Dot:
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
