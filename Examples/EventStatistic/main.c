@@ -25,10 +25,10 @@
  * -----------------------------------------------------------------------------
  */
 
-#include "RTE_Components.h"             // Component selection
+#include "RTE_Components.h"
 #include CMSIS_device_header
 
-#include "EventRecorder.h"              // Keil::Compiler:Event Recorder
+#include "EventRecorder.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -86,7 +86,10 @@ int main (void) {
   EventRecorderClockUpdate();
   EventStartC (0);                              // start measurement event group C, slot 0
   printf ("Started\n");
-  for (j = 0; j < 10000; j++)  {
+  for (j = 0; j < 1000; j++)  {
+    if ((j % 100) == 0) {
+      printf("%d%%\n", j/10+10);
+    }
     CalcSinTable ();                            // calculate table with sinus values
 
     EventStartB(0);                             // start group B, slot 0
@@ -95,9 +98,8 @@ int main (void) {
     EventStopBv(0, MaxSqrtSum, num);            // stop group B, slot 0, output values: MaxSqrtSum, num
   }
 
+  printf ("Finished\n");
   EventStopC(0);                                // stop measurement event group C, slot 0
 
-  while (1) {
-		__NOP();
-  }
+  return 0;
 }

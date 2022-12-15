@@ -29,3 +29,11 @@ __debug_bin
 *.bak
 *.syso
 *.log
+
+Examples/**/*.cbuild.yml
+Examples/**/*.cprj
+Examples/**/**_intdir
+Examples/**/**_outdir
+Examples/**/RTE/_**
+Examples/**/*-idx.yml
+Examples/**/*.zip

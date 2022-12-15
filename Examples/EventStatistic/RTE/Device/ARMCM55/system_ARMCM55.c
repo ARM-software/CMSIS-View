@@ -1,5 +1,12 @@
+/**************************************************************************//**
+ * @file     system_ARMCM55.c
+ * @brief    CMSIS Device System Source File for
+ *           ARMCM55 Device
+ * @version  V1.1.0
+ * @date     28. March 2022
+ ******************************************************************************/
 /*
- * Copyright (c) 2009-2021 Arm Limited. All rights reserved.
+ * Copyright (c) 2009-2022 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,40 +23,42 @@
  * limitations under the License.
  */
 
-/*
- * This file is derivative of CMSIS V5.6.0 system_ARMv81MML.c
- * Git SHA: b5f0603d6a584d1724d952fd8b0737458b90d62b
- */
+#if defined (ARMCM55)
+  #include "ARMCM55.h"
+#else
+  #error device not specified!
+#endif
 
-#include "SSE300MPS3.h"
+  #if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
+    #include "partition_ARMCM55.h"
+  #endif
 
 /*----------------------------------------------------------------------------
   Define clocks
  *----------------------------------------------------------------------------*/
- #define  XTAL             (100000000UL)
- #define  SYSTEM_CLOCK     (XTAL)
- #define  PERIPHERAL_CLOCK (25000000UL)
+#define  XTAL            ( 5000000UL)      /* Oscillator frequency */
+
+#define  SYSTEM_CLOCK    (5U * XTAL)
+
 
 /*----------------------------------------------------------------------------
-  Externals
+  Exception / Interrupt Vector table
  *----------------------------------------------------------------------------*/
-#if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1U)
-    extern uint32_t __VECTOR_TABLE;
-#endif
+extern const VECTOR_TABLE_Type __VECTOR_TABLE[496];
+
 
 /*----------------------------------------------------------------------------
   System Core Clock Variable
  *----------------------------------------------------------------------------*/
 uint32_t SystemCoreClock = SYSTEM_CLOCK;
-uint32_t PeripheralClock = PERIPHERAL_CLOCK;
+
 
 /*----------------------------------------------------------------------------
   System Core Clock update function
  *----------------------------------------------------------------------------*/
 void SystemCoreClockUpdate (void)
 {
-    SystemCoreClock = SYSTEM_CLOCK;
-    PeripheralClock = PERIPHERAL_CLOCK;
+  SystemCoreClock = SYSTEM_CLOCK;
 }
 
 /*----------------------------------------------------------------------------
@@ -59,28 +68,40 @@ void SystemInit (void)
 {
 
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1U)
-  SCB->VTOR = (uint32_t)(&__VECTOR_TABLE);
+  SCB->VTOR = (uint32_t)(&__VECTOR_TABLE[0]);
 #endif
 
-/* CMSIS System Initialization */
 #if (defined (__FPU_USED) && (__FPU_USED == 1U)) || \
-  (defined (__ARM_FEATURE_MVE) && (__ARM_FEATURE_MVE > 0U))
+    (defined (__ARM_FEATURE_MVE) && (__ARM_FEATURE_MVE > 0U))
   SCB->CPACR |= ((3U << 10U*2U) |           /* enable CP10 Full Access */
                  (3U << 11U*2U)  );         /* enable CP11 Full Access */
+
+  /* Set low-power state for PDEPU                */
+  /*  0b00  | ON, PDEPU is not in low-power state */
+  /*  0b01  | ON, but the clock is off            */
+  /*  0b10  | RET(ention)                         */
+  /*  0b11  | OFF                                 */
+
+  /* Clear ELPSTATE, value is 0b11 on Cold reset */
+  PWRMODCTL->CPDLPSTATE &= ~(PWRMODCTL_CPDLPSTATE_ELPSTATE_Msk);
+
+  /* Favor best FP/MVE performance by default, avoid EPU switch-ON delays */
+  /* PDEPU ON, Clock OFF */
+  PWRMODCTL->CPDLPSTATE |= 0x1 << PWRMODCTL_CPDLPSTATE_ELPSTATE_Pos;
 #endif
 
 #ifdef UNALIGNED_SUPPORT_DISABLE
   SCB->CCR |= SCB_CCR_UNALIGN_TRP_Msk;
 #endif
 
-/* Enable Loop and branch info cache */
+  /* Enable Loop and branch info cache */
   SCB->CCR |= SCB_CCR_LOB_Msk;
+  __DSB();
   __ISB();
 
-/* Set CPDLPSTATE.CLPSTATE to 0, so PDCORE will not enter low-power state. Set
- CPDLPSTATE.ELPSTATE to 0, to stop the processor from trying to switch the EPU
- into retention state */
-#define CPDLPSTATE_ADDR (0xE001E300UL)
-#define CPDLPSTATE *(volatile unsigned int *) CPDLPSTATE_ADDR
-  CPDLPSTATE &= 0xFFFFFF00UL;
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  TZ_SAU_Setup();
+#endif
+
+  SystemCoreClock = SYSTEM_CLOCK;
 }

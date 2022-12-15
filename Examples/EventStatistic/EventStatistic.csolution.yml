@@ -1,21 +1,100 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/csolution.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.3.0/tools/projmgr/schemas/csolution.schema.json
 
 solution:
   packs:
     - pack: ARM::CMSIS
-    - pack: Keil::ARM_Compiler
+    - pack: ARM::CMSIS-View
 
-    - pack: ARM::V2M_MPS3_SSE_300_BSP@1.2.0
   target-types:
-    - type: AVH
-      device: ARM::SSE-300-MPS3
+    - type: CM55
+      device: ARMCM55
       processor:
         endian: little
         fpu: "off"
         trustzone: off
+
+  build-types:
+    - type: AC6_Debug
+      compiler: AC6
       misc:
+        - C*:
+          - -O1
+          - -g
+          - -Wno-macro-redefined
+          - -Wno-pragma-pack
+          - -Wno-parentheses-equality
+        - C:
+          - -std=c99
+        - ASM:
+          - -masm=auto
         - Link:
-          - '--diag_suppress 6314,6848'
+          - --entry=Reset_Handler
+          - --diag_suppress 6314,6848
+
+    - type: AC6_Release
+      compiler: AC6
+      misc:
+        - C*:
+          - -O3
+          - -Wno-macro-redefined
+          - -Wno-pragma-pack
+          - -Wno-parentheses-equality
+        - C:
+          - -std=c99
+        - ASM:
+          - -masm=auto
+        - Link:
+          - --entry=Reset_Handler
+          - --diag_suppress 6314,6848
+
+    - type: GCC_Debug
+      compiler: GCC
+      misc:
+        - C*:
+          - -O1
+          - -g
+        - C:
+          - -std=gnu99
+        - Link:
+          - -lm
+          - --specs=nano.specs
+          - --specs=rdimon.specs
+
+    - type: GCC_Release
+      compiler: GCC
+      misc:
+        - C*:
+          - -O3
+        - C:
+          - -std=gnu99
+        - Link:
+          - -lm
+          - --specs=nano.specs
+          - --specs=rdimon.specs
+
+    - type: IAR_Debug
+      compiler: IAR
+      misc:
+        - C*:
+          - -Ol
+          - --dlib_config DLib_Config_Full.h
+        - Link:
+          - --config generic_v8m.icf
+          - --semihosting
+
+    - type: IAR_Release
+      compiler: IAR
+      misc:
+        - C*:
+          - -Oh
+          - --dlib_config DLib_Config_Full.h
+        - Link:
+          - --semihosting
 
   projects:
     - project: ./EventStatistic.cproject.yml
+
+  output-dirs:
+    cprjdir: ./$Project$.$BuildType$+$TargetType$
+    intdir:  ./$Project$.$BuildType$+$TargetType$/$Project$.$BuildType$+$TargetType$_intdir
+    outdir:  ./$Project$.$BuildType$+$TargetType$/$Project$.$BuildType$+$TargetType$_outdir
