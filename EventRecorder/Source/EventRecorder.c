@@ -664,6 +664,18 @@ __STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
 #define EVENT_LOG_FILENAME      "EventRecorder.log"
 #endif
 
+#if 1
+
+#include <stdio.h>
+
+#define sys_open(F, M)          fopen(F, M)
+#define sys_write(F, B, L)      fwrite(B, 1, L, F)
+#define MODE_wb                 "wb"
+
+static FILE* FileHandle = NULL;
+
+#else
+
 #define SYS_OPEN                0x01U
 #define SYS_CLOSE               0x02U
 #define SYS_WRITE               0x05U
@@ -732,6 +744,7 @@ static int32_t sys_write (FILEHANDLE fh, const uint8_t *buf, uint32_t len) {
   (void)args.len;
   return semihosting_call(SYS_WRITE, &args);
 }
+#endif
 
 #endif
 
