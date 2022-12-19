@@ -22,6 +22,7 @@
 #include "RTE_Components.h"
 #include CMSIS_device_header
 
+#include <stdatomic.h>
 #include <string.h>
 #include "EventRecorder.h"
 #include "EventRecorderConf.h"
@@ -249,217 +250,21 @@ __USED const EventRecorderInfo_t EventRecorderInfo =
 
 
 /* Atomic operation helper functions */
-
-#if (__CORTEX_M < 3U)
-
-__STATIC_INLINE uint8_t atomic_inc8 (uint8_t *mem) {
-  uint32_t primask = __get_PRIMASK();
-  uint8_t  ret;
-
-  __disable_irq();
-  ret = *mem;
-  *mem = ret + 1U;
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
+__STATIC_INLINE uint8_t atomic_inc8 (_Atomic uint8_t *mem) {
+  return atomic_fetch_add(mem, 1U);
 }
 
-__STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
-  uint32_t primask = __get_PRIMASK();
-  uint32_t ret;
-
-  __disable_irq();
-  ret = *mem;
-  *mem = ret + 1U;
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
+__STATIC_INLINE uint32_t atomic_inc32 (_Atomic uint32_t *mem) {
+  return atomic_fetch_add(mem, 1U);
 }
 
-__STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
-  uint32_t primask = __get_PRIMASK();
-  uint8_t  ret;
-
-  __disable_irq();
-  ret = *mem;
-  *mem = val;
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
+__STATIC_INLINE uint8_t atomic_wr8 (_Atomic uint8_t *mem, uint8_t val) {
+  return atomic_exchange(mem, val);
 }
 
-__STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  uint32_t primask = __get_PRIMASK();
-  uint32_t ret;
-
-  __disable_irq();
-  ret = *mem;
-  *mem = val;
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
+__STATIC_INLINE uint32_t atomic_wr32 (_Atomic uint32_t *mem, uint32_t val) {
+  return atomic_exchange(mem, val);
 }
-
-#else /* (__CORTEX_M >= 3U) */
-
-//lint ++flb
-
-#if defined(__CC_ARM)
-static __asm    uint8_t atomic_inc8 (uint8_t *mem) {
-  mov    r2,r0
-1
-  ldrexb r0,[r2]
-  adds   r1,r0,#1
-  strexb r3,r1,[r2]
-  cbz    r3,%F2
-  b      %B1
-2
-  bx     lr
-}
-#else
-__STATIC_INLINE uint8_t atomic_inc8 (uint8_t *mem) {
-  register uint32_t val, res;
-  register uint8_t  ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrexb %[ret],[%[mem]]\n\t"
-    "adds   %[val],%[ret],#1\n\t"
-    "strexb %[res],%[val],[%[mem]]\n\t"
-    "cbz    %[res],2f\n\t"
-    "b      1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [val] "=&l" (val),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem)
-  : "cc", "memory"
-  );
-
-  return ret;
-}
-#endif
-
-#if defined(__CC_ARM)
-static __asm    uint32_t atomic_inc32 (uint32_t *mem) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  adds  r1,r0,#1
-  strex r3,r1,[r2]
-  cbz   r3,%F2
-  b     %B1
-2
-  bx    lr
-}
-#else
-__STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
-  register uint32_t val, res;
-  register uint32_t ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[ret],[%[mem]]\n\t"
-    "adds  %[val],%[ret],#1\n\t"
-    "strex %[res],%[val],[%[mem]]\n\t"
-    "cbz   %[res],2f\n\t"
-    "b     1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [val] "=&l" (val),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem)
-  : "cc", "memory"
-  );
-
-  return ret;
-}
-#endif
-
-#if defined(__CC_ARM)
-static __asm    uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
-  mov    r2,r0
-1
-  ldrexb r0,[r2]
-  strexb r3,r1,[r2]
-  cbz    r3,%F2
-  b      %B1
-2
-  bx     lr
-}
-#else
-__STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
-  register uint32_t res;
-  register uint8_t  ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrexb %[ret],[%[mem]]\n\t"
-    "strexb %[res],%[val],[%[mem]]\n\t"
-    "cbz    %[res],2f\n\t"
-    "b      1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem),
-    [val] "l"   (val)
-  : "memory"
-  );
-
-  return ret;
-}
-#endif
-
-#if defined(__CC_ARM)
-static __asm    uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  strex r3,r1,[r2]
-  cbz   r3,%F2
-  b     %B1
-2
-  bx    lr
-}
-#else
-__STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  register uint32_t res;
-  register uint32_t ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[ret],[%[mem]]\n\t"
-    "strex %[res],%[val],[%[mem]]\n\t"
-    "cbz   %[res],2f\n\t"
-    "b     1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem),
-    [val] "l"   (val)
-  : "memory"
-  );
-
-  return ret;
-}
-#endif
-
-//lint --flb
-
-#endif
-
 
 __STATIC_INLINE uint32_t GetContext (void) {
   return ((uint32_t)atomic_inc8(&EventStatus.context));
@@ -491,170 +296,30 @@ __STATIC_INLINE void IncrementRecordsDumped (void) {
   (void)atomic_inc32(&EventStatus.records_dumped);
 }
 
+__STATIC_INLINE uint32_t LockRecord (_Atomic uint32_t *mem, uint32_t info) {
+  uint32_t val, neww;
 
-#if (__CORTEX_M < 3U)
+  val = atomic_load_explicit(mem, memory_order_relaxed);
+  do {
+      if ((val & EVENT_RECORD_LOCKED) != 0U) return 0;
+      neww = (val & EVENT_RECORD_TBIT) | info;
+  } while (!atomic_compare_exchange_weak_explicit(
+      mem, &val, neww, memory_order_acquire, memory_order_acquire));
 
-__STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
-  uint32_t primask = __get_PRIMASK();
+  return neww;
+}
+
+__STATIC_INLINE uint32_t UnlockRecord (_Atomic uint32_t *mem, uint32_t info) {
   uint32_t val;
 
-  __disable_irq();
-  val = *mem;
-  if ((val & EVENT_RECORD_LOCKED) == 0U) {
-     val = (val & EVENT_RECORD_TBIT) | info;
-    *mem = val;
-  } else {
-     val = 0U;
-  }
-  if (primask == 0U) {
-    __enable_irq();
-  }
+  val = atomic_load_explicit(mem, memory_order_relaxed);
+  do {
+      if ((val & EVENT_RECORD_LOCKED) == 0U) return 0;
+  } while (!atomic_compare_exchange_weak_explicit(
+      mem, &val, info, memory_order_release, memory_order_relaxed));
 
-  return val;
+  return 1;
 }
-
-__STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
-  uint32_t primask = __get_PRIMASK();
-  uint32_t val;
-  uint32_t ret;
-
-  __disable_irq();
-  val = *mem;
-  if ((val & EVENT_RECORD_LOCKED) != 0U) {
-    *mem = info;
-     ret = 1U;
-  } else {
-     ret = 0U;
-  }
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
-}
-
-#else /* (__CORTEX_M >= 3U) */
-
-//lint ++flb
-
-#if defined(__CC_ARM)
-static __asm    uint32_t LockRecord (uint32_t *mem, uint32_t info) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  lsls  r3,r0,#__cpp(32 - INT_LOG2(EVENT_RECORD_LOCKED))
-  bcc   %F2
-  clrex
-  movs  r0,#0
-  bx    lr
-2
-  and   r0,r0,#__cpp(EVENT_RECORD_TBIT)
-  orrs  r0,r1
-  strex r3,r0,[r2]
-  cbz   r3,%F3
-  b     %B1
-3
-  bx    lr
-}
-#else
-__STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
-  register uint32_t val, res, tmp;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[val],[%[mem]]\n\t"
-    "lsls  %[tmp],%[val],%[Ln]\n\t"
-    "bcc   2f\n\t"
-    "clrex\n\t"
-    "movs  %[val],#0\n\t"
-    "b     3f\n"
-  "2:\n\t"
-#if (defined(__ARM_ARCH_8M_BASE__) && (__ARM_ARCH_8M_BASE__ != 0))
-    "lsrs  %[val],%[val],%[Tp]\n\t"
-    "lsls  %[val],%[val],%[Tp]\n\t"
-#else
-    "and   %[val],%[val],%[Tbit]\n\t"
-#endif
-    "orrs  %[val],%[info]\n\t"
-    "strex %[res],%[val],[%[mem]]\n\t"
-    "cbz   %[res],3f\n\t"
-    "b     1b\n"
-  "3:"
-  : [val]  "=&l" (val),
-    [res]  "=&l" (res),
-    [tmp]  "=&l" (tmp)
-  : [mem]  "l"   (mem),
-    [info] "l"   (info),
-    [Ln]   "I"   (32 - INT_LOG2(EVENT_RECORD_LOCKED)),
-#if (defined(__ARM_ARCH_8M_BASE__) && (__ARM_ARCH_8M_BASE__ != 0))
-    [Tp]   "I"   (INT_LOG2(EVENT_RECORD_TBIT))
-#else
-    [Tbit] "I"   (EVENT_RECORD_TBIT)
-#endif
-  : "cc", "memory"
-  );
-
-  return val;
-}
-#endif
-
-#if defined(__CC_ARM)
-static __asm    uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  lsls  r0,r0,#__cpp(32 - INT_LOG2(EVENT_RECORD_LOCKED))
-  bcs   %F2
-  clrex
-  movs  r0,#0
-  bx    lr
-2
-  strex r3,r1,[r2]
-  cbz   r3,%F3
-  b     %B1
-3
-  movs  r0,#1
-4
-  bx    lr
-}
-#else
-__STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
-  register uint32_t val, res, ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[val],[%[mem]]\n\t"
-    "lsls  %[val],%[val],%[Ln]\n\t"
-    "bcs   2f\n\t"
-    "clrex\n\t"
-    "movs  %[ret],#0\n\t"
-    "b     4f\n"
-  "2:\n\t"
-    "strex %[res],%[info],[%[mem]]\n\t"
-    "cbz   %[res],3f\n\t"
-    "b     1b\n"
-  "3:\n\t"
-    "movs  %[ret],#1\n"
-  "4:"
-  : [ret]  "=&l" (ret),
-    [val]  "=&l" (val),
-    [res]  "=&l" (res)
-  : [mem]  "l"   (mem),
-    [info] "l"   (info),
-    [Ln]   "I"   (32 - INT_LOG2(EVENT_RECORD_LOCKED))
-  : "cc", "memory"
-  );
-
-  return ret;
-}
-#endif
-
-//lint --flb
-
-#endif
-
 
 /* Semihosting */
 
@@ -686,7 +351,7 @@ __STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {
   __ASM volatile (
     "bkpt 0xab" : "=r"(__r0) : "r"(__r0), "r"(__r1) :
   );
- 
+
   return (int32_t)__r0;
 }
 #endif
@@ -755,7 +420,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
     i = GetRecordIndex();
     record = &EventBuffer[i & (EVENT_RECORD_COUNT - 1U)];
     seq  = ((i / EVENT_RECORD_COUNT) << EVENT_RECORD_SEQ_POS) & EVENT_RECORD_SEQ_MASK;
-    info = id                                    | 
+    info = id                                    |
            seq                                   |
            ((ts   >> 3) & EVENT_RECORD_MSB_TS)   |
            ((val1 >> 2) & EVENT_RECORD_MSB_VAL1) |
@@ -786,7 +451,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
 
 
 #ifdef RTE_Compiler_EventRecorder_Semihosting
- 
+
 /**
   Record an event with variable data size to a log file
   \param[in]    id     event identifier (component number, message number)
@@ -804,7 +469,7 @@ static void EventRecordData_Log (uint32_t id,
   } event;
 
   event.head.type          = EVENT_TYPE_DATA;
-  event.head.length        = (uint16_t)(sizeof(event.record) + len); 
+  event.head.length        = (uint16_t)(sizeof(event.record) + len);
   event.record.ts          = ts;
   event.record.info.id     = (uint16_t)id;
   //lint -e{9034} "Expression assigned to a narrower or different essential type"
@@ -843,7 +508,7 @@ static void EventRecord2_Log (uint32_t id,
 
   (void)sys_write(FileHandle, (uint8_t *)&event,  sizeof(event));
 }
- 
+
 /**
   Record an event with four 32-bit data values a log file
   \param[in]    id     event identifier (component number, message number)
