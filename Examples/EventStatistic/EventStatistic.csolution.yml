@@ -34,7 +34,7 @@ solution:
           - -Wno-pragma-pack
           - -Wno-parentheses-equality
         - C:
-          - -std=c99
+          - -std=c11
         - ASM:
           - -masm=auto
         - Link:
@@ -50,7 +50,7 @@ solution:
           - -Wno-pragma-pack
           - -Wno-parentheses-equality
         - C:
-          - -std=c99
+          - -std=c11
         - ASM:
           - -masm=auto
         - Link:
@@ -64,7 +64,7 @@ solution:
           - -O1
           - -g
         - C:
-          - -std=gnu99
+          - -std=gnu11
         - Link:
           - -lm
           - --specs=nano.specs
@@ -76,7 +76,7 @@ solution:
         - C*:
           - -O3
         - C:
-          - -std=gnu99
+          - -std=gnu11
         - Link:
           - -lm
           - --specs=nano.specs
