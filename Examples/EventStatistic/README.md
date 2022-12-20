@@ -1,10 +1,12 @@
 # Event Statistic Example
 
 This project shows how to use start/stop events with the Event Recorder that allow to measure execution times with:
--  different slots (0 - 15)
--  different groups (A - D)
+
+- different slots (0 - 15)
+- different groups (A - D)
 
 The following API calls control this time recording:
+
 - `EventStart` starts a timer slot.
 - `EventStop` stops the related timer.
 - `EventStop` with slot 15 stops the timers of all slots for the specified group.
@@ -25,6 +27,8 @@ Tools:
 - [**Keil MDK 5.38 or higher**](https://www.keil.com/mdk5)
   - Arm Compiler 6 (part of MDK)
   - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
+- [**Python Matrix-Runner 1.1.0 or higher**][https://pypi.org/project/python-matrix-runner/] (optional)
+  - requires Python 3.8 or high
 - [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
 
 As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware) available via the AWS Marketplace as this image contains all relevant tools.
@@ -33,17 +37,16 @@ As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https:
 
 You may need to install missing software packs with this command sequence:
 
-```txt
-> csolution list packs -s .\EventStatistic.csolution.yml -m >packs.txt
-> cpackget add -f packs.txt
+```bash
+EventStatistic $ csolution list packs -s EventStatistic.csolution.yml -m >packs.txt
+EventStatistic $ cpackget add -f packs.txt
 ```
 
 The following commands convert and build the project:
 
-```txt
-> csolution convert -s .\EventStatistic.csolution.yml
-
-> cbuild .\EventStatistic.Debug+AVH.cprj
+```bash
+EventStatistic $ csolution convert -s EventStatistic.csolution.yml
+EventStatistic $ cbuild EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug+SSE300.cprj
 ```
 
 > NOTE: The `*.cprj` file may be also imported into Keil MDK for execution.
@@ -52,17 +55,18 @@ The following commands convert and build the project:
 
 The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
 
-```txt
-> C:/Keil_v5/ARM/VHT/VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 -C cpu0.semihosting-enable=1 -a ./out/EventStatistic/AVH/Debug/EventStatistic.Debug+AVH.axf
+```bash
+EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f model_config_sse300.txt --simlimit=60 -a ./EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug+SSE300_outdir\EventStatistic.AC6_Debug+SSE300.axf
 ```
-When using `cpu0.semihosting-enable=1` the file `EventRecorder.log` is generated that contains the events that are generated during execution. This file is the input for the `eventlist` utility.
+
+The file `EventRecorder.log` is generated that contains the events that are generated during execution. This file is the input for the `eventlist` utility.
 
 ## Analyze Events
 
 This file can be analyzed using the `eventlist` utility with the following command:
 
-```txt
-> eventlist -s EventRecorder.log
+```bash
+EventStatistic $ eventlist -s EventRecorder.log
 
    Start/Stop event statistic
    --------------------------
@@ -87,8 +91,9 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
 ```
 
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
-```
-> eventlist -a .\out\EventStatistic\AVH\Debug\EventStatistic.Debug+AVH.axf -I ...\Local\Arm\Packs\Keil\ARM_Compiler\1.7.2\EventRecorder.scvd .\EventRecorder.log
+
+```bash
+EventStatistic $ eventlist -a ./EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug+SSE300_outdir\EventStatistic.AC6_Debug+SSE300.axf -I EventRecorder.scvd EventRecorder.log
 
   :
 
@@ -121,5 +126,19 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Max: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
 ```
 
+## Using `build.py`
 
+Instead of running above commands manually for different configurations one can use `build.py` script.
+Running this Python script requires Python 3.8.
 
+The required Python packages can be installed using `pip` and the provided `requirements.txt` file:
+
+```bash
+EventStatistic $ pip install -r requirements.txt
+```
+
+Now, one can build, run and analyze configurations with
+
+```bash
+EventStatistic $ ./build --verbose -d <CM3|CM55|SSE300> -o <Debug|Release> -c <AC6|GCC|IAR> [build] [run] [events]
+```
