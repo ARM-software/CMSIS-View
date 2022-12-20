@@ -6,7 +6,17 @@ solution:
     - pack: ARM::CMSIS-View
 
   target-types:
+    - type: CM3
+      device: ARMCM3
+
     - type: CM55
+      device: ARMCM55
+      processor:
+        endian: little
+        fpu: "off"
+        trustzone: off
+
+    - type: SSE300
       device: ARMCM55
       processor:
         endian: little
@@ -79,7 +89,6 @@ solution:
           - -Ol
           - --dlib_config DLib_Config_Full.h
         - Link:
-          - --config generic_v8m.icf
           - --semihosting
 
     - type: IAR_Release

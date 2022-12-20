@@ -17,7 +17,9 @@ from matrix_runner import main, matrix_axis, matrix_action, matrix_command, matr
 
 @matrix_axis("device", "d", "Device(s) to be considered.")
 class DeviceAxis(Enum):
-    CM55 = ('Cortex-M55', 'CM55')
+    CM3    = ('Cortex-M3',  'CM3')
+    CM55   = ('Cortex-M55', 'CM55')
+    SSE300 = ('Corstone_SSE-300', 'SSE300')
 
 
 @matrix_axis("compiler", "c", "Compiler(s) to be considered.")
@@ -43,7 +45,9 @@ class OptimizeAxis(Enum):
 
 
 MODEL_EXECUTABLE = {
-    DeviceAxis.CM55: ("VHT_MPS2_Cortex-M55", [])
+    DeviceAxis.CM3: ("VHT_MPS2_Cortex-M3", []),
+    DeviceAxis.CM55: ("VHT_MPS2_Cortex-M55", []),
+    DeviceAxis.SSE300: ("VHT_MPS3_Corstone_SSE-300", [])
 }
 
 
