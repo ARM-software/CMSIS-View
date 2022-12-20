@@ -119,10 +119,10 @@
 
 /* Event Record */
 typedef struct {
-  uint32_t ts;                  // Timestamp (32-bit, Toggle bit instead of MSB)
-  uint32_t val1;                // Value 1   (32-bit, Toggle bit instead of MSB)
-  uint32_t val2;                // Value 2   (32-bit, Toggle bit instead of MSB)
-  uint32_t info;                // Record Information
+          uint32_t ts;          // Timestamp (32-bit, Toggle bit instead of MSB)
+          uint32_t val1;        // Value 1   (32-bit, Toggle bit instead of MSB)
+          uint32_t val2;        // Value 2   (32-bit, Toggle bit instead of MSB)
+  _Atomic uint32_t info;        // Record Information
                                 //  [ 7.. 0]: Message ID (8-bit)
                                 //  [15.. 8]: Component ID (8-bit)
                                 //  [18..16]: Data Length (1..8) / Event Context
@@ -201,17 +201,17 @@ static uint8_t EventFilter[128] __NO_INIT __ALIGNED(4);
 
 /* Event Recorder Status */
 typedef struct {
-  uint8_t  state;               // Recorder State: 0 - Inactive, 1 - Running
-  uint8_t  context;             // Current Event Context
-  uint16_t info_crc;            // EventRecorderInfo CRC16-CCITT
-  uint32_t record_index;        // Current Record Index
-  uint32_t records_written;     // Number of records written
-  uint32_t records_dumped;      // Number of records dumped
-  uint32_t ts_overflow;         // Timestamp overflow counter
-  uint32_t ts_freq;             // Timestamp frequency
-  uint32_t ts_last;             // Timestamp last value
-  uint32_t init_count;          // Initialization counter
-  uint32_t signature;           // Initialization signature
+  _Atomic uint8_t  state;               // Recorder State: 0 - Inactive, 1 - Running
+  _Atomic uint8_t  context;             // Current Event Context
+  _Atomic uint16_t info_crc;            // EventRecorderInfo CRC16-CCITT
+  _Atomic uint32_t record_index;        // Current Record Index
+  _Atomic uint32_t records_written;     // Number of records written
+  _Atomic uint32_t records_dumped;      // Number of records dumped
+  _Atomic uint32_t ts_overflow;         // Timestamp overflow counter
+  _Atomic uint32_t ts_freq;             // Timestamp frequency
+  _Atomic uint32_t ts_last;             // Timestamp last value
+  _Atomic uint32_t init_count;          // Initialization counter
+  _Atomic uint32_t signature;           // Initialization signature
 } EventStatus_t;
 
 static EventStatus_t EventStatus __NO_INIT __ALIGNED(64);
@@ -278,7 +278,7 @@ __STATIC_INLINE uint32_t UpdateTS (uint32_t ts) {
   return (atomic_wr32(&EventStatus.ts_last, ts));
 }
 
-static uint8_t TS_OverflowLock;
+static _Atomic uint8_t TS_OverflowLock;
 
 __STATIC_INLINE uint8_t LockTS_Overflow (void) {
   return (atomic_wr8(&TS_OverflowLock, 1U));
