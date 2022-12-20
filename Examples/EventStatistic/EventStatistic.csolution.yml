@@ -89,6 +89,7 @@ solution:
           - -Ol
           - --dlib_config DLib_Config_Full.h
         - Link:
+          - --config generic_cortex.icf
           - --semihosting
 
     - type: IAR_Release
@@ -98,6 +99,7 @@ solution:
           - -Oh
           - --dlib_config DLib_Config_Full.h
         - Link:
+          - --config generic_cortex.icf
           - --semihosting
 
   projects:
