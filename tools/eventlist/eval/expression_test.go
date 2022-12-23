@@ -543,7 +543,7 @@ func TestExpression_lex(t *testing.T) {
 		wantErr bool
 	}{
 		{s0, fields{&s0, 0, Value{}}, Value{t: Add}, 1, false},
-		{s1, fields{&s1, 0, Value{}}, Value{t: I64, i: 123}, 3, false},
+		{s1, fields{&s1, 0, Value{}}, Value{t: I32, i: 123}, 3, false},
 		{s2, fields{&s2, 0, Value{}}, Value{}, 2, true},
 		{s3, fields{&s3, 0, Value{}}, Value{t: F64, f: 1.2}, 3, false},
 		{s4, fields{&s4, 0, Value{}}, Value{t: F64, f: 2.77}, 8, false},
@@ -555,7 +555,7 @@ func TestExpression_lex(t *testing.T) {
 		{s10, fields{&s10, 0, Value{}}, Value{t: I8, i: 'X'}, 3, false},
 		{s11, fields{&s11, 0, Value{}}, Value{t: String, s: "x\xef\xbf\xbdX"}, 14, false},
 		{s12, fields{&s12, 0, Value{}}, Value{t: String, s: "q\xe3\x92\xafQ"}, 10, false},
-		{s13, fields{&s13, 0, Value{}}, Value{t: I16, i: 0x4711}, 8, false},
+		{s13, fields{&s13, 0, Value{}}, Value{t: U16, i: 0x4711}, 8, false},
 		{s14, fields{&s14, 0, Value{}}, Value{t: I32, i: 0x001234af}, 12, false},
 		{s15, fields{&s15, 0, Value{}}, Value{t: Nix}, 13, true},
 		{s16, fields{&s16, 0, Value{}}, Value{t: ShrAssign}, 3, false},

@@ -535,7 +535,13 @@ func (ex *Expression) lex() (Value, error) {
 			}
 			return Value{t: F64, f: f}, nil
 		}
-		return Value{t: I64, i: int64(ui)}, nil
+		if ui > math.MaxInt32 {
+			if ui > math.MaxInt64 {
+				return Value{t: U64, i: int64(ui)}, nil
+			}
+			return Value{t: I64, i: int64(ui)}, nil
+		}
+		return Value{t: I32, i: int64(ui)}, nil
 
 	} else if 'a' <= lower(c) && lower(c) <= 'z' {
 	loop:
@@ -709,7 +715,7 @@ func (ex *Expression) lex() (Value, error) {
 					return v, syntaxError(fnLex, s0)
 				}
 				s0 += s
-				v.t = I16
+				v.t = U16
 				v.i = int64(i)
 				done = true
 			case 'U':
