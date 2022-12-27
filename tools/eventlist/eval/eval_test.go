@@ -40,7 +40,7 @@ func TestEval(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"test " + s0, args{&s0}, Value{t: I64, i: 2}, false},
+		{"test " + s0, args{&s0}, Value{t: I32, i: 2}, false},
 		{"test " + s1, args{&s1}, Value{t: F64, f: 1.23}, false},
 		{"test " + s2, args{&s2}, Value{t: Nix}, true},
 		{"test eof", args{&s3}, Value{t: Nix}, true},

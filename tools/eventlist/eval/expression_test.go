@@ -151,6 +151,154 @@ func TestExpression_peek(t *testing.T) {
 	}
 }
 
+func TestExpression_back(t *testing.T) {
+	t.Parallel()
+
+	var s0 = "a"
+	var s1 = ""
+
+	type fields struct {
+		in   *string
+		pos  int
+		next Value
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		want    int
+	}{
+		{s0, fields{&s0, 1, Value{}}, 0},
+		{s1, fields{&s1, 0, Value{}}, 0},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ex := &Expression{
+				in:   tt.fields.in,
+				pos:  tt.fields.pos,
+				next: tt.fields.next,
+			}
+			ex.back()
+			if ex.pos != tt.want {
+				t.Errorf("Expression.back() %s pos = %v, want %v", tt.name, ex.pos, tt.want)
+			}
+		})
+	}
+}
+
+func TestExpression_skipToEnd(t *testing.T) {
+	t.Parallel()
+
+	var s0 = "a"
+	var s1 = ""
+
+	type fields struct {
+		in   *string
+		pos  int
+		next Value
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		want    int
+	}{
+		{s0, fields{&s0, 0, Value{}}, 1},
+		{s1, fields{&s1, 0, Value{}}, 0},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ex := &Expression{
+				in:   tt.fields.in,
+				pos:  tt.fields.pos,
+				next: tt.fields.next,
+			}
+			ex.skipToEnd()
+			if ex.pos != tt.want {
+				t.Errorf("Expression.skipToEnd() %s pos = %v, want %v", tt.name, ex.pos, tt.want)
+			}
+		})
+	}
+}
+
+func TestExpression_getPos(t *testing.T) {
+	t.Parallel()
+
+	var s0 = "a"
+	var s1 = ""
+
+	type fields struct {
+		in   *string
+		pos  int
+		next Value
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		want    int
+	}{
+		{s0, fields{&s0, 1, Value{}}, 1},
+		{s1, fields{&s1, 0, Value{}}, 0},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ex := &Expression{
+				in:   tt.fields.in,
+				pos:  tt.fields.pos,
+				next: tt.fields.next,
+			}
+			if ex.getPos() != tt.want {
+				t.Errorf("Expression.getPos() %s pos = %v, want %v", tt.name, ex.pos, tt.want)
+			}
+		})
+	}
+}
+
+func TestExpression_setPos(t *testing.T) {
+	t.Parallel()
+
+	var s0 = "a"
+	var s1 = ""
+
+	type fields struct {
+		in   *string
+		pos  int
+		next Value
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		set		int
+		want    int
+	}{
+		{s0, fields{&s0, 0, Value{}}, 1, 1},
+		{s1, fields{&s1, 1, Value{}}, 0, 0},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ex := &Expression{
+				in:   tt.fields.in,
+				pos:  tt.fields.pos,
+				next: tt.fields.next,
+			}
+			ex.setPos(tt.set)
+			if ex.pos != tt.want {
+				t.Errorf("Expression.getPos() %s pos = %v, want %v", tt.name, ex.pos, tt.want)
+			}
+		})
+	}
+}
+
 func Test_lower(t *testing.T) {
 	t.Parallel()
 
@@ -656,15 +804,15 @@ func TestExpression_primary(t *testing.T) {
 		{"Floating", fields{&s0, 0, Value{t: F32, f: 1.2345}}, Value{t: F32, f: 1.2345}, false, false},
 		{"Identifier", fields{&s0, 0, Value{t: Identifier, s: "vari"}}, Value{t: Identifier, s: "vari"}, false, false},
 		{"String", fields{&s0, 0, Value{t: String, s: "abc"}}, Value{t: String, s: "abc"}, false, false},
-		{"subExpression", fields{&s1, 0, Value{t: ParenO}}, Value{t: I64, i: 4711}, false, false},
+		{"subExpression", fields{&s1, 0, Value{t: ParenO}}, Value{t: I32, i: 4711}, false, false},
 		{"Integer_fail", fields{&s2, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Floating_fail", fields{&s2, 0, Value{t: F32, f: 1.2345}}, Value{t: F32, f: 1.2345}, false, true},
 		{"Identifier_fail", fields{&s2, 0, Value{t: Identifier, s: "vari"}}, Value{t: Identifier, s: "vari"}, false, true},
 		{"String_fail", fields{&s2, 0, Value{t: String, s: "abc"}}, Value{t: String, s: "abc"}, false, true},
 		{"subExpression_fail1", fields{&s2, 0, Value{t: ParenO}}, Value{t: Nix}, false, true},
 		{"subExpression_fail2", fields{&s0, 0, Value{t: ParenO}}, Value{t: Nix}, false, true},
-		{"subExpression_fail3", fields{&s3, 0, Value{t: ParenO}}, Value{t: I64, i: 5}, false, true},
-		{"subExpression_fail4", fields{&s4, 0, Value{t: ParenO}}, Value{t: I64, i: 6}, true, true},
+		{"subExpression_fail3", fields{&s3, 0, Value{t: ParenO}}, Value{t: I32, i: 5}, false, true},
+		{"subExpression_fail4", fields{&s4, 0, Value{t: ParenO}}, Value{t: I32, i: 6}, true, true},
 		{"fail", fields{&s0, 0, Value{t: Add}}, Value{t: Add}, false, true},
 	}
 	for _, tt := range tests {
@@ -718,7 +866,7 @@ func TestExpression_arguments(t *testing.T) {
 	}{
 		{"0 arg", fields{&s0, 0, Value{}}, Value{t: Nix}, false, false},
 		{"1 arg", fields{&s0, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}}}, false, false},
-		{"2 arg", fields{&s1, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}, {t: I64, i: 123}}}, false, false},
+		{"2 arg", fields{&s1, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}, {t: I32, i: 123}}}, false, false},
 		{"arg err", fields{&s2, 0, Value{t: I8, i: 1}}, Value{t: List, l: []Value{{t: I8, i: 1}}}, false, true},
 		{"arg err1", fields{&s3, 0, Value{t: I8, i: 1}}, Value{t: Nix}, false, true},
 	}
@@ -804,12 +952,12 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 		{"Dot", fields{&s6, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
 		{"Dot_fail", fields{&s6, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Dot_eof_fail", fields{&s7, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, true},
-		{"Dot_fail1", fields{&s8, 0, Value{t: Identifier, s: "name"}}, Value{t: I64, i: 123}, false, true},
+		{"Dot_fail1", fields{&s8, 0, Value{t: Identifier, s: "name"}}, Value{t: I32, i: 123}, false, true},
 		{"Dot_eof", fields{&s9, 0, Value{t: Identifier, s: "name"}}, Value{t: Nix}, true, false},
 		{"Pointer", fields{&s10, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
 		{"Pointer_fail", fields{&s10, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
 		{"Pointer_eof_fail", fields{&s11, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, true},
-		{"Pointer_fail1", fields{&s12, 0, Value{t: Identifier, s: "name"}}, Value{t: I64, i: 123}, false, true},
+		{"Pointer_fail1", fields{&s12, 0, Value{t: Identifier, s: "name"}}, Value{t: I32, i: 123}, false, true},
 		{"Pointer_eof", fields{&s13, 0, Value{t: Identifier, s: "name"}}, Value{t: Nix}, true, false},
 		{"Function", fields{&s14, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
 		{"Function_eof", fields{&s15, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, false},
@@ -889,19 +1037,19 @@ func TestExpression_unary(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"+IntExpr", fields{&s0, 0, Value{t: Add}}, Value{t: I64, i: 0x12345}, false},
+		{"+IntExpr", fields{&s0, 0, Value{t: Add}}, Value{t: I32, i: 0x12345}, false},
 		{"+IntExpr_err", fields{&s3, 0, Value{t: Add}}, Value{t: Nix}, true},
 		{"+IntExpr_eof", fields{&s4, 0, Value{t: Add}}, Value{t: Nix}, true},
 		{"+IntExpr_err1", fields{&s5, 0, Value{t: Add}}, Value{t: AddAdd}, true},
 		{"+IntExpr_err2", fields{&s6, 0, Value{t: Add}}, Value{t: Identifier, s: "name"}, true},
 		{"+IntExpr_err3", fields{&s7, 0, Value{t: Add}}, Value{t: String, s: "string"}, true},
-		{"-IntExpr", fields{&s0, 0, Value{t: Sub}}, Value{t: I64, i: -0x12345}, false},
+		{"-IntExpr", fields{&s0, 0, Value{t: Sub}}, Value{t: I32, i: -0x12345}, false},
 		{"-IntExpr_err", fields{&s3, 0, Value{t: Sub}}, Value{t: Nix}, true},
 		{"-IntExpr_eof", fields{&s4, 0, Value{t: Sub}}, Value{t: Nix}, true},
 		{"-IntExpr_err1", fields{&s5, 0, Value{t: Sub}}, Value{t: AddAdd}, true},
 		{"-IntExpr_err2", fields{&s6, 0, Value{t: Sub}}, Value{t: Identifier, s: "name"}, true},
 		{"-IntExpr_err3", fields{&s7, 0, Value{t: Sub}}, Value{t: String, s: "string"}, true},
-		{"~IntExpr", fields{&s0, 0, Value{t: Compl}}, Value{t: I64, i: 0x12345 ^ -1}, false},
+		{"~IntExpr", fields{&s0, 0, Value{t: Compl}}, Value{t: I32, i: 0x12345 ^ -1}, false},
 		{"~IntExpr_err", fields{&s3, 0, Value{t: Compl}}, Value{t: Nix}, true},
 		{"~IntExpr_eof", fields{&s4, 0, Value{t: Compl}}, Value{t: Nix}, true},
 		{"~IntExpr_err1", fields{&s5, 0, Value{t: Compl}}, Value{t: AddAdd}, true},
@@ -997,7 +1145,7 @@ func TestExpression_castExpr(t *testing.T) {
 		{s10, fields{&s10, 1, Value{t: ParenO}}, Value{t: F32, f: 123456792.0}, false},
 		{s11, fields{&s11, 1, Value{t: ParenO}}, Value{t: Nix}, true},
 		{s12, fields{&s12, 1, Value{t: ParenO}}, Value{t: AddAdd}, true},
-		{s13, fields{&s13, 1, Value{t: ParenO}}, Value{t: I64, i: 1}, false},
+		{s13, fields{&s13, 1, Value{t: ParenO}}, Value{t: I32, i: 1}, false},
 		{s14, fields{&s14, 1, Value{t: ParenO}}, Value{t: F32, f: 483.12}, true},
 		{s15, fields{&s15, 1, Value{t: ParenO}}, Value{t: F32, f: 483.12}, false},
 		{s16, fields{&s16, 1, Value{t: ParenO}}, Value{t: Nix}, true},
@@ -1067,17 +1215,17 @@ func TestExpression_mulExpr(t *testing.T) {
 		wantErr bool
 	}{
 		{s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 431.25}, false},
-		{"I*I", fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 233910}, false},
+		{"I*I", fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 233910}, false},
 		{"I*F", fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 2339.1}, false},
-		{"F*I", fields{&s1, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 2288.25}, false},
+		{"F*I", fields{&s1, 0, Value{t: F32, f: 3.375}}, Value{t: F32, f: 2288.25}, false},
 		{"F*F", fields{&s2, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 22.8825}, false},
 		{s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 230}, false},
-		{"I/I", fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 23}, false},
+		{"I/I", fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 23}, false},
 		{"I/F", fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 287.5}, false},
-		{"F/I", fields{&s4, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 0.225}, false},
+		{"F/I", fields{&s4, 0, Value{t: F32, f: 3.375}}, Value{t: F32, f: 0.225}, false},
 		{"F/F", fields{&s5, 0, Value{t: F32, f: 3.75}}, Value{t: F64, f: 3.125}, false},
 		{s6, fields{&s6, 0, Value{t: I32, i: 347}}, Value{t: I32, i: 2}, false},
-		{"I%I", fields{&s7, 0, Value{t: I32, i: 347}}, Value{t: I64, i: 2}, false},
+		{"I%I", fields{&s7, 0, Value{t: I32, i: 347}}, Value{t: I32, i: 2}, false},
 		{s8, fields{&s8, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
 		{s9, fields{&s9, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
@@ -1149,14 +1297,14 @@ func TestExpression_addExpr(t *testing.T) {
 		wantErr bool
 	}{
 		{s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 346.25}, false},
-		{"I+I", fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 1023}, false},
+		{"I+I", fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 1023}, false},
 		{"I+F", fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 349.5}, false},
-		{"F+I", fields{&s1, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 681.375}, false},
+		{"F+I", fields{&s1, 0, Value{t: F32, f: 3.375}}, Value{t: F32, f: 681.375}, false},
 		{"F+F", fields{&s2, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 7.875}, false},
 		{s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: F32, f: 343.5}, false},
-		{"I-I", fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I64, i: 330}, false},
+		{"I-I", fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 330}, false},
 		{"I-F", fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: F64, f: 343.8}, false},
-		{"F-I", fields{&s4, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: -11.625}, false},
+		{"F-I", fields{&s4, 0, Value{t: F32, f: 3.375}}, Value{t: F32, f: -11.625}, false},
 		{"F-F", fields{&s5, 0, Value{t: F32, f: 3.375}}, Value{t: F64, f: 2.175}, false},
 		{s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: Nix}, true},
 		{s7, fields{&s7, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
@@ -1888,17 +2036,17 @@ func TestExpression_condExpr(t *testing.T) {
 		{"0" + s9, fields{&s9, 0, Value{t: I32, i: 0}}, Value{t: Identifier, s: "name"}, true},
 		{"1" + s0, fields{&s0, 0, Value{t: I32, i: 1}}, Value{t: I32, i: 2}, false},
 		{"0" + s0, fields{&s0, 0, Value{t: I32, i: 0}}, Value{t: I32, i: 3}, false},
-		{"1" + s1, fields{&s1, 0, Value{t: I32, i: 1}}, Value{t: I64, i: 2}, false},
-		{"0" + s1, fields{&s1, 0, Value{t: I32, i: 0}}, Value{t: I64, i: 3}, false},
-		{"1.23" + s1, fields{&s1, 0, Value{t: F32, f: 1.23}}, Value{t: I64, i: 2}, false},
-		{"0.0" + s1, fields{&s1, 0, Value{t: F32, f: 0.0}}, Value{t: I64, i: 3}, false},
+		{"1" + s1, fields{&s1, 0, Value{t: I32, i: 1}}, Value{t: I32, i: 2}, false},
+		{"0" + s1, fields{&s1, 0, Value{t: I32, i: 0}}, Value{t: I32, i: 3}, false},
+		{"1.23" + s1, fields{&s1, 0, Value{t: F32, f: 1.23}}, Value{t: I32, i: 2}, false},
+		{"0.0" + s1, fields{&s1, 0, Value{t: F32, f: 0.0}}, Value{t: I32, i: 3}, false},
 		{"1" + s2, fields{&s2, 0, Value{t: I32, i: 1}}, Value{t: I32, i: 1}, true},
 		{"345" + s3, fields{&s3, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"name" + s0, fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true},
 		{"345" + s5, fields{&s5, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
 		{"345" + s6, fields{&s6, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
-		{"1" + s7, fields{&s7, 0, Value{t: I32, i: 1}}, Value{t: I64, i: 1}, true},
+		{"1" + s7, fields{&s7, 0, Value{t: I32, i: 1}}, Value{t: I32, i: 1}, true},
 		{"345" + s8, fields{&s8, 0, Value{t: I32, i: 345}}, Value{t: AddAdd}, true},
 		{"\"string\"" + s1, fields{&s1, 0, Value{t: String, s: "string"}}, Value{t: String, s: "string"}, true},
 	}
