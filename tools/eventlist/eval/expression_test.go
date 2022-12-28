@@ -677,6 +677,7 @@ func TestExpression_lex(t *testing.T) {
 	var s55 = "'\\r'"
 	var s56 = "'\\t'"
 	var s57 = "'\\v'"
+	var s58 = "0x8000000000000001$"
 
 	type fields struct {
 		in   *string
@@ -748,6 +749,7 @@ func TestExpression_lex(t *testing.T) {
 		{s55, fields{&s55, 0, Value{}}, Value{t: I8, i: 0xd}, 4, false},
 		{s56, fields{&s56, 0, Value{}}, Value{t: I8, i: 9}, 4, false},
 		{s57, fields{&s57, 0, Value{}}, Value{t: I8, i: 11}, 4, false},
+		{s58, fields{&s58, 0, Value{}}, Value{t: U64, i: -0x7fffffffffffffff}, 18, false},
 	}
 	for _, tt := range tests {
 		tt := tt

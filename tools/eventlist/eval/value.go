@@ -194,8 +194,8 @@ func (v *Value) Function(v1 *Value) error {
 		if f.parType >= I8 && f.parType <= U64 && !(par.t >= I8 && par.t <= U64) {
 			return typeError(fnFunction, "")
 		}
-		if f.parType >= F32 && f.parType <= F64 && !(par.t >= F32 && par.t <=F64) {
-			return typeError(fnFunction, "")
+		if f.parType >= F32 && f.parType <= F64 && !(par.t >= F32 && par.t <= F64) {
+			return typeError(fnFunction, "") // cannot happen, currently there are no functions with floating parameter
 		}
 	}
 	switch f.fno {
@@ -513,6 +513,7 @@ func (v *Value) Cast(t Token) error {
 		case U8:
 			v.f = float64(uint8(v.i))
 			v.t = F64
+			v.i = 0
 		case F32:
 			v.f = float64(float32(v.f))
 			v.t = F64
@@ -534,11 +535,11 @@ func (v *Value) Mul(v1 *Value) error {
 		return typeError(fnMul, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnMul, "")
+		return typeError(fnMul, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnMul, "")
+		return typeError(fnMul, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -546,7 +547,7 @@ func (v *Value) Mul(v1 *Value) error {
 	case F32, F64:
 		v.f *= vy.f
 	default:
-		return typeError(fnMul, "")
+		return typeError(fnMul, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -559,11 +560,11 @@ func (v *Value) Div(v1 *Value) error {
 		return typeError(fnDiv, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnDiv, "")
+		return typeError(fnDiv, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnDiv, "")
+		return typeError(fnDiv, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -577,7 +578,7 @@ func (v *Value) Div(v1 *Value) error {
 		}
 		v.f /= vy.f
 	default:
-		return typeError(fnDiv, "")
+		return typeError(fnDiv, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -590,11 +591,11 @@ func (v *Value) Mod(v1 *Value) error {
 		return typeError(fnMod, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnMod, "")
+		return typeError(fnMod, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnMod, "")
+		return typeError(fnMod, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -605,7 +606,7 @@ func (v *Value) Mod(v1 *Value) error {
 	case F32, F64:
 		return typeError("mod with floatings", "")
 	default:
-		return typeError(fnMod, "")
+		return typeError(fnMod, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -618,11 +619,11 @@ func (v *Value) Add(v1 *Value) error {
 		return typeError(fnAdd, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnAdd, "")
+		return typeError(fnAdd, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnAdd, "")
+		return typeError(fnAdd, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -630,7 +631,7 @@ func (v *Value) Add(v1 *Value) error {
 	case F32, F64:
 		v.f += vy.f
 	default:
-		return typeError(fnAdd, "")
+		return typeError(fnAdd, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -643,11 +644,11 @@ func (v *Value) Sub(v1 *Value) error {
 		return typeError(fnSub, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnSub, "")
+		return typeError(fnSub, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnSub, "")
+		return typeError(fnSub, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -655,7 +656,7 @@ func (v *Value) Sub(v1 *Value) error {
 	case F32, F64:
 		v.f -= vy.f
 	default:
-		return typeError(fnSub, "")
+		return typeError(fnSub, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -684,11 +685,11 @@ func (v *Value) Less(v1 *Value) error {
 		return typeError(fnLess, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnLess, "")
+		return typeError(fnLess, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnLess, "")
+		return typeError(fnLess, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -707,7 +708,7 @@ func (v *Value) Less(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError(fnLess, "")
+		return typeError(fnLess, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -720,11 +721,11 @@ func (v *Value) LessEqual(v1 *Value) error {
 		return typeError(fnLessEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnLessEqual, "")
+		return typeError(fnLessEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnLessEqual, "")
+		return typeError(fnLessEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -743,7 +744,7 @@ func (v *Value) LessEqual(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError(fnLessEqual, "")
+		return typeError(fnLessEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -756,11 +757,11 @@ func (v *Value) Greater(v1 *Value) error {
 		return typeError(fnGreater, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnGreater, "")
+		return typeError(fnGreater, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnGreater, "")
+		return typeError(fnGreater, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -779,7 +780,7 @@ func (v *Value) Greater(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError(fnGreater, "")
+		return typeError(fnGreater, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -792,11 +793,11 @@ func (v *Value) GreaterEqual(v1 *Value) error {
 		return typeError(fnGreaterEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnGreaterEqual, "")
+		return typeError(fnGreaterEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnGreaterEqual, "")
+		return typeError(fnGreaterEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -815,7 +816,7 @@ func (v *Value) GreaterEqual(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError(fnGreaterEqual, "")
+		return typeError(fnGreaterEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -828,11 +829,11 @@ func (v *Value) Equal(v1 *Value) error {
 		return typeError(fnEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnEqual, "")
+		return typeError(fnEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnEqual, "")
+		return typeError(fnEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -851,7 +852,7 @@ func (v *Value) Equal(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError(fnEqual, "")
+		return typeError(fnEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }
@@ -864,11 +865,11 @@ func (v *Value) NotEqual(v1 *Value) error {
 		return typeError(fnNotEqual, "")
 	}
 	if err = v.Cast(resultT); err != nil {
-		return typeError(fnNotEqual, "")
+		return typeError(fnNotEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	vy := v1
 	if err = vy.Cast(resultT); err != nil {
-		return typeError(fnNotEqual, "")
+		return typeError(fnNotEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -887,7 +888,7 @@ func (v *Value) NotEqual(v1 *Value) error {
 		v.t = U8
 		v.f = 0.0
 	default:
-		return typeError(fnNotEqual, "")
+		return typeError(fnNotEqual, "")	// cannot happen because calcResult always return a good type or error
 	}
 	return nil
 }

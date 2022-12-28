@@ -560,6 +560,7 @@ func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
 	calcMemUsedArgs := Value{t: List, l: []Value{{t: I32, i: 1}, {t: I32, i: 2}, {t: I32, i: 3}, {t: I32, i: 4}}}
 	calcMemUsedArgs1 := Value{t: List, l: []Value{{t: String}, {t: I32, i: 2}, {t: I32, i: 3}, {t: I32, i: 4}}}
 	getRegValArgs := Value{t: List, l: []Value{{t: String, s: "reg"}}}
+	getRegValArgs1 := Value{t: List, l: []Value{{t: I32, i: 1}}}
 	symbolExistsArgs := Value{t: List, l: []Value{{t: String, s: "LEDOn"}}}
 	symbolExistsArgs1 := Value{t: List, l: []Value{{t: String, s: "xxxx"}}}
 
@@ -599,6 +600,7 @@ func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
 		{"NoFct", fields{t: Identifier, s: "abc"}, args{&calcMemUsedArgs}, Value{t: Identifier, s: "abc"}, true},
 		{"wrongCnt", fields{t: Identifier, s: "__CalcMemUsed"}, args{&getRegValArgs}, Value{t: Identifier, s: "__CalcMemUsed"}, true},
 		{"wrongType", fields{t: Identifier, s: "__CalcMemUsed"}, args{&calcMemUsedArgs1}, Value{t: Identifier, s: "__CalcMemUsed"}, true},
+		{"wrongType1", fields{t: Identifier, s: "__GetRegVal"}, args{&getRegValArgs1}, Value{t: Identifier, s: "__GetRegVal"}, true},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -920,8 +922,38 @@ func TestValue_Cast(t *testing.T) {
 		{"(uint16_t)483.12", fields{t: F32, F: 483.12}, args{U16}, Value{t: U16, i: 0x1E3}, false},
 		{"(uint32_t)78483.12", fields{t: F32, F: 78483.12}, args{U32}, Value{t: U32, i: 78483}, false},
 		{"(uint64_t)-9278483.12", fields{t: F32, F: 9278483.12}, args{U64}, Value{t: U64, i: 9278483}, false},
-		{"(double)12345789", fields{t: F32, F: 12345789}, args{F64}, Value{t: F64, f: 12345789.0}, false},
-		{"(float)123456789", fields{t: F32, F: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(int8_t)(double)-483.12", fields{t: F64, F: -483.12}, args{I8}, Value{t: I8, i: 0x1D}, false},
+		{"(int16_t)(double)-483.12", fields{t: F64, F: -483.12}, args{I16}, Value{t: I16, i: -483}, false},
+		{"(int32_t)(double)-78483.12", fields{t: F64, F: -78483.12}, args{I32}, Value{t: I32, i: -78483}, false},
+		{"(int64_t)(double)-9278483.12", fields{t: F64, F: -9278483.12}, args{I64}, Value{t: I64, i: -9278483}, false},
+		{"(uint8_t)(double)483.12", fields{t: F64, F: 483.12}, args{U8}, Value{t: U8, i: 0xE3}, false},
+		{"(uint16_t)(double)483.12", fields{t: F64, F: 483.12}, args{U16}, Value{t: U16, i: 0x1E3}, false},
+		{"(uint32_t)(double)78483.12", fields{t: F64, F: 78483.12}, args{U32}, Value{t: U32, i: 78483}, false},
+		{"(uint64_t)(double)-9278483.12", fields{t: F64, F: 9278483.12}, args{U64}, Value{t: U64, i: 9278483}, false},
+		{"(uint8_t)483.12", fields{t: F32, F: 483.12}, args{U8}, Value{t: U8, i: 0xE3}, false},
+		{"(uint16_t)483.12", fields{t: F32, F: 483.12}, args{U16}, Value{t: U16, i: 0x1E3}, false},
+		{"(uint32_t)78483.12", fields{t: F32, F: 78483.12}, args{U32}, Value{t: U32, i: 78483}, false},
+		{"(uint64_t)-9278483.12", fields{t: F32, F: 9278483.12}, args{U64}, Value{t: U64, i: 9278483}, false},
+		{"(float)(int64_t)123456789", fields{t: I64, I: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(uint64_t)123456789", fields{t: U64, I: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(int32_t)123456789", fields{t: I32, I: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(uint32_t)123456789", fields{t: U32, I: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(int16_t)12345", fields{t: I16, I: 12345}, args{F32}, Value{t: F32, f: 12345.0}, false},
+		{"(float)(uint16_t)12345", fields{t: U16, I: 12345}, args{F32}, Value{t: F32, f: 12345.0}, false},
+		{"(float)(int8_t)123", fields{t: I8, I: 123}, args{F32}, Value{t: F32, f: 123.0}, false},
+		{"(float)(uint8_t)123", fields{t: U8, I: 123}, args{F32}, Value{t: F32, f: 123.0}, false},
+		{"(float)123456789.0", fields{t: F32, F: 123456789.0}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(double)123456789.0", fields{t: F64, F: 123456789.0}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(double)(int64_t)123456789", fields{t: I64, I: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(uint64_t)123456789", fields{t: U64, I: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(int32_t)123456789", fields{t: I32, I: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(uint32_t)123456789", fields{t: U32, I: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(int16_t)12345", fields{t: I16, I: 12345}, args{F64}, Value{t: F64, f: 12345.0}, false},
+		{"(double)(uint16_t)12345", fields{t: U16, I: 12345}, args{F64}, Value{t: F64, f: 12345.0}, false},
+		{"(double)(int8_t)123", fields{t: I8, I: 123}, args{F64}, Value{t: F64, f: 123.0}, false},
+		{"(double)(uint8_t)123", fields{t: U8, I: 123}, args{F64}, Value{t: F64, f: 123.0}, false},
+		{"(double)123456789.0", fields{t: F32, F: 123456789.0}, args{F64}, Value{t: F64, f: 123456792.0}, false},
+		{"(double)(double)123456789.0", fields{t: F64, F: 123456789.0}, args{F64}, Value{t: F64, f: 123456789.0}, false},
 		{"(int8_t)err", fields{t: Nix}, args{I8}, Value{t: Nix}, true},
 		{"(int16_t)err", fields{t: Nix}, args{I16}, Value{t: Nix}, true},
 		{"(int32_t)err", fields{t: Nix}, args{I32}, Value{t: Nix}, true},
@@ -932,6 +964,7 @@ func TestValue_Cast(t *testing.T) {
 		{"(uint64_t)err", fields{t: Nix}, args{U64}, Value{t: Nix}, true},
 		{"(double)err", fields{t: Nix}, args{F64}, Value{t: Nix}, true},
 		{"(float)err", fields{t: Nix}, args{F32}, Value{t: Nix}, true},
+		{"(string)err", fields{t: Nix}, args{String}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
