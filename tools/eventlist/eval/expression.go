@@ -957,6 +957,10 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 			if err = left.Function(&right); err != nil {
 				return left, err
 			}
+		} else {
+			if err = left.Function(&right); err != nil {
+				return left, err
+			}
 		}
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
@@ -2081,16 +2085,16 @@ func (ex *Expression) expression() (Value, error) {
 	if v, err = ex.asnExpr(); err != nil {
 		return v, err
 	}
-	if v.IsIdentifier() {
-		if v, err = v.getValue(); err != nil {
-			return v, err
-		}
-	}
 	for ex.next.t == Comma || ex.next.t == Semi {
 		if ex.next, err = ex.lex(); err != nil {
 			return v, err
 		}
-		if _, err = ex.asnExpr(); err != nil && !errors.Is(err, ErrEof) {
+		if v, err = ex.asnExpr(); err != nil && !errors.Is(err, ErrEof) {
+			return v, err
+		}
+	}
+	if v.IsIdentifier() {
+		if v, err = v.getValue(); err != nil {
 			return v, err
 		}
 	}
