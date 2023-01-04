@@ -18,6 +18,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  go_version: 1.19.3
+
 jobs:
   build:
     if: |
@@ -26,17 +29,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        go: [1.19.3]
     name: 'Build'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go 1.19
+      - name: Install go ${{ env.go_version }}
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go }}
+          go-version: ${{ env.go_version }}
 
       - name: Initialize CodeQL
         if: github.event_name != 'release'
@@ -120,13 +122,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        go-version: [1.19.3]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Setup Go
+      - name: Setup go ${{ env.go_version }}
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: ${{ env.go_version }}
 
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -144,16 +145,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        go: [1.19.3]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go 1.19
+      - name: Install go ${{ env.go_version }}
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go }}
+          go-version: ${{ env.go_version }}
 
       - name: Create build folder
         run: mkdir build
@@ -170,20 +170,23 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        go: [1.19.3]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - name: Install go 1.19
+
+      - name: Install go ${{ env.go_version }}
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go }}
+          go-version: ${{ env.go_version }}
+
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
-      - name: Detect vulnerability
+
+      - name: Run vulnerability check
         run: |
-          test -n "$(govulncheck ./... | grep 'No vulnerabilities found.')"
+          echo "$(govulncheck ./... 2>&1 | tee vulnerability_report.out)"          
+          test -n "$(grep 'No vulnerabilities found.' vulnerability_report.out)"
         working-directory: ./tools/eventlist
 
   test:
@@ -194,17 +197,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, windows-2019, macos-12]
-        go: [1.19.3]
     name: 'Test (${{ matrix.os }}, ${{ matrix.go }})'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go 1.19
+      - name: Install go ${{ env.go_version }}
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go }}
+          go-version: ${{ env.go_version }}
 
       - name: Create build folder
         run: mkdir build
@@ -264,17 +266,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        go: [1.19.3]
     name: 'Coverage check'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go 1.19
+      - name: Install go ${{ env.go_version }}
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go }}
+          go-version: ${{ env.go_version }}
 
       - name: Create build folder
         run: mkdir build
