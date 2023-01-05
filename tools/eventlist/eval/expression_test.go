@@ -2325,10 +2325,11 @@ func TestExpression_asnExpr(t *testing.T) {
 func TestExpression_expression(t *testing.T) {
 	t.Parallel()
 
-	var s0 = ",v0_expExpr"
+	var s0 = ",v1_expExpr"
 	var s1 = ",7"
 	var s2 = ","
 	var s3 = ", ++"
+	var s4 = ",name"
 
 	type fields struct {
 		in   *string
@@ -2341,18 +2342,20 @@ func TestExpression_expression(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345" + s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 1}, false},
-		{"v0_expExpr" + s0, fields{&s0, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: I32, i: 1}, false},
+		{"345" + s0, fields{&s0, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 42}, false},
+		{"v0_expExpr" + s0, fields{&s0, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: I32, i: 42}, false},
 		{"345" + s1, fields{&s1, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 7}, false},
 		{"v0_expExpr" + s1, fields{&s1, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: I32, i: 7}, false},
 		{"345" + s2, fields{&s2, 0, Value{t: I32, i: 345}}, Value{t: I32, i: 345}, true},
 		{"v0_expExpr" + s3, fields{&s3, 0, Value{t: Identifier, s: "v0_expExpr"}}, Value{t: AddAdd}, true},
+		{"345" + s4, fields{&s4, 0, Value{t: I32, i: 345}}, Value{t: Identifier, s: "name"}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
 		SetVar("v0_expExpr", Value{t: I32, i: 1})
+		SetVar("v1_expExpr", Value{t: I32, i: 42})
 		t.Run(tt.name, func(t *testing.T) {
-//			t.Parallel()
+			t.Parallel()
 
 			ex := &Expression{
 				in:   tt.fields.in,

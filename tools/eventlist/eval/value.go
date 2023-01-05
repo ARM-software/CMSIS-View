@@ -308,222 +308,108 @@ func (v *Value) Not() error {
 
 func (v *Value) Cast(t Token) error {
 	const fnCast = "Cast"
-
-	switch t {
-	case U8:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(uint8(v.i))
-			v.t = U8
+	switch (t) {
+	case U8, U16, U32, U64:
+		switch (v.t) {
+		case I64, U64:
+		case I32:
+			v.i = int64(uint64(int32(v.i)))
+		case U32:
+			v.i = int64(uint64(uint32(v.i)))
+		case I16:
+			v.i = int64(uint64(int16(v.i)))
+		case U16:
+			v.i = int64(uint64(uint16(v.i)))
+		case I8:
+			v.i = int64(uint64(int8(v.i)))
+		case U8:
+			v.i = int64(uint64(uint8(v.i)))
 		case F32:
-			v.i = int64(uint8(float32(v.f)))
-			v.t = U8
-			v.f = 0
-		case F64:
-			v.i = int64(uint8(v.f))
-			v.t = U8
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case I8:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(int8(v.i))
-			v.t = I8
-		case F32:
-			v.i = int64(int8(float32(v.f)))
-			v.t = I8
-			v.f = 0
-		case F64:
-			v.i = int64(int8(v.f))
-			v.t = I8
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case U16:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(uint16(v.i))
-			v.t = U16
-		case F32:
-			v.i = int64(uint16(float32(v.f)))
-			v.t = U16
-			v.f = 0
-		case F64:
-			v.i = int64(uint16(v.f))
-			v.t = U16
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case I16:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(int16(v.i))
-			v.t = I16
-		case F32:
-			v.i = int64(int16(float32(v.f)))
-			v.t = I16
-			v.f = 0
-		case F64:
-			v.i = int64(int16(v.f))
-			v.t = I16
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case U32:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(uint32(v.i))
-			v.t = U32
-		case F32:
-			v.i = int64(uint32(float32(v.f)))
-			v.t = U32
-			v.f = 0
-		case F64:
-			v.i = int64(uint32(v.f))
-			v.t = U32
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case I32:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(int32(v.i))
-			v.t = I32
-		case F32:
-			v.i = int64(int32(float32(v.f)))
-			v.t = I32
-			v.f = 0
-		case F64:
-			v.i = int64(int32(v.f))
-			v.t = I32
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case U64:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.i = int64(uint64(v.i))
-			v.t = U64
-		case F32:
-			v.i = int64(float32(v.f))
-			v.t = U64
-			v.f = 0
+			v.i = int64(uint64(float32(v.f)))
 		case F64:
 			v.i = int64(uint64(v.f))
-			v.t = U64
-			v.f = 0
 		default:
 			return typeError(fnCast, "")
 		}
-	case I64:
-		switch v.t {
-		case I64, U64, I32, U32, I16, U16, I8, U8:
-			v.t = I64
-		case F32:
-			v.i = int64(float32(v.f))
-			v.t = I64
-			v.f = 0
-		case F64:
-			v.i = int64(v.f)
-			v.t = I64
-			v.f = 0
-		default:
-			return typeError(fnCast, "")
-		}
-	case F32:
-		switch v.t {
-		case I64:
-			v.f = float64(float32(v.i))
-			v.t = F32
-			v.i = 0
-		case U64:
-			v.f = float64(float32(uint64(v.i)))
-			v.t = F32
-			v.i = 0
+		v.t = U64
+		v.f = 0
+
+	case I8, I16, I32, I64:
+		switch (v.t) {
+		case I64, U64:
 		case I32:
-			v.f = float64(float32(int32(v.i)))
-			v.t = F32
-			v.i = 0
+			v.i = int64(int32(v.i))
 		case U32:
-			v.f = float64(float32(uint32(v.i)))
-			v.t = F32
-			v.i = 0
+			v.i = int64(uint32(v.i))
 		case I16:
-			v.f = float64(float32(int16(v.i)))
-			v.t = F32
-			v.i = 0
+			v.i = int64(int16(v.i))
 		case U16:
-			v.f = float64(float32(uint16(v.i)))
-			v.t = F32
-			v.i = 0
+			v.i = int64(uint16(v.i))
 		case I8:
-			v.f = float64(float32(int8(v.i)))
-			v.t = F32
-			v.i = 0
+			v.i = int64(int8(v.i))
 		case U8:
-			v.f = float64(float32(uint8(v.i)))
-			v.t = F32
-			v.i = 0
+			v.i = int64(uint8(v.i))
 		case F32:
-			v.f = float64(float32(v.f))
-			v.t = F32
+			if (t == I32) {
+				v.i = int64(int32(float32(v.f)))   // for big values INT64_MIN is returned
+			} else {
+				v.i = int64(float32(v.f))   // for big values INT64_MIN is returned
+			}
 		case F64:
-			v.f = float64(float32(v.f))
-			v.t = F32
+			v.i = int64(uint64(v.f))   // for big values INT64_MIN is returned
 		default:
 			return typeError(fnCast, "")
 		}
-	case F64:
-		switch v.t {
+		v.t = I64
+		v.f = 0
+
+	case F32, F64:
+		switch (v.t) {
 		case I64:
 			v.f = float64(v.i)
-			v.t = F64
-			v.i = 0
 		case U64:
 			v.f = float64(uint64(v.i))
-			v.t = F64
-			v.i = 0
 		case I32:
 			v.f = float64(int32(v.i))
-			v.t = F64
-			v.i = 0
 		case U32:
 			v.f = float64(uint32(v.i))
-			v.t = F64
-			v.i = 0
 		case I16:
 			v.f = float64(int16(v.i))
-			v.t = F64
-			v.i = 0
 		case U16:
 			v.f = float64(uint16(v.i))
-			v.t = F64
-			v.i = 0
 		case I8:
 			v.f = float64(int8(v.i))
-			v.t = F64
-			v.i = 0
 		case U8:
 			v.f = float64(uint8(v.i))
-			v.t = F64
-			v.i = 0
 		case F32:
 			v.f = float64(float32(v.f))
-			v.t = F64
 		case F64:
 		default:
 			return typeError(fnCast, "")
 		}
+		v.t = F64
+		v.i = 0
+
 	default:
 		return typeError(fnCast, "")
 	}
+	switch (t) {
+	case U8:
+		v.i = int64(uint8(v.i))
+	case U16:
+		v.i = int64(uint16(v.i))
+	case U32:
+		v.i = int64(uint32(v.i))
+	case I8:
+		v.i = int64(int8(v.i))
+	case I16:
+		v.i = int64(int16(v.i))
+	case I32:
+		v.i = int64(int32(v.i))
+	case F32:
+		v.f = float64(float32(v.f))
+	}
+	v.t = t
 	return nil
 }
 
