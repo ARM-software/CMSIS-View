@@ -37,6 +37,16 @@
 #define TABLE_SIZE 1000
 float sin_table[TABLE_SIZE];
 
+#ifdef __GNUC__
+float sinf(float f) {
+  return f;
+}
+
+float sqrtf(float f) {
+  return f;
+}
+#endif
+
 // Calculate table with sine values
 void CalcSinTable (void)  {
   unsigned int i, max_i;
