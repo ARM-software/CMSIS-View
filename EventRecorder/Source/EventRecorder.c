@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2022 Arm Limited. All rights reserved.
+ * Copyright (c) 2016-2023 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -258,7 +258,7 @@ __USED const EventRecorderInfo_t EventRecorderInfo =
 
 #if (__CORTEX_M < 3U)
 
-__STATIC_INLINE uint8_t atomic_inc8 (uint8_t *mem) {
+__STATIC_INLINE uint8_t atomic_inc_8 (uint8_t *mem) {
   uint32_t primask = __get_PRIMASK();
   uint8_t  ret;
 
@@ -272,7 +272,7 @@ __STATIC_INLINE uint8_t atomic_inc8 (uint8_t *mem) {
   return ret;
 }
 
-__STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
+__STATIC_INLINE uint32_t atomic_inc_32 (uint32_t *mem) {
   uint32_t primask = __get_PRIMASK();
   uint32_t ret;
 
@@ -286,27 +286,20 @@ __STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
   return ret;
 }
 
-__STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
+__STATIC_INLINE uint32_t atomic_cmp_xch_32 (uint32_t *mem, uint32_t *expected, uint32_t desired) {
   uint32_t primask = __get_PRIMASK();
-  uint8_t  ret;
-
-  __disable_irq();
-  ret = *mem;
-  *mem = val;
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
-}
-
-__STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  uint32_t primask = __get_PRIMASK();
+  uint32_t val;
   uint32_t ret;
 
   __disable_irq();
-  ret = *mem;
-  *mem = val;
+  val = *mem;
+  if (val == *expected) {
+    *mem = desired;
+    ret = 1U;
+  } else {
+    *expected = val;
+    ret = 0U;
+  }
   if (primask == 0U) {
     __enable_irq();
   }
@@ -316,52 +309,39 @@ __STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
 
 #else /* (__CORTEX_M >= 3U) */
 
-__STATIC_INLINE uint8_t atomic_inc8 (uint8_t *mem) {
+__STATIC_INLINE uint8_t atomic_inc_8 (uint8_t *mem) {
   return (atomic_fetch_add_explicit((_Atomic uint8_t *)mem, 1U, memory_order_relaxed));
 }
 
-__STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
+__STATIC_INLINE uint32_t atomic_inc_32 (uint32_t *mem) {
   return (atomic_fetch_add_explicit((_Atomic uint32_t *)mem, 1U, memory_order_relaxed));
 }
 
-__STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
-  return (atomic_exchange((_Atomic uint8_t *)mem, val));
-}
-__STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  return (atomic_exchange((_Atomic uint32_t *)mem, val));
+__STATIC_INLINE uint32_t atomic_cmp_xch_32 (uint32_t *mem, uint32_t *expected, uint32_t desired) {
+  return((uint32_t)atomic_compare_exchange_weak_explicit((_Atomic uint32_t *)mem,
+                                                          expected,
+                                                          desired,
+                                                          memory_order_acq_rel,
+                                                          memory_order_relaxed));
 }
 
 #endif
 
 
 __STATIC_INLINE uint32_t GetContext (void) {
-  return ((uint32_t)atomic_inc8(&EventStatus.context));
+  return ((uint32_t)atomic_inc_8(&EventStatus.context));
 }
 
 __STATIC_INLINE uint32_t GetRecordIndex (void) {
-  return (atomic_inc32(&EventStatus.record_index));
-}
-
-__STATIC_INLINE uint32_t UpdateTS (uint32_t ts) {
-  return (atomic_wr32(&EventStatus.ts_last, ts));
-}
-
-static uint8_t TS_OverflowLock;
-
-__STATIC_INLINE uint8_t LockTS_Overflow (void) {
-  return (atomic_wr8(&TS_OverflowLock, 1U));
-}
-
-__STATIC_INLINE void UnlockTS_Overflow (void) {
-  (void) (atomic_wr8(&TS_OverflowLock, 0U));
+  return (atomic_inc_32(&EventStatus.record_index));
 }
 
 __STATIC_INLINE void IncrementRecordsWritten (void) {
-  (void)atomic_inc32(&EventStatus.records_written);
+  (void)atomic_inc_32(&EventStatus.records_written);
 }
 
 __STATIC_INLINE void IncrementRecordsDumped (void) {
-  (void)atomic_inc32(&EventStatus.records_dumped);
+  (void)atomic_inc_32(&EventStatus.records_dumped);
 }
 
 
@@ -657,28 +637,41 @@ static void EventRecord4_Log (uint32_t id,
   \return       timestamp (64-bit)
 */
 static uint64_t EventGetTS64 (void) {
+  //lint --e{934} "Taking address of near auto variable"
+  //lint --e{438} "Last value assigned to variable not used"
   uint32_t ts;
   uint32_t ts_last;
-  uint32_t ts_last_prev;
   uint32_t ts_overflow;
 
+  ts_last = *((volatile uint32_t *)&EventStatus.ts_last);
+  __DMB();
   do {
     ts_overflow = *((volatile uint32_t *)&EventStatus.ts_overflow);
-    ts_last     = *((volatile uint32_t *)&EventStatus.ts_last);
     ts = EventRecorderTimerGetCount();
     if (ts < ts_last) {
-      if (LockTS_Overflow() == 0U) {
+      uint32_t primask = __get_PRIMASK();
+      uint32_t ts_latest;
+      uint32_t ts_updated;
+      __disable_irq();
+      ts_latest = *((volatile uint32_t *)&EventStatus.ts_last);
+      if (ts_latest == ts_last) {
+        EventStatus.ts_last = ts;
         EventStatus.ts_overflow++;
-        UnlockTS_Overflow();
+        __DMB();
+        ts_updated = 1U;
+      } else {
+        ts_updated = 0U;
+      }
+      if (primask == 0U) {
+        __enable_irq();
+      }
+      if (ts_updated == 0U) {
+        continue;
       }
       ts_overflow++;
-    } else {
-      if (TS_OverflowLock != 0U) {
-        ts_overflow++;
-      }
+      break;
     }
-    ts_last_prev = UpdateTS(ts);
-  } while (ts_last != ts_last_prev);
+  } while (atomic_cmp_xch_32(&EventStatus.ts_last, &ts_last, ts) == 0U);
 
   return (ts | ((uint64_t)ts_overflow << 32));
 }
@@ -691,21 +684,37 @@ static uint64_t EventGetTS64 (void) {
   \return       timestamp (32-bit)
 */
 static uint32_t EventGetTS (void) {
+  //lint --e{934} "Taking address of near auto variable"
+  //lint --e{438} "Last value assigned to variable not used"
   uint32_t ts;
   uint32_t ts_last;
-  uint32_t ts_last_prev;
 
+  ts_last = *((volatile uint32_t *)&EventStatus.ts_last);
   do {
-    ts_last = *((volatile uint32_t *)&EventStatus.ts_last);
     ts = EventRecorderTimerGetCount();
     if (ts < ts_last) {
-      if (LockTS_Overflow() == 0U) {
+      uint32_t primask = __get_PRIMASK();
+      uint32_t ts_latest;
+      uint32_t ts_updated;
+      __disable_irq();
+      ts_latest = *((volatile uint32_t *)&EventStatus.ts_last);
+      if (ts_latest == ts_last) {
+        EventStatus.ts_last = ts;
         EventStatus.ts_overflow++;
-        UnlockTS_Overflow();
+        __DMB();
+        ts_updated = 1U;
+      } else {
+        ts_updated = 0U;
       }
+      if (primask == 0U) {
+        __enable_irq();
+      }
+      if (ts_updated == 0U) {
+        continue;
+      }
+      break;
     }
-    ts_last_prev = UpdateTS(ts);
-  } while (ts_last != ts_last_prev);
+  } while (atomic_cmp_xch_32(&EventStatus.ts_last, &ts_last, ts) == 0U);
 
   return (ts);
 }
@@ -974,7 +983,6 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     EventStatus.ts_freq     = freq;
     EventStatus.ts_last     = 0U;
     EventStatus.ts_overflow = 0U;
-    TS_OverflowLock         = 0U;
   } else {
 #if    (EVENT_TIMESTAMP_SOURCE == 0)
   #if ((__CORTEX_M >= 3U) && (__CORTEX_M != 23U))
@@ -996,7 +1004,6 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     EventStatus.ts_freq     = freq;
     EventStatus.ts_last     = 0U;
     EventStatus.ts_overflow = 0U;
-    TS_OverflowLock         = 0U;
 #else
     ret = 1U;
 #endif
