@@ -25,12 +25,14 @@ solution:
   target-types:
     - device: ARMCM3
       type: CM3
+
     - device: ARMCM55
       processor:
         endian: little
         fpu: "off"
         trustzone: "off"
       type: CM55
+
     - device: ARMCM55
       processor:
         endian: little
