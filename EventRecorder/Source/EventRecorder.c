@@ -142,9 +142,9 @@ typedef struct {
 #ifdef RTE_Compiler_EventRecorder_Semihosting
 
 /* Event Record Types (Log) */
-#define EVENT_TYPE_DATA         0x0001U  // EventRecordData
-#define EVENT_TYPE_VAL2         0x0002U  // EventRecord2
-#define EVENT_TYPE_VAL4         0x0003U  // EventRecord4
+#define EVENT_TYPE_DATA         0x0001U // EventRecordData
+#define EVENT_TYPE_VAL2         0x0002U // EventRecord2
+#define EVENT_TYPE_VAL4         0x0003U // EventRecord4
 
 /* Event Record Header (Log) */
 typedef struct __PACKED {
@@ -700,8 +700,8 @@ typedef int32_t FILEHANDLE;
 static FILEHANDLE FileHandle = -1;
 
 static FILEHANDLE sys_open (const char *name, uint32_t openmode) {
-  //lint --e{446}  "side effect in initializer"
-  //lint --e{934}  "Taking address of near auto variable"
+  //lint --e{446} "side effect in initializer"
+  //lint --e{934} "Taking address of near auto variable"
   struct {
     const char    *name;
     uint32_t       openmode;
@@ -715,7 +715,7 @@ static FILEHANDLE sys_open (const char *name, uint32_t openmode) {
 
 /*
 static int32_t sys_close (FILEHANDLE fh) {
-  //lint --e{934}  "Taking address of near auto variable"
+  //lint --e{934} "Taking address of near auto variable"
   struct {
     FILEHANDLE     fh;
   } args = { fh };
@@ -725,7 +725,7 @@ static int32_t sys_close (FILEHANDLE fh) {
 */
 
 static int32_t sys_write (FILEHANDLE fh, const uint8_t *buf, uint32_t len) {
-  //lint --e{934}  "Taking address of near auto variable"
+  //lint --e{934} "Taking address of near auto variable"
   struct {
     FILEHANDLE     fh;
     const uint8_t *buf;
@@ -801,7 +801,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
 static void EventRecordData_Log (uint32_t id,
                                  const void *data, uint32_t len,
                                  uint64_t ts) {
-  //lint --e{934}  "Taking address of near auto variable"
+  //lint --e{934} "Taking address of near auto variable"
   struct {
     EventRecordHead_t head;
     EventRecordData_t record;
@@ -830,7 +830,7 @@ static void EventRecordData_Log (uint32_t id,
 static void EventRecord2_Log (uint32_t id,
                               uint32_t val1, uint32_t val2,
                               uint64_t ts) {
-  //lint --e{934}  "Taking address of near auto variable"
+  //lint --e{934} "Taking address of near auto variable"
   struct {
     EventRecordHead_t head;
     EventRecord2_t    record;
@@ -860,7 +860,7 @@ static void EventRecord2_Log (uint32_t id,
 static void EventRecord4_Log (uint32_t id,
                               uint32_t val1, uint32_t val2, uint32_t val3, uint32_t val4,
                               uint64_t ts) {
-  //lint --e{934}  "Taking address of near auto variable"
+  //lint --e{934} "Taking address of near auto variable"
   struct {
     EventRecordHead_t head;
     EventRecord4_t    record;
