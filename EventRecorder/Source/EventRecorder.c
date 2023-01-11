@@ -374,7 +374,8 @@ __STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
   __disable_irq();
   val = *mem;
   if ((val & EVENT_RECORD_LOCKED) == 0U) {
-     val = (val & EVENT_RECORD_TBIT) | info;
+     val = (info | EVENT_RECORD_LOCKED) |
+           (val  & EVENT_RECORD_TBIT);
     *mem = val;
   } else {
      val = 0U;
@@ -382,28 +383,17 @@ __STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
   if (primask == 0U) {
     __enable_irq();
   }
+  __COMPILER_BARRIER();
 
   return val;
 }
 
-__STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
-  uint32_t primask = __get_PRIMASK();
+__STATIC_INLINE void UnlockRecord (uint32_t *mem, uint32_t info) {
   uint32_t val;
-  uint32_t ret;
 
-  __disable_irq();
-  val = *mem;
-  if ((val & EVENT_RECORD_LOCKED) != 0U) {
-    *mem = info;
-     ret = 1U;
-  } else {
-     ret = 0U;
-  }
-  if (primask == 0U) {
-    __enable_irq();
-  }
-
-  return ret;
+  __COMPILER_BARRIER();
+  val = info & ~EVENT_RECORD_LOCKED;
+  *mem = val;
 }
 
 #else /* (__CORTEX_M >= 3U) */
@@ -418,7 +408,8 @@ __STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
       //lint -e{904} "Return statement before end of function"
       return 0U;
     }
-    val_new = (val  & EVENT_RECORD_TBIT) | info;
+    val_new = (info | EVENT_RECORD_LOCKED) |
+              (val  & EVENT_RECORD_TBIT);
   } while (!atomic_compare_exchange_weak_explicit((_Atomic uint32_t *)mem,
                                                   &val,
                                                   val_new,
@@ -428,22 +419,11 @@ __STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
   return val_new;
 }
 
-__STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
+__STATIC_INLINE void UnlockRecord (uint32_t *mem, uint32_t info) {
   uint32_t val;
  
-  val = *mem;
-  do {
-    if ((val & EVENT_RECORD_LOCKED) == 0U) {
-      //lint -e{904} "Return statement before end of function"
-      return 0U;
-    }
-  } while (!atomic_compare_exchange_weak_explicit((_Atomic uint32_t *)mem,
-                                                  &val,
-                                                  info,
-                                                  memory_order_release,
-                                                  memory_order_relaxed));
- 
-  return 1U;
+  val = info & ~EVENT_RECORD_LOCKED;
+  (void)atomic_exchange_explicit((_Atomic uint32_t *)mem, val, memory_order_release);
 }
 
 #endif
@@ -555,23 +535,18 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
            ((ts   >> 3) & EVENT_RECORD_MSB_TS)   |
            ((val1 >> 2) & EVENT_RECORD_MSB_VAL1) |
            ((val2 >> 1) & EVENT_RECORD_MSB_VAL2) |
-           EVENT_RECORD_VALID                    |
-           EVENT_RECORD_LOCKED;
+           EVENT_RECORD_VALID;
     info = LockRecord(&record->info, info);
     if ((info & EVENT_RECORD_LOCKED) != 0U) {
-      info ^= EVENT_RECORD_LOCKED;
       info ^= EVENT_RECORD_TBIT;
       tbit  = info & EVENT_RECORD_TBIT;
       record->ts   = (ts   & ~EVENT_RECORD_TBIT) | tbit;
       record->val1 = (val1 & ~EVENT_RECORD_TBIT) | tbit;
       record->val2 = (val2 & ~EVENT_RECORD_TBIT) | tbit;
-      if ((UnlockRecord(&record->info, info)) != 0U) {
-        IncrementRecordsWritten();
-        //lint -e{904} "Return statement before end of function"
-        return 1U;
-      } else {
-        break;
-      }
+      UnlockRecord(&record->info, info);
+      IncrementRecordsWritten();
+      //lint -e{904} "Return statement before end of function"
+      return 1U;
     }
   }
 
