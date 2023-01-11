@@ -14,4 +14,10 @@ project:
         - file: ./main.c
         # vectortable.c due to become part of startup component
         - file: ./RTE/Device/$Dname$/vectortable.c
+        - file: $OutDir(EventStatistic)$/$Dname$_ac6.sct
+          for-compiler: AC6
+        - file: $OutDir(EventStatistic)$/gcc_arm.ld
+          for-compiler: GCC
+        - file: $OutDir(EventStatistic)$/generic_cortex.icf
+          for-compiler: IAR
       group: main

@@ -22,6 +22,23 @@ class DeviceAxis(Enum):
     CM55   = ('Cortex-M55', 'CM55')
     SSE300 = ('Corstone_SSE-300', 'SSE300')
 
+    @property
+    def dname(self):
+        return {
+            DeviceAxis.CM3:    'ARMCM3',
+            DeviceAxis.CM55:   'ARMCM55',
+            DeviceAxis.SSE300: 'ARMCM55'
+        }[self]
+
+
+    @property
+    def mcpu(self):
+        return {
+            DeviceAxis.CM3:    'cortex-m3',
+            DeviceAxis.CM55:   'cortex-m55',
+            DeviceAxis.SSE300: 'cortex-m55'
+        }[self]
+
 
 @matrix_axis("compiler", "c", "Compiler(s) to be considered.")
 class CompilerAxis(Enum):
@@ -75,6 +92,17 @@ def model_config(config):
     return f"model_config_{config.device[1].lower()}.txt"
 
 
+def linker_file(config):
+    if config.compiler == CompilerAxis.AC6:
+        return f"{config.device.dname}_ac6.sct"
+    elif config.compiler == CompilerAxis.GCC:
+        return "gcc_arm.ld"
+    elif config.compiler == CompilerAxis.IAR:
+        return "generic_cortex.icf"
+    else:
+        return ""
+
+
 @matrix_action
 def clean(config):
     """Build the selected configurations using CMSIS-Build."""
@@ -92,6 +120,10 @@ def build(config, results):
     copy(src, dst)
 
     yield csolution(f"{project_name(config)}")
+    Path(project_outdir(config)).mkdir(exist_ok=True)
+    yield preprocess(config,
+        f"RTE/Device/{config.device.dname}/{linker_file(config)}",
+        f"{project_outdir(config)}/{linker_file(config)}")
     yield cbuild(f"{project_dir(config)}/{project_name(config)}.cprj")
 
     if not all(r.success for r in results):
@@ -139,6 +171,18 @@ def unzip(archive):
 @matrix_command()
 def csolution(project):
     return ["csolution", "convert", "-s", "EventStatistic.csolution.yaml", "-c", project]
+
+
+@matrix_command()
+def preprocess(config, infile, outfile):
+    layout = f"RTE/Device/{config.device.dname}/memory_layout.h"
+    if config.compiler == CompilerAxis.AC6:
+        return ["armclang", "--target=arm-arm-none-eabi", f"-mcpu={config.device.mcpu}", "-xc", "-include", layout, "-E", infile, "-o", outfile]
+    elif config.compiler == CompilerAxis.GCC:
+        return ["arm-none-eabi-gcc", f"-mcpu={config.device.mcpu}", "-xc", "-include", layout, "-E", infile, "-P", "-o", outfile]
+    elif config.compiler == CompilerAxis.IAR:
+      return ["iccarm", infile, "--preinclude", layout, "--preprocess=n", outfile]
+    return ["true"]
 
 
 @matrix_command()

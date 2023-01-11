@@ -1,7 +1,3 @@
-#! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m3 -xc
-; command above MUST be in first line (no comment above!)
-
-#include "memory_layout.h"
 
 /*----------------------------------------------------------------------------
   User Stack & Heap boundary definition

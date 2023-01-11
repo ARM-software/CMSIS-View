@@ -4,6 +4,4 @@ default:
   compiler: IAR
   misc:
     - C-CPP: [--dlib_config DLib_Config_Full.h]
-      Link:
-        - --config generic_cortex.icf
-        - --semihosting
+      Link: [--semihosting]
