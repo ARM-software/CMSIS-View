@@ -22,6 +22,10 @@
 #include "RTE_Components.h"
 #include CMSIS_device_header
 
+#if (__CORTEX_M >= 3U)
+#include <stdatomic.h>
+#endif
+
 #include <string.h>
 #include "EventRecorder.h"
 #include "EventRecorderConf.h"
@@ -312,153 +316,20 @@ __STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
 
 #else /* (__CORTEX_M >= 3U) */
 
-//lint ++flb
-
-#if defined(__CC_ARM)
-static __asm    uint8_t atomic_inc8 (uint8_t *mem) {
-  mov    r2,r0
-1
-  ldrexb r0,[r2]
-  adds   r1,r0,#1
-  strexb r3,r1,[r2]
-  cbz    r3,%F2
-  b      %B1
-2
-  bx     lr
-}
-#else
 __STATIC_INLINE uint8_t atomic_inc8 (uint8_t *mem) {
-  register uint32_t val, res;
-  register uint8_t  ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrexb %[ret],[%[mem]]\n\t"
-    "adds   %[val],%[ret],#1\n\t"
-    "strexb %[res],%[val],[%[mem]]\n\t"
-    "cbz    %[res],2f\n\t"
-    "b      1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [val] "=&l" (val),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem)
-  : "cc", "memory"
-  );
-
-  return ret;
+  return (atomic_fetch_add_explicit((_Atomic uint8_t *)mem, 1U, memory_order_relaxed));
 }
-#endif
 
-#if defined(__CC_ARM)
-static __asm    uint32_t atomic_inc32 (uint32_t *mem) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  adds  r1,r0,#1
-  strex r3,r1,[r2]
-  cbz   r3,%F2
-  b     %B1
-2
-  bx    lr
-}
-#else
 __STATIC_INLINE uint32_t atomic_inc32 (uint32_t *mem) {
-  register uint32_t val, res;
-  register uint32_t ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[ret],[%[mem]]\n\t"
-    "adds  %[val],%[ret],#1\n\t"
-    "strex %[res],%[val],[%[mem]]\n\t"
-    "cbz   %[res],2f\n\t"
-    "b     1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [val] "=&l" (val),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem)
-  : "cc", "memory"
-  );
-
-  return ret;
+  return (atomic_fetch_add_explicit((_Atomic uint32_t *)mem, 1U, memory_order_relaxed));
 }
-#endif
 
-#if defined(__CC_ARM)
-static __asm    uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
-  mov    r2,r0
-1
-  ldrexb r0,[r2]
-  strexb r3,r1,[r2]
-  cbz    r3,%F2
-  b      %B1
-2
-  bx     lr
-}
-#else
 __STATIC_INLINE uint8_t atomic_wr8 (uint8_t *mem, uint8_t val) {
-  register uint32_t res;
-  register uint8_t  ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrexb %[ret],[%[mem]]\n\t"
-    "strexb %[res],%[val],[%[mem]]\n\t"
-    "cbz    %[res],2f\n\t"
-    "b      1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem),
-    [val] "l"   (val)
-  : "memory"
-  );
-
-  return ret;
+  return (atomic_exchange((_Atomic uint8_t *)mem, val));
 }
-#endif
-
-#if defined(__CC_ARM)
-static __asm    uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  strex r3,r1,[r2]
-  cbz   r3,%F2
-  b     %B1
-2
-  bx    lr
-}
-#else
 __STATIC_INLINE uint32_t atomic_wr32 (uint32_t *mem, uint32_t val) {
-  register uint32_t res;
-  register uint32_t ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[ret],[%[mem]]\n\t"
-    "strex %[res],%[val],[%[mem]]\n\t"
-    "cbz   %[res],2f\n\t"
-    "b     1b\n"
-  "2:"
-  : [ret] "=&l" (ret),
-    [res] "=&l" (res)
-  : [mem] "l"   (mem),
-    [val] "l"   (val)
-  : "memory"
-  );
-
-  return ret;
+  return (atomic_exchange((_Atomic uint32_t *)mem, val));
 }
-#endif
-
-//lint --flb
 
 #endif
 
@@ -537,123 +408,43 @@ __STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
 
 #else /* (__CORTEX_M >= 3U) */
 
-//lint ++flb
-
-#if defined(__CC_ARM)
-static __asm    uint32_t LockRecord (uint32_t *mem, uint32_t info) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  lsls  r3,r0,#__cpp(32 - INT_LOG2(EVENT_RECORD_LOCKED))
-  bcc   %F2
-  clrex
-  movs  r0,#0
-  bx    lr
-2
-  and   r0,r0,#__cpp(EVENT_RECORD_TBIT)
-  orrs  r0,r1
-  strex r3,r0,[r2]
-  cbz   r3,%F3
-  b     %B1
-3
-  bx    lr
-}
-#else
 __STATIC_INLINE uint32_t LockRecord (uint32_t *mem, uint32_t info) {
-  register uint32_t val, res, tmp;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[val],[%[mem]]\n\t"
-    "lsls  %[tmp],%[val],%[Ln]\n\t"
-    "bcc   2f\n\t"
-    "clrex\n\t"
-    "movs  %[val],#0\n\t"
-    "b     3f\n"
-  "2:\n\t"
-#if (defined(__ARM_ARCH_8M_BASE__) && (__ARM_ARCH_8M_BASE__ != 0))
-    "lsrs  %[val],%[val],%[Tp]\n\t"
-    "lsls  %[val],%[val],%[Tp]\n\t"
-#else
-    "and   %[val],%[val],%[Tbit]\n\t"
-#endif
-    "orrs  %[val],%[info]\n\t"
-    "strex %[res],%[val],[%[mem]]\n\t"
-    "cbz   %[res],3f\n\t"
-    "b     1b\n"
-  "3:"
-  : [val]  "=&l" (val),
-    [res]  "=&l" (res),
-    [tmp]  "=&l" (tmp)
-  : [mem]  "l"   (mem),
-    [info] "l"   (info),
-    [Ln]   "I"   (32 - INT_LOG2(EVENT_RECORD_LOCKED)),
-#if (defined(__ARM_ARCH_8M_BASE__) && (__ARM_ARCH_8M_BASE__ != 0))
-    [Tp]   "I"   (INT_LOG2(EVENT_RECORD_TBIT))
-#else
-    [Tbit] "I"   (EVENT_RECORD_TBIT)
-#endif
-  : "cc", "memory"
-  );
-
-  return val;
+  uint32_t val;
+  uint32_t val_new;
+ 
+  val = *mem;
+  do {
+    if ((val & EVENT_RECORD_LOCKED) != 0U) {
+      //lint -e{904} "Return statement before end of function"
+      return 0U;
+    }
+    val_new = (val  & EVENT_RECORD_TBIT) | info;
+  } while (!atomic_compare_exchange_weak_explicit((_Atomic uint32_t *)mem,
+                                                  &val,
+                                                  val_new,
+                                                  memory_order_acquire,
+                                                  memory_order_relaxed));
+ 
+  return val_new;
 }
-#endif
 
-#if defined(__CC_ARM)
-static __asm    uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
-  mov   r2,r0
-1
-  ldrex r0,[r2]
-  lsls  r0,r0,#__cpp(32 - INT_LOG2(EVENT_RECORD_LOCKED))
-  bcs   %F2
-  clrex
-  movs  r0,#0
-  bx    lr
-2
-  strex r3,r1,[r2]
-  cbz   r3,%F3
-  b     %B1
-3
-  movs  r0,#1
-4
-  bx    lr
-}
-#else
 __STATIC_INLINE uint32_t UnlockRecord (uint32_t *mem, uint32_t info) {
-  register uint32_t val, res, ret;
-
-  __ASM volatile (
-  ".syntax unified\n"
-  "1:\n\t"
-    "ldrex %[val],[%[mem]]\n\t"
-    "lsls  %[val],%[val],%[Ln]\n\t"
-    "bcs   2f\n\t"
-    "clrex\n\t"
-    "movs  %[ret],#0\n\t"
-    "b     4f\n"
-  "2:\n\t"
-    "strex %[res],%[info],[%[mem]]\n\t"
-    "cbz   %[res],3f\n\t"
-    "b     1b\n"
-  "3:\n\t"
-    "movs  %[ret],#1\n"
-  "4:"
-  : [ret]  "=&l" (ret),
-    [val]  "=&l" (val),
-    [res]  "=&l" (res)
-  : [mem]  "l"   (mem),
-    [info] "l"   (info),
-    [Ln]   "I"   (32 - INT_LOG2(EVENT_RECORD_LOCKED))
-  : "cc", "memory"
-  );
-
-  return ret;
+  uint32_t val;
+ 
+  val = *mem;
+  do {
+    if ((val & EVENT_RECORD_LOCKED) == 0U) {
+      //lint -e{904} "Return statement before end of function"
+      return 0U;
+    }
+  } while (!atomic_compare_exchange_weak_explicit((_Atomic uint32_t *)mem,
+                                                  &val,
+                                                  info,
+                                                  memory_order_release,
+                                                  memory_order_relaxed));
+ 
+  return 1U;
 }
-#endif
-
-//lint --flb
 
 #endif
 
