@@ -46,7 +46,7 @@ The following commands convert and build the project:
 
 ```bash
 EventStatistic $ csolution convert -s EventStatistic.csolution.yml
-EventStatistic $ cbuild EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug+SSE300.cprj
+EventStatistic $ cbuild EventStatistic.Debug+SSE300-AC6/EventStatistic.Debug+SSE300.cprj
 ```
 
 > NOTE: The `*.cprj` file may be also imported into Keil MDK for execution.
@@ -56,7 +56,7 @@ EventStatistic $ cbuild EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug
 The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
 
 ```bash
-EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f model_config_sse300.txt --simlimit=60 -a ./EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug+SSE300_outdir\EventStatistic.AC6_Debug+SSE300.axf
+EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f model_config_sse300.txt --simlimit=60 -a ./EventStatistic.Debug+SSE300-AC6/outdir/EventStatistic.Debug+SSE300.axf
 ```
 
 The file `EventRecorder.log` is generated that contains the events that are generated during execution. This file is the input for the `eventlist` utility.
