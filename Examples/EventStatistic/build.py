@@ -7,6 +7,7 @@ from datetime import datetime
 from enum import Enum
 from glob import glob, iglob
 from pathlib import Path
+from shutil import copy
 
 from lxml.etree import XMLSyntaxError
 from zipfile import ZipFile
@@ -59,11 +60,15 @@ def config_suffix(config, timestamp=True):
 
 
 def project_name(config):
-    return f"EventStatistic.{config.compiler}_{config.optimize}+{config.device[1]}"
+    return f"EventStatistic.{config.optimize}+{config.device[1]}"
 
 
-def output_dir(config):
-    return f"{project_name(config)}_outdir"
+def project_dir(config):
+    return f"{project_name(config)}-{config.compiler}"
+
+
+def project_outdir(config):
+    return f"{project_dir(config)}/outdir"
 
 
 def model_config(config):
@@ -73,7 +78,7 @@ def model_config(config):
 @matrix_action
 def clean(config):
     """Build the selected configurations using CMSIS-Build."""
-    yield cbuild_clean(f"{project_name(config)}/{project_name(config)}.cprj")
+    yield cbuild_clean(f"{project_dir(config)}/{project_name(config)}.cprj")
 
 
 @matrix_action
@@ -81,8 +86,13 @@ def build(config, results):
     """Build the selected configurations using CMSIS-Build."""
     logging.info("Compiling Project...")
 
+    src = Path(f"EventStatistic.{config.compiler[0].lower()}-cdefault.yaml")
+    dst = Path("EventStatistic.cdefault.yaml")
+    dst.unlink(missing_ok=True)
+    copy(src, dst)
+
     yield csolution(f"{project_name(config)}")
-    yield cbuild(f"{project_name(config)}/{project_name(config)}.cprj")
+    yield cbuild(f"{project_dir(config)}/{project_name(config)}.cprj")
 
     if not all(r.success for r in results):
         return
@@ -90,7 +100,7 @@ def build(config, results):
     file = f"blinky-{config_suffix(config)}.zip"
     logging.info(f"Archiving build output to {file}...")
     with ZipFile(file, "w") as archive:
-        for content in iglob(f"{project_name(config)}/**/*", recursive=True):
+        for content in iglob(f"{project_dir(config)}/**/*", recursive=True):
             if Path(content).is_file():
                 archive.write(content)
 
@@ -128,7 +138,7 @@ def unzip(archive):
 
 @matrix_command()
 def csolution(project):
-    return ["csolution", "convert", "-s", "EventStatistic.csolution.yml", "-c", project]
+    return ["csolution", "convert", "-s", "EventStatistic.csolution.yaml", "-c", project]
 
 
 @matrix_command()
@@ -140,7 +150,7 @@ def cbuild(project):
 def model_exec(config):
     cmdline = [MODEL_EXECUTABLE[config.device][0], "-q", "--simlimit", 200, "-f", model_config(config)]
     cmdline += MODEL_EXECUTABLE[config.device][1]
-    cmdline += ["-a", f"{project_name(config)}/{output_dir(config)}/{project_name(config)}.{config.compiler.image_ext}"]
+    cmdline += ["-a", f"{project_outdir(config)}/{project_name(config)}.{config.compiler.image_ext}"]
     return cmdline
 
 

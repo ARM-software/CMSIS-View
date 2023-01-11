@@ -25,15 +25,18 @@ __debug_bin
 *.sw*
 **/.trunk
 **/.vscode
+**/.clangd
 
 *.bak
 *.syso
 *.log
 
-Examples/**/*.cbuild.yml
-Examples/**/*.cprj
-Examples/**/**_intdir
-Examples/**/**_outdir
-Examples/**/RTE/_**
-Examples/**/*-idx.yml
-Examples/**/*.zip
+/Examples/**/*.cbuild.yml
+/Examples/**/*.cprj
+/Examples/**/intdir
+/Examples/**/outdir
+/Examples/**/RTE/_**
+/Examples/**/*-idx.yml
+/Examples/**/*.zip
+
+/Examples/EventStatistic/EventStatistic.cdefault.yaml

@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.4.0/tools/projmgr/schemas/cproject.schema.json
+
+project:
+  components:
+    - component: CMSIS:CORE
+      for-type:
+        - .Debug+CM55
+        - .Release+CM55
+        - .Debug+SSE300
+        - .Release+SSE300
+        - .Debug+CM3
+        - .Release+CM3
+    - component: Device:Startup&C Startup
+    - component: CMSIS:Event Recorder&Semihosting
+  groups:
+    - files:
+        - file: ./README.md
+      group: Documentation
+    - files:
+        - file: ./main.c
+      group: main

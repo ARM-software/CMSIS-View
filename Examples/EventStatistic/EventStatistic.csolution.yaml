@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.4.0/tools/projmgr/schemas/csolution.schema.json
+
+solution:
+  build-types:
+    - type: Release
+      optimize: size
+      debug: off
+
+    - type: Debug
+      optimize: none
+      debug: on
+
+  output-dirs:
+    cprjdir: ./$Project$.$BuildType$+$TargetType$-$Compiler$
+    intdir: ./$Project$.$BuildType$+$TargetType$-$Compiler$/intdir
+    outdir: ./$Project$.$BuildType$+$TargetType$-$Compiler$/outdir
+
+  packs:
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-View
+
+  projects:
+    - project: ./EventStatistic.cproject.yaml
+
+  target-types:
+    - device: ARMCM3
+      type: CM3
+    - device: ARMCM55
+      processor:
+        endian: little
+        fpu: "off"
+        trustzone: "off"
+      type: CM55
+    - device: ARMCM55
+      processor:
+        endian: little
+        fpu: "off"
+        trustzone: "off"
+      type: SSE300
