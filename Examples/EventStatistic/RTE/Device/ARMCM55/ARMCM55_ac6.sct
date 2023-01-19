@@ -14,15 +14,15 @@
 LR_ROM1 __ROM1_BASE __ROM1_SIZE  {
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-  ER_CMSE_VENEER (__ROM1_BASE + __ROM1_SIZE) -__ROM1_SIZE {
+  ER_CMSE_VENEER __ROM1_BASE+__ROM1_SIZE -__ROM1_SIZE {
    *(Veneer$$CMSE)
   }
   #define ER_CMSE_VENEER_SIZE AlignExpr(ImageLength(ER_CMSE_VENEER), 8)
 #else
-  #define __VENEER_SIZE 0
+  #define ER_CMSE_VENEER_SIZE 0
 #endif
 
-  ER_ROM1 __ROM1_BASE (__ROM1_SIZE - __VENEER_SIZE) {
+  ER_ROM1 __ROM1_BASE (__ROM1_SIZE - ER_CMSE_VENEER_SIZE) {
    *.o (RESET, +First)
    *(InRoot$$Sections)
    *(+RO +XO)
