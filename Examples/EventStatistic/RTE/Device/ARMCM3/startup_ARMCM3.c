@@ -25,6 +25,10 @@
 #include "RTE_Components.h"
 #include CMSIS_device_header
 
+#ifndef __ALIAS
+  #define __ALIAS(x) __attribute__ ((alias(x)))
+#endif
+
 /*----------------------------------------------------------------------------
   External References
  *----------------------------------------------------------------------------*/
@@ -35,33 +39,35 @@ extern __NO_RETURN void __PROGRAM_START(void);
 /*----------------------------------------------------------------------------
   Internal References
  *----------------------------------------------------------------------------*/
-__NO_RETURN void Reset_Handler  (void);
-            void Default_Handler(void);
+__NO_RETURN void Reset_Handler  (void) __WEAK;
+            void Default_Handler(void) __WEAK;
 
 /*----------------------------------------------------------------------------
   Exception / Interrupt Handler
  *----------------------------------------------------------------------------*/
-/* Exceptions */
-void NMI_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
-void HardFault_Handler      (void) __attribute__ ((weak));
-void MemManage_Handler      (void) __attribute__ ((weak, alias("Default_Handler")));
-void BusFault_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
-void UsageFault_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void SVC_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
-void DebugMon_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
-void PendSV_Handler         (void) __attribute__ ((weak, alias("Default_Handler")));
-void SysTick_Handler        (void) __attribute__ ((weak, alias("Default_Handler")));
+void RESERVED_Handler       (void) __WEAK __ALIAS("Default_Handler");
 
-void Interrupt0_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt1_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt2_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt3_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt4_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt5_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt6_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt7_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt8_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
-void Interrupt9_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
+/* Exceptions */
+void NMI_Handler            (void) __WEAK __ALIAS("Default_Handler");
+void HardFault_Handler      (void) __WEAK;
+void MemManage_Handler      (void) __WEAK __ALIAS("Default_Handler");
+void BusFault_Handler       (void) __WEAK __ALIAS("Default_Handler");
+void UsageFault_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void SVC_Handler            (void) __WEAK __ALIAS("Default_Handler");
+void DebugMon_Handler       (void) __WEAK __ALIAS("Default_Handler");
+void PendSV_Handler         (void) __WEAK __ALIAS("Default_Handler");
+void SysTick_Handler        (void) __WEAK __ALIAS("Default_Handler");
+
+void Interrupt0_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt1_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt2_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt3_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt4_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt5_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt6_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt7_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt8_Handler     (void) __WEAK __ALIAS("Default_Handler");
+void Interrupt9_Handler     (void) __WEAK __ALIAS("Default_Handler");
 
 
 /*----------------------------------------------------------------------------
@@ -82,13 +88,13 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[240];
   MemManage_Handler,                        /* -12 MPU Fault Handler */
   BusFault_Handler,                         /* -11 Bus Fault Handler */
   UsageFault_Handler,                       /* -10 Usage Fault Handler */
-  0,                                        /*     Reserved */
-  0,                                        /*     Reserved */
-  0,                                        /*     Reserved */
-  0,                                        /*     Reserved */
+  RESERVED_Handler,                         /*     Reserved */
+  RESERVED_Handler,                         /*     Reserved */
+  RESERVED_Handler,                         /*     Reserved */
+  RESERVED_Handler,                         /*     Reserved */
   SVC_Handler,                              /*  -5 SVC Handler */
   DebugMon_Handler,                         /*  -4 Debug Monitor Handler */
-  0,                                        /*     Reserved */
+  RESERVED_Handler,                         /*     Reserved */
   PendSV_Handler,                           /*  -2 PendSV Handler */
   SysTick_Handler,                          /*  -1 SysTick Handler */
 
