@@ -47,6 +47,8 @@
   #define __NO_INIT __attribute__ ((section (".bss.noinit")))
  #elif defined (__GNUC__)                                           /* GNU Compiler */
   #define __NO_INIT __attribute__ ((section (".bss.noinit")))
+ #elif defined (__ICCARM__)                                         /* IAR Compiler */
+  #define __NO_INIT __attribute__ ((section (".noinit")))
  #else
   #warning "No compiler specific solution for __NO_INIT. __NO_INIT is ignored."
   #define __NO_INIT
@@ -675,6 +677,8 @@ static __asm    int32_t semihosting_call (uint32_t operation, void *args) {
   bkpt  0xab
   bx    lr
 }
+#elif defined(__ICCARM__)
+#define semihosting_call __semihosting
 #else
 __STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {
   //lint --e{438} "Last value assigned to variable not used"
@@ -686,7 +690,7 @@ __STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {
   __ASM volatile (
     "bkpt 0xab" : "=r"(__r0) : "r"(__r0), "r"(__r1) :
   );
- 
+
   return (int32_t)__r0;
 }
 #endif
@@ -755,7 +759,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
     i = GetRecordIndex();
     record = &EventBuffer[i & (EVENT_RECORD_COUNT - 1U)];
     seq  = ((i / EVENT_RECORD_COUNT) << EVENT_RECORD_SEQ_POS) & EVENT_RECORD_SEQ_MASK;
-    info = id                                    | 
+    info = id                                    |
            seq                                   |
            ((ts   >> 3) & EVENT_RECORD_MSB_TS)   |
            ((val1 >> 2) & EVENT_RECORD_MSB_VAL1) |
@@ -786,7 +790,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
 
 
 #ifdef RTE_Compiler_EventRecorder_Semihosting
- 
+
 /**
   Record an event with variable data size to a log file
   \param[in]    id     event identifier (component number, message number)
@@ -804,7 +808,7 @@ static void EventRecordData_Log (uint32_t id,
   } event;
 
   event.head.type          = EVENT_TYPE_DATA;
-  event.head.length        = (uint16_t)(sizeof(event.record) + len); 
+  event.head.length        = (uint16_t)(sizeof(event.record) + len);
   event.record.ts          = ts;
   event.record.info.id     = (uint16_t)id;
   //lint -e{9034} "Expression assigned to a narrower or different essential type"
@@ -843,7 +847,7 @@ static void EventRecord2_Log (uint32_t id,
 
   (void)sys_write(FileHandle, (uint8_t *)&event,  sizeof(event));
 }
- 
+
 /**
   Record an event with four 32-bit data values a log file
   \param[in]    id     event identifier (component number, message number)
