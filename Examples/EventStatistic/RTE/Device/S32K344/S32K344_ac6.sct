@@ -1,0 +1,94 @@
+// ------- <<< Use Configuration Wizard in Context Menu >>> ------------------
+
+
+// --------------------- Stack / Heap Configuration --------------------------
+// <h> Stack / Heap Configuration
+//   <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
+//   <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+// </h>
+#define STACK_SIZE__    0x00000200
+#define HEAP_SIZE__     0x00000C00
+
+// ------------- <<< end of configuration section >>> -----------------------
+
+/*---------------------------------------------------------------------------
+  User Stack & Heap boundary definition
+ *---------------------------------------------------------------------------*/
+#define STACK_TOP__    (RAM_START__ + RAM_SIZE__)   /* starts at end of RAM */
+#define HEAP_BASE__    (AlignExpr(+0, 8))           /* starts after RW_RAM section, 8 byte aligned */
+
+#define LC_XRDC_CONFIG_SIZE     (0x004 + 0x110)     /* LC_config size + XRDC_Config size */
+#define LC_XRDC_CONFIG_START    (AlignExpr(+0, 4))  /* starts after Bootheader section, 4 byte aligned */
+
+
+/*---------------------------------------------------------------------------
+  Scatter File Definitions
+ *---------------------------------------------------------------------------*/
+#define RO_START__      FLASH_START__
+#define RO_SIZE__       FLASH_SIZE__
+
+#define RW_START__      RAM_START__
+#define RW_SIZE__      (RAM_SIZE__ - STACK_SIZE__ - HEAP_SIZE__)
+
+
+#if defined BOOTHEADER_ONLY && defined BOOTHEADER_INCL
+  #error BOOTHEADER_ONLY and BOOTHEADER_INCL are defined!
+#endif
+
+#if defined BOOTHEADER_ONLY
+
+LR_BOOT BOOT_HEADER_START BOOT_HEADER_SIZE  {
+  ER_BOOT BOOT_HEADER_START BOOT_HEADER_SIZE {
+    S32K3xx_bootheader.o (.bootheader)
+    S32K3xx_bootheader.o (+RO)
+  }
+}
+
+LR_LC_XRDC LC_XRDC_CONFIG_START LC_XRDC_CONFIG_SIZE  {
+  ER_XRDC LC_XRDC_CONFIG_START LC_XRDC_CONFIG_SIZE {
+    S32K3xx_lc_xrdc_config.o (.lc_xrdc_config)
+    S32K3xx_lc_xrdc_config.o (+RO)
+  }
+}
+
+#else
+
+LR_ROM RO_START__ RO_SIZE__  {                       ; load region size_region
+  ER_ROM RO_START__ RO_SIZE__  {                     ; load address = execution address
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+   .ANY (+XO)
+  }
+
+  RW_RAM RW_START__ RW_SIZE__  {                     ; RW data
+   .ANY (+RW +ZI)
+  }
+
+#if HEAP_SIZE__ > 0
+  ARM_LIB_HEAP  HEAP_BASE__ EMPTY  HEAP_SIZE__  {   ; Reserve empty region for heap
+  }
+#endif
+
+  ARM_LIB_STACK STACK_TOP__ EMPTY -STACK_SIZE__ {   ; Reserve empty region for stack
+  }
+}
+
+#if defined BOOTHEADER_INCL
+LR_BOOT BOOT_HEADER_START BOOT_HEADER_SIZE  {
+  ER_BOOT BOOT_HEADER_START BOOT_HEADER_SIZE {
+    S32K3xx_bootheader.o (.bootheader)
+//  S32K3xx_bootheader.o (+RO)
+  }
+}
+
+LR_LC_XRDC LC_XRDC_CONFIG_START LC_XRDC_CONFIG_SIZE  {
+  ER_XRDC LC_XRDC_CONFIG_START LC_XRDC_CONFIG_SIZE {
+    S32K3xx_lc_xrdc_config.o (.lc_xrdc_config)
+//  S32K3xx_lc_xrdc_config.o (+RO)
+  }
+}
+
+#endif /* defined BOOTHEADER_INCL */
+
+#endif /* defined BOOTHEADER_ONLY */

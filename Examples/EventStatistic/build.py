@@ -21,13 +21,15 @@ class DeviceAxis(Enum):
     CM3    = ('Cortex-M3',  'CM3')
     CM55   = ('Cortex-M55', 'CM55')
     SSE300 = ('Corstone_SSE-300', 'SSE300')
+    S32K344 = ('S32K344')
 
     @property
     def dname(self):
         return {
             DeviceAxis.CM3:    'ARMCM3',
             DeviceAxis.CM55:   'ARMCM55',
-            DeviceAxis.SSE300: 'ARMCM55'
+            DeviceAxis.SSE300: 'ARMCM55',
+            DeviceAxis.S32K344: 'S32K344'
         }[self]
 
 
@@ -36,7 +38,8 @@ class DeviceAxis(Enum):
         return {
             DeviceAxis.CM3:    'cortex-m3',
             DeviceAxis.CM55:   'cortex-m55',
-            DeviceAxis.SSE300: 'cortex-m55'
+            DeviceAxis.SSE300: 'cortex-m55',
+            DeviceAxis.S32K344: 'cortex-m7'
         }[self]
 
 

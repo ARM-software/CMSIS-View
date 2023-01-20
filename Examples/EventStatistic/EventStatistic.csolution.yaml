@@ -18,6 +18,7 @@ solution:
   packs:
     - pack: ARM::CMSIS
     - pack: ARM::CMSIS-View
+    - pack: Keil::S32K3xx_DFP
 
   projects:
     - project: ./EventStatistic.cproject.yaml
@@ -39,3 +40,6 @@ solution:
         fpu: "off"
         trustzone: "off"
       type: SSE300
+
+    - device: S32K344
+      type: S32K344

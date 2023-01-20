@@ -37,7 +37,7 @@
 #define TABLE_SIZE 1000
 float sin_table[TABLE_SIZE];
 
-#ifdef __GNUC__
+#if defined ( __GNUC__ ) && !defined (__ARMCC_VERSION)
 float sinf(float f) {
   return f;
 }
@@ -50,7 +50,7 @@ float sqrtf(float f) {
 // Calculate table with sine values
 void CalcSinTable (void)  {
   unsigned int i, max_i;
-  float f = 0.0;
+  float f = 0.0f;
 
   max_i = TABLE_SIZE - (rand () % 500);
   EventStartAv (15, max_i, 0);                  // Start group A, slot 15, passing the max_i variable
@@ -60,7 +60,7 @@ void CalcSinTable (void)  {
     }
 
     sin_table[i] = sinf(f);
-    f = f + (3.141592 / TABLE_SIZE);
+    f = f + (3.141592f / TABLE_SIZE);
 
     if (i == 800)  {                            // Measure 800 table entries
       EventStopA (0);                           // Stop group A, slot 0
@@ -75,7 +75,7 @@ unsigned int FindSqrtSum (float max_sum)  {
   unsigned int i;
   float sqrt_sum;
 
-  sqrt_sum = 0.0;
+  sqrt_sum = 0.0f;
   for (i = 0; i < 10000; i++) {
     sqrt_sum += sqrtf((float) i);
     if (sqrt_sum > max_sum)  {
