@@ -22,8 +22,8 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"eventlist/event"
-	"eventlist/xml/scvd"
+	"eventlist/pkg/event"
+	"eventlist/pkg/xml/scvd"
 	"fmt"
 	"io"
 	"math"
@@ -609,11 +609,11 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 
 	tds := make(map[string]map[string]map[int16]string)
 
-	var s1 = "../testdata/test1.binary"
-	var s3 = "../testdata/test3.binary"
-	var s4 = "../testdata/test4.binary"
-	var s6 = "../testdata/test6.binary"
-	var s7 = "../testdata/test7.binary"
+	var s1 = "../../testdata/test1.binary"
+	var s3 = "../../testdata/test3.binary"
+	var s4 = "../../testdata/test4.binary"
+	var s6 = "../../testdata/test6.binary"
+	var s7 = "../../testdata/test7.binary"
 
 	type fields struct {
 		evProps       [4]eventProperty
@@ -766,11 +766,11 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
-	var s0 = "../testdata/test0.binary"
-	var s1 = "../testdata/test1.binary"
-	var s10 = "../testdata/test10.binary"
-	var s11 = "../testdata/test11.binary"
-	var sNix = "../testdata/xxxx"
+	var s0 = "../../testdata/test0.binary"
+	var s1 = "../../testdata/test1.binary"
+	var s10 = "../../testdata/test10.binary"
+	var s11 = "../../testdata/test11.binary"
+	var sNix = "../../testdata/xxxx"
 
 	line1 := "    0 0.00000124 0xFF     0xFF03       val1=0x00000004, val2=0x00000002\n" +
 		"    1 0.00000124 0xFE     0xFE00       \"hello wo\"\n"
@@ -900,9 +900,9 @@ func TestOutput_printHeader(t *testing.T) { //nolint:golint,paralleltest
 func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 	var b bytes.Buffer
 
-	//	var e0 = "../testdata/test.xml"
-	var s10 = "../testdata/test10.binary"
-	var s11 = "../testdata/nix.binary"
+	//	var e0 = "../../testdata/test.xml"
+	var s10 = "../../testdata/test10.binary"
+	var s11 = "../../testdata/nix.binary"
 
 	line1 := "   Detailed event list\n" +
 		"   -------------------\n\n" +
@@ -981,7 +981,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 	o1 := "testOutput.out"
 
-	var s10 = "../testdata/test10.binary"
+	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
 		"   Detailed event list\n",

@@ -18,7 +18,7 @@
 
 package eval
 
-import "eventlist/elf"
+import "eventlist/pkg/elf"
 
 type Value struct {
 	t Token

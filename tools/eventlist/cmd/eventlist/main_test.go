@@ -131,8 +131,7 @@ func Test_main(t *testing.T) { //nolint:golint,paralleltest
 	outFile := "out.out"
 
 	lines1 :=
-		"\\[.*\\]\\n" +
-			"   Detailed event list\\n" +
+		"   Detailed event list\\n" +
 			"   -------------------\\n" +
 			"\\n" +
 			"Index Time \\(s\\)   Component Event Property Value\\n" +
@@ -147,15 +146,14 @@ func Test_main(t *testing.T) { //nolint:golint,paralleltest
 			"----- -----      -----       ---         ---         -------     -----       ----\\n"
 
 	lines2 :=
-		"\\[.*\\]\\n" +
-			"   Start/Stop event statistic\\n" +
+		"   Start/Stop event statistic\\n" +
 			"   --------------------------\\n" +
 			"\\n" +
 			"Event count      total       min         max         average     first       last\\n" +
 			"----- -----      -----       ---         ---         -------     -----       ----\\n"
 
 	help :=
-		"\\[.*\\]\\nUsage: [^ ]+ \\[-I <scvdFile>\\]\\.\\.\\. \\[-o <outputFile>\\] \\[-a <elf/axfFile>\\] \\[-b\\] <logFile>\\n" +
+		"Usage: [^ ]+ \\[-I <scvdFile>\\]\\.\\.\\. \\[-o <outputFile>\\] \\[-a <elf/axfFile>\\] \\[-b\\] <logFile>\\n" +
 			"\\t-a <fileName> \\telf/axf file name\\n" +
 			"\\t-b --begin\\tshow statistic at beginning\\n" +
 			"\\t-h --help\\tshow short help\\n" +
@@ -164,28 +162,29 @@ func Test_main(t *testing.T) { //nolint:golint,paralleltest
 			"\\t-s --statistic\\tshow statistic only\\n" +
 			"\\t-V --version\\tshow version info\\n"
 
+	versionInfo = "1.2.3 (C) 2022 Arm Ltd. and Contributors"
 	tests := []struct {
 		name       string
 		args       []string
 		want       string
 		removefile string
 	}{
-		{"-a", []string{"-a", "testdata/nix", "xxx"}, ".*: open testdata/nix: (no such file or directory|The system cannot find the file specified.)\\n", ""},
-		{"-s stdout", []string{"-s", "testdata/test10.binary"}, lines2, ""},
-		{"-s", []string{"-s", "-o", outFile, "testdata/test10.binary"}, "\\[.*\\]\\n", outFile},
-		{"-statistic", []string{"-statistic", "-o", outFile, "testdata/test10.binary"}, "\\[.*\\]\\n", outFile},
+		{"-a", []string{"-a", "../../testdata/nix", "xxx"}, ".*: open ../../testdata/nix: (no such file or directory|The system cannot find the file specified.)\\n", ""},
+		{"-s stdout", []string{"-s", "../../testdata/test10.binary"}, lines2, ""},
+		{"-s", []string{"-s", "-o", outFile, "../../testdata/test10.binary"}, "", outFile},
+		{"-statistic", []string{"-statistic", "-o", outFile, "../../testdata/test10.binary"}, "", outFile},
 		{"-help", []string{"-help"}, help, ""},
-		{"stdout", []string{"testdata/test10.binary"}, lines1, ""},
-		{"-o -begin", []string{"-begin", "-o", outFile, "testdata/test10.binary"}, "\\[.*\\]\\n", outFile},
-		{"-o -b", []string{"-b", "-o", outFile, "testdata/test10.binary"}, "\\[.*\\]\\n", outFile},
-		{"-o", []string{"-o", outFile, "testdata/test10.binary"}, "\\[.*\\]\\n", outFile},
-		{"-o", []string{"-o", outFile, "testdata/nix"}, ".*: cannot open event file\\n", outFile},
-		{"-V", []string{"-V"}, ".*: Version [0-9]+\\.[0-9]+\\.[0-9]+\\nCopyright \\(C\\) [0-9]+ ARM Limited or its Affiliates\\. All rights reserved\\.\\n", ""},
-		{"-version", []string{"-version"}, ".*: Version [0-9]+\\.[0-9]+\\.[0-9]+\\nCopyright \\(C\\) [0-9]+ ARM Limited or its Affiliates\\. All rights reserved\\.\\n", ""},
+		{"stdout", []string{"../../testdata/test10.binary"}, lines1, ""},
+		{"-o -begin", []string{"-begin", "-o", outFile, "../../testdata/test10.binary"}, "", outFile},
+		{"-o -b", []string{"-b", "-o", outFile, "../../testdata/test10.binary"}, "", outFile},
+		{"-o", []string{"-o", outFile, "../../testdata/test10.binary"}, "", outFile},
+		{"-o", []string{"-o", outFile, "../../testdata/nix"}, ".*: cannot open event file\\n", outFile},
+		{"-V", []string{"-V"}, ".* [0-9]+\\.[0-9]+\\.[0-9]+ \\(C\\) [0-9]+ Arm Ltd. and Contributors\\n", ""},
+		{"-version", []string{"-version"}, ".* [0-9]+\\.[0-9]+\\.[0-9]+ \\(C\\) [0-9]+ Arm Ltd. and Contributors\\n", ""},
 		{"err", []string{"xxx", "yyy"}, ".*: only one binary input file allowed\n", ""},
 		{"missing", nil, ".*: missing input file\n", ""},
 		// -I must be the last test
-		{"-I", []string{"-I", "testdata/nix", "xxx"}, ".*: open testdata/nix: (no such file or directory|The system cannot find the file specified.)\\n", ""},
+		{"-I", []string{"-I", "../../testdata/nix", "xxx"}, ".*: open ../../testdata/nix: (no such file or directory|The system cannot find the file specified.)\\n", ""},
 	}
 	savedArgs := os.Args
 	for _, tt := range tests { //nolint:golint,paralleltest

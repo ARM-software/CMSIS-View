@@ -19,7 +19,7 @@
 package eval
 
 import (
-	"eventlist/elf"
+	"eventlist/pkg/elf"
 	"reflect"
 	"testing"
 )

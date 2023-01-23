@@ -21,7 +21,7 @@ package scvd
 import (
 	"encoding/xml"
 	"errors"
-	"eventlist/eval"
+	"eventlist/pkg/eval"
 	"os"
 	"strconv"
 	"strings"

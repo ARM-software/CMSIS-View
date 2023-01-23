@@ -21,9 +21,9 @@ package output
 import (
 	"bufio"
 	"errors"
-	"eventlist/eval"
-	"eventlist/event"
-	"eventlist/xml/scvd"
+	"eventlist/pkg/eval"
+	"eventlist/pkg/event"
+	"eventlist/pkg/xml/scvd"
 	"fmt"
 	"math"
 	"os"

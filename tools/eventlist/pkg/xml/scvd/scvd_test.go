@@ -24,8 +24,8 @@ import (
 )
 
 func TestComponentViewer_getFromFile(t *testing.T) {
-	var name = "../../testdata/test.xml"
-	var wrongName = "../../testdata/xxxxx"
+	var name = "../../../testdata/test.xml"
+	var wrongName = "../../../testdata/xxxxx"
 
 	type fields struct {
 		Component Component
@@ -120,11 +120,11 @@ func TestID_getIdValue(t *testing.T) {
 }
 
 func Test_getOne(t *testing.T) {
-	var name = "../../testdata/test.xml"
-	var wrongName = "../../testdata/xxxxx"
-	var nameErr1 = "../../testdata/test_err1.xml"
-	var nameErr2 = "../../testdata/test_err2.xml"
-	var nameErr3 = "../../testdata/test_err3.xml"
+	var name = "../../../testdata/test.xml"
+	var wrongName = "../../../testdata/xxxxx"
+	var nameErr1 = "../../../testdata/test_err1.xml"
+	var nameErr2 = "../../../testdata/test_err2.xml"
+	var nameErr3 = "../../../testdata/test_err3.xml"
 	var evs = make(map[uint16]Event)
 	var tds = make(map[string]map[string]map[int16]string)
 
@@ -166,8 +166,8 @@ func Test_getOne(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	var files = []string{"../../testdata/test.xml"}
-	var files1 = []string{"../../testdata/xxxxx"}
+	var files = []string{"../../../testdata/test.xml"}
+	var files1 = []string{"../../../testdata/xxxxx"}
 	var evs = make(map[uint16]Event)
 	var tds = make(map[string]map[string]map[int16]string)
 
