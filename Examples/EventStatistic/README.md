@@ -38,14 +38,24 @@ As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https:
 You may need to install missing software packs with this command sequence:
 
 ```bash
-EventStatistic $ csolution list packs -s EventStatistic.csolution.yml -m >packs.txt
+EventStatistic $ csolution list packs -s EventStatistic.csolution.yaml -m >packs.txt
 EventStatistic $ cpackget add -f packs.txt
 ```
 
 The following commands convert and build the project:
 
+> NOTE: Prior to have support for compiler selection and linker script preprocessing built into
+> the tools, one need to handle these steps manually:
+>
+> ```bash
+> EventStatistic $ cp EventStatistic.ac6-cdefault.yaml EventStatistic.cdefault.yaml
+> EventStatistic $ armclang --target=arm-arm-none-eabi -mcpu=<cpu> -xc -include RTE/Device/ARMCM55/memory_layout.h -E RTE/Device/ARMCM55/ARMCM55_ac6.sct -o EventStatistic.Debug+SSE300-AC6/outdir/ARMCM55_ac6.sct
+> ```
+>
+> One might want to rely on `build.py` as described below.
+
 ```bash
-EventStatistic $ csolution convert -s EventStatistic.csolution.yml
+EventStatistic $ csolution convert -s EventStatistic.csolution.yaml
 EventStatistic $ cbuild EventStatistic.Debug+SSE300-AC6/EventStatistic.Debug+SSE300.cprj
 ```
 
