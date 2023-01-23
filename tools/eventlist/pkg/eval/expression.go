@@ -823,7 +823,6 @@ func (ex *Expression) primary() (Value, error) {
 	return v, nil
 }
 
-//
 // asnExpr
 // arguments , asnExpr
 func (ex *Expression) arguments() (Value, error) {

@@ -338,17 +338,29 @@ func (e *Data) Read(in *bufio.Reader) error {
 	if err != nil {
 		return err
 	}
+	if len(data) < 12 {
+		return eval.ErrEof
+	}
 	e.Time = convert64(data[:8])
 	e.Info.getInfoFromBytes(data[8:12])
 	e.Typ = typ
 	switch typ {
 	case 1: // EventrecordData
+		if len(data) < 12+int(e.Info.length) {
+			return eval.ErrEof
+		}
 		e.Data = new([]uint8)
 		*e.Data = data[12 : 12+int(e.Info.length)]
 	case 2: // Eventrecord2
+		if len(data) < 20 {
+			return eval.ErrEof
+		}
 		e.Value1 = int32(convert32(data[12:16]))
 		e.Value2 = int32(convert32(data[16:20]))
 	case 3: // Eventrecord4
+		if len(data) < 28 {
+			return eval.ErrEof
+		}
 		e.Value1 = int32(convert32(data[12:16]))
 		e.Value2 = int32(convert32(data[16:20]))
 		e.Value3 = int32(convert32(data[20:24]))
