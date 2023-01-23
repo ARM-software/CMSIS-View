@@ -162,7 +162,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install go ${{ env.go_version }}
         uses: actions/setup-go@v3
@@ -186,7 +186,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, windows-2019, macos-12]
-    name: 'Test (${{ matrix.os }}, ${{ env.go_version }})'
+    name: 'Test (${{ matrix.os }})'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
