@@ -101,7 +101,7 @@ def linker_file(config):
     elif config.compiler == CompilerAxis.GCC:
         return "gcc_arm.ld"
     elif config.compiler == CompilerAxis.IAR:
-        return "generic_cortex.icf"
+        return "generic_cortex.ld"
     else:
         return ""
 
@@ -184,7 +184,7 @@ def preprocess(config, infile, outfile):
     elif config.compiler == CompilerAxis.GCC:
         return ["arm-none-eabi-gcc", f"-mcpu={config.device.mcpu}", "-xc", "-include", layout, "-E", infile, "-P", "-o", outfile]
     elif config.compiler == CompilerAxis.IAR:
-      return ["iccarm", infile, "--preinclude", layout, "--preprocess=n", outfile]
+      return ["iccarm", infile, "--preinclude", layout, "--preprocess=ns", outfile]
     return ["true"]
 
 

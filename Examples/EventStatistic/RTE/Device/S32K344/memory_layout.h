@@ -45,7 +45,7 @@
 #define CM7_0_DTCM_START    0x20000000
 #define CM7_0_DTCM_SIZE     0x00020000
 
-#define  FLASH_START__          CM7_0_FLASH_START
+#define FLASH_START__          CM7_0_FLASH_START
 #define FLASH_SIZE__           CM7_0_FLASH_SIZE
 #define RAM_START__            CM7_0_RAM_START
 #define RAM_SIZE__             CM7_0_RAM_SIZE
@@ -54,9 +54,23 @@
 
 #define __ROM1_BASE            FLASH_START__
 #define __ROM1_SIZE            FLASH_SIZE__
+#define __ROM2_BASE            0x00000000
+#define __ROM2_SIZE            0x00000000
+#define __ROM3_BASE            0x00000000
+#define __ROM3_SIZE            0x00000000
+#define __ROM4_BASE            0x00000000
+#define __ROM4_SIZE            0x00000000
+
 #define __RAM1_BASE            RAM_START__
 #define __RAM1_SIZE            RAM_SIZE__
 #define __RAM2_BASE            DTCM_START__
 #define __RAM2_SIZE            DTCM_SIZE__
+#define __RAM3_BASE            0x00000000
+#define __RAM3_SIZE            0x00000000
+#define __RAM4_BASE            0x00000000
+#define __RAM4_SIZE            0x00000000
+
+#define __STACK_SIZE           0x00000200
+#define __HEAP_SIZE            0x00000C00
 
 #endif /* S32K3xx_MEMMAP_H */

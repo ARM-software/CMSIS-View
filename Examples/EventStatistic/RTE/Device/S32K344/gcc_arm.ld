@@ -3,19 +3,6 @@
  * Purpose: GNU Linker Script for S32K3xx based device
  *---------------------------------------------------------------------------*/
 
-/*-------- <<< Use Configuration Wizard in Context Menu >>> ------------------*/
-
-/*--------------------- Stack / Heap Configuration ---------------------------
-  <h> Stack / Heap Configuration
-    <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
-    <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-  </h>
-  ----------------------------------------------------------------------------*/
-__STACK_SIZE = 0x00000200;
-__HEAP_SIZE  = 0x00000C00;
-
-/*-------------------- <<< end of configuration section >>> ------------------*/
-
 MEMORY
 {
   BOOT_HEADER    (r)   : ORIGIN = 0x10000000, LENGTH = 0x00000100

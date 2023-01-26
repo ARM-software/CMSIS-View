@@ -16,6 +16,6 @@ project:
           for-compiler: AC6
         - file: $OutDir(EventStatistic)$/gcc_arm.ld
           for-compiler: GCC
-        - file: $OutDir(EventStatistic)$/generic_cortex.icf
+        - file: $OutDir(EventStatistic)$/generic_cortex.ld
           for-compiler: IAR
       group: main
