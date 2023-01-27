@@ -27,13 +27,13 @@ Tools:
 - [**Keil MDK 5.38 or higher**](https://www.keil.com/mdk5)
   - Arm Compiler 6 (part of MDK)
   - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
-- [**Python Matrix-Runner 1.1.0 or higher**][https://pypi.org/project/python-matrix-runner/] (optional)
+- [**Python Matrix-Runner 1.1.0 or higher**](https://pypi.org/project/python-matrix-runner/) (optional)
   - requires Python 3.8 or high
 - [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
 
 As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware) available via the AWS Marketplace as this image contains all relevant tools.
 
-## Compile Project
+## Compile Project for Corstone SSE-300
 
 You may need to install missing software packs with this command sequence:
 
@@ -49,7 +49,7 @@ The following commands convert and build the project:
 >
 > ```bash
 > EventStatistic $ cp EventStatistic.ac6-cdefault.yaml EventStatistic.cdefault.yaml
-> EventStatistic $ armclang --target=arm-arm-none-eabi -mcpu=<cpu> -xc -include RTE/Device/ARMCM55/memory_layout.h -E RTE/Device/ARMCM55/ARMCM55_ac6.sct -o EventStatistic.Debug+SSE300-AC6/outdir/ARMCM55_ac6.sct
+> EventStatistic $ armclang --target=arm-arm-none-eabi -mcpu=cortex-m55 -xc -include RTE/Device/ARMCM55/memory_layout.h -E RTE/Device/ARMCM55/ARMCM55_ac6.sct -o EventStatistic.Debug+SSE300-AC6/outdir/ARMCM55_ac6.sct
 > ```
 >
 > One might want to rely on `build.py` as described below.
@@ -103,7 +103,7 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
 
 ```bash
-EventStatistic $ eventlist -a ./EventStatistic.AC6_Debug+SSE300/EventStatistic.AC6_Debug+SSE300_outdir\EventStatistic.AC6_Debug+SSE300.axf -I EventRecorder.scvd EventRecorder.log
+EventStatistic $ eventlist -a ./EventStatistic.AC6_Debug+SSE300/outdir/EventStatistic.AC6_Debug+SSE300.axf -I EventRecorder.scvd EventRecorder.log
 
   :
 
@@ -135,6 +135,59 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Min: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
       Max: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
 ```
+
+## Alternative Configurations
+
+The example provides additional project configurations for different compilers and target devices.
+
+The different project configurations are generated into folders according to the pattern
+`EventStatistic.<build>+<target>-<compiler>/EventStatistic.<build>+<target>.cprj`
+
+The `<build>` can be one of
+
+- `Debug` using no optimization and creating debug symbols, or
+- `Release` using size optimization and creating no debug symbols.
+
+The `<target>` can be one of
+
+- `CM3` compiling for Cortex-M3 MPS2-Model (`VHT_MPS2_Cortex-M3 -f model_config_cm3.txt`)
+  - `<device>` is `ARMCM3`
+  - `<mcpu>` is `cortex-m3`
+- `CM55` compiling for Cortex-M55 MPS2-Model (`VHT_MPS2_Cortex-M55 -f model_config_cm55.txt`)
+  - `<device>` is `ARMCM55`
+  - `<mcpu>` is `cortex-m55`
+- `SSE300` compiling for Corstone SSE-300 MPS3-Model (`VHT_MPS3_Corstone_SSE -f model_config_sse300.txt`)
+  - `<device>` is `ARMC55`
+  - `<mcpu>` is `cortex-m55`
+- `S32K344` compiling for an NXP S32K344 device (cannot be executed on a model)
+  - `<device>` is `S32K344`
+  - `<mcpu>` is `cortex-m7`
+
+The following compilers are currently supported by using the given `.cdefault.yaml` file:
+
+- Arm Compiler 6 (`AC6`): EventStatstic.ac6-cdefault.yaml
+
+  Scatter file preprocessing command:
+
+  ```bash
+  armclang --target=arm-arm-none-eabi -mcpu=<mcpu> -xc -include RTE/Device/<device>/memory_layout.h -E RTE/Device/<device>/<device>_ac6.sct -o EventStatistic.<build>+<target>-AC6/outdir/<device>_ac6.sct
+  ```
+
+- GNU Compiler (`GCC`): EventStatstic.gcc-cdefault.yaml
+
+  Linker script preprocessing command:
+
+  ```bash
+  arm-none-eabi-gcc -mcpu=<mcpu> -xc -include RTE/Device/<device>/memory_layout.h -E RTE/Device/<device>/gcc_arm.ld -o EventStatistic.<build>+<target>-GCC/outdir/gcc_arm.ld
+  ```
+
+- IAR Compiler (`IAR`): EventStatstic.iar-cdefault.yaml
+
+  Linker script preprocessing command:
+
+  ```bash
+  iccarm RTE/Device/<device>/generic_cortex.ld --preinclude RTE/Device/<device>/memory_layout.h --preprocess=ns EventStatistic.<build>+<target>-GCC/outdir/generic_cortex.ld
+  ```
 
 ## Using `build.py`
 
