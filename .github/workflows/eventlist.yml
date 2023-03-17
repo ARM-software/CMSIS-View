@@ -18,27 +18,22 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  go_version: 1.19.3
-
 jobs:
   build:
     if: |
       github.event_name != 'release' ||
       startsWith(github.ref, 'refs/tags/tools/eventlist/')
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
     name: 'Build'
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go ${{ env.go_version }}
+      - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.go_version }}
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
 
       - name: Initialize CodeQL
         if: github.event_name != 'release'
@@ -62,6 +57,7 @@ jobs:
           ./make.sh build -os darwin -arch amd64 -outdir build/darwin-amd64
           ./make.sh build -os darwin -arch arm64 -outdir build/darwin-arm64
           ./make.sh build -os windows -arch amd64 -outdir build/windows-amd64
+          ./make.sh build -os windows -arch arm64 -outdir build/windows-arm64
         working-directory: ./tools/eventlist
 
       - name: Archive eventlist
@@ -104,22 +100,28 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
+      - name: Archive eventlist
+        uses: actions/upload-artifact@v3
+        with:
+          name: eventlist-windows-arm64
+          path: ./tools/eventlist/build/windows-arm64
+          retention-days: 1
+          if-no-files-found: error
+
   lint:
     if: github.event_name == 'pull_request'
     name: Lint
     timeout-minutes: 10
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-      - name: Setup go ${{ env.go_version }}
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.go_version }}
-
       - name: Check out repository code
         uses: actions/checkout@v3
+
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
@@ -131,18 +133,16 @@ jobs:
   format:
     if: github.event_name != 'pull_request'
     name: Format
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go ${{ env.go_version }}
+      - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.go_version }}
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
 
       - name: Create build folder
         run: mkdir build
@@ -156,25 +156,23 @@ jobs:
 
   vulnerability-check:
     name: "Vulnerability check"
-    strategy:
-      matrix:
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go ${{ env.go_version }}
+      - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.go_version }}
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
 
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
 
       - name: Run vulnerability check
         run: |
-          echo "$(govulncheck ./... 2>&1 | tee vulnerability_report.out)"          
+          echo "$(govulncheck ./... 2>&1 | tee vulnerability_report.out)"
           test -n "$(grep 'No vulnerabilities found.' vulnerability_report.out)"
         working-directory: ./tools/eventlist
 
@@ -185,17 +183,18 @@ jobs:
     needs: [ build ]
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macos-12]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     name: 'Test (${{ matrix.os }})'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go ${{ env.go_version }}
+      - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.go_version }}
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
 
       - name: Create build folder
         run: mkdir build
@@ -220,24 +219,24 @@ jobs:
     if: github.event_name != 'release'
     name: "Publish Tests Results"
     needs: [ test ]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download unit test report windows
         uses: actions/download-artifact@v3
         with:
-          name: unit-test-result-windows-2019
+          name: unit-test-result-windows-latest
           path: testreports/
 
       - name: Download unit test report linux
         uses: actions/download-artifact@v3
         with:
-          name: unit-test-result-ubuntu-20.04
+          name: unit-test-result-ubuntu-latest
           path: testreports/
 
       - name: Download unit test report macos
         uses: actions/download-artifact@v3
         with:
-          name: unit-test-result-macos-12
+          name: unit-test-result-macos-latest
           path: testreports/
 
       - name: publish test results
@@ -252,19 +251,17 @@ jobs:
       github.event_name != 'release' ||
       startsWith(github.ref, 'refs/tags/tools/eventlist/')
     needs: [ build ]
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
     name: 'Coverage check'
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install go ${{ env.go_version }}
+      - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: ${{ env.go_version }}
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
 
       - name: Create build folder
         run: mkdir build
@@ -298,16 +295,19 @@ jobs:
           mkdir -p release/eventlist-darwin-amd64/docs
           mkdir -p release/eventlist-darwin-arm64/docs
           mkdir -p release/eventlist-windows-amd64/docs
+          mkdir -p release/eventlist-windows-arm64/docs
           cp LICENSE release/eventlist-linux-amd64/
           cp LICENSE release/eventlist-linux-arm64/
           cp LICENSE release/eventlist-darwin-amd64/
           cp LICENSE release/eventlist-darwin-arm64/
           cp LICENSE release/eventlist-windows-amd64/
+          cp LICENSE release/eventlist-windows-arm64
           cp tools/eventlist/docs/* release/eventlist-linux-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-linux-arm64/docs/
           cp tools/eventlist/docs/* release/eventlist-darwin-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-darwin-arm64/docs/
           cp tools/eventlist/docs/* release/eventlist-windows-amd64/docs/
+          cp tools/eventlist/docs/* release/eventlist-windows-arm64/docs/
 
       - name: Download eventlist linux
         uses: actions/download-artifact@v3
@@ -339,9 +339,16 @@ jobs:
           name: eventlist-windows-amd64
           path: release/eventlist-windows-amd64/
 
+      - name: Download eventlist windows
+        uses: actions/download-artifact@v2
+        with:
+          name: eventlist-windows-arm64
+          path: release/eventlist-windows-arm64/
+
       - name: Zip folders
         run: |
           zip -r eventlist-windows-amd64.zip eventlist-windows-amd64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
+          zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
           tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE
           tar -czvf eventlist-linux-arm64.tar.gz  eventlist-linux-arm64/eventlist eventlist-linux-arm64/docs eventlist-linux-arm64/LICENSE
           tar -czvf eventlist-darwin-amd64.tar.gz eventlist-darwin-amd64/eventlist eventlist-darwin-amd64/docs eventlist-darwin-amd64/LICENSE
@@ -351,6 +358,7 @@ jobs:
       - name: Calculate checksums
         run: |
           sha256sum eventlist-windows-amd64.zip --text > eventlist-checksums.txt
+          sha256sum eventlist-windows-arm64.zip --text >> eventlist-checksums.txt
           sha256sum eventlist-linux-amd64.tar.gz --text >> eventlist-checksums.txt
           sha256sum eventlist-linux-arm64.tar.gz --text >> eventlist-checksums.txt
           sha256sum eventlist-darwin-amd64.tar.gz --text >> eventlist-checksums.txt
