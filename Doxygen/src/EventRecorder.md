@@ -193,7 +193,7 @@ The following steps explain how to enable views for static information \a and dy
   -# Add \ref Event_Annotations in the C source to be able to stream dynamic event information.
   -# Create an \ref SCVD_Format "SCVD file" to \ref Format_Event_Information that matches with application code.
 
-**For MDK-Middleware, Keil RTX5, and FreeRTOS:**
+**For Pre-annotated Software Components:**
 
 The software packs for MDK-Middleware, CMSIS, CMSIS-FreeRTOS already contain the relevant *.SCVD files and the related event annotations in the C source code.
 
