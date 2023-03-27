@@ -8,7 +8,7 @@ Example Project                                        | Description
 
 \page scvd_evt_stat SCVD Event Statistics
 
-This example project shows how to use start/stop events with the Event Recorder.  For further details refer to \ref es_use.
+This example project shows how to use start/stop events with the Event Recorder.
 
 The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The
 call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer.  A call to EventStop with slot 15 

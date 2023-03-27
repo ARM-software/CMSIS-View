@@ -291,7 +291,7 @@ EventRecorderEnable (EventRecordError+EventRecordAPI,      // Record group A and
 \endcode
 
 <b>Code example</b>
- - Refer to \ref es_use
+ - Refer to \ref scvd_evt_stat
 
 */
 
