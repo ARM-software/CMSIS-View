@@ -1,6 +1,6 @@
 # CMSIS-View
 
-The [**Keil MDK Event Recorder**](https://www2.keil.com/mdk5/debug) is now available as open source component along with tooling.
+The [**Keil MDK Event Recorder**](https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Event-Recorder) is now available as open source component along with tooling.
 This repository contains the source code of:
   - [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the event recorder software component.
   - [**EventList**](./tools/eventlist) command line utility that allows to dump the events on command line.

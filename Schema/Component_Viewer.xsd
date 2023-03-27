@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  Copyright (c) 2015-2018 Arm Limited.
+ 
+  This software is provided 'as-is', without any express or implied warranty. 
+  In no event will the authors be held liable for any damages arising from 
+  the use of this software. Permission is granted to anyone to use this 
+  software for any purpose, including commercial applications, and to alter 
+  it and redistribute it freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not 
+     claim that you wrote the original software. If you use this software in
+     a product, an acknowledgment in the product documentation would be 
+     appreciated but is not required. 
+
+  2. Altered source versions must be plainly marked as such, and must not be 
+     misrepresented as being the original software. 
+
+  3. This notice may not be removed or altered from any source distribution.
+
+  $Date:        12. Mar 2018
+  $Revision:    1.2.0
+
+  $Project: Schema File for Component Viewer Description File Format Specification
+
+  File naming convention <component_name>.scvd
+  SchemaVersion=1.2.0
+
+  12. Mar 2018
+  - added definition of up to 8 states to a components.
+  - added state display attributes plot, color and bold with pre defined set of values.
+  - added state reset attribute specifying the 'initial' state of a component.
+  - added tracking attribute for controlling the start and stop of the state tracking.
+  - added event attribute reset for resetting the state of all components within its group.
+
+  23. Feb 2018
+  - added attribute handle and hname (handle name) to event tag.
+  - updated attribute alert to xs:string to support expression evaluation resolving to boolean.
+
+  04. May 2017
+  - added print tag.
+  - added alert and bold attributes to displaying tags (print, item, event, etc.).
+  - added import attribute to TypedefType.
+
+  04. November 2016
+  - added attribute shortname to component tag.
+  - added endian attribute to MemberType and TypeDefType.
+  - allow lower case endian specifier b and l.
+  - added missing maxOccurs for event groups and events.
+
+  31. Aug. 2016
+  - extended events section with <group> and <component> elements.
+  - extended EventType adding attributes 'level' and 'doc'.
+
+  16. Jun. 2016
+  - NonNegativeInteger and Integer supporting hex and dec format.
+  - EnumType value attribute type changed from xs:string to Integer.
+  - MemberType size attribute type changed from xs:string to NonNegativeInteger.
+  - VarType attribute size added.
+  - ReadType:
+    + attribute size type changed from xs:string to NonNegativeInteger.
+    + attribute endian with type EndianEnumType added.
+  - ReadlistType:
+    + attribute const type changed to xs:boolean.
+    + attribute while added.
+  - TypedefType:
+    + attribute name, size and const added type.
+  - OutsType removed as it is no longer used.
+  - EventType changed attribute name from required to optional.
+
+  12. Apr.2016
+  - adding events section.
+
+  17.Dec.2015
+  - first draft version.
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified" version="1.1.0">
+  <!-- Types -->
+  <!-- NonNegativeInteger specifies the format in which numbers are represented in hexadecimal or decimal format -->
+  <xs:simpleType name="NonNegativeInteger">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\+]?((0x|0X)?[0-9a-fA-F]+|[0-9]+)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Integer specifies the format in which integer numbers are represented in hexadecimal or decimal format -->
+  <xs:simpleType name="Integer">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[\+\-]?((0x|0X)[0-9a-fA-F]+|[0-9]+)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="EndianEnumType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="B"/> <!-- big endian -->
+      <xs:enumeration value="b"/> <!-- big endian -->
+      <xs:enumeration value="L"/> <!-- little endian -->
+      <xs:enumeration value="l"/> <!-- little endian -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PlotEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="line"/>
+      <xs:enumeration value="box"/>
+      <xs:enumeration value="off"/>
+      <!-- default -->
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ColorEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="red"/>
+      <xs:enumeration value="green"/>
+      <xs:enumeration value="black"/>
+      <xs:enumeration value="blue"/> <!-- default -->
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="TrackingEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Start"/>
+      <xs:enumeration value="Stop"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ComponentsType">
+    <xs:attribute name="name"      type="xs:string"  use="required"/>
+    <xs:attribute name="shortname" type="xs:string"  />
+    <xs:attribute name="version"   type="xs:string"  />
+  </xs:complexType>
+
+  <xs:complexType name="CreateType">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="OutputType">
+    <xs:attribute name="name"  type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" />
+    <xs:attribute name="cond"  type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="DropType">
+    <xs:sequence>
+      <xs:element name="output" type="OutputType"/>
+    </xs:sequence>
+    <xs:attribute name="name"  type="xs:string" use="required"/>
+    <xs:attribute name="type"  type="xs:string" use="required"/>
+    <xs:attribute name="value" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="EnumType">
+    <xs:attribute name="name"  type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+    <xs:attribute name="info"  type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="MemberType">
+    <xs:sequence>
+      <xs:element name="enum" type="EnumType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name"   type="xs:string" use="required"/>
+    <xs:attribute name="type"   type="xs:string" use="required"/>
+    <xs:attribute name="offset" type="xs:string" use="required"/>
+    <xs:attribute name="size"   type="NonNegativeInteger"      />
+    <xs:attribute name="info"   type="xs:string"               />
+    <xs:attribute name="endian" type="EndianEnumType"          />
+  </xs:complexType>
+
+  <xs:complexType name="VarType">
+    <xs:attribute name="name"  type="xs:string"         />
+    <xs:attribute name="value" type="xs:string"         />
+    <xs:attribute name="type"  type="xs:string"         />
+    <xs:attribute name="size"  type="NonNegativeInteger"/>
+    <xs:attribute name="info"  type="xs:string"         />
+  </xs:complexType>
+
+  <xs:complexType name="ReadType">
+    <xs:attribute name="name"   type="xs:string"       use="required"/>
+    <xs:attribute name="type"   type="xs:string"       use="required"/>
+    <xs:attribute name="size"   type="xs:string"                     />
+    <xs:attribute name="offset" type="xs:string"                     />
+    <xs:attribute name="symbol" type="xs:string"                     />
+    <xs:attribute name="const"  type="xs:boolean"                    />
+    <xs:attribute name="info"   type="xs:string"                     />
+    <xs:attribute name="cond"   type="xs:string"                     />
+    <xs:attribute name="endian" type="EndianEnumType"                />
+  </xs:complexType>
+
+  <xs:complexType name="ReadlistType">
+    <xs:attribute name="name"   type="xs:string"  use="required"/>
+    <xs:attribute name="type"   type="xs:string"  use="required"/>
+    <xs:attribute name="count"  type="xs:string"                />
+    <xs:attribute name="next"   type="xs:string"                />
+    <xs:attribute name="offset" type="xs:string"                />
+    <xs:attribute name="symbol" type="xs:string"                />
+    <xs:attribute name="const"  type="Integer"                  />
+    <xs:attribute name="info"   type="xs:string"                />
+    <xs:attribute name="while"  type="xs:string"                />
+    <xs:attribute name="cond"   type="xs:string"                />
+    <xs:attribute name="init"   type="xs:boolean"               />
+    <xs:attribute name="based"  type="xs:boolean"               />
+  </xs:complexType>
+
+  <xs:complexType name="TypedefType">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="member" type="MemberType"/>
+      <xs:element name="var"    type="VarType"   />
+    </xs:choice>
+    <xs:attribute name="name"   type="xs:string"          use="required"/>
+    <xs:attribute name="size"   type="NonNegativeInteger"               />
+    <xs:attribute name="const"  type="xs:boolean"                       />
+    <xs:attribute name="info"   type="xs:string"                        />
+    <xs:attribute name="endian" type="EndianEnumType"                   />
+    <xs:attribute name="import" type="xs:string"                        />
+  </xs:complexType>
+
+  <xs:complexType name="TypedefsType">
+    <xs:sequence>
+      <xs:element name="typedef" type="TypedefType" maxOccurs="unbounded"/>
+    </xs:sequence>    
+  </xs:complexType>
+
+  <xs:complexType name="CalcType">
+    <xs:simpleContent>
+      <xs:extension base='xs:string'>
+        <xs:attribute name="cond" type="xs:string"/>
+      </xs:extension>
+      </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="ListTypeO">
+    <xs:choice  minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="list"     type="ListTypeO"   />
+      <xs:element name="readlist" type="ReadlistType"/>
+      <xs:element name="read"     type="ReadType"    />
+      <xs:element name="var"      type="VarType"     />
+      <xs:element name="calc"     type="CalcType"    />
+    </xs:choice>
+    <xs:attribute name="name"     type="xs:string" use="required"/>
+    <xs:attribute name="start"    type="xs:string" use="required"/>
+    <xs:attribute name="limit"    type="xs:string"               />
+    <xs:attribute name="while"    type="xs:string"               />
+    <xs:attribute name="cond"     type="xs:string"               />
+  </xs:complexType>
+
+  <xs:complexType name="ObjectType">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="list"     type="ListTypeO"   />
+      <xs:element name="readlist" type="ReadlistType"/>
+      <xs:element name="read"     type="ReadType"    />
+      <xs:element name="addr"     type="ReadType"    />
+      <xs:element name="var"      type="VarType"     />
+      <xs:element name="calc"     type="CalcType"    />
+      <xs:element name="out"      type="OutType"     />
+    </xs:choice>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ObjectsType">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:element name="object" type="ObjectType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PrintType">
+    <xs:attribute name="cond"     type="xs:string" use="required"/>
+    <xs:attribute name="property" type="xs:string" use="required"/>
+    <xs:attribute name="value"    type="xs:string" use="required"/>
+    <xs:attribute name="alert"    type="xs:string"               />    <!-- expression resolving to boolean -->
+    <xs:attribute name="bold"     type="xs:boolean"              />
+  </xs:complexType>
+
+  <xs:complexType name="ItemType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="item"   type="ItemType"  />
+      <xs:element name="print"  type="PrintType" />
+      <xs:element name="output" type="OutputType"/>
+      <xs:element name="list"   type="ListType"  />
+    </xs:choice>
+    <xs:attribute name="property" type="xs:string" />
+    <xs:attribute name="value"    type="xs:string" />
+    <xs:attribute name="info"     type="xs:string" />
+    <xs:attribute name="cond"     type="xs:string" />
+    <xs:attribute name="alert"    type="xs:string" />    <!-- expression resolving to boolean -->
+    <xs:attribute name="bold"     type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="ListType">
+    <xs:choice  minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="item"   type="ItemType"  />
+      <xs:element name="output" type="OutputType"/>
+      <xs:element name="list"   type="ListType"  />
+    </xs:choice>
+    <xs:attribute name="name"  type="xs:string" use="required"/>
+    <xs:attribute name="start" type="xs:string" use="required"/>
+    <xs:attribute name="limit" type="xs:string"               />
+    <xs:attribute name="while" type="xs:string"               />
+    <xs:attribute name="cond"  type="xs:string"               />
+    <xs:attribute name="alert" type="xs:string"               /> <!-- expression resolving to boolean -->
+    <xs:attribute name="bold"  type="xs:boolean"              />
+  </xs:complexType>
+
+  <xs:complexType name="OutType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="item"   type="ItemType"  />
+      <xs:element name="output" type="OutputType"/>
+      <xs:element name="list"   type="ListType"  />
+    </xs:choice>
+    <xs:attribute name="name"  type="xs:string"  />
+    <xs:attribute name="value" type="xs:string"  />
+    <xs:attribute name="type"  type="xs:string"  />
+    <xs:attribute name="cond"  type="xs:string"  />
+    <xs:attribute name="alert" type="xs:string"  />       <!-- expression resolving to boolean -->
+    <xs:attribute name="bold"  type="xs:boolean" />
+  </xs:complexType>
+
+  <xs:simpleType name="LevelEnumType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Error" />
+      <xs:enumeration value="API"   />
+      <xs:enumeration value="Op"    />
+      <xs:enumeration value="Detail"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="EventType">
+    <xs:sequence>
+      <xs:element name="print"    type="PrintType"     minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="name"     type="xs:string"                   />
+    <xs:attribute name="id"       type="xs:string"     use="required"/> <!-- limit to 16 bits-->
+    <xs:attribute name="level"    type="LevelEnumType" use="required"/>
+    <xs:attribute name="val1"     type="xs:string"                   />
+    <xs:attribute name="val2"     type="xs:string"                   />
+    <xs:attribute name="val3"     type="xs:string"                   />
+    <xs:attribute name="val4"     type="xs:string"                   />
+    <xs:attribute name="val5"     type="xs:string"                   />
+    <xs:attribute name="val6"     type="xs:string"                   />
+    <xs:attribute name="value"    type="xs:string"                   />
+    <xs:attribute name="property" type="xs:string"                   />
+    <xs:attribute name="info"     type="xs:string"                   />
+    <xs:attribute name="doc"      type="xs:string"                   />
+    <xs:attribute name="alert"    type="xs:string"                   />   <!-- expression resolving to boolean -->
+    <xs:attribute name="bold"     type="xs:boolean"                  />
+    <xs:attribute name="state"    type="xs:string"                   />   <!-- if state is set the handle attribute is required -->
+    <xs:attribute name="handle"   type="xs:string"                   />
+    <xs:attribute name="hname"    type="xs:string"                   />
+    <xs:attribute name="reset"    type="xs:boolean"                  />   <!-- puts all components from the related <group> into 'reset' state -->
+    <xs:attribute name="tracking" type="xs:string"                   />
+  </xs:complexType>
+
+  <xs:complexType name="ComponentType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="state">
+        <xs:complexType>
+          <xs:attribute name="name"     type="xs:string" use="required"/>
+          <xs:attribute name="plot"     type="PlotEnumType" use="required"/>
+          <xs:attribute name="bold"     type="xs:boolean"/>
+          <xs:attribute name="dormant"  type="xs:boolean"/>
+          <xs:attribute name="unique"   type="xs:boolean"/>
+          <xs:attribute name="reset"    type="xs:boolean"/>
+          <xs:attribute name="color"    type="ColorEnumType"/>
+          <xs:attribute name="tracking" type="TrackingEnumType"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="no"     type="NonNegativeInteger"/>
+    <xs:attribute name="name"   type="xs:string"         />
+    <xs:attribute name="prefix" type="xs:string"         />
+    <xs:attribute name="brief"  type="xs:string"         />
+    <xs:attribute name="info"   type="xs:string"         />
+  </xs:complexType>
+
+  <xs:complexType name="GroupType">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="group"     type="GroupType"    />
+      <xs:element name="component" type="ComponentType"/>
+    </xs:choice>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="EventsType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="group" type="GroupType" maxOccurs="unbounded"/>
+      <xs:element name="event" type="EventType" maxOccurs="unbounded"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <!-- Root Point-->
+  <xs:element name="component_viewer" nillable="true">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="component" type="ComponentsType"/>
+        <xs:element name="typedefs"  type="TypedefsType"  />
+        <xs:element name="objects"   type="ObjectsType"   />
+        <xs:element name="events"    type="EventsType"    />
+      </xs:choice>
+      <xs:attribute name="schemaVersion" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

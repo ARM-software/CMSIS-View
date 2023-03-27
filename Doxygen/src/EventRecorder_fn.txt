@@ -162,8 +162,6 @@ The macro \ref EventID generates an \em id value that combines \em level, \em co
 The \em level value should be set to \ref EventLevelError, \ref EventLevelAPI, \ref EventLevelOp, or \ref EventLevelDetail.
 
 The \em id value is used by the functions \ref EventRecordData, \ref EventRecord2, and \ref EventRecord4.
-
-The example \ref MyComponent shows the usage of \ref EventID in combination with a help system.
 */
 
 /**
@@ -293,7 +291,7 @@ EventRecorderEnable (EventRecordError+EventRecordAPI,      // Record group A and
 \endcode
 
 <b>Code example</b>
- - Refer to \ref es_use
+ - Refer to \ref scvd_evt_stat
 
 */
 
@@ -416,7 +414,7 @@ This function is called by \ref EventRecorderInitialize to initialize the timer 
 For time stamp source \ref TimeStampSource "User Timer (Power-On Reset)" this function is only called for the first call to \ref EventRecorderInitialize.
 
 \note
-MDK is using currently a fixed frequency that is defined by \c EVENT_TIMESTAMP_FREQ.
+µVision is using currently a fixed frequency that is defined by \c EVENT_TIMESTAMP_FREQ.
 */
 
 /*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
