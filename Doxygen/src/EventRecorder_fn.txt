@@ -162,8 +162,6 @@ The macro \ref EventID generates an \em id value that combines \em level, \em co
 The \em level value should be set to \ref EventLevelError, \ref EventLevelAPI, \ref EventLevelOp, or \ref EventLevelDetail.
 
 The \em id value is used by the functions \ref EventRecordData, \ref EventRecord2, and \ref EventRecord4.
-
-The example \ref MyComponent shows the usage of \ref EventID in combination with a help system.
 */
 
 /**

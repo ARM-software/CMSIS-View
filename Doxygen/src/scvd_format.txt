@@ -2,8 +2,8 @@
 /** 
 \page SCVD_Format SCVD File Format
 
-The SCVD (Software Component View Description) files are formatted in XML and based on the schema file \b Component_Viewer.xsd. 
-The schema file \b Component_Viewer.xsd is part of the Keil MDK installation and available in the folder <b>..\\UV4</b>.
+The SCVD (Software Component View Description) files are formatted in XML and based on the schema file 
+<a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
 
 The SCVD file format is described in the following sections:
  - \subpage xml_elements : specifies the structure and top level elements of an SCVD file.
@@ -13,26 +13,23 @@ The SCVD file format is described in the following sections:
  - \subpage builtin_function : lists built-in functions that can be used for  calculating stack memory usage, accessing CPU registers or application program symbols. 
  - \subpage value_output : shows how to format output data for display in the \cviewer or \erecorder.
 
-
-
 \section scvd_validate SCVD File Validation
 
-An *.SCVD file is validated with the following steps:
+The schema file 
+<a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
+specifies the XML format. Use this schema file together with XML tools for validating an *.scvd file. 
 
--# The schema file <b>Component_Viewer.xsd</b> specifies the XML format. Use this schema file together with XML tools to check correctness of an *.scvd file. 
--# Start the <b>uVision Debugger</b> and verify that no error messages are displayed in the debug command window and when opening the software component watch window.
+\section scvd_in_debug Using SCVD Files in a Debugger
 
-\section scvd_in_debug Using SCVD Files in the Debugger
-
-To use a *.SCVD file in the uVision Debugger:
- - Add the SCVD file to uVision as described in <a href="http://www.keil.com/support/man/docs/uv4/uv4_ca_manage_scvd.htm" target="_blank"><b>Manage Component Viewer Description Files</b></a>. 
+The following steps explain how to use an *.SCVD file in the µVision Debugger. Other tools might require different steps:
+ - Add the SCVD file to µVision as described in <a href="https://developer.arm.com/documentation/101407/0538/Creating-Applications/Tips-and-Tricks/Manage-Component-Viewer-Description-Files" target="_blank"><b>Manage Component Viewer Description Files</b></a>.
  - Use the debug windows as described in \cviewer.
 
 \section scvd_in_packs SCVD Files in Software Packs
 
 Software components which are part of Software Packs may add related *.SCVD files directly in the Package Description file (*.pdsc) using the \<file\> element category \token{other}.
 In the *.pdsc file example below \token{Network.scvd} is added to the debugger when the component \token{:Network:Core} is selected. For details, refer to
-<a href="http://www.keil.com/pack/doc/CMSIS/Pack/html/pdsc_components_pg.html#element_file" target="_blank"><b>CMSIS-Pack - Pack Description (*.PDSC) Format</b></a>.
+<a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/pdsc_components_pg.html" target="_blank"><b>CMSIS-Pack - Pack Description (*.PDSC) Format</b></a>.
 
 \code
 <component CClass="Network" Cgroup="Core">
@@ -716,11 +713,6 @@ Define variables, calculations, and the viewer output for a software component.
     <td>0..*</td>
   </tr>
 </table>
- 
-\b Example:
-
-See \ref complex_scvd
-
 */
 
 /* ========================================================================================================================== */
@@ -2302,7 +2294,7 @@ The element \refelem{read} accesses variables or arrays from the target system. 
 
 \b Example:
 
-The following example code is an excerpt from the FreeRTOS source code. The CMSIS-RTOS complaint FreeRTOS implementation is available as Software Pack from <a href="http://www.keil.com/dd2/pack/#/ARM.CMSIS-FreeRTOS" target="_blank"><b>www.keil.com/pack</b></a>.
+The following example code is an excerpt from the FreeRTOS source code. The CMSIS-RTOS compliant FreeRTOS implementation is available as a <a href="https://github.com/ARM-software/CMSIS-FreeRTOS" target="_blank"><b>Software Pack</b></a>.
  
 C Code:
 \code
@@ -3106,7 +3098,7 @@ The example shows the <b>%</b>-sign output in the \em Property column.
 
 \subsection alert_bold alert and bold output
 
-The following example is based on the \ref simple_scvd and shows how to emphasis output with the \b bold and \b alert attribute of the
+The following example shows how to emphasis output with the \b bold and \b alert attribute of the
 \ref elem_item "<item>" element.
 
 <b>*.SCVD file</b>
@@ -3154,7 +3146,7 @@ The value "Low [hex]" is shown in red and \b bold (both attributes are set).
 
 \subsection print_spec Dynamic output formats
 
-The following example is based on the \ref simple_scvd and shows how to dynamically change the output format of an \ref elem_item "<item>" element 
+The following example shows how to dynamically change the output format of an \ref elem_item "<item>" element 
 using a \ref elem_print "<print>" child element.
 
 <b>*.SCVD file</b>

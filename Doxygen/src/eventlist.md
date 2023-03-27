@@ -1,69 +1,17 @@
-# Event Statistic Example 
+# eventlist {#evntlst}
 
-This project shows how to use start/stop events with the Event Recorder that allow to measure execution times with:
--  different slots (0 - 15)
--  different groups (A - D)
-  
-The following API calls control this time recording:
-- `EventStart` starts a timer slot.
-- `EventStop` stops the related timer.  
-- `EventStop` with slot 15 stops the timers of all slots for the specified group.
+## Overview {#about_evntlst}
 
-Refer to [Using Event Statistics](https://arm-software.github.io/CMSIS-View/main/ev_stat.html#es_use) for more information.
+Eventlist is a command line tool for processing Event Recorder data stored to a log file. 
 
-This demo application does some time consuming calculations that are recorded
-and can be displayed in the Event Statistics window.  
-
->Note:  
-This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 model](https://arm-software.github.io/AVH/main/simulation/html/Using.html) and does not require any hardware.  
-
-## Prerequisites
-
-Tools:
-
-- [**CMSIS-Toolbox 1.0.0 or higher**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox)
-- [**Keil MDK 5.37 or higher**](https://www.keil.com/mdk5)
-  - Arm Compiler 6 (part of MDK)
-  - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
-- [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
-
-As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware) available via the AWS Marketplace as this image contains all relevant tools.
-
-## Compile Project
-
-You may need to install missing software packs with this command sequence:
-
-```txt
-> csolution list packs -s .\EventStatistic.csolution.yml -m >packs.txt
-> cpackget add -f packs.txt
-```
-
-The following commands convert and build the project:
-
-```txt
-> csolution convert -s .\EventStatistic.csolution.yml
-
-> cbuild .\EventStatistic.Debug+AVH.cprj
-```
-
-> NOTE: The `*.cprj` file may be also imported into µVision for execution.
-
-## Execute
-
-The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
-
-```txt
-> C:/Keil_v5/ARM/VHT/VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 -C cpu0.semihosting-enable=1 -a ./out/EventStatistic/AVH/Debug/EventStatistic.Debug+AVH.axf
-```
-When using `cpu0.semihosting-enable=1` the file `EventRecorder.log` is generated that contains the events that are generated during execution. This file is the input for the `eventlist` utility.
+The utility is a Go application that is available for all major operating systems and is run from the command line. Refer to the
+<a href="https://github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist">source code</a> for more information including the invocation details.
 
 ## Analyze Events
 
-This file can be analyzed using the `eventlist` utility with the following command:
+It is used in the example project \ref scvd_evt_stat. Build and run the example. Then run  `eventlist -s EventRecorder.log` in a terminal to create the human readable output:
 
 ```txt
-> eventlist -s EventRecorder.log
-
    Start/Stop event statistic
    --------------------------
 
@@ -86,10 +34,13 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Max: Start: 0.00000000 val1=0x10004d43, val2=0x00000057 Stop: 180.67371888 val1=0x10004d43, val2=0x00000062
 ```
 
-When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
-```
-> eventlist -a .\out\EventStatistic\AVH\Debug\EventStatistic.Debug+AVH.axf -I ...\Local\Arm\Packs\Keil\ARM_Compiler\1.7.2\EventRecorder.scvd .\EventRecorder.log
+### Adding Context
 
+When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command, the context of the program is shown.
+
+Run `eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I ./EventRecorder.scvd ./EventRecorder.log` in a terminal window. The output should look like the following:
+
+```txt
   :
 
 53947 180.66841874 EvCtrl    StartAv(15)             v1=776 v2=0
@@ -121,5 +72,4 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Max: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
 ```
 
-
-
+Customizing the SCVD file enable you to create application specific output that can be easily read and analyzed for debugging purposes.

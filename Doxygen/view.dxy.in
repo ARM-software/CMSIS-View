@@ -890,6 +890,8 @@ INPUT                  = src/main.md \
                          src/history.txt \
                          src/EventRecorder.md \
                          src/ev_stat.md \
+                         src/eventlist.md \
+                         src/examples.md \
                          src/cmp_viewer.md \
                          src/EventRecorder_fn.txt \
                          src/scvd_format.txt \
