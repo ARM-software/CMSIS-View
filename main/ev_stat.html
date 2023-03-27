@@ -115,100 +115,20 @@ Overview</h1>
 <img src="EventStatistics_wo_Energy.png" alt=""/>
 <div class="caption">
 Event Statistics for user code</div></div>
-<p >Energy profiling is of annotated code sections is possible using <a href="https://www2.keil.com/mdk5/ulink/ulinkplus">ULINKplus</a>. When combined with power measurement, the Event Statistics window displays the energy consumption of the code section with min/man/average values:</p>
+<p >Energy profiling is of annotated code sections is possible using <a href="https://developer.arm.com/Tools%20and%20Software/ULINKplus">ULINKplus</a>. When combined with power measurement, the Event Statistics window displays the energy consumption of the code section with min/man/average values:</p>
 <div class="image">
 <img src="EventStatistics_w_Energy.png" alt=""/>
 <div class="caption">
 User code energy profiling</div></div>
-<p >For more information, refer to <a class="el" href="ev_stat.html#es_use">Using Event Statistics</a>.</p>
+<p >For more information, refer to the <a class="el" href="scvd_evt_stat.html">SCVD Event Statistics</a> example.</p>
 <p ><b>Benefits of Event Statistics:</b></p><ul>
 <li>Collect statistical data about the code execution (time and energy).</li>
 <li>Log files enable comparisons between different build runs in continuous integration (CI) environments.</li>
 <li>Improve overall code quality and energy profile (especially relevant for battery driven applications).</li>
 </ul>
-<h1><a class="anchor" id="es_use"></a>
-Using Event Statistics</h1>
-<p >The following steps enable the MDK debugger views for <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> on timing, number of calls, and current consumption.</p>
-<p >To use <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> in the application code:</p><ol type="1">
-<li>Follow the first two steps in <a class="el" href="er_use.html">Using Event Recorder</a>.</li>
-<li>Annotate the C source with <a class="el" href="group__Event__Execution__Statistic.html">Event Execution Statistics</a>.</li>
-</ol>
-<p ><a class="el" href="group__Event__Execution__Statistic.html">Event Execution Statistics</a> functions may be placed throughout the application source code to measure execution performance between corresponding start and stop events:</p>
-<ul>
-<li><b>EventStart<em>G</em> (<em>slot</em>)</b> or <b>EventStart<em>G</em>v (<em>slot</em>, <em>val1</em>, <em>val2</em>)</b> functions define the start point of an execution slot.</li>
-<li><b>EventStop<em>G</em> (<em>slot</em>)</b> or <b>EventStop<em>G</em>v (<em>slot</em>, <em>val1</em>, <em>val2</em>)</b> functions define the stop point of an execution slot.</li>
-</ul>
-<p >The <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> window shows collected data about execution time, number of calls, and (when using <a href="https://www2.keil.com/mdk5/ulink/ulinkplus">ULINKplus</a>) the current consumption for each execution slot.</p>
-<p >For the minimum and maximum time or current consumption it also shows for start and stop events the:</p><ul>
-<li>C source file name and line number of event calls via <b>EventStart<em>G</em> (<em>slot</em>)</b> or <b>EventStop<em>G</em> (<em>slot</em>)</b>.</li>
-<li>Integer values <em>val1</em> and <em>val2</em> of event calls via <b>EventStart<em>G</em>v (<em>slot</em>, <em>val1</em>, <em>val2</em>)</b> or <b>EventStop<em>G</em>v (<em>slot</em>, <em>val1</em>, <em>val2</em>)</b>.</li>
-</ul>
-<p >Each execution slot is identified by the function name group letter <em>G</em> = {A, B, C, D} and a <em>slot</em> number (0 to 15). <a class="el" href="er_use.html#er_filtering">Event filtering</a> may be used to control the recording of each group. A call to <b>EventStop<em>G</em></b> or <b>EventStop<em>G</em>v</b> with <em>slot</em>=15 stops measurement for all slots in a group and may be used at global exits of an execution block.</p>
-<p >The following code is from the <a class="el" href="scvd_evt_stat.html">SCVD Event Statistics</a> example project that is part of the <b>Keil::ARM_Compiler</b> pack:</p>
-<p ><b>Code example</b></p>
-<div class="fragment"><div class="line">#define TABLE_SIZE 1000</div>
-<div class="line">float sin_table[TABLE_SIZE];</div>
-<div class="line"> </div>
-<div class="line">// Calculate table with sine values </div>
-<div class="line">void CalcSinTable (void)  {</div>
-<div class="line">  unsigned int i, max_i;</div>
-<div class="line">  float f = 0.0;</div>
-<div class="line">  </div>
-<div class="line">  max_i = TABLE_SIZE - (rand () % 500);</div>
-<div class="line">  EventStartAv (15, max_i, 0);                  // Start group A, slot 15, passing the max_i variable</div>
-<div class="line">  for (i = 0; i &lt; max_i; i++)  {</div>
-<div class="line">    if (i == 200)  {</div>
-<div class="line">       EventStartAv (0, max_i, 0);              // Start group A, slot 0, passing the max_i variable</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    sin_table[i] = sinf(f);</div>
-<div class="line">    f = f + (3.141592 / TABLE_SIZE);</div>
-<div class="line">  </div>
-<div class="line">    if (i == 800)  {                            // Measure 800 table entries</div>
-<div class="line">      EventStopA (0);                           // Stop group A, slot 0</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-<div class="line"> </div>
-<div class="line">  EventStopA (15);                              // Stop group A, slot 15 (stops also slots 0..14)</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line">...</div>
-<div class="line"> </div>
-<div class="line">int main (void) {</div>
-<div class="line"> </div>
-<div class="line">  SystemCoreClockUpdate();                      // System Initialization</div>
-<div class="line">  </div>
-<div class="line">  EventRecorderInitialize(EventRecordAll, 1U);  // Initialize and start Event Recorder</div>
-<div class="line"> </div>
-<div class="line">  EventStartC (0);                              // start measurement event group C, slot 0</div>
-<div class="line"> </div>
-<div class="line">  for (j = 0; j &lt; 1000; j++)  {</div>
-<div class="line">    CalcSinTable ();                            // calculate table with sinus values</div>
-<div class="line">  </div>
-<div class="line">    EventStartB(0);                             // start group B, slot 0</div>
-<div class="line">    MaxSqrtSum = rand () / 65536;               // limit for sqrt calculation</div>
-<div class="line">    num = FindSqrtSum ((float) MaxSqrtSum);     // return number of sqrt operations</div>
-<div class="line">    EventStopBv(0, MaxSqrtSum, num);            // stop group B, slot 0, output values: MaxSqrtSum, num</div>
-<div class="line">  }</div>
-<div class="line"> </div>
-<div class="line">  EventStopC(0);                                // stop measurement event group C, slot 0</div>
-<div class="line">  </div>
-<div class="line">  for (;;) {}</div>
-<div class="line">}</div>
-</div><!-- fragment --><p >Build and run the example project which uses the µVision simulator (available in all versions of MDK). In a debug session, <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm" target="_blank"><b>Event Recorder</b></a>, displays the following output:</p>
-<div class="image">
-<img src="er_with_statistics_annotated.png" alt=""/>
-<div class="caption">
-Event Recorder with Start/Stop events and values</div></div>
-<p >The <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> window shows the statistical data about the code execution:</p>
-<div class="image">
-<img src="es_start_stop_wo_energy_annotated.png" alt=""/>
-<div class="caption">
-Event Statistics</div></div>
-<p >For more information on the usage of the functions, refer to the <a href="group__Event__Execution__Statistic.html"><b>Event Execution Statistics API</b></a>.</p>
 <h1><a class="anchor" id="es_display_energy"></a>
 Display current consumption</h1>
-<p >Using a <a href="https://www2.keil.com/mdk5/ulink/ulinkplus">ULINKplus</a> debug adapter, you can also record and analyze the energy that has been consumed in each execution slot. Using the above example on a hardware target with a ULINKplus, you get the following displays in the <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> window (the <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm" target="_blank"><b>Event Recorder</b></a> window does not change):</p>
+<p >Using a ULINKplus debug adapter, you can also record and analyze the energy that has been consumed in each execution slot. Using the above example on a hardware target with a ULINKplus, you get the following displays in the <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> window (the <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm" target="_blank"><b>Event Recorder</b></a> window does not change):</p>
 <div class="image">
 <img src="es_start_stop_w_energy.png" alt=""/>
 <div class="caption">

@@ -108,22 +108,24 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><b>CMSIS-View</b> equips software developers with methodologies, software components and utilities that provide visibility into internal operation of embedded applications and software components.</p>
-<p >With CMSIS-View developers can collect time-accurate event-based information as well as see the real-time program execution status. The data can be observed in real-time in an IDE or can be saved as a log file during program execution. It allows to analyze execution flows, debug potential issues, and measure execution times.</p>
+<p >With CMSIS-View, developers can collect time-accurate event-based information as well as see the real-time program execution status. The data can be observed in real-time in an IDE or can be saved as a log file during program execution. It allows to analyze execution flows, debug potential issues, and measure execution times.</p>
+<p >A <b>Software Component Viewer Description</b> (*.SCVD) file in <a class="el" href="SCVD_Format.html">SCVD File Format</a> (XML) defines the content that is displayed in the <b>Component Viewer</b> and <b>Event Recorder</b>.</p>
+<p >In addition, using the Event Recorder API, you can annotate your code so that you can get statistical data on the time spent in a loop or on the energy consumption (<a href="https://developer.arm.com/Tools%20and%20Software/ULINKplus">ULINKplus</a> required).</p>
 <p >Key elements of CMSIS-View are:</p><ul>
 <li><a class="el" href="er_use.html">Event Recorder</a> - is an embedded software component that provides an <a href="modules.html">API (function calls)</a> for event annotations in the code.</li>
 <li><a class="el" href="SCVD_Format.html">SCVD file specification</a> defines the content that is displayed.</li>
+<li><a class="el" href="evntlst.html">eventlist</a>, a command line tool for processing Event Recorder log files.</li>
 </ul>
-<p >A <b>Software Component Viewer Description</b> (*.SCVD) file in <a class="el" href="SCVD_Format.html">SCVD File Format</a> (XML) defines the content that is displayed in the <b>Component Viewer</b> and <b>Event Recorder</b>.</p>
-<p >In addition, using the Event Recorder API, you can annotate your code so that you can get statistical data on the time spent in a loop or on the energy consumption (<a href="https://www.keil.com/mdk5/ulink/ulinkplus">ULINKplus</a> required).</p>
-<p >The debugger can load multiple *.SCVD files as typically each software component has an individual description file.</p>
 <h1><a class="anchor" id="content"></a>
 Content</h1>
-<p >This user's guide contains the following chapters:</p><ul>
+<p >This user's guide contains the following chapters:</p>
+<ul>
 <li><a class="el" href="rev_hist.html">Revision History</a> : lists CMSIS-View releases</li>
 <li><a class="el" href="evr.html">Event Recorder</a> : explores the features and operation of the <b>Event Recorder</b> including configuration, technical data, and theory of operation.</li>
 <li><a class="el" href="ev_stat.html">Event Statistics</a> : describes how to use Event Statistics to create statistical data on code execution and power consumption.</li>
+<li><a class="el" href="evntlst.html">eventlist</a> : shows the usage of <code>eventlist</code>, a command line tool for processing Event Recorder records stored to a log file.</li>
 <li><a class="el" href="cmp_viewer.html">Component Viewer</a> : explains the use of Component Viewer.</li>
-<li><a class="el" href="SCVD_Format.html">SCVD File Format</a> : describes the format of the Software Component View Description (*.SCVD) files that define the output of the MDK debugger views.</li>
+<li><a class="el" href="SCVD_Format.html">SCVD File Format</a> : describes the format of the Software Component View Description (*.SCVD) files that define the output of he MDK debugger views.</li>
 <li><a class="el" href="ExampleProjects.html">Examples</a> are available demonstrating standard use cases.</li>
 <li><b><a href="modules.html">API References</a></b> describes the API and the functions of the <b>Event Recorder</b> in details. </li>
 </ul>

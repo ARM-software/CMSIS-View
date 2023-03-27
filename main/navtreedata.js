@@ -30,12 +30,17 @@ var NAVTREE =
     [ "Event Recorder", "evr.html", "evr" ],
     [ "Event Statistics", "ev_stat.html", [
       [ "Overview", "ev_stat.html#about_event_statistics", null ],
-      [ "Using Event Statistics", "ev_stat.html#es_use", null ],
       [ "Display current consumption", "ev_stat.html#es_display_energy", null ]
+    ] ],
+    [ "eventlist", "evntlst.html", [
+      [ "Overview", "evntlst.html#about_evntlst", null ],
+      [ "Analyze Events", "evntlst.html#autotoc_md0", [
+        [ "Adding Context", "evntlst.html#autotoc_md1", null ]
+      ] ]
     ] ],
     [ "Component Viewer", "cmp_viewer.html", [
       [ "Overview", "cmp_viewer.html#about_cmp_viewer", null ],
-      [ "Using Component Viewer", "cmp_viewer.html#cv_use", [
+      [ "Component Viewer Usage Example", "cmp_viewer.html#cv_use", [
         [ "Static Component Information", "cmp_viewer.html#cv_static_information", null ]
       ] ]
     ] ],

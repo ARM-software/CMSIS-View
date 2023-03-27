@@ -121,14 +121,14 @@ Overview</h1>
 <p ><b>Benefits of the Event Recorder:</b></p><ul>
 <li>Visibility to the dynamic execution of an application at little (memory) cost.</li>
 <li>Adding RTOS awareness to a development tool does not require complex DLL programming.</li>
-<li>For Arm Cortex-M3/M4/M7/M33 processor based devices, Event Recorder functions will not disable interrupts.</li>
-<li>Adding <a class="el" href="er_use.html#printf_redirect">printf re-targeting</a> for devices without <a href="http://www2.keil.com/coresight/#swv">ITM</a>, such as Arm Cortex-M0/M0+/M23.</li>
+<li>For Arm Cortex-M3/M4/M7/M33/M55/M85 processor based devices, Event Recorder functions will not disable interrupts.</li>
+<li>Adding <a class="el" href="er_use.html#printf_redirect">printf re-targeting</a> for devices without ITM, such as Arm Cortex-M0/M0+/M23.</li>
 <li>Fast time-deterministic execution of event recorder functions with minimal code and timing overhead. <br  />
 </li>
 <li>No need for a debug or release build as the event annotations can remain in production code.</li>
 <li>Saving the event data in local memory ensures fast recording.</li>
-<li>Collecting the data from the on-chip memory is done using simple read commands. These commands work on all Cortex-M processor based devices and require only <a href="http://www2.keil.com/coresight/#jtag">JTAG</a> or <a href="http://www2.keil.com/coresight/#swd">SWD</a> connectivity to the debug adapter.</li>
-<li>Using the DWT Cycle Count register for creating time stamps reduces code overhead (available on Arm Cortex-M3/M4/M7/M33). </li>
+<li>Collecting the data from the on-chip memory is done using simple read commands. These commands work on all Cortex-M processor based devices and require only JTAG or SWD connectivity to the debug adapter.</li>
+<li>Using the DWT Cycle Count register for creating time stamps reduces code overhead (available on Arm Cortex-M3/M4/M7/M33/M55/M85). </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

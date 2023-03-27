@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('SCVD_Format.html',''); initResizable()
   <div class="headertitle"><div class="title">SCVD File Format </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >The SCVD (Software Component View Description) files are formatted in XML and based on the schema file <b>Component_Viewer.xsd</b>. The schema file <b>Component_Viewer.xsd</b> is part of the Keil MDK installation and available in the folder <b>..\UV4</b>.</p>
+<div class="textblock"><p >The SCVD (Software Component View Description) files are formatted in XML and based on the schema file <a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.</p>
 <p >The SCVD file format is described in the following sections:</p><ul>
 <li><a class="el" href="xml_elements.html">XML Elements</a> : specifies the structure and top level elements of an SCVD file.</li>
 <li><a class="el" href="Symbol_Access.html">Symbol Access</a> : explains how to refer to application symbols when reading program variables.</li>
@@ -118,20 +118,16 @@ $(document).ready(function(){initNavTree('SCVD_Format.html',''); initResizable()
 </ul>
 <h1><a class="anchor" id="scvd_validate"></a>
 SCVD File Validation</h1>
-<p >An *.SCVD file is validated with the following steps:</p>
-<ol type="1">
-<li>The schema file <b>Component_Viewer.xsd</b> specifies the XML format. Use this schema file together with XML tools to check correctness of an *.scvd file.</li>
-<li>Start the <b>uVision Debugger</b> and verify that no error messages are displayed in the debug command window and when opening the software component watch window.</li>
-</ol>
+<p >The schema file <a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>. specifies the XML format. Use this schema file together with XML tools for validating an *.scvd file.</p>
 <h1><a class="anchor" id="scvd_in_debug"></a>
-Using SCVD Files in the Debugger</h1>
-<p >To use a *.SCVD file in the uVision Debugger:</p><ul>
-<li>Add the SCVD file to uVision as described in <a href="http://www.keil.com/support/man/docs/uv4/uv4_ca_manage_scvd.htm" target="_blank"><b>Manage Component Viewer Description Files</b></a>.</li>
+Using SCVD Files in a Debugger</h1>
+<p >The following steps explain how to use an *.SCVD file in the µVision Debugger. Other tools might require different steps:</p><ul>
+<li>Add the SCVD file to µVision as described in <a href="https://developer.arm.com/documentation/101407/0538/Creating-Applications/Tips-and-Tricks/Manage-Component-Viewer-Description-Files" target="_blank"><b>Manage Component Viewer Description Files</b></a>.</li>
 <li>Use the debug windows as described in <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a>.</li>
 </ul>
 <h1><a class="anchor" id="scvd_in_packs"></a>
 SCVD Files in Software Packs</h1>
-<p >Software components which are part of Software Packs may add related *.SCVD files directly in the Package Description file (*.pdsc) using the &lt;file&gt; element category <span class="XML-Token">other</span>. In the *.pdsc file example below <span class="XML-Token">Network.scvd</span> is added to the debugger when the component <span class="XML-Token">:Network:Core</span> is selected. For details, refer to <a href="http://www.keil.com/pack/doc/CMSIS/Pack/html/pdsc_components_pg.html#element_file" target="_blank"><b>CMSIS-Pack - Pack Description (*.PDSC) Format</b></a>.</p>
+<p >Software components which are part of Software Packs may add related *.SCVD files directly in the Package Description file (*.pdsc) using the &lt;file&gt; element category <span class="XML-Token">other</span>. In the *.pdsc file example below <span class="XML-Token">Network.scvd</span> is added to the debugger when the component <span class="XML-Token">:Network:Core</span> is selected. For details, refer to <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/pdsc_components_pg.html" target="_blank"><b>CMSIS-Pack - Pack Description (*.PDSC) Format</b></a>.</p>
 <div class="fragment"><div class="line">&lt;component CClass=<span class="stringliteral">&quot;Network&quot;</span> Cgroup=<span class="stringliteral">&quot;Core&quot;</span>&gt;</div>
 <div class="line">  &lt;files&gt;</div>
 <div class="line">    &lt;file category=<span class="stringliteral">&quot;library&quot;</span>  name=<span class="stringliteral">&quot;Network/Lib/ARM/Network.lib&quot;</span>/&gt;</div>

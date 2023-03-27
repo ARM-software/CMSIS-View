@@ -147,7 +147,7 @@ Event id</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">0x40 .. 0x7F (64 .. 127)   </td><td class="markdownTableBodyNone">third party middleware components    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">0x80 .. 0xEE (128 .. 238)   </td><td class="markdownTableBodyNone">MDK middleware components    </td></tr>
+<td class="markdownTableBodyNone">0x80 .. 0xEE (128 .. 238)   </td><td class="markdownTableBodyNone">MDK-Middleware components    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">0xEF (239)   </td><td class="markdownTableBodyNone">Start/Stop events for Event Statistic information    </td></tr>
 <tr class="markdownTableRowOdd">
@@ -166,7 +166,7 @@ Event id</h1>
 </ul>
 <h1><a class="anchor" id="er_config"></a>
 Configuration</h1>
-<p >Selecting the software component <b>Compiler:Event Recorder</b> to a project will add the file <em>EventRecorderConf.h</em> that is used to define the configuration parameters of the <b>Event Recorder</b>. It uses <a href="http://www.keil.com/pack/doc/CMSIS/Pack/html/configWizard.html" class="el" target="_blank">Configuration Wizard Annotations</a> that show a graphical representation of the settings in MDK:</p>
+<p >Selecting the software component <b>Compiler:Event Recorder</b> to a project will add the file <em>EventRecorderConf.h</em> that is used to define the configuration parameters of the <b>Event Recorder</b>. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:</p>
 <p ><img src="config_wizard.png" alt="" class="inline" title="EventRecorderConf.h in Configuration Wizard View"/> <br  />
 </p>
 <table class="markdownTable">
@@ -208,12 +208,10 @@ Configure for targets without DWT Cycle Counter</h2>
 <p ><b>SysTick</b></p>
 <p >For applications that do not use the SysTick timer, you may configure EventRecorderConf.h with: </p><div class="fragment"><div class="line">#define EVENT_TIMESTAMP_SOURCE  1             // use SysTick</div>
 <div class="line">#define EVENT_TIMESTAMP_FREQ    25000000U     // processor core clock (input frequency to SysTick)</div>
-</div><!-- fragment --><p >The example project <a class="el" href="scvd_CM0_SysTick.html">SCVD Cortex-M0 SysTick</a> shows this configuration.</p>
-<p ><b>CMSIS-RTOS2 System Timer</b></p>
+</div><!-- fragment --><p ><b>CMSIS-RTOS2 System Timer</b></p>
 <p >For applications that use a CMSIS-RTOS2 compliant RTOS (SysTick timer used by RTOS), you may configure EventRecorderConf.h with: </p><div class="fragment"><div class="line">#define EVENT_TIMESTAMP_SOURCE  2             // use CMSIS-RTOS2 System Timer</div>
 <div class="line">#define EVENT_TIMESTAMP_FREQ    25000000U     // processor core clock (input frequency to SysTick)</div>
-</div><!-- fragment --><p >The example project <a class="el" href="scvd_CM0_RTOS.html">SCVD Cortex-M0 RTOS</a> shows this configuration.</p>
-<h2><a class="anchor" id="simulation"></a>
+</div><!-- fragment --><h2><a class="anchor" id="simulation"></a>
 DWT Cycle Counter with µVision simulator</h2>
 <p >The DWT Cycle Counter can be simulated with the following debug initialization file, for example Debug_Sim.ini: </p><div class="fragment"><div class="line">MAP 0xE0001000, 0xE0001007 READ WRITE</div>
 <div class="line"> </div>
@@ -225,8 +223,7 @@ DWT Cycle Counter with µVision simulator</h2>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">DWT_CYCCNT()</div>
-</div><!-- fragment --><p >Refer to the <a class="el" href="MyComponent.html">SCVD in MyComponent</a> to see how it is used in a µVision project.</p>
-<h1><a class="anchor" id="er_req"></a>
+</div><!-- fragment --><h1><a class="anchor" id="er_req"></a>
 Resource requirements</h1>
 <p ><b>Technical data of Event Recorder firmware</b></p>
 <p >Target: Cortex-M3 using DWT cycle counter as timer</p>

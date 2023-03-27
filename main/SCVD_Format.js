@@ -1,7 +1,7 @@
 var SCVD_Format =
 [
     [ "SCVD File Validation", "SCVD_Format.html#scvd_validate", null ],
-    [ "Using SCVD Files in the Debugger", "SCVD_Format.html#scvd_in_debug", null ],
+    [ "Using SCVD Files in a Debugger", "SCVD_Format.html#scvd_in_debug", null ],
     [ "SCVD Files in Software Packs", "SCVD_Format.html#scvd_in_packs", null ],
     [ "XML Elements", "xml_elements.html", "xml_elements" ],
     [ "Symbol Access", "Symbol_Access.html", null ],

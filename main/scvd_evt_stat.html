@@ -107,95 +107,89 @@ $(document).ready(function(){initNavTree('scvd_evt_stat.html',''); initResizable
   <div class="headertitle"><div class="title">SCVD Event Statistics </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >This example project shows how to use start/stop events with the Event Recorder. For further details refer to <a class="el" href="ev_stat.html#es_use">Using Event Statistics</a>.</p>
+<div class="textblock"><p >This example project shows how to use start/stop events with the Event Recorder.</p>
 <p >The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer. A call to EventStop with slot 15 stops the timers of all slots in the specific group.</p>
 <p >This demo application does some time consuming calculations that are recorded. It runs in simulation and does not require any hardware to be present.</p>
 <p ><b>main.c File</b></p>
-<div class="fragment"><div class="line">#include &quot;RTE_Components.h&quot;</div>
-<div class="line">#include  CMSIS_device_header</div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;RTE_Components.h&quot;</span>             <span class="comment">// Component selection</span></div>
+<div class="line"><span class="preprocessor">#include CMSIS_device_header            </span><span class="comment">// defined in the RTE_Components.h file</span></div>
 <div class="line"> </div>
-<div class="line">#ifndef RTE_Compiler_EventRecorder</div>
-<div class="line">#warning This example requires the Event Recorder component</div>
-<div class="line">#endif</div>
+<div class="line"><span class="preprocessor">#include &quot;EventRecorder.h&quot;</span></div>
 <div class="line"> </div>
-<div class="line">#include &quot;EventRecorder.h&quot;</div>
-<div class="line">#include &lt;math.h&gt;</div>
-<div class="line">#include &lt;stdlib.h&gt;</div>
+<div class="line"><span class="preprocessor">#include &lt;math.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
 <div class="line"> </div>
-<div class="line">#define TABLE_SIZE 1000</div>
-<div class="line">float sin_table[TABLE_SIZE];</div>
+<div class="line"><span class="preprocessor">#define TABLE_SIZE 1000</span></div>
+<div class="line"><span class="keywordtype">float</span> sin_table[TABLE_SIZE];</div>
 <div class="line"> </div>
-<div class="line">// Calculate table with sine values </div>
-<div class="line">void CalcSinTable (void)  {</div>
-<div class="line">  unsigned int i, max_i;</div>
-<div class="line">  float f = 0.0;</div>
-<div class="line">  </div>
+<div class="line"><span class="comment">// Calculate table with sine values</span></div>
+<div class="line"><span class="keywordtype">void</span> CalcSinTable (<span class="keywordtype">void</span>)  {</div>
+<div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i, max_i;</div>
+<div class="line">  <span class="keywordtype">float</span> f = 0.0;</div>
+<div class="line"> </div>
 <div class="line">  max_i = TABLE_SIZE - (rand () % 500);</div>
-<div class="line">  EventStartAv (15, max_i, 0);                  // Start group A, slot 15, passing the max_i variable</div>
-<div class="line">  for (i = 0; i &lt; max_i; i++)  {</div>
-<div class="line">    if (i == 200)  {</div>
-<div class="line">       EventStartAv (0, max_i, 0);              // Start group A, slot 0, passing the max_i variable</div>
+<div class="line">  <a class="code hl_define" href="group__Event__Execution__Statistic.html#ga04bc2078e175cb140d2d6c63b735de5a">EventStartAv</a> (15, max_i, 0);                  <span class="comment">// Start group A, slot 15, passing the max_i variable</span></div>
+<div class="line">  <span class="keywordflow">for</span> (i = 0; i &lt; max_i; i++)  {</div>
+<div class="line">    <span class="keywordflow">if</span> (i == 200)  {</div>
+<div class="line">       <a class="code hl_define" href="group__Event__Execution__Statistic.html#ga04bc2078e175cb140d2d6c63b735de5a">EventStartAv</a> (0, max_i, 0);              <span class="comment">// Start group A, slot 0, passing the max_i variable</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    sin_table[i] = sinf(f);</div>
 <div class="line">    f = f + (3.141592 / TABLE_SIZE);</div>
-<div class="line">  </div>
-<div class="line">    if (i == 800)  {                            // Measure 800 table entries</div>
-<div class="line">      EventStopA (0);                           // Stop group A, slot 0</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (i == 800)  {                            <span class="comment">// Measure 800 table entries</span></div>
+<div class="line">      <a class="code hl_define" href="group__Event__Execution__Statistic.html#ga272b6974b8639ccdbde641aee2f32f80">EventStopA</a> (0);                           <span class="comment">// Stop group A, slot 0</span></div>
 <div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  EventStopA (15);                              // Stop group A, slot 15 (stops also slots 0..14)</div>
+<div class="line">   <a class="code hl_define" href="group__Event__Execution__Statistic.html#ga272b6974b8639ccdbde641aee2f32f80">EventStopA</a> (15);                              <span class="comment">// Stop group A, slot 15 (stops also slots 0..14)</span></div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">// Return number of sqrt operations to exceed sum</div>
-<div class="line">unsigned int FindSqrtSum (float max_sum)  {</div>
-<div class="line">  unsigned int i;</div>
-<div class="line">  float sqrt_sum;</div>
-<div class="line">   </div>
+<div class="line"><span class="comment">// Return number of sqrt operations to exceed sum</span></div>
+<div class="line"><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> FindSqrtSum (<span class="keywordtype">float</span> max_sum)  {</div>
+<div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i;</div>
+<div class="line">  <span class="keywordtype">float</span> sqrt_sum;</div>
+<div class="line"> </div>
 <div class="line">  sqrt_sum = 0.0;</div>
-<div class="line">  for (i = 0; i &lt; 10000; i++) {</div>
-<div class="line">    sqrt_sum += sqrtf((float) i);</div>
-<div class="line">    if (sqrt_sum &gt; max_sum)  {</div>
-<div class="line">      return (i);</div>
+<div class="line">  <span class="keywordflow">for</span> (i = 0; i &lt; 10000; i++) {</div>
+<div class="line">    sqrt_sum += sqrtf((<span class="keywordtype">float</span>) i);</div>
+<div class="line">    <span class="keywordflow">if</span> (sqrt_sum &gt; max_sum)  {</div>
+<div class="line">      <span class="keywordflow">return</span> (i);</div>
 <div class="line">    }</div>
 <div class="line">  }</div>
-<div class="line">  return (i);</div>
+<div class="line">  <span class="keywordflow">return</span> (i);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">unsigned int j, num, MaxSqrtSum;</div>
+<div class="line"><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> j, num, MaxSqrtSum;</div>
 <div class="line"> </div>
-<div class="line">int main (void) {</div>
 <div class="line"> </div>
-<div class="line">  SystemCoreClockUpdate();                      // System Initialization</div>
-<div class="line">  </div>
-<div class="line">  EventRecorderInitialize(EventRecordAll, 1U);  // Initialize and start Event Recorder</div>
+<div class="line"><span class="keywordtype">int</span> main (<span class="keywordtype">void</span>) {</div>
 <div class="line"> </div>
-<div class="line">  EventStartC (0);                              // start measurement event group C, slot 0</div>
+<div class="line">  SystemCoreClockUpdate();                      <span class="comment">// System Initialization</span></div>
 <div class="line"> </div>
-<div class="line">  for (j = 0; j &lt; 1000; j++)  {</div>
-<div class="line">    CalcSinTable ();                            // calculate table with sinus values</div>
-<div class="line">  </div>
-<div class="line">    EventStartB(0);                             // start group B, slot 0</div>
-<div class="line">    MaxSqrtSum = rand () / 65536;               // limit for sqrt calculation</div>
-<div class="line">    num = FindSqrtSum ((float) MaxSqrtSum);     // return number of sqrt operations</div>
-<div class="line">    EventStopBv(0, MaxSqrtSum, num);            // stop group B, slot 0, output values: MaxSqrtSum, num</div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1U); <span class="comment">// Initialize and start Event Recorder</span></div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Time.html#ga560a1e7ee682be19357c1cb72d6d081b">EventRecorderClockUpdate</a>();</div>
+<div class="line">  <a class="code hl_define" href="group__Event__Execution__Statistic.html#gaa847ea3ad2a5b60f0fb7db7fc5ab0854">EventStartC</a> (0);                              <span class="comment">// start measurement event group C, slot 0</span></div>
+<div class="line">  printf (<span class="stringliteral">&quot;Started\n&quot;</span>);</div>
+<div class="line">  <span class="keywordflow">for</span> (j = 0; j &lt; 10000; j++)  {</div>
+<div class="line">    CalcSinTable ();                            <span class="comment">// calculate table with sinus values</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="group__Event__Execution__Statistic.html#gab30990477409902c0a721f5d7ec15cbd">EventStartB</a>(0);                             <span class="comment">// start group B, slot 0</span></div>
+<div class="line">    MaxSqrtSum = rand () / 65536;               <span class="comment">// limit for sqrt calculation</span></div>
+<div class="line">    num = FindSqrtSum ((<span class="keywordtype">float</span>) MaxSqrtSum);     <span class="comment">// return number of sqrt operations</span></div>
+<div class="line">    <a class="code hl_define" href="group__Event__Execution__Statistic.html#gaf60ad8252136f7e6c051d1d4e46387c7">EventStopBv</a>(0, MaxSqrtSum, num);            <span class="comment">// stop group B, slot 0, output values: MaxSqrtSum, num</span></div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  EventStopC(0);                                // stop measurement event group C, slot 0</div>
-<div class="line">  </div>
-<div class="line">  for (;;) {}</div>
+<div class="line">  <a class="code hl_define" href="group__Event__Execution__Statistic.html#ga6b39b6771769a2a9e1ba9c8fda33e1d7">EventStopC</a>(0);                                <span class="comment">// stop measurement event group C, slot 0</span></div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">while</span> (1) {</div>
+<div class="line">    __NOP();</div>
+<div class="line">  }</div>
 <div class="line">}</div>
 </div><!-- fragment --><p ><b>Build and run</b></p>
-<ol type="1">
-<li>Open the project "SCVD Event Statistic" from Pack Installer (search for <em>uVision</em> <em>Simulator</em> in the <b>Boards</b> tab).</li>
-<li>Compile and run the application.</li>
-<li>Open the windows <b>View - Analysis Windows - <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm" target="_blank"><b>Event Recorder</b></a></b> and <b>View - Analysis Windows - <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a></b> to verify the output.</li>
-</ol>
-<p ><img src="er_with_statistics.png" alt="" class="inline" title="Event Recorder with Start/Stop events and values"/></p>
-<p ><br  />
-</p>
-<p ><img src="es_start_stop_wo_energy.png" alt="" class="inline" title="Event Statistics"/> </p>
+<p >This example project does not require an IDE and can be built using the <a href="https://github.com/Open-CMSIS-Pack/cmsis-toolbox" target="_blank">CMSIS-Toolbox</a>.</p>
+<p >Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the <code>README.md</code> file to build and run the project. Use the <a class="el" href="evntlst.html">eventlist</a> application to anaylze the outcomes. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

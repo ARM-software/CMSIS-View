@@ -107,26 +107,12 @@ $(document).ready(function(){initNavTree('ExampleProjects.html',''); initResizab
   <div class="headertitle"><div class="title">Examples </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >The software pack <a href="https://www.keil.com/dd2/pack/#/Keil.ARM_Compiler" target="_blank"><b>Keil:ARM_Compiler</b></a> contains several example projects that show the usage of Component Viewer and Event Recorder. These example projects contain Software Component Viewer Description (*.SCVD) files. Use the <a href="https://www2.keil.com/mdk5/packinstaller" target="_blank"><b>Pack Installer</b></a> to copy the projects to working folder. Build the selected project and enter a debug session. All projects run in simulation and do not require hardware.</p>
-<p >These examples show you how to utilize <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a> and <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm" target="_blank"><b>Event Recorder</b></a> in own application software. All example projects are based on an Arm Cortex-M processors and are configured to use processor simulation. Additional instructions have been added to the project descriptions.</p>
-<p >The following SCVD example projects are available:</p>
+<div class="textblock"><p ><a class="anchor" id="md_src_examples"></a> This repository and its CMSIS-Pack contain an example project that shows how to utilize Event Recorder in an application. It is based on an Arm Cortex-M processor, uses the CMSIS-Toolbox for project build, and runs on Arm Virtual Hardware.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">Example Project   </th><th class="markdownTableHeadLeft">Description    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="simple_scvd.html">SCVD Simple Example</a>   </td><td class="markdownTableBodyLeft">Simple example that shows how to display two variables in the <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a>.    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><a class="el" href="complex_scvd.html">SCVD Complex Example</a>   </td><td class="markdownTableBodyLeft">More complex <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a> example.    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="MyComponent.html">SCVD in MyComponent</a>   </td><td class="markdownTableBodyLeft">Example showing <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a> and <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm" target="_blank"><b>Event Recorder</b></a> and how to create links to documentation and include SCVD files in software packs.    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><a class="el" href="scvd_evt_stat.html">SCVD Event Statistics</a>   </td><td class="markdownTableBodyLeft">Example that shows the usage of start/stop events for statistical code profiling with the <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm" target="_blank"><b>Event Statistics</b></a> window.    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="scvd_evt_state.html">SCVD Event State</a>   </td><td class="markdownTableBodyLeft">Example that uses state information to display time-line information in the <a href="http://www.keil.com/support/man/docs/uv4/uv4_db_dbg_systemanalyzer.htm" target="_blank"><b>System Analyzer</b></a> window.    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><a class="el" href="scvd_CM0_SysTick.html">SCVD Cortex-M0 SysTick</a>   </td><td class="markdownTableBodyLeft">Example that shows the Event Recorder with SysTick timer as time source (for Cortex-M0/M0+/M23)    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="scvd_CM0_RTOS.html">SCVD Cortex-M0 RTOS</a>   </td><td class="markdownTableBodyLeft">Example that shows the Event Recorder with RTOS System Timer as time source (for Cortex-M0/M0+/M23)   </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="scvd_evt_stat.html">SCVD Event Statistics</a>   </td><td class="markdownTableBodyLeft">Shows the usage of start/stop events for statistical code profiling.   </td></tr>
 </table>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
