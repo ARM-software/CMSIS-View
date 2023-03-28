@@ -9,7 +9,7 @@
 # Generated Files
 Local_Release
 Documentation/html
-/Doxygen/src/history.md
+/Doxygen/src/history.txt
 /Doxygen/view.dxy
 /PACK.xsd
 /output/ARM.CMSIS-View.1.1.2-dev4+ge8d94f5.pack
