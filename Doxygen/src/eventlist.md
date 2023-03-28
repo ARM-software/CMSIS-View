@@ -2,7 +2,7 @@
 
 ## Overview {#about_evntlst}
 
-Eventlist is a command line tool for processing Event Recorder data stored to a log file. 
+Eventlist is a command line tool for processing Event Recorder data stored to a log file.
 
 The utility is a Go application that is available for all major operating systems and is run from the command line. Refer to the
 <a href="https://github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist">source code</a> for more information including the invocation details.

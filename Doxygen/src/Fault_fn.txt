@@ -1,0 +1,36 @@
+/**
+\defgroup Fault Fault
+\brief Store, record, and analyze Cortex-M Exception Fault information.
+\details
+This section contains the functions of the component CMSIS-View:Fault that store, record, and analyze the Cortex-M Exception Fault information.
+
+@{
+*/
+
+/**
+\defgroup Fault_Storage Fault Storage
+\brief Functions that store the Cortex-M Exception Fault information into memory.
+\details
+This section contains the functions that of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in memory.
+
+*/
+
+/**
+@}
+*/
+
+/**
+@{
+*/
+
+/**
+\defgroup Fault_Record Fault Record
+\brief Decode and record the Cortex-M Exception Fault information via Event Recorder.
+\details
+This section contains the functions that of the component CMSIS-View:Fault:Record that decode and record the Cortex-M Exception Fault information using the Event Recorder.
+
+*/
+
+/**
+@}
+*/

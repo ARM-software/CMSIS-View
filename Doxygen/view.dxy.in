@@ -44,7 +44,7 @@ PROJECT_NUMBER         = "Version {projectNumber}"
 # for a project that appears at the top of each page and should give viewer a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "Debugger Views for Status and Event Information"
+PROJECT_BRIEF          = "Record program events, display status information, and analyze execution faults"
 
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55
@@ -894,6 +894,8 @@ INPUT                  = src/main.md \
                          src/examples.md \
                          src/cmp_viewer.md \
                          src/EventRecorder_fn.txt \
+                         src/Fault.md \
+                         src/Fault_fn.txt \
                          src/scvd_format.txt \
                          ../EventRecorder/Include/EventRecorder.h \
                          ../EventRecorder/Config/EventRecorderConf.h

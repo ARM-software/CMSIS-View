@@ -5,23 +5,5 @@
   <th>Version</th>
   <th>Description</th>
 </tr>
-<tr>
-  <td>v1.1.1</td>
-  <td>
-    Added clock frequency to internal Event Recorder Initialization message.
-  </td>
-</tr>
-<tr>
-  <td>v1.1.0</td>
-  <td>
-    Added Event Recorder logging via Semihosting.
-  </td>
-</tr>
-<tr>
-  <td>v1.0.0</td>
-  <td>
-    Open Source Version of Event Recorder Version 1.4.0 under Apache 2.0.
-  </td>
-</tr>
 </table>
 */
