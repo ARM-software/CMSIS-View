@@ -50,5 +50,6 @@ var searchData=
   ['evtprintf_5fno_47',['EvtPrintf_No',['../group__EventRecorder__CompNoDefs.html#ga8c9a9414ff48f3f794c2bfa2951c2f98',1,'EventRecorder.h']]],
   ['evtstatistics_5fno_48',['EvtStatistics_No',['../group__EventRecorder__CompNoDefs.html#ga0dc3370661899f6f018283bbf65ce8dc',1,'EventRecorder.h']]],
   ['examples_49',['Examples',['../ExampleProjects.html',1,'index']]],
-  ['expressions_50',['Expressions',['../scvd_expression.html',1,'SCVD_Format']]]
+  ['exception_20fault_20analysis_50',['Exception Fault Analysis',['../fault.html',1,'index']]],
+  ['expressions_51',['Expressions',['../scvd_expression.html',1,'SCVD_Format']]]
 ];
