@@ -35,8 +35,8 @@
   </conditions>
 
   <components>
-    <component Cclass="CMSIS" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.2" condition="Cortex-M Device">
-      <description>Event Recording and Component Viewer via Debug Access Port (DAP)</description>
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.2" condition="Cortex-M Device">
+      <description>Event Recording via Debug Access Port (DAP)</description>
       <RTE_Components_h>
         #define RTE_Compiler_EventRecorder
         #define RTE_Compiler_EventRecorder_DAP
@@ -49,8 +49,8 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.2" condition="Cortex-M Device">
-      <description>Event Recording and Component Viewer via Debug Access Port (DAP) and Semihosting</description>
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.2" condition="Cortex-M Device">
+      <description>Event Recording via Debug Access Port (DAP) and Semihosting</description>
       <RTE_Components_h>
         #define RTE_Compiler_EventRecorder
         #define RTE_Compiler_EventRecorder_DAP
