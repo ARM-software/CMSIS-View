@@ -22,6 +22,7 @@ PACK_BUILD=./build
 PACK_DIRS="
   Documentation
   EventRecorder
+  Fault
 "
 
 # Specify file names to be added to pack base directory
