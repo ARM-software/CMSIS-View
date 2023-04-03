@@ -574,7 +574,7 @@ func Test_eventProperty_getLast(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
-		values [16]eventStatistic
+		Values [16]eventStatistic
 	}
 	type args struct {
 		idx uint16
@@ -593,7 +593,7 @@ func Test_eventProperty_getLast(t *testing.T) {
 			t.Parallel()
 
 			ep := &eventProperty{
-				values: tt.fields.values,
+				values: tt.fields.Values,
 			}
 			if got := ep.getLast(tt.args.idx); got != tt.want {
 				t.Errorf("eventProperty.getLast() %s = %v, want %v", tt.name, got, tt.want)
@@ -701,6 +701,10 @@ func TestOutput_printStatistic(t *testing.T) { //nolint:golint,paralleltest
 		{"header", fields{props0, 15, 20}, args{nil, 1}, header, false},
 		{"line1", fields{props1, 15, 20}, args{nil, 1}, header + line1, false},
 	}
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
@@ -709,7 +713,7 @@ func TestOutput_printStatistic(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.printStatistic(tt.args.out, tt.args.eventCount); (err != nil) != tt.wantErr {
+			if err := o.printStatistic(tt.args.out, tt.args.eventCount, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.printStatistic() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -806,6 +810,10 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		{"read3", fields{}, args{}, &s11, line3, false},
 		{"readNix", fields{}, args{}, &sNix, "", false},
 	}
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
@@ -819,7 +827,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.printEvents(tt.args.out, tt.args.in, tt.args.evdefs, tt.args.typedefs); (err != nil) != tt.wantErr {
+			if err := o.printEvents(tt.args.out, tt.args.in, tt.args.evdefs, tt.args.typedefs, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.printEvents() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -952,6 +960,10 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 		{"statEnd", fields{}, args{eventFile: &s10}, line1, false},
 		{"statBegin", fields{}, args{eventFile: &s10, statBegin: true}, line2, false},
 	}
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
@@ -963,7 +975,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.print(tt.args.out, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := o.print(tt.args.out, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -1006,6 +1018,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		statBegin     bool
 		showStatistic bool
 	}
+	formatType := "txt"
 	tests := []struct {
 		name    string
 		args    args
@@ -1017,7 +1030,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)

@@ -115,12 +115,14 @@ func main() {
 		infoOpt(commFlag, "o", "", "<fileName>")
 		infoOpt(commFlag, "s", "statistic", "")
 		infoOpt(commFlag, "V", "version", "")
+		infoOpt(commFlag, "f", "format", "<formatType>")
 		usage = true
 	}
 	// parse command line
 	commFlag.Var(&paths, "I", "include SCVD file name")
 	outputFile := commFlag.String("o", "", "output file name")
 	elfFile := commFlag.String("a", "", "elf/axf file name")
+	formatType := commFlag.String("f", "", "format type: txt, json, xml")
 	var statBegin bool
 	commFlag.BoolVar(&statBegin, "b", false, "show statistic at beginning")
 	commFlag.BoolVar(&statBegin, "begin", false, "show statistic at beginning")
@@ -169,7 +171,7 @@ func main() {
 		return
 	}
 
-	if err := output.Print(outputFile, &eventFile[0], evdefs, typedefs, statBegin, showStatistic); err != nil {
+	if err := output.Print(outputFile, formatType, &eventFile[0], evdefs, typedefs, statBegin, showStatistic); err != nil {
 		fmt.Print(Progname + ": ")
 		fmt.Println(err)
 	}

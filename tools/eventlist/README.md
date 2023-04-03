@@ -9,13 +9,14 @@ Usage:
   eventlist [-I <scvdFile>]... [-o <outputFile>] [-a <elf/axfFile>] [-b] <logFile>
 
 Flags:
-  -a <fileName>   elf/axf file name
-  -b --begin      show statistic at beginning
-  -h --help       show short help
-  -I <fileName>   include SCVD file name
-  -o <fileName>   output file name
-  -s --statistic  show statistic only
-  -V --version    show version info
+  -a <fileName>     elf/axf file name
+  -b --begin        show statistic at beginning
+  -f <txt/xml/json> output format, default: txt
+  -h --help         show short help
+  -I <fileName>     include SCVD file name
+  -o <fileName>     output file name
+  -s --statistic    show statistic only
+  -V --version      show version info
 ```
 
 ## Building the tool locally

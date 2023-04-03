@@ -6,6 +6,9 @@
 *.so
 *.dylib
 
+# macOS
+.DS_Store
+
 # Generated Files
 Local_Release
 Documentation/html
