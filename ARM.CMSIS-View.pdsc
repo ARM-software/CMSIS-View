@@ -32,6 +32,11 @@
       <accept Dcore="ARMV8MML"/>
       <accept Dcore="ARMV81MML"/>
     </condition>
+    <condition id="ConditionsForFaultRecord">
+      <description>Conditions for Fault Record</description>
+      <require Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage"/>
+      <require Cclass="CMSIS-View" Cgroup="Event Recorder"/>
+    </condition>
   </conditions>
 
   <components>
@@ -62,6 +67,31 @@
         <file category="source" name="EventRecorder/Source/EventRecorder.c"/>
         <file category="doc"    name="Documentation/html/index.html"/>
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
+      </files>
+    </component>
+    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cversion="0.4.0" condition="Cortex-M Device">
+      <description>Fault Storage</description>
+      <RTE_Components_h>
+        #define RTE_CMSIS_View_Fault_Storage
+      </RTE_Components_h>
+      <files>
+        <file category="header" name="Fault/Include/ARM_Fault.h"/>
+        <file category="source" name="Fault/Source/ARM_FaultStorage.c"/>
+        <file category="source" name="Fault/Template/ARM_FaultPrint.c" version="0.4.0" attr="template" select="Output decoded fault information via STDIO"/>
+        <file category="doc"    name="Documentation/html/index.html"/>
+        <file category="other"  name="Fault/ARM_Fault.scvd"/>
+      </files>
+    </component>
+    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cversion="0.4.0" condition="ConditionsForFaultRecord">
+      <description>Fault Record (Output decoded fault information via EventRecorder)</description>
+      <RTE_Components_h>
+        #define RTE_CMSIS_View_Fault_Record
+      </RTE_Components_h>
+      <files>
+        <file category="header" name="Fault/Include/ARM_Fault.h"/>
+        <file category="source" name="Fault/Source/ARM_FaultRecord.c"/>
+        <file category="doc"    name="Documentation/html/index.html"/>
+        <file category="other"  name="Fault/ARM_Fault.scvd"/>
       </files>
     </component>
   </components>
