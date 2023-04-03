@@ -103,12 +103,12 @@ uint32_t ARM_FaultOccurred (void) {
     }
   }
 
-  return fault_info_valid;  
+  return fault_info_valid;
 }
 
 /**
   Save the fault information.
-  Must be called from fault handler with preserved Link Register value, 
+  Must be called from fault handler with preserved Link Register value,
   typically by branching to this function.
 */
 __NAKED void ARM_FaultSave (void) {
@@ -201,7 +201,7 @@ __NAKED void ARM_FaultSave (void) {
 
  /* Determine if stack contains valid state context (if fault was not a stacking fault).
     If stack information is not valid mark it by setting bit [1] of the R4 to value 1.
-    Note: for Armv6-M and Armv8-M Baseline CFSR register is not available, so stack is 
+    Note: for Armv6-M and Armv8-M Baseline CFSR register is not available, so stack is
           considered valid although it might not always be so. */
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)   // If fault registers exist
     "ldr   r1,  =%c[cfsr_err_msk]\n"    // R1 = (SCB_CFSR_Stack_Err_Msk)
