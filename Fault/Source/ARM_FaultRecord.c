@@ -139,7 +139,7 @@ void ARM_FaultRecord (void) {
   // Check if CRC of the ARM_FaultInfo is correct
   if (fault_info_valid != 0) {
     if (ARM_FaultInfo.crc32 != CalcCRC32(ARM_FAULT_CRC32_INIT_VAL,
-                                        (const uint8_t *)&ARM_FaultInfo.type,
+                                        (const uint8_t *)&ARM_FaultInfo.count,
                                         (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.magic_number) + sizeof(ARM_FaultInfo.crc32))),
                                          ARM_FAULT_CRC32_POLYNOM)) {
       fault_info_valid  = 0;
