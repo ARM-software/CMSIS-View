@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['recording_20control_0',['Recording Control',['../group__EventRecorder__recdefs.html',1,'']]]
+  ['macros_0',['Macros',['../group__Fault__Storage__Macros.html',1,'']]]
 ];

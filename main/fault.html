@@ -112,8 +112,36 @@ $(document).ready(function(){initNavTree('fault.html',''); initResizable(); });
 Overview</h1>
 <p >The software components under <b>CMSIS-View:Fault</b> provide infrastructure and <a href="modules.html">API (function calls)</a> to store, record, and analyze the Cortex-M Exception Fault information. The Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, division by zero. With the component <b>CMSIS-View:Fault:Storage</b> an exception fault can be saved for later analysis. The component <b>CMSIS-View:Fault:Record</b> decodes an saved exception fault and records this information using the <b>Event Recorder</b>.</p>
 <p >A typical execution flow is shown in the diagram below.</p>
-<p ><img src="ArmFault.png" alt="" class="inline" title="Exception Fault Analysis"/> </p>
-</div></div><!-- contents -->
+<p ><img src="ArmFault.png" alt="" class="inline" title="Exception Fault Analysis"/></p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Usage example</h1>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;EventRecorder.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;ARM_Fault.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> HardFault_Handler() {</div>
+<div class="line">    <a class="code hl_function" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3" title="Save the fault information.">ARM_FaultSave</a>();</div>
+<div class="line">    <a class="code hl_function" href="group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292" title="Callback function called after fault information was saved.">ARM_FaultExit</a>();</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line">    SystemCoreClockUpdate();                      <span class="comment">// System Initialization</span></div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1U); <span class="comment">// Initialize and start Event Recorder</span></div>
+<div class="line">    <a class="code hl_function" href="group__EventRecorder__Time.html#ga560a1e7ee682be19357c1cb72d6d081b">EventRecorderClockUpdate</a>();</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">if</span> (<a class="code hl_function" href="group__Fault__Storage.html#ga46ed1c1d7ede7bea91130d1e93ab4fe1">ARM_FaultOccurred</a>()) {</div>
+<div class="line">        <a class="code hl_function" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558" title="Output decoded fault information via EventRecorder.">ARM_FaultRecord</a>();</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// ...</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordflow">while</span> (1) {</div>
+<div class="line">       __NOP();</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['recording_20control_0',['Recording Control',['../group__EventRecorder__recdefs.html',1,'']]],
-  ['revision_20history_1',['Revision History',['../rev_hist.html',1,'index']]]
+  ['fault_0',['Fault',['../group__Fault.html',1,'']]],
+  ['fault_20record_1',['Fault Record',['../group__Fault__Record.html',1,'']]],
+  ['fault_20storage_2',['Fault Storage',['../group__Fault__Storage.html',1,'']]]
 ];

@@ -46,7 +46,8 @@ var NAVTREE =
     ] ],
     [ "SCVD File Format", "SCVD_Format.html", "SCVD_Format" ],
     [ "Exception Fault Analysis", "fault.html", [
-      [ "Overview", "fault.html#about_fault", null ]
+      [ "Overview", "fault.html#about_fault", null ],
+      [ "Usage example", "fault.html#autotoc_md2", null ]
     ] ],
     [ "Examples", "ExampleProjects.html", "ExampleProjects" ],
     [ "API Reference", "modules.html", "modules" ]

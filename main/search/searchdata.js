@@ -1,24 +1,30 @@
 var indexSectionsWithContent =
 {
-  0: "/bcdefrstuvx",
-  1: "e",
-  2: "cefr",
-  3: "/bcderstuvx"
+  0: "/abcdefilmprstuvx",
+  1: "a",
+  2: "ae",
+  3: "aceilmprstx",
+  4: "cefmr",
+  5: "/bcderstuvx"
 };
 
 var indexSectionNames =
 {
   0: "all",
-  1: "functions",
-  2: "groups",
-  3: "pages"
+  1: "classes",
+  2: "functions",
+  3: "variables",
+  4: "groups",
+  5: "pages"
 };
 
 var indexSectionLabels =
 {
   0: "All",
-  1: "Functions",
-  2: "Modules",
-  3: "Pages"
+  1: "Data Structures",
+  2: "Functions",
+  3: "Variables",
+  4: "Modules",
+  5: "Pages"
 };
 
