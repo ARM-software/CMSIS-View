@@ -89,81 +89,82 @@
 extern "C" {
 #endif
 
-// Fault information type definition
+/// Fault information type definition
 typedef struct {
-  uint32_t magic_number;
-  uint32_t crc32;
-  uint32_t count;
+  uint32_t magic_number;                //!< Always set to \ref ARM_FAULT_MAGIC_NUMBER
+  uint32_t crc32;                       //!< CRC32 checksum calculated using \ref ARM_FAULT_CRC32_INIT_VAL and \ref ARM_FAULT_CRC32_POLYNOM
+  uint32_t count;                       //!< Auto-incrementing fault counter
 
-  // Fault information structure
+  /// Fault information structure
   struct {
+    /// Fault information version
     struct {
-      uint8_t minor;                    // Fault information structure version: minor
-      uint8_t major;                    // Fault information structure version: major
+      uint8_t minor;                    //!< Fault information structure version: minor, see \ref ARM_FAULT_FAULT_INFO_VER_MINOR
+      uint8_t major;                    //!< Fault information structure version: major, see \ref ARM_FAULT_FAULT_INFO_VER_MAJOR
     } version;
-    uint16_t fault_regs    :  1;        // == 1 - contains fault registers
-    uint16_t armv8m        :  1;        // == 1 - contains Armv8/8.1-M related information
-    uint16_t tz_secure     :  1;        // == 1 - recording was done running in Secure World
-    uint16_t reserved      : 13;        // Reserved (0)
+    uint16_t fault_regs    :  1;        //!< Fault registers: 0 - absent; 1 - available
+    uint16_t armv8m        :  1;        //!< Armv8/8.1-M information: 0 - absent; 1 - available
+    uint16_t tz_secure     :  1;        //!< Recording was done running in: 0 - tz-disabled or non-secure mode; 1 - secure mode
+    uint16_t reserved      : 13;        //!< Reserved (0)
   } type;
 
-  // State context (same as Basic Stack Frame)
-  uint32_t R0;                          // R0  register value before exception
-  uint32_t R1;                          // R1  register value before exception
-  uint32_t R2;                          // R2  register value before exception
-  uint32_t R3;                          // R3  register value before exception
-  uint32_t R12;                         // R12 register value before exception
-  uint32_t LR;                          // Link Register (R14) value before exception
-  uint32_t ReturnAddress;               // Return address from exception
-  uint32_t xPSR;                        // Program Status Register value before exception
+  /// State context (same as Basic Stack Frame)
+  uint32_t R0;                          //!< R0  register value before exception
+  uint32_t R1;                          //!< R1  register value before exception
+  uint32_t R2;                          //!< R2  register value before exception
+  uint32_t R3;                          //!< R3  register value before exception
+  uint32_t R12;                         //!< R12 register value before exception
+  uint32_t LR;                          //!< Link Register (R14) value before exception
+  uint32_t ReturnAddress;               //!< Return address from exception
+  uint32_t xPSR;                        //!< Program Status Register value before exception
 
-  // Common Registers
-  uint32_t xPSR_in_handler;             // Program Status Register value, in exception handler
-  uint32_t EXC_RETURN;                  // Exception Return code (LR), in exception handler
-  uint32_t MSP;                         // Main    Stack Pointer value
-  uint32_t PSP;                         // Process Stack Pointer value
+  /// Common Registers
+  uint32_t xPSR_in_handler;             //!< Program Status Register value, in exception handler
+  uint32_t EXC_RETURN;                  //!< Exception Return code (LR), in exception handler
+  uint32_t MSP;                         //!< Main    Stack Pointer value
+  uint32_t PSP;                         //!< Process Stack Pointer value
 
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-  // Fault Registers
-  uint32_t SCB_CFSR;                    // System Control Block - Configurable Fault Status Register value
-  uint32_t SCB_HFSR;                    // System Control Block - HardFault          Status Register value
-  uint32_t SCB_DFSR;                    // System Control Block - Debug Fault        Status Register value
-  uint32_t SCB_MMFAR;                   // System Control Block - MemManage Fault    Status Register value
-  uint32_t SCB_BFAR;                    // System Control Block - BusFault           Status Register value
-  uint32_t SCB_AFSR;                    // System Control Block - Auxiliary Fault    Status Register value
+  /// Fault Registers
+  uint32_t SCB_CFSR;                    //!< System Control Block - Configurable Fault Status Register value
+  uint32_t SCB_HFSR;                    //!< System Control Block - HardFault          Status Register value
+  uint32_t SCB_DFSR;                    //!< System Control Block - Debug Fault        Status Register value
+  uint32_t SCB_MMFAR;                   //!< System Control Block - MemManage Fault    Status Register value
+  uint32_t SCB_BFAR;                    //!< System Control Block - BusFault           Status Register value
+  uint32_t SCB_AFSR;                    //!< System Control Block - Auxiliary Fault    Status Register value
 #endif
 
 #if (ARM_FAULT_ARCH_ARMV8x_M != 0)
-  // Additional state context (only for Armv8/8.1-M arch)
-  uint32_t IntegritySignature;          // Integrity Signature
-  uint32_t Reserved;                    // Reserved
-  uint32_t R4;                          // R4  register value before exception
-  uint32_t R5;                          // R5  register value before exception
-  uint32_t R6;                          // R6  register value before exception
-  uint32_t R7;                          // R7  register value before exception
-  uint32_t R8;                          // R8  register value before exception
-  uint32_t R9;                          // R9  register value before exception
-  uint32_t R10;                         // R10 register value before exception
-  uint32_t R11;                         // R11 register value before exception
+  /// Additional state context (only for Armv8/8.1-M arch)
+  uint32_t IntegritySignature;          //!< Integrity Signature
+  uint32_t Reserved;                    //!< Reserved
+  uint32_t R4;                          //!< R4  register value before exception
+  uint32_t R5;                          //!< R5  register value before exception
+  uint32_t R6;                          //!< R6  register value before exception
+  uint32_t R7;                          //!< R7  register value before exception
+  uint32_t R8;                          //!< R8  register value before exception
+  uint32_t R9;                          //!< R9  register value before exception
+  uint32_t R10;                         //!< R10 register value before exception
+  uint32_t R11;                         //!< R11 register value before exception
 
-  // Additional Armv8/8.1-M arch specific Registers
-  uint32_t MSPLIM;                      // Main    Stack Pointer Limit Register value
-  uint32_t PSPLIM;                      // Process Stack Pointer Limit Register value
+  /// Additional Armv8/8.1-M arch specific Registers
+  uint32_t MSPLIM;                      //!< Main    Stack Pointer Limit Register value
+  uint32_t PSPLIM;                      //!< Process Stack Pointer Limit Register value
 #endif
 
 #if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
-  // Additional Armv8/8.1-M Mainline arch specific Fault Registers
-  uint32_t SCB_SFSR;                    // System Control Block - Secure Fault Status  Register value
-  uint32_t SCB_SFAR;                    // System Control Block - Secure Fault Address Register value
+  /// Additional Armv8/8.1-M Mainline arch specific Fault Registers
+  uint32_t SCB_SFSR;                    //!< System Control Block - Secure Fault Status  Register value
+  uint32_t SCB_SFAR;                    //!< System Control Block - Secure Fault Address Register value
 #endif
 } ARM_FaultInfo_t;
 
 // ARM Fault variables ---------------------------------------------------------
 
-// Fault component version information
+//! Fault component version information
 extern const char ARM_FaultVersion[];
 
-// Fault Information
+//! Fault Information
 extern ARM_FaultInfo_t ARM_FaultInfo;
 
 // ARM Fault Storage functions -------------------------------------------------
