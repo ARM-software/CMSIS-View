@@ -10,24 +10,11 @@
 set -o pipefail
 
 # Set version of gen pack library
-REQUIRED_GEN_PACK_LIB="0.6.0"
+REQUIRED_GEN_PACK_LIB="0.7.0"
 
 DIRNAME=$(dirname $(readlink -f $0))
-DOXYGEN=$(which doxygen 2>/dev/null)
 REQ_DXY_VERSION="1.9.2"
-
-if [[ ! -f "${DOXYGEN}" ]]; then
-    echo "Doxygen not found!" >&2
-    echo "Did you miss to add it to PATH?"
-    exit 1
-else
-    version=$("${DOXYGEN}" --version | sed -E 's/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
-    echo "Doxygen is ${DOXYGEN} at version ${version}"
-    if [[ "${version}" != "${REQ_DXY_VERSION}" ]]; then
-        echo "Doxygen required to be at version ${REQ_DXY_VERSION}!" >&2
-        exit 1
-    fi
-fi
+PACK_CHANGELOG_MODE="tag"
 
 ############ DO NOT EDIT BELOW ###########
 
@@ -62,6 +49,7 @@ function load_lib() {
 
 load_lib
 find_git
+find_doxygen "${REQ_DXY_VERSION}"
 
 if [ -z $VERSION ]; then
   VERSION_FULL=$(git_describe "pack/")
@@ -76,8 +64,8 @@ sed -e "s/{projectNumber}/${VERSION}/" view.dxy.in > view.dxy
 
 git_changelog -f html -p "pack/" > src/history.txt
 
-echo "\"${DOXYGEN}\" view.dxy"
-"${DOXYGEN}" view.dxy
+echo "\"${UTILITY_DOXYGEN}\" view.dxy"
+"${UTILITY_DOXYGEN}" view.dxy
 
 if [[ $2 != 0 ]]; then
   mkdir -p "${DIRNAME}/../Documentation/html/search/"
