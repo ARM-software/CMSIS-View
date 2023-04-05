@@ -134,8 +134,8 @@ Add Event Recorder Component</h1>
 <div class="line">int main (void) {</div>
 <div class="line">  :</div>
 <div class="line">  HAL_Init();                                     // configure hardware abstraction layer</div>
-<div class="line">  SystemClock_Config();                           // configure system clock </div>
-<div class="line">  MemoryBus_Config();                             // configure external memory bus    </div>
+<div class="line">  SystemClock_Config();                           // configure system clock</div>
+<div class="line">  MemoryBus_Config();                             // configure external memory bus</div>
 <div class="line">  EventRecorderInitialize (EventRecordAll, 1);    // initialize and start Event Recorder</div>
 <div class="line">  :</div>
 <div class="line">  // other application code</div>
@@ -195,7 +195,7 @@ Create memory region</h2>
 
 @section initial_timestamp Time Stamp Settings
 
-To avoid display problems in System Analyzer, set the &lt;b&gt;Time Stamp Clock Frequency [Hz]&lt;/b&gt; to the initially expected
+To avoid display problems in System Analyzer, set the &lt;strong&gt;Time Stamp Clock Frequency [Hz]&lt;/strong&gt; to the initially expected
 value:
 
 @image{inline} html ./images/config_wizard.png "Event Recorder Configuration Wizard"</li>
@@ -225,7 +225,7 @@ Event Annotations</h1>
 <div class="line">    ;</div>
 <div class="line">  if (some_error)  {</div>
 <div class="line">    EventRecord2 (2+EventLevelError, 0, 0);                  // Event at Error</div>
-<div class="line">    return; </div>
+<div class="line">    return;</div>
 <div class="line">  }</div>
 <div class="line">  EventRecordData (3+EventLevelOp, string, sizeof(string));  // Event at Finish</div>
 <div class="line">  return;</div>
@@ -251,7 +251,7 @@ Format Event Information</h1>
 <div class="line">    &lt;events&gt;</div>
 <div class="line">      &lt;group name=&quot;My Events Group&quot;&gt;</div>
 <div class="line">         &lt;component name=&quot;MyApp&quot;      brief=&quot;My Application&quot;    no=&quot;0x00&quot; prefix=&quot;EvrNetMM_&quot;    info=&quot;Network - System - Dynamic Memory Management&quot;/&gt;</div>
-<div class="line">      &lt;/group&gt;  </div>
+<div class="line">      &lt;/group&gt;</div>
 <div class="line"> </div>
 <div class="line">      &lt;event id=&quot;1&quot; level=&quot;API&quot;   property=&quot;MyFunction&quot;        value=&quot;parameter=%x[val1]&quot;     info=&quot;Event on start of MyFunction&quot;  /&gt;</div>
 <div class="line">      &lt;event id=&quot;2&quot; level=&quot;Error&quot; property=&quot;MyFunctionError&quot;                                  info=&quot;Event on error in MyFunction&quot; /&gt;</div>
@@ -273,11 +273,11 @@ Software Component Variants</h1>
 <h1><a class="anchor" id="printf_redirect"></a>
 Redirecting printf output</h1>
 <p >The Event Recorder can be used to retarget printf output. This is especially interesting for targets without ITM, such as Cortex-M0/M0+/M23. Steps to enable this:</p><ol type="1">
-<li>In the Manage Run-Time Environment window, set the component <b>Compiler:I/O:STDOUT</b> to use <b>Variant</b> <em>EVR</em>.</li>
-<li>Select the component <b>Compiler:Event Recorder</b> or use the <b>Resolve</b> button.</li>
+<li>In the Manage Run-Time Environment window, set the component <b>CMSIS-Compiler:I/O:STDOUT</b> to use <b>Variant</b> <em>EVR</em>.</li>
+<li>Select the component <b>CMSIS-View:Event Recorder</b> or use the <b>Resolve</b> button.</li>
 <li>In the user code, include <em>EventRecorder.h</em> and call the <code><a class="el" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize()</a></code> function in <code>main()</code>.</li>
 </ol>
-<p >Refer to the example <b><a href="../../RetargetIO/html/_retarget__examples_er.html" class="el">Retarget STDOUT via Event Recorder</a></b> in "I/O Retargeting".</p>
+<p >Refer to the example <a href="https://arm-software.github.io/CMSIS-Compiler/latest/Retarget_Examples_er.html">Retarget STDOUT via Event Recorder</a>.</p>
 <h1><a class="anchor" id="er_filtering"></a>
 Event filtering</h1>
 <p >Filtering for events reduces the amount of data transmitted from the target to the debugger. To filter for events, use the button <b>Configure Target Event Recording</b>:</p>
