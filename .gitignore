@@ -9,6 +9,7 @@
 Local_Release
 Documentation/html
 Doxygen/view.dxy
+Doxygen/src/history.txt
 /PACK.xsd
 /output/ARM.CMSIS-View.1.1.2-dev4+ge8d94f5.pack
 /output
@@ -33,9 +34,10 @@ __debug_bin
 
 /Examples/**/*.cbuild.yml
 /Examples/**/*.cprj
-/Examples/**/intdir
-/Examples/**/outdir
+/Examples/**/tmp
+/Examples/**/out
 /Examples/**/RTE/_**
+/Examples/**/RTE/**/*.base@*
 /Examples/**/*-idx.yml
 /Examples/**/*.zip
 

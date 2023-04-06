@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.4.0/tools/projmgr/schemas/cproject.schema.json
-
 project:
   components:
     - component: CMSIS:CORE
@@ -16,6 +14,6 @@ project:
           for-compiler: AC6
         - file: $OutDir(EventStatistic)$/gcc_arm.ld
           for-compiler: GCC
-        - file: $OutDir(EventStatistic)$/generic_cortex.ld
+        - file: $OutDir(EventStatistic)$/generic_cortex.icf
           for-compiler: IAR
       group: main

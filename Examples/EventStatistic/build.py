@@ -18,9 +18,9 @@ from matrix_runner import main, matrix_axis, matrix_action, matrix_command, matr
 
 @matrix_axis("device", "d", "Device(s) to be considered.")
 class DeviceAxis(Enum):
-    CM3    = ('Cortex-M3',  'CM3')
-    CM55   = ('Cortex-M55', 'CM55')
-    SSE300 = ('Corstone_SSE-300', 'SSE300')
+    CM3    = ('CM3', 'Cortex-M3')
+    CM55   = ('CM55', 'Cortex-M55')
+    SSE300 = ('SSE300', 'Corstone_SSE-300')
     S32K344 = ('S32K344')
 
     @property
@@ -54,7 +54,7 @@ class CompilerAxis(Enum):
         ext = {
             CompilerAxis.AC6: 'axf',
             CompilerAxis.GCC: 'elf',
-            CompilerAxis.IAR: 'elf'
+            CompilerAxis.IAR: 'out'
         }
         return ext[self]
 
@@ -79,6 +79,10 @@ def config_suffix(config, timestamp=True):
     return suffix
 
 
+def solution_name():
+    return "EventStatistic.csolution.yaml"
+
+
 def project_name(config):
     return f"EventStatistic.{config.optimize}+{config.device[1]}"
 
@@ -88,11 +92,11 @@ def project_dir(config):
 
 
 def project_outdir(config):
-    return f"{project_dir(config)}/outdir"
+    return f"out/EventStatistic/{config.device}/{config.optimize}"
 
 
 def model_config(config):
-    return f"model_config_{config.device[1].lower()}.txt"
+    return f"model_config_{config.device[0].lower()}.txt"
 
 
 def linker_file(config):
@@ -101,7 +105,7 @@ def linker_file(config):
     elif config.compiler == CompilerAxis.GCC:
         return "gcc_arm.ld"
     elif config.compiler == CompilerAxis.IAR:
-        return "generic_cortex.ld"
+        return "generic_cortex.icf"
     else:
         return ""
 
@@ -109,7 +113,7 @@ def linker_file(config):
 @matrix_action
 def clean(config):
     """Build the selected configurations using CMSIS-Build."""
-    yield cbuild_clean(f"{project_dir(config)}/{project_name(config)}.cprj")
+    yield cbuild_clean(solution_name())
 
 
 @matrix_action
@@ -122,12 +126,11 @@ def build(config, results):
     dst.unlink(missing_ok=True)
     copy(src, dst)
 
-    yield csolution(f"{project_name(config)}")
-    Path(project_outdir(config)).mkdir(exist_ok=True)
+    Path(project_outdir(config)).mkdir(parents=True, exist_ok=True)
     yield preprocess(config,
         f"RTE/Device/{config.device.dname}/{linker_file(config)}",
         f"{project_outdir(config)}/{linker_file(config)}")
-    yield cbuild(f"{project_dir(config)}/{project_name(config)}.cprj")
+    yield cbuild(solution_name(), f".{config.optimize}+{config.device}")
 
     if not all(r.success for r in results):
         return
@@ -162,18 +165,13 @@ def events(config, results):
 
 
 @matrix_command()
-def cbuild_clean(project):
-    return ["cbuild", "-c", project]
+def cbuild_clean(solution):
+    return ["cbuild", solution, "-c"]
 
 
 @matrix_command()
 def unzip(archive):
     return ["bash", "-c", f"unzip {archive}"]
-
-
-@matrix_command()
-def csolution(project):
-    return ["csolution", "convert", "-s", "EventStatistic.csolution.yaml", "-c", project]
 
 
 @matrix_command()
@@ -189,15 +187,15 @@ def preprocess(config, infile, outfile):
 
 
 @matrix_command()
-def cbuild(project):
-    return ["cbuild", project]
+def cbuild(solution, config):
+    return ["cbuild", solution, "-p", "--update-rte", "--configuration", config]
 
 
 @matrix_command()
 def model_exec(config):
     cmdline = [MODEL_EXECUTABLE[config.device][0], "-q", "--simlimit", 200, "-f", model_config(config)]
     cmdline += MODEL_EXECUTABLE[config.device][1]
-    cmdline += ["-a", f"{project_outdir(config)}/{project_name(config)}.{config.compiler.image_ext}"]
+    cmdline += ["-a", f"out/EventStatistic/{config.optimize}/{config.device}/{config.optimize}+{config.device}.{config.compiler.image_ext}"]
     return cmdline
 
 

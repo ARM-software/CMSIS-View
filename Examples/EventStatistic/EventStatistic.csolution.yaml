@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.4.0/tools/projmgr/schemas/csolution.schema.json
-
 solution:
   build-types:
     - type: Release
@@ -9,11 +7,6 @@ solution:
     - type: Debug
       optimize: none
       debug: on
-
-  output-dirs:
-    cprjdir: ./$Project$.$BuildType$+$TargetType$-$Compiler$
-    intdir: ./$Project$.$BuildType$+$TargetType$-$Compiler$/intdir
-    outdir: ./$Project$.$BuildType$+$TargetType$-$Compiler$/outdir
 
   packs:
     - pack: ARM::CMSIS
