@@ -22,20 +22,11 @@ This section contains the functions that of the component CMSIS-View:Fault:Stora
 @{
 */
 
-/** ARM Fault major version used in \ref ARM_FaultInfo_t.type.version major */
+/** ARM Fault major version used in \ref ARM_FaultInfo_t.info.version major */
 #define ARM_FAULT_FAULT_INFO_VER_MAJOR (0U)
 
-/** ARM Fault minor version used in \ref ARM_FaultInfo_t.type.version minor */
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (1U)
-
-/** ARM Fault Magic number (ASCII "FltR") used in \ref ARM_FaultInfo_t::magic_number */
-#define ARM_FAULT_MAGIC_NUMBER         (0x52746C46U)
-
-/** ARM Fault CRC-32 initial value for calculation of \ref ARM_FaultInfo_t::crc32 */
-#define ARM_FAULT_CRC32_INIT_VAL       (0xFFFFFFFFU)
-
-/** ARM Fault CRC-32 polynom for calculation of \ref ARM_FaultInfo_t::crc32 */
-#define ARM_FAULT_CRC32_POLYNOM        (0x04C11DB7U)
+/** ARM Fault minor version used in \ref ARM_FaultInfo_t.info.version minor */
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (2U)
 
 /** @} Fault_Storage_Macros */
 
@@ -54,14 +45,15 @@ Call during startup to check if a fault occurred that can be sent, e.g. using \r
 Consider calling \ref ARM_FaultClear after sending the fault buffer to prevent resending.
 
 \fn ARM_FaultSave
-Call from a fault handler to save current fault context into fault buffer.
-Consider calling \ref ARM_FaultExit to trigger a processor reset after saving the fault context.
+Call from a fault handler to save current fault information into fault buffer.
 
 \fn ARM_FaultExit
-Call after saving the fault context (see \ref ARM_FaultSave) to trigger a processor reset for recover device from fault state.
+Callback function called after saving the fault information (see \ref ARM_FaultSave).
+The default implementation will do a System Reset.
+If System Reset is not desired please provide a custom implementation of this function.
 
 \fn ARM_FaultPrint
-Decode stored fault context from fault buffer to standard out via a custom routine. To use \ref ARM_FaultPrint one needs
+Decode stored fault information from fault buffer to standard out via a custom routine. To use \ref ARM_FaultPrint one needs
 to add the ARM_FaultPrint template implementation to the project.
 
 */
@@ -79,7 +71,7 @@ This section contains the functions that of the component CMSIS-View:Fault:Recor
 
 /**
 \fn ARM_FaultRecord
-Decode stored fault context from fault buffer and send information using \ref evr "Event Recorder" events.
+Decode stored fault information from fault buffer and send information using \ref evr "Event Recorder" events.
 */
 
 /** @} Fault_Record */

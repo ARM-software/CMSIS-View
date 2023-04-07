@@ -18,9 +18,10 @@ A typical execution flow is shown in the diagram below.
 
 #include <stdlib.h>
 
-void HardFault_Handler() {
-    ARM_FaultSave();
-    ARM_FaultExit();
+__attribute__((naked)) void HardFault_Handler (void) {
+  __ASM volatile (
+    "b  ARM_FaultSave\n"
+  );
 }
 
 int main() {

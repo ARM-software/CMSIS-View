@@ -20,25 +20,9 @@
 
 #include <stdio.h>
 
-#if    (ARM_FAULT_FAULT_REGS_EXIST != 0)
-// Define CFSR mask for detecting state context stacking failure
-#ifndef SCB_CFSR_Stack_Err_Msk
-#ifdef  SCB_CFSR_STKOF_Msk
-#define SCB_CFSR_Stack_Err_Msk (SCB_CFSR_STKERR_Msk | SCB_CFSR_MSTKERR_Msk | SCB_CFSR_STKOF_Msk)
-#else
-#define SCB_CFSR_Stack_Err_Msk (SCB_CFSR_STKERR_Msk | SCB_CFSR_MSTKERR_Msk)
-#endif
-#endif
-#endif
-
 // General defines
 #ifndef EXC_RETURN_SPSEL
 #define EXC_RETURN_SPSEL       (1UL << 2)
-#endif
-
-// Armv8/8.1-M architecture related defines
-#if    (ARM_FAULT_ARCH_ARMV8x_M != 0)
-#define ARM_FAULT_ASC_INTEGRITY_SIG    (0xFEFA125AU)    // Additional State Context Integrity Signature
 #endif
 
 // Armv8/8.1-M Mainline architecture related defines
@@ -69,12 +53,6 @@
 #endif
 #endif
 
-// Local functions prototypes
-static uint32_t CalcCRC32 (      uint32_t init_val,
-                           const uint8_t *data_ptr,
-                                 uint32_t data_len,
-                                 uint32_t polynom);
-
 // ARM_FaultPrint function -----------------------------------------------------
 
 /**
@@ -83,125 +61,83 @@ static uint32_t CalcCRC32 (      uint32_t init_val,
   standard input/output fully functional.
 */
 void ARM_FaultPrint (void) {
-  int8_t fault_info_valid    = 1;
-  int8_t fault_info_magic_ok = 1;
-  int8_t fault_info_crc_ok   = 1;
-  int8_t state_context_valid = 1;
+  int8_t fault_info_valid;
 
-  // Check if magic number is valid
-  if (ARM_FaultInfo.magic_number != ARM_FAULT_MAGIC_NUMBER) {
-    fault_info_valid    = 0;
-    fault_info_magic_ok = 0;
-  }
-
-  // Check if CRC of the ARM_FaultInfo is correct
-  if (fault_info_valid != 0) {
-    if (ARM_FaultInfo.crc32 != CalcCRC32(ARM_FAULT_CRC32_INIT_VAL,
-                                        (const uint8_t *)&ARM_FaultInfo.count,
-                                        (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.magic_number) + sizeof(ARM_FaultInfo.crc32))),
-                                         ARM_FAULT_CRC32_POLYNOM)) {
-      fault_info_valid  = 0;
-      fault_info_crc_ok = 0;
-    }
-  }
-
-#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-  // Check if the state context was stacked properly (if CFSR is available)
-  if ((ARM_FaultInfo.SCB_CFSR & (SCB_CFSR_Stack_Err_Msk)) != 0U) {
-    state_context_valid = 0;
-  }
-#endif
+  /* Check if there is available valid fault information */
+  fault_info_valid = (int8_t)ARM_FaultOccurred();
 
   // Output: Header and version information
-  printf("\n --- FaultRecorder (v%s) ---\n\n", (const char *)ARM_FaultVersion);
+  printf("\n --- Fault (v%s) ---\n\n", (const char *)ARM_FaultVersion);
 
-  // Output: Error message if magic number or CRC is invalid
-  if (fault_info_magic_ok == 0) {
-    printf("\n  No fault saved yet!\n\n");
-  } else if (fault_info_crc_ok == 0) {
-    printf("\n  Invalid CRC of the saved fault information!\n\n");
-  } else {
-    // Fault information is valid
+  // Output: Message if fault info is invalid
+  if (fault_info_valid == 0) {
+    printf("\n  No fault saved yet or fault information is invalid!\n\n");
+    return;
   }
 
   // Output: Fault count
-  if (fault_info_valid != 0) {
-    printf("  Fault count:       %u\n\n", ARM_FaultInfo.count);
-  }
+  printf("  Fault count:       %u\n\n", ARM_FaultInfo.count);
 
   // Output: Exception which saved the fault information
-  if (fault_info_valid != 0) {
-    uint32_t exc_num = ARM_FaultInfo.xPSR_in_handler & IPSR_ISR_Msk;
+  printf("  Exception Handler: ");
 
-    printf("  Exception Handler: ");
-
-#if (ARM_FAULT_ARCH_ARMV8x_M != 0)
-    if (ARM_FaultInfo.type.tz_secure != 0U) {
+  if (ARM_FaultInfo.info.content.armv8m != 0U) {
+    if (ARM_FaultInfo.info.content.tz_secure != 0U) {
       printf("Secure - ");
     } else {
       printf("Non-Secure - ");
     }
-#endif
-
-    switch (exc_num) {
-      case 3:
-        printf("HardFault");
-        break;
-      case 4:
-        printf("MemManage fault");
-        break;
-      case 5:
-        printf("BusFault");
-        break;
-      case 6:
-        printf("UsageFault");
-        break;
-      case 7:
-        printf("SecureFault");
-        break;
-      default:
-        printf("unknown, exception number = %u", exc_num);
-        break;
-    }
-
-    printf("\n");
   }
+
+  switch (ARM_FaultInfo.xPSR_in_handler & IPSR_ISR_Msk) {
+    case 3:
+      printf("HardFault");
+      break;
+    case 4:
+      printf("MemManage fault");
+      break;
+    case 5:
+      printf("BusFault");
+      break;
+    case 6:
+      printf("UsageFault");
+      break;
+    case 7:
+      printf("SecureFault");
+      break;
+    default:
+      printf("unknown, exception number = %u", (uint32_t)(ARM_FaultInfo.xPSR_in_handler & IPSR_ISR_Msk));
+      break;
+  }
+  printf("\n");
 
 #if (ARM_FAULT_ARCH_ARMV8x_M != 0)
   // Output: state in which the fault occurred
-  if (fault_info_valid != 0) {
-    uint32_t exc_return = ARM_FaultInfo.EXC_RETURN;
-
+  if (ARM_FaultInfo.info.content.armv8m != 0U) {
     printf("  State:             ");
 
-    if ((exc_return & EXC_RETURN_S) != 0U) {
+    if ((ARM_FaultInfo.EXC_RETURN & EXC_RETURN_S) != 0U) {
       printf("Secure");
     } else {
       printf("Non-Secure");
     }
-
     printf("\n");
   }
 #endif
 
   // Output: Mode in which the fault occurred
-  if (fault_info_valid != 0) {
-    uint32_t exc_return = ARM_FaultInfo.EXC_RETURN;
+  printf("  Mode:              ");
 
-    printf("  Mode:              ");
-
-    if ((exc_return & EXC_RETURN_SPSEL) == 0U) {
-      printf("Handler");
-    } else {
-      printf("Thread");
-    }
-
-    printf("\n");
+  if ((ARM_FaultInfo.EXC_RETURN & EXC_RETURN_SPSEL) == 0U) {
+    printf("Handler");
+  } else {
+    printf("Thread");
   }
+  printf("\n");
 
-#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
+#if (ARM_FAULT_FAULT_REGS_EXIST != 0)   // If fault registers exist
   /* Output: Decoded HardFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if (ARM_FaultInfo.info.content.fault_regs != 0U) {
     uint32_t scb_hfsr = ARM_FaultInfo.SCB_HFSR;
 
     if ((scb_hfsr & (SCB_HFSR_VECTTBL_Msk   |
@@ -219,13 +155,12 @@ void ARM_FaultPrint (void) {
       if ((scb_hfsr & SCB_HFSR_DEBUGEVT_Msk) != 0U) {
         printf("Breakpoint hit with Debug Monitor disabled");
       }
-
       printf("\n");
     }
   }
 
   /* Output: Decoded MemManage fault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if (ARM_FaultInfo.info.content.fault_regs != 0U) {
     uint32_t scb_cfsr  = ARM_FaultInfo.SCB_CFSR;
     uint32_t scb_mmfar = ARM_FaultInfo.SCB_MMFAR;
 
@@ -259,13 +194,12 @@ void ARM_FaultPrint (void) {
       if ((scb_cfsr & SCB_CFSR_MMARVALID_Msk) != 0U) {
         printf(", fault address 0x%08X", scb_mmfar);
       }
-
       printf("\n");
     }
   }
 
   /* Output: Decoded BusFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if (ARM_FaultInfo.info.content.fault_regs != 0U) {
     uint32_t scb_cfsr = ARM_FaultInfo.SCB_CFSR;
     uint32_t scb_bfar = ARM_FaultInfo.SCB_BFAR;
 
@@ -303,13 +237,12 @@ void ARM_FaultPrint (void) {
       if ((scb_cfsr & SCB_CFSR_BFARVALID_Msk) != 0U) {
         printf(", fault address 0x%08X", scb_bfar);
       }
-
       printf("\n");
     }
   }
 
   /* Output Decoded UsageFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if (ARM_FaultInfo.info.content.fault_regs != 0U) {
     uint32_t scb_cfsr = ARM_FaultInfo.SCB_CFSR;
 
     if ((scb_cfsr & (SCB_CFSR_UNDEFINSTR_Msk |
@@ -347,14 +280,13 @@ void ARM_FaultPrint (void) {
       if ((scb_cfsr & SCB_CFSR_DIVBYZERO_Msk) != 0U) {
         printf("Divide by 0");
       }
-
       printf("\n");
     }
   }
 
 #if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
   /* Output: Decoded SecureFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if (ARM_FaultInfo.info.content.secure_fault_regs != 0U) {
     uint32_t scb_sfsr = ARM_FaultInfo.SCB_SFSR;
     uint32_t scb_sfar = ARM_FaultInfo.SCB_SFAR;
 
@@ -392,141 +324,89 @@ void ARM_FaultPrint (void) {
       if ((scb_sfsr & SAU_SFSR_SFARVALID_Msk) != 0U) {
         printf(", fault address 0x%08X", scb_sfar);
       }
-
       printf("\n");
     }
   }
 #endif
 #endif
 
-  // Output: Program Counter, MSP (if TrustZone also MSPLIM), PSP (if TrustZone also PSPLIM)
-  if (fault_info_valid != 0) {
+  // Output: Program Counter
+  /* Output here is named PC (Program Counter) since in most situations stacked Return Address will be
+     the address of the instruction which caused the fault, there are some exceptions (asynchronous faults)
+     but these are for the sake of simplicity not taken into account here */
+  printf("\n   - PC:             ");
 
-    printf("\n");
-
-#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-    printf("   - Return Address: ");
-
-    if (state_context_valid != 0) {
-      printf("0x%08X\n", ARM_FaultInfo.ReturnAddress);
-    } else {
-      printf("unknown\n");
-    }
-#else
-    printf("   - Return Address: 0x%08X\n", ARM_FaultInfo.ReturnAddress);
-#endif
-    printf("   - MSP:            0x%08X\n", ARM_FaultInfo.MSP);
-#if (ARM_FAULT_ARCH_ARMV8x_M     != 0)
-#if (ARM_FAULT_ARCH_ARMV8_M_BASE != 0)
-    if ((ARM_FaultInfo.EXC_RETURN & EXC_RETURN_S) != 0) {
-      printf("   - MSPLIM:         0x%08X\n", ARM_FaultInfo.MSPLIM);
-    }
-#else
-    printf("   - MSPLIM:         0x%08X\n", ARM_FaultInfo.MSPLIM);
-#endif
-#endif
-    printf("   - PSP:            0x%08X\n", ARM_FaultInfo.PSP);
-#if (ARM_FAULT_ARCH_ARMV8x_M     != 0)
-#if (ARM_FAULT_ARCH_ARMV8_M_BASE != 0)
-    if ((ARM_FaultInfo.EXC_RETURN & EXC_RETURN_S) != 0) {
-      printf("   - PSPLIM:         0x%08X\n", ARM_FaultInfo.PSPLIM);
-    }
-#else
-    printf("   - PSPLIM:         0x%08X\n", ARM_FaultInfo.PSPLIM);
-#endif
-#endif
-
-    printf("\n");
+  if (ARM_FaultInfo.info.content.state_context != 0U) {
+    printf("0x%08X\n", ARM_FaultInfo.ReturnAddress);
+  } else {
+    printf("unknown (was not stacked)\n");
   }
 
-  /* Output: state context information */
-  if ((fault_info_valid != 0) && (state_context_valid != 0))  {
-    printf("  Exception stacked State Context:\n");
+  // Output: Program Counter, MSP (if TrustZone also MSPLIM), PSP (if TrustZone also PSPLIM)
+  printf("   - MSP:            0x%08X\n", ARM_FaultInfo.MSP);
+  if (ARM_FaultInfo.info.content.limit_regs != 0U) {
+    printf("   - MSPLIM:         0x%08X\n", ARM_FaultInfo.MSPLIM);
+  }
+  printf("   - PSP:            0x%08X\n", ARM_FaultInfo.PSP);
+  if (ARM_FaultInfo.info.content.limit_regs != 0U) {
+    printf("   - PSPLIM:         0x%08X\n", ARM_FaultInfo.PSPLIM);
+  }
+  printf("\n");
 
+  /* Output: state context information */
+  /* Registers R4 .. R11 values might be either: stacked (if additional state context (TrustZone only)
+     was stacked) or values as they were when fault handler started execution */
+  if (ARM_FaultInfo.info.content.state_context != 0U) {
     printf("   - R0:             0x%08X\n", ARM_FaultInfo.R0);
     printf("   - R1:             0x%08X\n", ARM_FaultInfo.R1);
     printf("   - R2:             0x%08X\n", ARM_FaultInfo.R2);
     printf("   - R3:             0x%08X\n", ARM_FaultInfo.R3);
+  } else {
+    printf("   - R0 .. R3:       unknown (were not stacked)\n");
   }
 
-#if (ARM_FAULT_ARCH_ARMV8x_M != 0)
-  if ((fault_info_valid != 0) && (state_context_valid != 0) && (ARM_FaultInfo.type.armv8m != 0U))  {
-    /* Output: additional state context (if it exists) */
-    if ((ARM_FaultInfo.IntegritySignature & 0xFFFFFFFEU) == ARM_FAULT_ASC_INTEGRITY_SIG) {
-      printf("   - R4:             0x%08X\n", ARM_FaultInfo.R4);
-      printf("   - R5:             0x%08X\n", ARM_FaultInfo.R5);
-      printf("   - R6:             0x%08X\n", ARM_FaultInfo.R6);
-      printf("   - R7:             0x%08X\n", ARM_FaultInfo.R7);
-      printf("   - R8:             0x%08X\n", ARM_FaultInfo.R8);
-      printf("   - R9:             0x%08X\n", ARM_FaultInfo.R9);
-      printf("   - R10:            0x%08X\n", ARM_FaultInfo.R10);
-      printf("   - R11:            0x%08X\n", ARM_FaultInfo.R11);
-    }
-  }
-#endif
+  /* Output: R4 .. R11 */
+  printf("   - R4:             0x%08X\n", ARM_FaultInfo.R4);
+  printf("   - R5:             0x%08X\n", ARM_FaultInfo.R5);
+  printf("   - R6:             0x%08X\n", ARM_FaultInfo.R6);
+  printf("   - R7:             0x%08X\n", ARM_FaultInfo.R7);
+  printf("   - R8:             0x%08X\n", ARM_FaultInfo.R8);
+  printf("   - R9:             0x%08X\n", ARM_FaultInfo.R9);
+  printf("   - R10:            0x%08X\n", ARM_FaultInfo.R10);
+  printf("   - R11:            0x%08X\n", ARM_FaultInfo.R11);
 
-  if ((fault_info_valid != 0) && (state_context_valid != 0))  {
+  if (ARM_FaultInfo.info.content.state_context != 0U) {
     printf("   - R12:            0x%08X\n",   ARM_FaultInfo.R12);
     printf("   - LR:             0x%08X\n",   ARM_FaultInfo.LR);
     printf("   - Return Address: 0x%08X\n",   ARM_FaultInfo.ReturnAddress);
     printf("   - xPSR:           0x%08X\n\n", ARM_FaultInfo.xPSR);
+  } else {
+    printf("   - R12:            unknown (was not stacked)\n");
+    printf("   - LR:             unknown (was not stacked)\n");
+    printf("   - Return Address: unknown (was not stacked)\n");
+    printf("   - xPSR:           unknown (was not stacked)\n\n");
   }
 
-#if (ARM_FAULT_FAULT_REGS_EXIST  != 0)
-  /* Output: Fault registers (if they exist) */
-  if (fault_info_valid != 0) {
+#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
+  /* Output: Fault Registers (if they exist) */
+  if (ARM_FaultInfo.info.content.fault_regs != 0U) {
     printf("  Fault Registers:\n");
 
-    printf("   - CFSR:           0x%08X\n", ARM_FaultInfo.SCB_CFSR);
-    printf("   - HFSR:           0x%08X\n", ARM_FaultInfo.SCB_HFSR);
-    printf("   - DFSR:           0x%08X\n", ARM_FaultInfo.SCB_DFSR);
-    printf("   - MMFAR:          0x%08X\n", ARM_FaultInfo.SCB_MMFAR);
-    printf("   - BFAR:           0x%08X\n", ARM_FaultInfo.SCB_BFAR);
-    printf("   - AFSR:           0x%08X\n", ARM_FaultInfo.SCB_AFSR);
+    printf("   - SCB_CFSR:       0x%08X\n", ARM_FaultInfo.SCB_CFSR);
+    printf("   - SCB_HFSR:       0x%08X\n", ARM_FaultInfo.SCB_HFSR);
+    printf("   - SCB_DFSR:       0x%08X\n", ARM_FaultInfo.SCB_DFSR);
+    printf("   - SCB_MMFAR:      0x%08X\n", ARM_FaultInfo.SCB_MMFAR);
+    printf("   - SCB_BFAR:       0x%08X\n", ARM_FaultInfo.SCB_BFAR);
+    printf("   - SCB_AFSR:       0x%08X\n", ARM_FaultInfo.SCB_AFSR);
 
-#if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
-    if (ARM_FaultInfo.type.tz_secure != 0U) {
-      printf("   - SFSR:           0x%08X\n", ARM_FaultInfo.SCB_SFSR);
-      printf("   - SFAR:           0x%08X\n", ARM_FaultInfo.SCB_SFAR);
+    if (ARM_FaultInfo.info.content.secure_fault_regs != 0U) {
+      printf("   - SCB_SFSR:       0x%08X\n", ARM_FaultInfo.SCB_SFSR);
+      printf("   - SCB_SFAR:       0x%08X\n", ARM_FaultInfo.SCB_SFAR);
     }
-#endif
-
     printf("\n");
   }
+#else
+  /* Output: Message if fault registers do not exist */
+  printf("  Fault Registers do not exist!\n\n");
 #endif
-}
-
-
-// Helper functions
-
-/**
-  Calculate CRC-32 on data block in memory
-  \param[in]    init_val        initial CRC value
-  \param[in]    data_ptr        pointer to data
-  \param[in]    data_len        data length (in bytes)
-  \param[in]    polynom         CRC polynom
-  \return       CRC-32 value (32-bit)
-*/
-static uint32_t CalcCRC32 (      uint32_t init_val,
-                           const uint8_t *data_ptr,
-                                 uint32_t data_len,
-                                 uint32_t polynom) {
-  uint32_t crc32, i;
-
-  crc32 = init_val;
-  while (data_len != 0U) {
-    crc32 ^= ((uint32_t)*data_ptr) << 24;
-    for (i = 8U; i != 0U; i--) {
-      if ((crc32 & 0x80000000U) != 0U) {
-        crc32 <<= 1;
-        crc32  ^= polynom;
-      } else {
-        crc32 <<= 1;
-      }
-    }
-    data_ptr++;
-    data_len--;
-  }
-
-  return crc32;
 }
