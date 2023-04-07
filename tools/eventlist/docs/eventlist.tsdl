@@ -1,6 +1,4 @@
-
-
-/* Common Trace Format (CTF) TSDL description 1.8 */
+/* CTF 1.8 */
 // TSDL of log file format used by EventList
 // Maps to definitions in EventRecorder.h
 
@@ -14,6 +12,10 @@ integer {
 typealias integer {
     size = 64;
 } := time;
+
+typealias integer {
+    size = 8;
+} := uint8;
 
 typealias integer {
     size = 16;
@@ -35,6 +37,23 @@ typealias struct {
     uint16  length:15;
 } := len;
 
+/* another possible solution for typealias len:
+typealias integer {
+    size = 1;
+    align = 1;
+} := uint1;
+
+typealias integer {
+    size = 15;
+    align = 1;
+} := uint15;
+
+typealias struct {
+    uint1   irq;
+    uint15  length;
+} := len;
+*/
+
 typealias struct {
     id      _id;
     len     _len;
@@ -47,7 +66,7 @@ struct {
     info    _info;
     variant <tag> {
         struct {                 // EventRecordData
-            char    data[_info.length];
+            uint8   data[_info.length];
         } EventRecordData;
         struct {                 // EventRecord2
             uint32  value1;
