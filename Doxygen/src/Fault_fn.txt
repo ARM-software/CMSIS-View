@@ -13,16 +13,75 @@ This section contains the functions of the component CMSIS-View:Fault that store
 \details
 This section contains the functions that of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in memory.
 
+@{
 */
+
+/**
+\defgroup Fault_Storage_Macros Macros
+\brief Fault Storage macro definitions
+@{
+*/
+
+/** ARM Fault major version used in \ref ARM_FaultInfo_t.type.version major */
+#define ARM_FAULT_FAULT_INFO_VER_MAJOR (0U)
+
+/** ARM Fault minor version used in \ref ARM_FaultInfo_t.type.version minor */
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (1U)
+
+/** ARM Fault Magic number (ASCII "FltR") used in \ref ARM_FaultInfo_t::magic_number */
+#define ARM_FAULT_MAGIC_NUMBER         (0x52746C46U)
+
+/** ARM Fault CRC-32 initial value for calculation of \ref ARM_FaultInfo_t::crc32 */
+#define ARM_FAULT_CRC32_INIT_VAL       (0xFFFFFFFFU)
+
+/** ARM Fault CRC-32 polynom for calculation of \ref ARM_FaultInfo_t::crc32 */
+#define ARM_FAULT_CRC32_POLYNOM        (0x04C11DB7U)
+
+/** @} Fault_Storage_Macros */
+
+typedef struct {} ARM_FaultInfo_t;
+
+const char ARM_FaultVersion[];
+ARM_FaultInfo_t ARM_FaultInfo;
+
+/**
+
+\fn ARM_FaultClear
+Clear the fault buffer.
+
+\fn ARM_FaultOccurred
+Call during startup to check if a fault occurred that can be sent, e.g. using \ref ARM_FaultPrint or \ref ARM_FaultRecord.
+Consider calling \ref ARM_FaultClear after sending the fault buffer to prevent resending.
+
+\fn ARM_FaultSave
+Call from a fault handler to save current fault context into fault buffer.
+Consider calling \ref ARM_FaultExit to trigger a processor reset after saving the fault context.
+
+\fn ARM_FaultExit
+Call after saving the fault context (see \ref ARM_FaultSave) to trigger a processor reset for recover device from fault state.
+
+\fn ARM_FaultPrint
+Decode stored fault context from fault buffer to standard out via a custom routine. To use \ref ARM_FaultPrint one needs
+to add the ARM_FaultPrint template implementation to the project.
+
+*/
+
+/** @} Fault_Storage */
 
 /**
 \defgroup Fault_Record Fault Record
-\brief Decode and record the Cortex-M Exception Fault information via Event Recorder.
+\brief Decode and record the Cortex-M Exception Fault information via \ref evr "Event Recorder".
 \details
-This section contains the functions that of the component CMSIS-View:Fault:Record that decode and record the Cortex-M Exception Fault information using the Event Recorder.
+This section contains the functions that of the component CMSIS-View:Fault:Record that decode and record the Cortex-M Exception Fault information using the \ref evr "Event Recorder".
 
+@{
 */
 
 /**
-@}
+\fn ARM_FaultRecord
+Decode stored fault context from fault buffer and send information using \ref evr "Event Recorder" events.
 */
+
+/** @} Fault_Record */
+
+/** @} Fault */

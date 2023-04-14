@@ -97,7 +97,7 @@ void ARM_FaultPrint (void) {
   // Check if CRC of the ARM_FaultInfo is correct
   if (fault_info_valid != 0) {
     if (ARM_FaultInfo.crc32 != CalcCRC32(ARM_FAULT_CRC32_INIT_VAL,
-                                        (const uint8_t *)&ARM_FaultInfo.type,
+                                        (const uint8_t *)&ARM_FaultInfo.count,
                                         (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.magic_number) + sizeof(ARM_FaultInfo.crc32))),
                                          ARM_FAULT_CRC32_POLYNOM)) {
       fault_info_valid  = 0;
@@ -129,7 +129,7 @@ void ARM_FaultPrint (void) {
     printf("  Fault count:       %u\n\n", ARM_FaultInfo.count);
   }
 
-  // Output: Exception which recorded the fault information
+  // Output: Exception which saved the fault information
   if (fault_info_valid != 0) {
     uint32_t exc_num = ARM_FaultInfo.xPSR_in_handler & IPSR_ISR_Msk;
 

@@ -96,19 +96,19 @@ uint32_t ARM_FaultOccurred (void) {
   // Check if CRC of the ARM_FaultInfo structure is valid
   if (fault_info_valid != 0U) {
     if (ARM_FaultInfo.crc32 != CalcCRC32(ARM_FAULT_CRC32_INIT_VAL,
-                                        (const uint8_t *)&ARM_FaultInfo.type,
+                                        (const uint8_t *)&ARM_FaultInfo.count,
                                         (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.magic_number) + sizeof(ARM_FaultInfo.crc32))),
                                          ARM_FAULT_CRC32_POLYNOM)) {
       fault_info_valid = 0U;
     }
   }
 
-  return fault_info_valid;  
+  return fault_info_valid;
 }
 
 /**
   Save the fault information.
-  Must be called from fault handler with preserved Link Register value, 
+  Must be called from fault handler with preserved Link Register value,
   typically by branching to this function.
 */
 __NAKED void ARM_FaultSave (void) {
@@ -201,7 +201,7 @@ __NAKED void ARM_FaultSave (void) {
 
  /* Determine if stack contains valid state context (if fault was not a stacking fault).
     If stack information is not valid mark it by setting bit [1] of the R4 to value 1.
-    Note: for Armv6-M and Armv8-M Baseline CFSR register is not available, so stack is 
+    Note: for Armv6-M and Armv8-M Baseline CFSR register is not available, so stack is
           considered valid although it might not always be so. */
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)   // If fault registers exist
     "ldr   r1,  =%c[cfsr_err_msk]\n"    // R1 = (SCB_CFSR_Stack_Err_Msk)
@@ -409,7 +409,7 @@ __NAKED void ARM_FaultSave (void) {
   , [sfar_ofs]                              "i" (offsetof(SCB_Type, SFAR ))
 #endif
   , [crc_init_val]                          "i" (ARM_FAULT_CRC32_INIT_VAL)
-  , [crc_data_ptr]                          "i" (&ARM_FaultInfo.type)
+  , [crc_data_ptr]                          "i" (&ARM_FaultInfo.count)
   , [crc_data_len]                          "i" (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.magic_number) + sizeof(ARM_FaultInfo.crc32)))
   , [crc_polynom]                           "i" (ARM_FAULT_CRC32_POLYNOM)
  :  /* clobber list */

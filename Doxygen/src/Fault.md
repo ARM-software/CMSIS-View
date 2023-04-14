@@ -9,3 +9,34 @@ With the component **CMSIS-View:Fault:Storage** an exception fault can be saved 
 A typical execution flow is shown in the diagram below.
 
 ![Exception Fault Analysis](./images/ArmFault.png "Exception Fault Analysis")
+
+## Usage example
+
+```c
+#include "EventRecorder.h"
+#include "ARM_Fault.h"
+
+#include <stdlib.h>
+
+void HardFault_Handler() {
+    ARM_FaultSave();
+    ARM_FaultExit();
+}
+
+int main() {
+    SystemCoreClockUpdate();                      // System Initialization
+
+    EventRecorderInitialize (EventRecordAll, 1U); // Initialize and start Event Recorder
+    EventRecorderClockUpdate();
+
+    if (ARM_FaultOccurred()) {
+        ARM_FaultRecord();
+    }
+
+    // ...
+
+    while (1) {
+       __NOP();
+    }
+}
+```
