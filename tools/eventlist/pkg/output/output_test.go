@@ -574,7 +574,7 @@ func Test_eventProperty_getLast(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
-		Values [16]eventStatistic
+		values [16]eventStatistic
 	}
 	type args struct {
 		idx uint16
@@ -593,7 +593,7 @@ func Test_eventProperty_getLast(t *testing.T) {
 			t.Parallel()
 
 			ep := &eventProperty{
-				values: tt.fields.Values,
+				values: tt.fields.values,
 			}
 			if got := ep.getLast(tt.args.idx); got != tt.want {
 				t.Errorf("eventProperty.getLast() %s = %v, want %v", tt.name, got, tt.want)
