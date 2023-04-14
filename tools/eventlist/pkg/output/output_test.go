@@ -1064,3 +1064,123 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		})
 	}
 }
+
+func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
+	o1 := "testOutput.json"
+
+	var s10 = "../../testdata/test10.binary"
+
+	lines1 := [...]string{
+		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF     \",\"eventProperty\":\"0xFF03        \",\"value\":\"val1=0x00000004, val2=0x00000002\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE     \",\"eventProperty\":\"0xFE00        \",\"value\":\"hello wo\"}],\"statistics\":[]}",
+	}
+
+	type args struct {
+		filename      *string
+		eventFile     *string
+		evdefs        map[uint16]scvd.Event
+		typedefs      map[string]map[string]map[int16]string
+		statBegin     bool
+		showStatistic bool
+	}
+	formatType := "json"
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"test", args{filename: &o1, eventFile: &s10}, false},
+	}
+	for _, tt := range tests { //nolint:golint,paralleltest
+		t.Run(tt.name, func(t *testing.T) {
+			TimeFactor = nil
+			defer os.Remove(*tt.args.filename)
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			file, err := os.Open(*tt.args.filename)
+			if err != nil {
+				t.Errorf("Print() error = %v, output file not created", err)
+			}
+			if file != nil {
+				in := bufio.NewReader(file)
+				var l string
+				end := false
+				for _, l = range lines1 {
+					line, _ := in.ReadString('\n')
+					if line != l {
+						t.Errorf("Print() %s = %v, want %v", tt.name, line, l)
+					}
+				}
+				line, err := in.ReadString('\n')
+				if errors.Is(err, io.EOF) {
+					end = true
+				} else {
+					t.Errorf("Print() %s = %v, want EOF", tt.name, line)
+				}
+				if !end {
+					t.Errorf("Print() %s = EOF, want %v", tt.name, l)
+				}
+			}
+		})
+	}
+}
+
+func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
+	o1 := "testOutput.xml"
+
+	var s10 = "../../testdata/test10.binary"
+
+	lines1 := [...]string{
+		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF     </component><eventProperty>0xFF03        </eventProperty><value>val1=0x00000004, val2=0x00000002</value></events><events><index>1</index><time>7.75</time><component>0xFE     </component><eventProperty>0xFE00        </eventProperty><value>hello wo</value></events></EventsTable>",
+	}
+
+	type args struct {
+		filename      *string
+		eventFile     *string
+		evdefs        map[uint16]scvd.Event
+		typedefs      map[string]map[string]map[int16]string
+		statBegin     bool
+		showStatistic bool
+	}
+	formatType := "xml"
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"test", args{filename: &o1, eventFile: &s10}, false},
+	}
+	for _, tt := range tests { //nolint:golint,paralleltest
+		t.Run(tt.name, func(t *testing.T) {
+			TimeFactor = nil
+			defer os.Remove(*tt.args.filename)
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			file, err := os.Open(*tt.args.filename)
+			if err != nil {
+				t.Errorf("Print() error = %v, output file not created", err)
+			}
+			if file != nil {
+				in := bufio.NewReader(file)
+				var l string
+				end := false
+				for _, l = range lines1 {
+					line, _ := in.ReadString('\n')
+					if line != l {
+						t.Errorf("Print() %s = %v, want %v", tt.name, line, l)
+					}
+				}
+				line, err := in.ReadString('\n')
+				if errors.Is(err, io.EOF) {
+					end = true
+				} else {
+					t.Errorf("Print() %s = %v, want EOF", tt.name, line)
+				}
+				if !end {
+					t.Errorf("Print() %s = EOF, want %v", tt.name, l)
+				}
+			}
+		})
+	}
+}
