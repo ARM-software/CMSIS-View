@@ -508,8 +508,8 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 				}
 			}
 		} else {
-			eventRecord.Component = fmt.Sprintf("0x%02X%*s", uint8(ev.Info.ID>>8), -(o.componentSize - 4), "")
-			eventRecord.EventProperty = fmt.Sprintf("0x%04X%*s", ev.Info.ID, -(o.propertySize - 6), "")
+			eventRecord.Component = fmt.Sprintf("0x%02X%*s", uint8(ev.Info.ID>>8), 0, "")
+			eventRecord.EventProperty = fmt.Sprintf("0x%04X%*s", ev.Info.ID, 0, "")
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
 				eventRecord.Value = s
