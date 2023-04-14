@@ -35,7 +35,7 @@ import (
 var errNoEvents = errors.New("cannot open event file")
 
 var TimeFactor *float64
-var FormatType string = "txt"
+var FormatType = "txt"
 
 func TimeInSecs(time uint64) float64 {
 	if TimeFactor == nil {
@@ -320,27 +320,28 @@ func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
 	return eventCount
 }
 
-func conditionalWrite(out *bufio.Writer, format string, a ...any) (n int, err error) {
+func conditionalWrite(out *bufio.Writer, format string, a ...any) (err error) {
 	if FormatType == "txt" {
-		return fmt.Fprintf(out, format, a...)
+		_, err = fmt.Fprintf(out, format, a...)
+		return err
 	}
-	return 0, nil
+	return nil
 }
 
 func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *EventsTable) error {
 	var err error
 
 	if out != nil && eventCount > 0 {
-		if _, err = conditionalWrite(out, "   Start/Stop event statistic\n"); err != nil {
+		if err = conditionalWrite(out, "   Start/Stop event statistic\n"); err != nil {
 			return err
 		}
-		if _, err = conditionalWrite(out, "   --------------------------\n\n"); err != nil {
+		if err = conditionalWrite(out, "   --------------------------\n\n"); err != nil {
 			return err
 		}
-		if _, err = conditionalWrite(out, "Event count      total       min         max         average     first       last\n"); err != nil {
+		if err = conditionalWrite(out, "Event count      total       min         max         average     first       last\n"); err != nil {
 			return err
 		}
-		if _, err = conditionalWrite(out, "----- -----      -----       ---         ---         -------     -----       ----\n"); err != nil {
+		if err = conditionalWrite(out, "----- -----      -----       ---         ---         -------     -----       ----\n"); err != nil {
 			return err
 		}
 		for i := uint16(0); i < uint16(len(o.evProps)); i++ {
@@ -365,14 +366,14 @@ func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *E
 						TextMaxB:    o.evProps[i].values[j].textMaxB,
 						TextMaxE:    o.evProps[i].values[j].textMaxE,
 					}
-					_, err = conditionalWrite(out, eventStat.Event)
+					err = conditionalWrite(out, eventStat.Event)
 					if err == nil && j < 10 {
-						_, err = conditionalWrite(out, " ")
+						err = conditionalWrite(out, " ")
 					}
 					if err != nil {
 						return err
 					}
-					_, err = conditionalWrite(out, " %5d%s %s %s %s %s %s %s\n",
+					err = conditionalWrite(out, " %5d%s %s %s %s %s %s %s\n",
 						eventStat.Count,
 						eventStat.AddCount,
 						eventStat.Total,
@@ -384,7 +385,7 @@ func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *E
 					if err != nil {
 						return err
 					}
-					_, err = conditionalWrite(out, "      Min: Start: %.8f %s Stop: %.8f %s\n",
+					err = conditionalWrite(out, "      Min: Start: %.8f %s Stop: %.8f %s\n",
 						eventStat.MinTime,
 						eventStat.TextMinB,
 						eventStat.MinStopTime,
@@ -392,7 +393,7 @@ func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *E
 					if err != nil {
 						return err
 					}
-					_, err = conditionalWrite(out, "      Max: Start: %.8f %s Stop: %.8f %s\n\n",
+					err = conditionalWrite(out, "      Max: Start: %.8f %s Stop: %.8f %s\n\n",
 						eventStat.MaxTime,
 						eventStat.TextMaxB,
 						eventStat.MaxStopTime,
@@ -495,14 +496,14 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
 				eventRecord.Value = s
-				_, err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
+				err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
 					eventRecord.Index, eventRecord.Time, -o.componentSize,
 					eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
 			} else {
 				rep, err = ev.EvalLine(evdef, typedefs)
 				if err == nil {
 					eventRecord.Value = rep
-					_, err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
+					err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
 						eventRecord.Index, eventRecord.Time, -o.componentSize,
 						eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
 				}
@@ -513,14 +514,14 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
 				eventRecord.Value = s
-				_, err = conditionalWrite(out, "%5d %.8f 0x%02X%*s 0x%04X%*s \"%s\"\n",
+				err = conditionalWrite(out, "%5d %.8f 0x%02X%*s 0x%04X%*s \"%s\"\n",
 					eventRecord.Index, eventRecord.Time,
 					uint8(ev.Info.ID>>8), -(o.componentSize - 4), "",
 					ev.Info.ID, -(o.propertySize - 6), "", eventRecord.Value)
 			} else {
 				rep = ev.GetValuesAsString()
 				eventRecord.Value = rep
-				_, err = conditionalWrite(out, "%5d %.8f 0x%02X%*s 0x%04X%*s %s\n",
+				err = conditionalWrite(out, "%5d %.8f 0x%02X%*s 0x%04X%*s %s\n",
 					eventRecord.Index, eventRecord.Time,
 					uint8(ev.Info.ID>>8), -(o.componentSize - 4), "",
 					ev.Info.ID, -(o.propertySize - 6), "", eventRecord.Value)
@@ -537,18 +538,18 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 
 func (o *Output) printHeader(out *bufio.Writer) error {
 	var err error
-	if _, err = conditionalWrite(out, "   Detailed event list\n"); err != nil {
+	if err = conditionalWrite(out, "   Detailed event list\n"); err != nil {
 		return err
 	}
-	if _, err = conditionalWrite(out, "   -------------------\n\n"); err != nil {
+	if err = conditionalWrite(out, "   -------------------\n\n"); err != nil {
 		return err
 	}
-	_, err = conditionalWrite(out, "%5s %-10s %*s %*s %s\n", o.columns[0], o.columns[1],
+	err = conditionalWrite(out, "%5s %-10s %*s %*s %s\n", o.columns[0], o.columns[1],
 		-o.componentSize, o.columns[2], -o.propertySize, o.columns[3], o.columns[4])
 	if err != nil {
 		return err
 	}
-	_, err = conditionalWrite(out, "----- --------   %*s %*s -----\n",
+	err = conditionalWrite(out, "----- --------   %*s %*s -----\n",
 		-o.componentSize, "---------", -o.propertySize, "--------------")
 	return err
 }
@@ -575,7 +576,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 	if err == nil && statBegin {
 		err = o.printStatistic(out, eventCount, eventsTable)
 		if err == nil && !showStatistic {
-			_, err = conditionalWrite(out, "\n")
+			err = conditionalWrite(out, "\n")
 		}
 	}
 
@@ -598,7 +599,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 
 	if err == nil && !statBegin {
 		if !showStatistic {
-			_, err = conditionalWrite(out, "\n")
+			err = conditionalWrite(out, "\n")
 		}
 		if err == nil {
 			err = o.printStatistic(out, eventCount, eventsTable)
