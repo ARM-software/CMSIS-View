@@ -44,7 +44,7 @@ jobs:
 
       - name: Build linux-amd64 executable
         run: |
-          ./make.sh build -os linux -arch amd64 -outdir build/linux-amd64/eventlist
+          ./make.sh build -os linux -arch amd64 -outdir build/linux-amd64
         working-directory: ./tools/eventlist
 
       - name: Perform CodeQL Analysis
@@ -301,7 +301,7 @@ jobs:
           cp LICENSE release/eventlist-darwin-amd64/
           cp LICENSE release/eventlist-darwin-arm64/
           cp LICENSE release/eventlist-windows-amd64/
-          cp LICENSE release/eventlist-windows-arm64
+          cp LICENSE release/eventlist-windows-arm64/
           cp tools/eventlist/docs/* release/eventlist-linux-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-linux-arm64/docs/
           cp tools/eventlist/docs/* release/eventlist-darwin-amd64/docs/
@@ -348,7 +348,7 @@ jobs:
       - name: Zip folders
         run: |
           zip -r eventlist-windows-amd64.zip eventlist-windows-amd64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
-          zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
+          zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-arm64/docs eventlist-windows-arm64/LICENSE
           tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE
           tar -czvf eventlist-linux-arm64.tar.gz  eventlist-linux-arm64/eventlist eventlist-linux-arm64/docs eventlist-linux-arm64/LICENSE
           tar -czvf eventlist-darwin-amd64.tar.gz eventlist-darwin-amd64/eventlist eventlist-darwin-amd64/docs eventlist-darwin-amd64/LICENSE
