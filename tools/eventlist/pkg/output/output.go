@@ -20,6 +20,9 @@ package output
 
 import (
 	"bufio"
+	"bytes"
+	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"eventlist/pkg/eval"
 	"eventlist/pkg/event"
@@ -32,6 +35,7 @@ import (
 var errNoEvents = errors.New("cannot open event file")
 
 var TimeFactor *float64
+var FormatType = "txt"
 
 func TimeInSecs(time uint64) float64 {
 	if TimeFactor == nil {
@@ -60,6 +64,43 @@ type eventStatistic struct {
 	textMinE  string
 	textMaxB  string
 	textMaxE  string
+}
+
+type EventRecord struct {
+	Index         int     `json:"index" xml:"index"`
+	Time          float64 `json:"time" xml:"time"`
+	Component     string  `json:"component" xml:"component"`
+	EventProperty string  `json:"eventProperty" xml:"eventProperty"`
+	Value         string  `json:"value" xml:"value"`
+}
+
+type EventRecordStatistic struct {
+	Event       string  `json:"event" xml:"event"`
+	Count       int     `json:"count" xml:"count"`
+	AddCount    string  `json:"addCount" xml:"addCount"`
+	Start       string  `json:"start" xml:"start"`
+	MinStopTime float64 `json:"minStopTime" xml:"minStopTime"`
+	MaxStopTime float64 `json:"maxStopTime" xml:"maxStopTime"`
+	Total       string  `json:"total" xml:"total"`
+	Min         string  `json:"min" xml:"min"`
+	Max         string  `json:"max" xml:"max"`
+	First       string  `json:"first" xml:"first"`
+	Last        string  `json:"last" xml:"last"`
+	Avg         string  `json:"avg" xml:"avg"`
+	MinTime     float64 `json:"minTime" xml:"minTime"`
+	MaxTime     float64 `json:"maxTime" xml:"maxTime"`
+	FirstTime   string  `json:"firstTime" xml:"firstTime"`
+	LastTime    string  `json:"lastTime" xml:"lastTime"`
+	TextB       string  `json:"textB" xml:"textB"`
+	TextMinB    string  `json:"textMinB" xml:"textMinB"`
+	TextMinE    string  `json:"textMinE" xml:"textMinE"`
+	TextMaxB    string  `json:"textMaxB" xml:"textMaxB"`
+	TextMaxE    string  `json:"textMaxE" xml:"textMaxE"`
+}
+
+type EventsTable struct {
+	Events     []EventRecord          `json:"events" xml:"events"`
+	Statistics []EventRecordStatistic `json:"statistics" xml:"statistics"`
 }
 
 func (es *eventStatistic) init() {
@@ -279,60 +320,88 @@ func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
 	return eventCount
 }
 
-func (o *Output) printStatistic(out *bufio.Writer, eventCount int) error {
+func conditionalWrite(out *bufio.Writer, format string, a ...any) (err error) {
+	if FormatType == "txt" {
+		_, err = fmt.Fprintf(out, format, a...)
+		return err
+	}
+	return nil
+}
+
+func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *EventsTable) error {
 	var err error
 
 	if out != nil && eventCount > 0 {
-		if _, err = out.WriteString("   Start/Stop event statistic\n"); err != nil {
+		if err = conditionalWrite(out, "   Start/Stop event statistic\n"); err != nil {
 			return err
 		}
-		if _, err = out.WriteString("   --------------------------\n\n"); err != nil {
+		if err = conditionalWrite(out, "   --------------------------\n\n"); err != nil {
 			return err
 		}
-		if _, err = out.WriteString("Event count      total       min         max         average     first       last\n"); err != nil {
+		if err = conditionalWrite(out, "Event count      total       min         max         average     first       last\n"); err != nil {
 			return err
 		}
-		if _, err = out.WriteString("----- -----      -----       ---         ---         -------     -----       ----\n"); err != nil {
+		if err = conditionalWrite(out, "----- -----      -----       ---         ---         -------     -----       ----\n"); err != nil {
 			return err
 		}
 		for i := uint16(0); i < uint16(len(o.evProps)); i++ {
 			for j := uint16(0); j < uint16(len(o.evProps[i].values)); j++ {
 				if o.evProps[i].values[j].evFirst {
-					_, err = fmt.Fprintf(out, "%c(%d)", byte(i+'A'), j)
+					eventStat := EventRecordStatistic{
+						Event:       fmt.Sprintf("%c(%d)", byte(i+'A'), j),
+						AddCount:    o.evProps[i].getAddCount(j),
+						Count:       o.evProps[i].getCount(j),
+						Total:       o.evProps[i].getTot(j),
+						Min:         o.evProps[i].getMin(j),
+						Max:         o.evProps[i].getMax(j),
+						Avg:         o.evProps[i].getAvg(j),
+						First:       o.evProps[i].getFirst(j),
+						Last:        o.evProps[i].getLast(j),
+						MinTime:     o.evProps[i].values[j].minTime,
+						TextMinB:    o.evProps[i].values[j].textMinB,
+						TextMinE:    o.evProps[i].values[j].textMinE,
+						MinStopTime: o.evProps[i].values[j].minTime + o.evProps[i].values[j].min,
+						MaxStopTime: o.evProps[i].values[j].maxTime + o.evProps[i].values[j].max,
+						MaxTime:     o.evProps[i].values[j].maxTime,
+						TextMaxB:    o.evProps[i].values[j].textMaxB,
+						TextMaxE:    o.evProps[i].values[j].textMaxE,
+					}
+					err = conditionalWrite(out, eventStat.Event)
 					if err == nil && j < 10 {
-						err = out.WriteByte(' ')
+						err = conditionalWrite(out, " ")
 					}
 					if err != nil {
 						return err
 					}
-					_, err = fmt.Fprintf(out, " %5d%s %s %s %s %s %s %s\n",
-						o.evProps[i].getCount(j),
-						o.evProps[i].getAddCount(j),
-						o.evProps[i].getTot(j),
-						o.evProps[i].getMin(j),
-						o.evProps[i].getMax(j),
-						o.evProps[i].getAvg(j),
-						o.evProps[i].getFirst(j),
-						o.evProps[i].getLast(j))
+					err = conditionalWrite(out, " %5d%s %s %s %s %s %s %s\n",
+						eventStat.Count,
+						eventStat.AddCount,
+						eventStat.Total,
+						eventStat.Min,
+						eventStat.Max,
+						eventStat.Avg,
+						eventStat.First,
+						eventStat.Last)
 					if err != nil {
 						return err
 					}
-					_, err = fmt.Fprintf(out, "      Min: Start: %.8f %s Stop: %.8f %s\n",
-						o.evProps[i].values[j].minTime,
-						o.evProps[i].values[j].textMinB,
-						o.evProps[i].values[j].minTime+o.evProps[i].values[j].min,
-						o.evProps[i].values[j].textMinE)
+					err = conditionalWrite(out, "      Min: Start: %.8f %s Stop: %.8f %s\n",
+						eventStat.MinTime,
+						eventStat.TextMinB,
+						eventStat.MinStopTime,
+						eventStat.TextMinE)
 					if err != nil {
 						return err
 					}
-					_, err = fmt.Fprintf(out, "      Max: Start: %.8f %s Stop: %.8f %s\n\n",
-						o.evProps[i].values[j].maxTime,
-						o.evProps[i].values[j].textMaxB,
-						o.evProps[i].values[j].maxTime+o.evProps[i].values[j].max,
-						o.evProps[i].values[j].textMaxE)
+					err = conditionalWrite(out, "      Max: Start: %.8f %s Stop: %.8f %s\n\n",
+						eventStat.MaxTime,
+						eventStat.TextMaxB,
+						eventStat.MaxStopTime,
+						eventStat.TextMaxE)
 					if err != nil {
 						return err
 					}
+					eventTable.Statistics = append(eventTable.Statistics, eventStat)
 				}
 			}
 		}
@@ -376,7 +445,7 @@ func escapeGen(s string) string {
 }
 
 func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string) error {
+	typedefs map[string]map[string]map[int16]string, eventTable *EventsTable) error {
 	if out == nil || in == nil {
 		return nil
 	}
@@ -416,36 +485,49 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 				*TimeFactor = 1.0 / float64(ev.Value1)
 			}
 		}
+		eventRecord := EventRecord{
+			Index: no,
+			Time:  beforeClockEvent + TimeInSecs(ev.Time-lastClockEvent),
+		}
 		var rep string
 		if evdef, ok := evdefs[ev.Info.ID]; ok {
+			eventRecord.Component = evdef.Brief
+			eventRecord.EventProperty = evdef.Property
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
-				_, err = fmt.Fprintf(out, "%5d %.8f %*s %*s \"%s\"\n",
-					no, beforeClockEvent+TimeInSecs(ev.Time-lastClockEvent),
-					-o.componentSize, evdef.Brief, -o.propertySize, evdef.Property, s)
+				eventRecord.Value = s
+				err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
+					eventRecord.Index, eventRecord.Time, -o.componentSize,
+					eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
 			} else {
 				rep, err = ev.EvalLine(evdef, typedefs)
 				if err == nil {
-					_, err = fmt.Fprintf(out, "%5d %.8f %*s %*s %s\n",
-						no, beforeClockEvent+TimeInSecs(ev.Time-lastClockEvent),
-						-o.componentSize, evdef.Brief, -o.propertySize, evdef.Property, rep)
+					eventRecord.Value = rep
+					err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
+						eventRecord.Index, eventRecord.Time, -o.componentSize,
+						eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
 				}
 			}
 		} else {
+			eventRecord.Component = fmt.Sprintf("0x%02X%*s", uint8(ev.Info.ID>>8), 0, "")
+			eventRecord.EventProperty = fmt.Sprintf("0x%04X%*s", ev.Info.ID, 0, "")
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
-				_, err = fmt.Fprintf(out, "%5d %.8f 0x%02X%*s 0x%04X%*s \"%s\"\n",
-					no, beforeClockEvent+TimeInSecs(ev.Time-lastClockEvent),
+				eventRecord.Value = s
+				err = conditionalWrite(out, "%5d %.8f 0x%02X%*s 0x%04X%*s \"%s\"\n",
+					eventRecord.Index, eventRecord.Time,
 					uint8(ev.Info.ID>>8), -(o.componentSize - 4), "",
-					ev.Info.ID, -(o.propertySize - 6), "", s)
+					ev.Info.ID, -(o.propertySize - 6), "", eventRecord.Value)
 			} else {
 				rep = ev.GetValuesAsString()
-				_, err = fmt.Fprintf(out, "%5d %.8f 0x%02X%*s 0x%04X%*s %s\n",
-					no, beforeClockEvent+TimeInSecs(ev.Time-lastClockEvent),
+				eventRecord.Value = rep
+				err = conditionalWrite(out, "%5d %.8f 0x%02X%*s 0x%04X%*s %s\n",
+					eventRecord.Index, eventRecord.Time,
 					uint8(ev.Info.ID>>8), -(o.componentSize - 4), "",
-					ev.Info.ID, -(o.propertySize - 6), "", rep)
+					ev.Info.ID, -(o.propertySize - 6), "", eventRecord.Value)
 			}
 		}
+		eventTable.Events = append(eventTable.Events, eventRecord)
 		if err != nil {
 			break
 		}
@@ -456,24 +538,24 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 
 func (o *Output) printHeader(out *bufio.Writer) error {
 	var err error
-	if _, err = out.WriteString("   Detailed event list\n"); err != nil {
+	if err = conditionalWrite(out, "   Detailed event list\n"); err != nil {
 		return err
 	}
-	if _, err = out.WriteString("   -------------------\n\n"); err != nil {
+	if err = conditionalWrite(out, "   -------------------\n\n"); err != nil {
 		return err
 	}
-	_, err = fmt.Fprintf(out, "%5s %-10s %*s %*s %s\n", o.columns[0], o.columns[1],
+	err = conditionalWrite(out, "%5s %-10s %*s %*s %s\n", o.columns[0], o.columns[1],
 		-o.componentSize, o.columns[2], -o.propertySize, o.columns[3], o.columns[4])
 	if err != nil {
 		return err
 	}
-	_, err = fmt.Fprintf(out, "----- --------   %*s %*s -----\n",
+	err = conditionalWrite(out, "----- --------   %*s %*s -----\n",
 		-o.componentSize, "---------", -o.propertySize, "--------------")
 	return err
 }
 
 func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
+	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
 	var b event.Binary
 	var err error
 	var eventCount int
@@ -492,9 +574,9 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 	}
 
 	if err == nil && statBegin {
-		err = o.printStatistic(out, eventCount)
+		err = o.printStatistic(out, eventCount, eventsTable)
 		if err == nil && !showStatistic {
-			_, err = out.WriteString("\n")
+			err = conditionalWrite(out, "\n")
 		}
 	}
 
@@ -503,7 +585,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 		if err == nil {
 			in = b.Open(eventFile)
 			if in != nil {
-				err = o.printEvents(out, in, evdefs, typedefs)
+				err = o.printEvents(out, in, evdefs, typedefs, eventsTable)
 				if err != nil {
 					_ = b.Close()
 				} else {
@@ -517,30 +599,39 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 
 	if err == nil && !statBegin {
 		if !showStatistic {
-			_, err = out.WriteString("\n")
+			err = conditionalWrite(out, "\n")
 		}
 		if err == nil {
-			err = o.printStatistic(out, eventCount)
+			err = o.printStatistic(out, eventCount, eventsTable)
 		}
 	}
-
 	if err == nil {
 		err = out.Flush()
 	}
 	return err
 }
 
-func Print(filename *string, eventFile *string, evdefs map[uint16]scvd.Event,
+func Print(filename *string, formatType *string, eventFile *string, evdefs map[uint16]scvd.Event,
 	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
 	var file *os.File
 	var err error
 	var o Output
+
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 
 	if TimeFactor == nil {
 		TimeFactor = new(float64)
 	}
 	if *TimeFactor == 0.0 {
 		*TimeFactor = 4e-8
+	}
+	if formatType != nil {
+		if *formatType == "xml" || *formatType == "json" {
+			FormatType = *formatType
+		}
 	}
 
 	if filename != nil && len(*filename) != 0 {
@@ -553,9 +644,29 @@ func Print(filename *string, eventFile *string, evdefs map[uint16]scvd.Event,
 	}
 
 	out := bufio.NewWriter(file)
-	err = o.print(out, eventFile, evdefs, typedefs, statBegin, showStatistic)
+	err = o.print(out, eventFile, evdefs, typedefs, statBegin, showStatistic, &eventsTable)
 	if err == nil {
-		err = out.Flush()
+		if FormatType == "json" {
+			output, err := json.Marshal(eventsTable)
+			if err == nil {
+				buf := bytes.NewBuffer(output)
+				_, err = fmt.Fprint(out, buf)
+				if err == nil {
+					out.Flush()
+				}
+			}
+		} else if FormatType == "xml" {
+			output, err := xml.Marshal(eventsTable)
+			if err == nil {
+				buf := bytes.NewBuffer(output)
+				_, err = fmt.Fprint(out, buf)
+				if err == nil {
+					out.Flush()
+				}
+			}
+		} else {
+			err = out.Flush()
+		}
 	} else {
 		_ = out.Flush()
 	}

@@ -701,6 +701,10 @@ func TestOutput_printStatistic(t *testing.T) { //nolint:golint,paralleltest
 		{"header", fields{props0, 15, 20}, args{nil, 1}, header, false},
 		{"line1", fields{props1, 15, 20}, args{nil, 1}, header + line1, false},
 	}
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
@@ -709,7 +713,7 @@ func TestOutput_printStatistic(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.printStatistic(tt.args.out, tt.args.eventCount); (err != nil) != tt.wantErr {
+			if err := o.printStatistic(tt.args.out, tt.args.eventCount, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.printStatistic() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -806,6 +810,10 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		{"read3", fields{}, args{}, &s11, line3, false},
 		{"readNix", fields{}, args{}, &sNix, "", false},
 	}
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
@@ -819,7 +827,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.printEvents(tt.args.out, tt.args.in, tt.args.evdefs, tt.args.typedefs); (err != nil) != tt.wantErr {
+			if err := o.printEvents(tt.args.out, tt.args.in, tt.args.evdefs, tt.args.typedefs, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.printEvents() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -952,6 +960,10 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 		{"statEnd", fields{}, args{eventFile: &s10}, line1, false},
 		{"statBegin", fields{}, args{eventFile: &s10, statBegin: true}, line2, false},
 	}
+	eventsTable := EventsTable{
+		Events:     []EventRecord{},
+		Statistics: []EventRecordStatistic{},
+	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
@@ -963,7 +975,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.print(tt.args.out, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := o.print(tt.args.out, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -1006,6 +1018,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		statBegin     bool
 		showStatistic bool
 	}
+	formatType := "txt"
 	tests := []struct {
 		name    string
 		args    args
@@ -1017,7 +1030,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1034,6 +1047,126 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 						end = true
 						break // end of lines reached
 					}
+					if line != l {
+						t.Errorf("Print() %s = %v, want %v", tt.name, line, l)
+					}
+				}
+				line, err := in.ReadString('\n')
+				if errors.Is(err, io.EOF) {
+					end = true
+				} else {
+					t.Errorf("Print() %s = %v, want EOF", tt.name, line)
+				}
+				if !end {
+					t.Errorf("Print() %s = EOF, want %v", tt.name, l)
+				}
+			}
+		})
+	}
+}
+
+func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
+	o1 := "testOutput.json"
+
+	var s10 = "../../testdata/test10.binary"
+
+	lines1 := [...]string{
+		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF\",\"eventProperty\":\"0xFF03\",\"value\":\"val1=0x00000004, val2=0x00000002\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE\",\"eventProperty\":\"0xFE00\",\"value\":\"hello wo\"}],\"statistics\":[]}",
+	}
+
+	type args struct {
+		filename      *string
+		eventFile     *string
+		evdefs        map[uint16]scvd.Event
+		typedefs      map[string]map[string]map[int16]string
+		statBegin     bool
+		showStatistic bool
+	}
+	formatType := "json"
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"test", args{filename: &o1, eventFile: &s10}, false},
+	}
+	for _, tt := range tests { //nolint:golint,paralleltest
+		t.Run(tt.name, func(t *testing.T) {
+			TimeFactor = nil
+			defer os.Remove(*tt.args.filename)
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			file, err := os.Open(*tt.args.filename)
+			if err != nil {
+				t.Errorf("Print() error = %v, output file not created", err)
+			}
+			if file != nil {
+				in := bufio.NewReader(file)
+				var l string
+				end := false
+				for _, l = range lines1 {
+					line, _ := in.ReadString('\n')
+					if line != l {
+						t.Errorf("Print() %s = %v, want %v", tt.name, line, l)
+					}
+				}
+				line, err := in.ReadString('\n')
+				if errors.Is(err, io.EOF) {
+					end = true
+				} else {
+					t.Errorf("Print() %s = %v, want EOF", tt.name, line)
+				}
+				if !end {
+					t.Errorf("Print() %s = EOF, want %v", tt.name, l)
+				}
+			}
+		})
+	}
+}
+
+func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
+	o1 := "testOutput.xml"
+
+	var s10 = "../../testdata/test10.binary"
+
+	lines1 := [...]string{
+		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF</component><eventProperty>0xFF03</eventProperty><value>val1=0x00000004, val2=0x00000002</value></events><events><index>1</index><time>7.75</time><component>0xFE</component><eventProperty>0xFE00</eventProperty><value>hello wo</value></events></EventsTable>",
+	}
+
+	type args struct {
+		filename      *string
+		eventFile     *string
+		evdefs        map[uint16]scvd.Event
+		typedefs      map[string]map[string]map[int16]string
+		statBegin     bool
+		showStatistic bool
+	}
+	formatType := "xml"
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{"test", args{filename: &o1, eventFile: &s10}, false},
+	}
+	for _, tt := range tests { //nolint:golint,paralleltest
+		t.Run(tt.name, func(t *testing.T) {
+			TimeFactor = nil
+			defer os.Remove(*tt.args.filename)
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			file, err := os.Open(*tt.args.filename)
+			if err != nil {
+				t.Errorf("Print() error = %v, output file not created", err)
+			}
+			if file != nil {
+				in := bufio.NewReader(file)
+				var l string
+				end := false
+				for _, l = range lines1 {
+					line, _ := in.ReadString('\n')
 					if line != l {
 						t.Errorf("Print() %s = %v, want %v", tt.name, line, l)
 					}
