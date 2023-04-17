@@ -3,7 +3,7 @@ var indexSectionsWithContent =
   0: "/abcdefilmprstuvx",
   1: "a",
   2: "ae",
-  3: "aceilmprstx",
+  3: "aceilmprsx",
   4: "cefmr",
   5: "/bcderstuvx"
 };

@@ -120,9 +120,10 @@ Usage example</h1>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> HardFault_Handler() {</div>
-<div class="line">    <a class="code hl_function" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3" title="Save the fault information.">ARM_FaultSave</a>();</div>
-<div class="line">    <a class="code hl_function" href="group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292" title="Callback function called after fault information was saved.">ARM_FaultExit</a>();</div>
+<div class="line">__attribute__((naked)) <span class="keywordtype">void</span> HardFault_Handler (<span class="keywordtype">void</span>) {</div>
+<div class="line">  __ASM <span class="keyword">volatile</span> (</div>
+<div class="line">    <span class="stringliteral">&quot;b  ARM_FaultSave\n&quot;</span></div>
+<div class="line">  );</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>

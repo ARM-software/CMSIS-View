@@ -125,14 +125,15 @@ Content</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structARM__FaultInfo__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t">ARM_FaultInfo_t</a></td></tr>
-<tr class="memdesc:structARM__FaultInfo__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault information type definition.  <a href="group__Fault__Storage.html#structARM__FaultInfo__t">More...</a><br /></td></tr>
+<tr class="memdesc:structARM__FaultInfo__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault information structure type definition.  <a href="group__Fault__Storage.html#structARM__FaultInfo__t">More...</a><br /></td></tr>
 <tr class="separator:structARM__FaultInfo__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structARM__FaultInfo__t_8type"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8type">ARM_FaultInfo_t.type</a></td></tr>
-<tr class="memdesc:structARM__FaultInfo__t_8type"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault information structure.  <a href="group__Fault__Storage.html#structARM__FaultInfo__t_8type">More...</a><br /></td></tr>
-<tr class="separator:structARM__FaultInfo__t_8type"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structARM__FaultInfo__t_8type_8version"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8type_8version">ARM_FaultInfo_t.type.version</a></td></tr>
-<tr class="memdesc:structARM__FaultInfo__t_8type_8version"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault information version.  <a href="group__Fault__Storage.html#structARM__FaultInfo__t_8type_8version">More...</a><br /></td></tr>
-<tr class="separator:structARM__FaultInfo__t_8type_8version"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8info"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8info"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8info_8version"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td></tr>
+<tr class="memdesc:structARM__FaultInfo__t_8info_8version"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; Structure version and content information  <a href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">More...</a><br /></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8info_8version"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8info_8content"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content">ARM_FaultInfo_t.info.content</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8info_8content"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -175,7 +176,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p >Fault information type definition. </p>
+<div class="textblock"><p >Fault information structure type definition. </p>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
@@ -183,13 +184,13 @@ Variables</h2></td></tr>
 <td class="fieldname">
 count</td>
 <td class="fielddoc">
-Auto-incrementing fault counter. </td></tr>
+Saved faults counter. </td></tr>
 <tr><td class="fieldtype">
 <a id="a7ba6d986496f16e7c9bb92ea0265914d" name="a7ba6d986496f16e7c9bb92ea0265914d"></a>uint32_t</td>
 <td class="fieldname">
 crc32</td>
 <td class="fielddoc">
-CRC32 checksum calculated using <a class="el" href="group__Fault__Storage__Macros.html#ga177dde2802c544c04f49495dda3bde5f">ARM_FAULT_CRC32_INIT_VAL</a> and <a class="el" href="group__Fault__Storage__Macros.html#ga5fd9c53aac8e14636a10cfdca7b4b2f7">ARM_FAULT_CRC32_POLYNOM</a>. </td></tr>
+CRC32 of the structure content (excluding magic_number and crc32 fields) </td></tr>
 <tr><td class="fieldtype">
 <a id="ac699e8a2ada09ddf3f7df240c8032a53" name="ac699e8a2ada09ddf3f7df240c8032a53"></a>uint32_t</td>
 <td class="fieldname">
@@ -197,24 +198,29 @@ EXC_RETURN</td>
 <td class="fielddoc">
 Exception Return code (LR), in exception handler. </td></tr>
 <tr><td class="fieldtype">
+<a id="ab04b9b327f38315ae6b99791570cfde9" name="ab04b9b327f38315ae6b99791570cfde9"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td>
+<td class="fieldname">
+info</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
 <a id="a972b05b20154d3b04b487468986fd6f0" name="a972b05b20154d3b04b487468986fd6f0"></a>uint32_t</td>
 <td class="fieldname">
 IntegritySignature</td>
 <td class="fielddoc">
-Additional state context (only for Armv8/8.1-M arch) <p >Integrity Signature </p>
-</td></tr>
+Integrity Signature (only for Armv8/8.1-M arch) </td></tr>
 <tr><td class="fieldtype">
 <a id="a3314de2ca1fccad1fe0411e61b2d282d" name="a3314de2ca1fccad1fe0411e61b2d282d"></a>uint32_t</td>
 <td class="fieldname">
 LR</td>
 <td class="fielddoc">
-Link Register (R14) value before exception. </td></tr>
+Link Register (R14) value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a45eaf7e07ea0226c1328ee7d4a5f7948" name="a45eaf7e07ea0226c1328ee7d4a5f7948"></a>uint32_t</td>
 <td class="fieldname">
 magic_number</td>
 <td class="fielddoc">
-Always set to <a class="el" href="group__Fault__Storage__Macros.html#ga28ab0ccaa44f0bf6605c740e40b9586a">ARM_FAULT_MAGIC_NUMBER</a>. </td></tr>
+Magic number (ASCII "FltR") </td></tr>
 <tr><td class="fieldtype">
 <a id="a44133716bf1f8c1f60fc73a4a5799dd9" name="a44133716bf1f8c1f60fc73a4a5799dd9"></a>uint32_t</td>
 <td class="fieldname">
@@ -226,8 +232,7 @@ Main Stack Pointer value. </td></tr>
 <td class="fieldname">
 MSPLIM</td>
 <td class="fielddoc">
-Additional Armv8/8.1-M arch specific Registers. <p >Main Stack Pointer Limit Register value </p>
-</td></tr>
+Main Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
 <tr><td class="fieldtype">
 <a id="a4465a910abcbdf89240e5e808246ba0c" name="a4465a910abcbdf89240e5e808246ba0c"></a>uint32_t</td>
 <td class="fieldname">
@@ -239,92 +244,85 @@ Process Stack Pointer value. </td></tr>
 <td class="fieldname">
 PSPLIM</td>
 <td class="fielddoc">
-Process Stack Pointer Limit Register value. </td></tr>
+Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
 <tr><td class="fieldtype">
 <a id="a2396b29a5d3434f4ed3c248523270330" name="a2396b29a5d3434f4ed3c248523270330"></a>uint32_t</td>
 <td class="fieldname">
 R0</td>
 <td class="fielddoc">
-State context (same as Basic Stack Frame) <p >R0 register value before exception </p>
-</td></tr>
+R0 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a2b71b52e6a327eb84881526b454a0a21" name="a2b71b52e6a327eb84881526b454a0a21"></a>uint32_t</td>
 <td class="fieldname">
 R1</td>
 <td class="fielddoc">
-R1 register value before exception. </td></tr>
+R1 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="add1ccfa070e769fa0997305a16890c25" name="add1ccfa070e769fa0997305a16890c25"></a>uint32_t</td>
 <td class="fieldname">
 R10</td>
 <td class="fielddoc">
-R10 register value before exception. </td></tr>
+R10 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="aa7856f89a3a397c558c6649be8e66dc8" name="aa7856f89a3a397c558c6649be8e66dc8"></a>uint32_t</td>
 <td class="fieldname">
 R11</td>
 <td class="fielddoc">
-R11 register value before exception. </td></tr>
+R11 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a91258eb79edc2231a6c7dbc2ff14c13a" name="a91258eb79edc2231a6c7dbc2ff14c13a"></a>uint32_t</td>
 <td class="fieldname">
 R12</td>
 <td class="fielddoc">
-R12 register value before exception. </td></tr>
+R12 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a5d193f7a0912b76f2101cc5388c7b71b" name="a5d193f7a0912b76f2101cc5388c7b71b"></a>uint32_t</td>
 <td class="fieldname">
 R2</td>
 <td class="fielddoc">
-R2 register value before exception. </td></tr>
+R2 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a02984de000cdc74dd423966935993ec5" name="a02984de000cdc74dd423966935993ec5"></a>uint32_t</td>
 <td class="fieldname">
 R3</td>
 <td class="fielddoc">
-R3 register value before exception. </td></tr>
+R3 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="aaff5644c1fc6e32c5f83d35326fb6fd0" name="aaff5644c1fc6e32c5f83d35326fb6fd0"></a>uint32_t</td>
 <td class="fieldname">
 R4</td>
 <td class="fielddoc">
-R4 register value before exception. </td></tr>
+R4 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a71d3e97764f882c9adaa4ff51981d2fe" name="a71d3e97764f882c9adaa4ff51981d2fe"></a>uint32_t</td>
 <td class="fieldname">
 R5</td>
 <td class="fielddoc">
-R5 register value before exception. </td></tr>
+R5 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="ad187aa37e5ebebc9054239173d06cdd6" name="ad187aa37e5ebebc9054239173d06cdd6"></a>uint32_t</td>
 <td class="fieldname">
 R6</td>
 <td class="fielddoc">
-R6 register value before exception. </td></tr>
+R6 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a9929d303935cc338da211aaa33e65da2" name="a9929d303935cc338da211aaa33e65da2"></a>uint32_t</td>
 <td class="fieldname">
 R7</td>
 <td class="fielddoc">
-R7 register value before exception. </td></tr>
+R7 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a7982db8ebbe623de80374009f7650e76" name="a7982db8ebbe623de80374009f7650e76"></a>uint32_t</td>
 <td class="fieldname">
 R8</td>
 <td class="fielddoc">
-R8 register value before exception. </td></tr>
+R8 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a0df18fdea4760a9f71b31f1a12e66958" name="a0df18fdea4760a9f71b31f1a12e66958"></a>uint32_t</td>
 <td class="fieldname">
 R9</td>
 <td class="fielddoc">
-R9 register value before exception. </td></tr>
-<tr><td class="fieldtype">
-<a id="a43fae5b728aa075b9475bbe49a5738ef" name="a43fae5b728aa075b9475bbe49a5738ef"></a>uint32_t</td>
-<td class="fieldname">
-Reserved</td>
-<td class="fielddoc">
-Reserved. </td></tr>
+R9 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a79d90bf04aa3b096b74d8f270b00000f" name="a79d90bf04aa3b096b74d8f270b00000f"></a>uint32_t</td>
 <td class="fieldname">
@@ -342,14 +340,13 @@ System Control Block - Auxiliary Fault Status Register value. </td></tr>
 <td class="fieldname">
 SCB_BFAR</td>
 <td class="fielddoc">
-System Control Block - BusFault Status Register value. </td></tr>
+System Control Block - BusFault Address Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a748b97139222c35e8b1612f94c2f0ed5" name="a748b97139222c35e8b1612f94c2f0ed5"></a>uint32_t</td>
 <td class="fieldname">
 SCB_CFSR</td>
 <td class="fielddoc">
-Fault Registers. <p >System Control Block - Configurable Fault Status Register value </p>
-</td></tr>
+System Control Block - Configurable Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="af50ca1735205d115d328093a79a8df9a" name="af50ca1735205d115d328093a79a8df9a"></a>uint32_t</td>
 <td class="fieldname">
@@ -367,7 +364,7 @@ System Control Block - HardFault Status Register value. </td></tr>
 <td class="fieldname">
 SCB_MMFAR</td>
 <td class="fielddoc">
-System Control Block - MemManage Fault Status Register value. </td></tr>
+System Control Block - MemManage Fault Address Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a4e69c506c3e5df6ca086e96cb1420836" name="a4e69c506c3e5df6ca086e96cb1420836"></a>uint32_t</td>
 <td class="fieldname">
@@ -379,91 +376,64 @@ System Control Block - Secure Fault Address Register value. </td></tr>
 <td class="fieldname">
 SCB_SFSR</td>
 <td class="fielddoc">
-Additional Armv8/8.1-M Mainline arch specific Fault Registers. <p >System Control Block - Secure Fault Status Register value </p>
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a646efc0776a8161b1a194d6cf6369fe7" name="a646efc0776a8161b1a194d6cf6369fe7"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8type">ARM_FaultInfo_t.type</a></td>
-<td class="fieldname">
-type</td>
-<td class="fielddoc">
-Fault information structure. </td></tr>
+System Control Block - Secure Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a1d6c6767a3d4bb9e9bf57f8cb4bc0613" name="a1d6c6767a3d4bb9e9bf57f8cb4bc0613"></a>uint32_t</td>
 <td class="fieldname">
 xPSR</td>
 <td class="fielddoc">
-Program Status Register value before exception. </td></tr>
+Program Status Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a85df7bf2fec54c01dfc0c4f228acc1a1" name="a85df7bf2fec54c01dfc0c4f228acc1a1"></a>uint32_t</td>
 <td class="fieldname">
 xPSR_in_handler</td>
 <td class="fielddoc">
-Common Registers. <p >Program Status Register value, in exception handler </p>
-</td></tr>
+Program Status Register value, in exception handler. </td></tr>
 </table>
 
 </div>
 </div>
-<a name="structARM__FaultInfo__t_8type" id="structARM__FaultInfo__t_8type"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8type">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.type</h2>
+<a name="structARM__FaultInfo__t_8info" id="structARM__FaultInfo__t_8info"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8info">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.info</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct ARM_FaultInfo_t.type</td>
+          <td class="memname">struct ARM_FaultInfo_t.info</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p >Fault information structure. </p>
-</div><table class="fieldtable">
+<div class="textblock"></div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a25edef5dd9e93b5aaddb386196d71262" name="a25edef5dd9e93b5aaddb386196d71262"></a>uint16_t</td>
+<a id="a9a0364b9e99bb480dd25e1f0284c8555" name="a9a0364b9e99bb480dd25e1f0284c8555"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content">ARM_FaultInfo_t.info.content</a></td>
 <td class="fieldname">
-armv8m: 1</td>
+content</td>
 <td class="fielddoc">
-Armv8/8.1-M information: 0 - absent; 1 - available. </td></tr>
+</td></tr>
 <tr><td class="fieldtype">
-<a id="ada60f4dec912ed64ef4483ef7f6978ac" name="ada60f4dec912ed64ef4483ef7f6978ac"></a>uint16_t</td>
-<td class="fieldname">
-fault_regs: 1</td>
-<td class="fielddoc">
-Fault registers: 0 - absent; 1 - available. </td></tr>
-<tr><td class="fieldtype">
-<a id="a7f005c3fa691e77c52d3297cc2699072" name="a7f005c3fa691e77c52d3297cc2699072"></a>uint16_t</td>
-<td class="fieldname">
-reserved: 13</td>
-<td class="fielddoc">
-Reserved (0) </td></tr>
-<tr><td class="fieldtype">
-<a id="abc705802f37ff7e0bb850df6e2e9467e" name="abc705802f37ff7e0bb850df6e2e9467e"></a>uint16_t</td>
-<td class="fieldname">
-tz_secure: 1</td>
-<td class="fielddoc">
-Recording was done running in: 0 - tz-disabled or non-secure mode; 1 - secure mode. </td></tr>
-<tr><td class="fieldtype">
-<a id="a2af72f100c356273d46284f6fd1dfc08" name="a2af72f100c356273d46284f6fd1dfc08"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8type_8version">ARM_FaultInfo_t.type.version</a></td>
+<a id="a2af72f100c356273d46284f6fd1dfc08" name="a2af72f100c356273d46284f6fd1dfc08"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td>
 <td class="fieldname">
 version</td>
 <td class="fielddoc">
-Fault information version. </td></tr>
+&lt; Structure version and content information </td></tr>
 </table>
 
 </div>
 </div>
-<a name="structARM__FaultInfo__t_8type_8version" id="structARM__FaultInfo__t_8type_8version"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8type_8version">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.type.version</h2>
+<a name="structARM__FaultInfo__t_8info_8version" id="structARM__FaultInfo__t_8info_8version"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8info_8version">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.info.version</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct ARM_FaultInfo_t.type.version</td>
+          <td class="memname">struct ARM_FaultInfo_t.info.version</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p >Fault information version. </p>
+<div class="textblock"><p >&lt; Structure version and content information </p>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
@@ -478,6 +448,65 @@ Fault information structure version: major, see <a class="el" href="group__Fault
 minor</td>
 <td class="fielddoc">
 Fault information structure version: minor, see <a class="el" href="group__Fault__Storage__Macros.html#gafa7f6c005137393af25375ed25a3d90d">ARM_FAULT_FAULT_INFO_VER_MINOR</a>. </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structARM__FaultInfo__t_8info_8content" id="structARM__FaultInfo__t_8info_8content"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8info_8content">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.info.content</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ARM_FaultInfo_t.info.content</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a25edef5dd9e93b5aaddb386196d71262" name="a25edef5dd9e93b5aaddb386196d71262"></a>uint16_t</td>
+<td class="fieldname">
+armv8m: 1</td>
+<td class="fielddoc">
+Armv8/8.1-M information: 0 - absent; 1 - available. </td></tr>
+<tr><td class="fieldtype">
+<a id="ada60f4dec912ed64ef4483ef7f6978ac" name="ada60f4dec912ed64ef4483ef7f6978ac"></a>uint16_t</td>
+<td class="fieldname">
+fault_regs: 1</td>
+<td class="fielddoc">
+Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="a2453a9764d85670260f845e5529cf8b2" name="a2453a9764d85670260f845e5529cf8b2"></a>uint16_t</td>
+<td class="fieldname">
+limit_regs: 1</td>
+<td class="fielddoc">
+MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7f005c3fa691e77c52d3297cc2699072" name="a7f005c3fa691e77c52d3297cc2699072"></a>uint16_t</td>
+<td class="fieldname">
+reserved: 10</td>
+<td class="fielddoc">
+Reserved (0) </td></tr>
+<tr><td class="fieldtype">
+<a id="aba549a313935295d5c3c369c98797ca7" name="aba549a313935295d5c3c369c98797ca7"></a>uint16_t</td>
+<td class="fieldname">
+secure_fault_regs: 1</td>
+<td class="fielddoc">
+Secure Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="ab4ccde3b9a92cdff55dd8c38df00d08e" name="ab4ccde3b9a92cdff55dd8c38df00d08e"></a>uint16_t</td>
+<td class="fieldname">
+state_context: 1</td>
+<td class="fielddoc">
+State Context: 0 - was not saved; 1 - was saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="abc705802f37ff7e0bb850df6e2e9467e" name="abc705802f37ff7e0bb850df6e2e9467e"></a>uint16_t</td>
+<td class="fieldname">
+tz_secure: 1</td>
+<td class="fielddoc">
+Recording was done running in: 0 - tz-disabled or non-secure mode; 1 - secure mode. </td></tr>
 </table>
 
 </div>
@@ -521,7 +550,7 @@ Fault information structure version: minor, see <a class="el" href="group__Fault
 </div><div class="memdoc">
 
 <p>Callback function called after fault information was saved. </p>
-<p >Call after saving the fault context (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>) to trigger a processor reset for recover device from fault state. </p>
+<p >Callback function called after saving the fault information (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>). The default implementation will do a System Reset. If System Reset is not desired please provide a custom implementation of this function. </p>
 
 </div>
 </div>
@@ -540,7 +569,7 @@ Fault information structure version: minor, see <a class="el" href="group__Fault
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Check if the fault occurred and if the fault information was saved properly. </p><dl class="section return"><dt>Returns</dt><dd>status (1=Fault occurred and valid fault information exists, 0=no fault information saved yet or is invalid)</dd></dl>
+<p >Check if the fault occurred and if the fault information was saved properly. </p><dl class="section return"><dt>Returns</dt><dd>status (1 = fault occurred and valid fault information exists, 0 = no fault information saved yet or fault information is invalid)</dd></dl>
 <p>Call during startup to check if a fault occurred that can be sent, e.g. using <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> or <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a>. Consider calling <a class="el" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346">ARM_FaultClear</a> after sending the fault buffer to prevent resending. </p>
 
 </div>
@@ -562,7 +591,7 @@ Fault information structure version: minor, see <a class="el" href="group__Fault
 </div><div class="memdoc">
 
 <p>Output decoded fault information via STDIO. </p>
-<p >Decode stored fault context from fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> one needs to add the ARM_FaultPrint template implementation to the project. </p>
+<p >Decode stored fault information from fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> one needs to add the ARM_FaultPrint template implementation to the project. </p>
 
 </div>
 </div>
@@ -583,7 +612,7 @@ Fault information structure version: minor, see <a class="el" href="group__Fault
 </div><div class="memdoc">
 
 <p>Save the fault information. </p>
-<p >Call from a fault handler to save current fault context into fault buffer. Consider calling <a class="el" href="group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292">ARM_FaultExit</a> to trigger a processor reset after saving the fault context. </p>
+<p >Call from a fault handler to save current fault information into fault buffer. </p>
 
 </div>
 </div>

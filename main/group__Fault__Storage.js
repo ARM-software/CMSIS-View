@@ -5,6 +5,7 @@ var group__Fault__Storage =
       [ "count", "group__Fault__Storage.html#a86988a65e0d3ece7990c032c159786d6", null ],
       [ "crc32", "group__Fault__Storage.html#a7ba6d986496f16e7c9bb92ea0265914d", null ],
       [ "EXC_RETURN", "group__Fault__Storage.html#ac699e8a2ada09ddf3f7df240c8032a53", null ],
+      [ "info", "group__Fault__Storage.html#ab04b9b327f38315ae6b99791570cfde9", null ],
       [ "IntegritySignature", "group__Fault__Storage.html#a972b05b20154d3b04b487468986fd6f0", null ],
       [ "LR", "group__Fault__Storage.html#a3314de2ca1fccad1fe0411e61b2d282d", null ],
       [ "magic_number", "group__Fault__Storage.html#a45eaf7e07ea0226c1328ee7d4a5f7948", null ],
@@ -25,7 +26,6 @@ var group__Fault__Storage =
       [ "R7", "group__Fault__Storage.html#a9929d303935cc338da211aaa33e65da2", null ],
       [ "R8", "group__Fault__Storage.html#a7982db8ebbe623de80374009f7650e76", null ],
       [ "R9", "group__Fault__Storage.html#a0df18fdea4760a9f71b31f1a12e66958", null ],
-      [ "Reserved", "group__Fault__Storage.html#a43fae5b728aa075b9475bbe49a5738ef", null ],
       [ "ReturnAddress", "group__Fault__Storage.html#a79d90bf04aa3b096b74d8f270b00000f", null ],
       [ "SCB_AFSR", "group__Fault__Storage.html#a111ea8a6b0404e78a64239f5309ec56b", null ],
       [ "SCB_BFAR", "group__Fault__Storage.html#a75e07b2a054bce39712cd25d5ac3a49e", null ],
@@ -35,20 +35,25 @@ var group__Fault__Storage =
       [ "SCB_MMFAR", "group__Fault__Storage.html#a5429e9e6a9adc6e09644e064166d9c03", null ],
       [ "SCB_SFAR", "group__Fault__Storage.html#a4e69c506c3e5df6ca086e96cb1420836", null ],
       [ "SCB_SFSR", "group__Fault__Storage.html#a940cdef6313aecc9c0b9b0a58e692a3a", null ],
-      [ "type", "group__Fault__Storage.html#a646efc0776a8161b1a194d6cf6369fe7", null ],
       [ "xPSR", "group__Fault__Storage.html#a1d6c6767a3d4bb9e9bf57f8cb4bc0613", null ],
       [ "xPSR_in_handler", "group__Fault__Storage.html#a85df7bf2fec54c01dfc0c4f228acc1a1", null ]
     ] ],
-    [ "ARM_FaultInfo_t.type", "group__Fault__Storage.html#structARM__FaultInfo__t_8type", [
-      [ "armv8m", "group__Fault__Storage.html#a25edef5dd9e93b5aaddb386196d71262", null ],
-      [ "fault_regs", "group__Fault__Storage.html#ada60f4dec912ed64ef4483ef7f6978ac", null ],
-      [ "reserved", "group__Fault__Storage.html#a7f005c3fa691e77c52d3297cc2699072", null ],
-      [ "tz_secure", "group__Fault__Storage.html#abc705802f37ff7e0bb850df6e2e9467e", null ],
+    [ "ARM_FaultInfo_t.info", "group__Fault__Storage.html#structARM__FaultInfo__t_8info", [
+      [ "content", "group__Fault__Storage.html#a9a0364b9e99bb480dd25e1f0284c8555", null ],
       [ "version", "group__Fault__Storage.html#a2af72f100c356273d46284f6fd1dfc08", null ]
     ] ],
-    [ "ARM_FaultInfo_t.type.version", "group__Fault__Storage.html#structARM__FaultInfo__t_8type_8version", [
+    [ "ARM_FaultInfo_t.info.version", "group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version", [
       [ "major", "group__Fault__Storage.html#af1425da40a9f2d21ab702a1c7feae026", null ],
       [ "minor", "group__Fault__Storage.html#aab846c0e3717a3e7d14af45cab70b44a", null ]
+    ] ],
+    [ "ARM_FaultInfo_t.info.content", "group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content", [
+      [ "armv8m", "group__Fault__Storage.html#a25edef5dd9e93b5aaddb386196d71262", null ],
+      [ "fault_regs", "group__Fault__Storage.html#ada60f4dec912ed64ef4483ef7f6978ac", null ],
+      [ "limit_regs", "group__Fault__Storage.html#a2453a9764d85670260f845e5529cf8b2", null ],
+      [ "reserved", "group__Fault__Storage.html#a7f005c3fa691e77c52d3297cc2699072", null ],
+      [ "secure_fault_regs", "group__Fault__Storage.html#aba549a313935295d5c3c369c98797ca7", null ],
+      [ "state_context", "group__Fault__Storage.html#ab4ccde3b9a92cdff55dd8c38df00d08e", null ],
+      [ "tz_secure", "group__Fault__Storage.html#abc705802f37ff7e0bb850df6e2e9467e", null ]
     ] ],
     [ "ARM_FaultClear", "group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346", null ],
     [ "ARM_FaultExit", "group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292", null ],

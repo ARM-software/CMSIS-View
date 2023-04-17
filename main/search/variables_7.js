@@ -13,6 +13,5 @@ var searchData=
   ['r7_10',['R7',['../group__Fault__Storage.html#a9929d303935cc338da211aaa33e65da2',1,'ARM_FaultInfo_t']]],
   ['r8_11',['R8',['../group__Fault__Storage.html#a7982db8ebbe623de80374009f7650e76',1,'ARM_FaultInfo_t']]],
   ['r9_12',['R9',['../group__Fault__Storage.html#a0df18fdea4760a9f71b31f1a12e66958',1,'ARM_FaultInfo_t']]],
-  ['reserved_13',['Reserved',['../group__Fault__Storage.html#a43fae5b728aa075b9475bbe49a5738ef',1,'ARM_FaultInfo_t']]],
-  ['returnaddress_14',['ReturnAddress',['../group__Fault__Storage.html#a79d90bf04aa3b096b74d8f270b00000f',1,'ARM_FaultInfo_t']]]
+  ['returnaddress_13',['ReturnAddress',['../group__Fault__Storage.html#a79d90bf04aa3b096b74d8f270b00000f',1,'ARM_FaultInfo_t']]]
 ];
