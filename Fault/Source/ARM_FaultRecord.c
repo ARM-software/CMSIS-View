@@ -19,6 +19,7 @@
 //lint -e46  "Suppress: field type should be _Bool, unsigned int or signed int [MISRA 2012 Rule 6.1, required]"
 //lint -e750 "Suppress: local macro not referenced [MISRA 2012 Rule 2.5, advisory]"
 //lint -e835 "Suppress: A zero has been given as left argument to operator '+'"
+//lint -esym(9058, cmse_address_info) "Suppress: tag 'cmse_address_info' unused outside of typedefs [MISRA 2012 Rule 2.4, advisory]"
 
 #include "ARM_Fault.h"
 #include "EventRecorder.h"
@@ -27,57 +28,36 @@
 #define EvtFault_No     0xEEU           // Component number for ARM Fault Record
 
 // ARM Fault Event IDs
-#define EvtFault_FaultInfo_Empty        EventID(EventLevelOp,    EvtFault_No, 0x00U)
-#define EvtFault_FaultInfo_Invalid      EventID(EventLevelError, EvtFault_No, 0x01U)
-#define EvtFault_HardFault_VECTTBL      EventID(EventLevelError, EvtFault_No, 0x02U)
-#define EvtFault_HardFault_FORCED       EventID(EventLevelError, EvtFault_No, 0x04U)
-#define EvtFault_HardFault_DEBUGEVT     EventID(EventLevelError, EvtFault_No, 0x06U)
-#define EvtFault_MemManage_IACCVIOL     EventID(EventLevelError, EvtFault_No, 0x08U)
-#define EvtFault_MemManage_DACCVIOL     EventID(EventLevelError, EvtFault_No, 0x0CU)
-#define EvtFault_MemManage_MUNSTKERR    EventID(EventLevelError, EvtFault_No, 0x10U)
-#define EvtFault_MemManage_MSTKERR      EventID(EventLevelError, EvtFault_No, 0x14U)
-#define EvtFault_MemManage_MLSPERR      EventID(EventLevelError, EvtFault_No, 0x16U)
-#define EvtFault_BusFault_IBUSERR       EventID(EventLevelError, EvtFault_No, 0x1AU)
-#define EvtFault_BusFault_PRECISERR     EventID(EventLevelError, EvtFault_No, 0x1EU)
-#define EvtFault_BusFault_IMPRECISERR   EventID(EventLevelError, EvtFault_No, 0x22U)
-#define EvtFault_BusFault_UNSTKERR      EventID(EventLevelError, EvtFault_No, 0x26U)
-#define EvtFault_BusFault_STKERR        EventID(EventLevelError, EvtFault_No, 0x2AU)
-#define EvtFault_BusFault_LSPERR        EventID(EventLevelError, EvtFault_No, 0x2CU)
-#define EvtFault_UsageFault_UNDEFINSTR  EventID(EventLevelError, EvtFault_No, 0x30U)
-#define EvtFault_UsageFault_INVSTATE    EventID(EventLevelError, EvtFault_No, 0x32U)
-#define EvtFault_UsageFault_INVPC       EventID(EventLevelError, EvtFault_No, 0x34U)
-#define EvtFault_UsageFault_NOCP        EventID(EventLevelError, EvtFault_No, 0x36U)
-#define EvtFault_UsageFault_STKOF       EventID(EventLevelError, EvtFault_No, 0x38U)
-#define EvtFault_UsageFault_UNALIGNED   EventID(EventLevelError, EvtFault_No, 0x39U)
-#define EvtFault_UsageFault_DIVBYZERO   EventID(EventLevelError, EvtFault_No, 0x3BU)
-#define EvtFault_SecureFault_INVEP      EventID(EventLevelError, EvtFault_No, 0x3DU)
-#define EvtFault_SecureFault_INVIS      EventID(EventLevelError, EvtFault_No, 0x41U)
-#define EvtFault_SecureFault_INVER      EventID(EventLevelError, EvtFault_No, 0x45U)
-#define EvtFault_SecureFault_AUVIOL     EventID(EventLevelError, EvtFault_No, 0x49U)
-#define EvtFault_SecureFault_INVTRAN    EventID(EventLevelError, EvtFault_No, 0x4DU)
-#define EvtFault_SecureFault_LSPERR     EventID(EventLevelError, EvtFault_No, 0x51U)
-#define EvtFault_SecureFault_LSERR      EventID(EventLevelError, EvtFault_No, 0x55U)
-
-#if    (ARM_FAULT_FAULT_REGS_EXIST != 0)
-// Define CFSR mask for detecting state context stacking failure
-#ifndef SCB_CFSR_Stack_Err_Msk
-#ifdef  SCB_CFSR_STKOF_Msk
-#define SCB_CFSR_Stack_Err_Msk (SCB_CFSR_STKERR_Msk | SCB_CFSR_MSTKERR_Msk | SCB_CFSR_STKOF_Msk)
-#else
-#define SCB_CFSR_Stack_Err_Msk (SCB_CFSR_STKERR_Msk | SCB_CFSR_MSTKERR_Msk)
-#endif
-#endif
-#endif
-
-// General defines
-#ifndef EXC_RETURN_SPSEL
-#define EXC_RETURN_SPSEL       (1UL << 2)
-#endif
-
-// Armv8/8.1-M architecture related defines
-#if    (ARM_FAULT_ARCH_ARMV8x_M != 0)
-#define ARM_FAULT_ASC_INTEGRITY_SIG    (0xFEFA125AU)    // Additional State Context Integrity Signature
-#endif
+#define EvtFault_FaultInfo_Invalid      EventID(EventLevelOp,    EvtFault_No, 0x00U)
+#define EvtFault_FaultInfo_NoFaultRegs  EventID(EventLevelError, EvtFault_No, 0x01U)
+#define EvtFault_HardFault_VECTTBL      EventID(EventLevelError, EvtFault_No, 0x03U)
+#define EvtFault_HardFault_FORCED       EventID(EventLevelError, EvtFault_No, 0x05U)
+#define EvtFault_HardFault_DEBUGEVT     EventID(EventLevelError, EvtFault_No, 0x07U)
+#define EvtFault_MemManage_IACCVIOL     EventID(EventLevelError, EvtFault_No, 0x09U)
+#define EvtFault_MemManage_DACCVIOL     EventID(EventLevelError, EvtFault_No, 0x0DU)
+#define EvtFault_MemManage_MUNSTKERR    EventID(EventLevelError, EvtFault_No, 0x11U)
+#define EvtFault_MemManage_MSTKERR      EventID(EventLevelError, EvtFault_No, 0x15U)
+#define EvtFault_MemManage_MLSPERR      EventID(EventLevelError, EvtFault_No, 0x17U)
+#define EvtFault_BusFault_IBUSERR       EventID(EventLevelError, EvtFault_No, 0x1BU)
+#define EvtFault_BusFault_PRECISERR     EventID(EventLevelError, EvtFault_No, 0x1FU)
+#define EvtFault_BusFault_IMPRECISERR   EventID(EventLevelError, EvtFault_No, 0x23U)
+#define EvtFault_BusFault_UNSTKERR      EventID(EventLevelError, EvtFault_No, 0x27U)
+#define EvtFault_BusFault_STKERR        EventID(EventLevelError, EvtFault_No, 0x2BU)
+#define EvtFault_BusFault_LSPERR        EventID(EventLevelError, EvtFault_No, 0x2DU)
+#define EvtFault_UsageFault_UNDEFINSTR  EventID(EventLevelError, EvtFault_No, 0x31U)
+#define EvtFault_UsageFault_INVSTATE    EventID(EventLevelError, EvtFault_No, 0x33U)
+#define EvtFault_UsageFault_INVPC       EventID(EventLevelError, EvtFault_No, 0x35U)
+#define EvtFault_UsageFault_NOCP        EventID(EventLevelError, EvtFault_No, 0x37U)
+#define EvtFault_UsageFault_STKOF       EventID(EventLevelError, EvtFault_No, 0x39U)
+#define EvtFault_UsageFault_UNALIGNED   EventID(EventLevelError, EvtFault_No, 0x3AU)
+#define EvtFault_UsageFault_DIVBYZERO   EventID(EventLevelError, EvtFault_No, 0x3CU)
+#define EvtFault_SecureFault_INVEP      EventID(EventLevelError, EvtFault_No, 0x3EU)
+#define EvtFault_SecureFault_INVIS      EventID(EventLevelError, EvtFault_No, 0x42U)
+#define EvtFault_SecureFault_INVER      EventID(EventLevelError, EvtFault_No, 0x46U)
+#define EvtFault_SecureFault_AUVIOL     EventID(EventLevelError, EvtFault_No, 0x4AU)
+#define EvtFault_SecureFault_INVTRAN    EventID(EventLevelError, EvtFault_No, 0x4EU)
+#define EvtFault_SecureFault_LSPERR     EventID(EventLevelError, EvtFault_No, 0x52U)
+#define EvtFault_SecureFault_LSERR      EventID(EventLevelError, EvtFault_No, 0x56U)
 
 // Armv8/8.1-M Mainline architecture related defines
 #if    (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
@@ -107,12 +87,6 @@
 #endif
 #endif
 
-// Local functions prototypes
-static uint32_t CalcCRC32 (      uint32_t init_val,
-                           const uint8_t *data_ptr,
-                                 uint32_t data_len,
-                                 uint32_t polynom);
-
 // ARM_FaultRecord function ----------------------------------------------------
 
 /**
@@ -121,61 +95,49 @@ static uint32_t CalcCRC32 (      uint32_t init_val,
   EventRecorder fully functional.
 */
 void ARM_FaultRecord (void) {
-  int8_t   fault_info_valid    = 1;
-  int8_t   fault_info_magic_ok = 1;
-  int8_t   fault_info_crc_ok   = 1;
-#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-  int8_t   state_context_valid = 1;
-  uint32_t return_address      = 0U;
-  uint32_t evt_id_inc          = 0U;
-#endif
+  int8_t fault_info_valid;
+  uint32_t return_address = 0U;
+  uint32_t evt_id_inc     = 0U;
 
-  // Check if magic number is valid
-  if (ARM_FaultInfo.magic_number != ARM_FAULT_MAGIC_NUMBER) {
-    fault_info_valid    = 0;
-    fault_info_magic_ok = 0;
-  }
+  /* Check if there is available valid fault information */
+  fault_info_valid = (int8_t)ARM_FaultOccurred();
 
-  // Check if CRC of the ARM_FaultInfo is correct
-  if (fault_info_valid != 0) {
-    if (ARM_FaultInfo.crc32 != CalcCRC32(ARM_FAULT_CRC32_INIT_VAL,
-                                        (const uint8_t *)&ARM_FaultInfo.count,
-                                        (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.magic_number) + sizeof(ARM_FaultInfo.crc32))),
-                                         ARM_FAULT_CRC32_POLYNOM)) {
-      fault_info_valid  = 0;
-      fault_info_crc_ok = 0;
-    }
-  }
-
-#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-  // Check if the state context was stacked properly (if CFSR is available)
-  if ((ARM_FaultInfo.SCB_CFSR & (SCB_CFSR_Stack_Err_Msk)) != 0U) {
-    state_context_valid = 0;
-  } else {
+  // Check if state context is valid
+  if (ARM_FaultInfo.info.content.state_context != 0U) {
     return_address = ARM_FaultInfo.ReturnAddress;
   }
-#endif
 
-  // Output: Error message if magic number or CRC is invalid
-  if (fault_info_magic_ok == 0) {
+  // Output: Message if fault info is invalid
+  if (fault_info_valid == 0) {
     //lint -e845 "Suppress: The right argument to operator '|' is certain to be 0"
-    (void)EventRecord2(EvtFault_FaultInfo_Empty,   0U, 0U);
-  } else if (fault_info_crc_ok == 0) {
     (void)EventRecord2(EvtFault_FaultInfo_Invalid, 0U, 0U);
   } else {
     // Fault information is valid
   }
 
-#if (ARM_FAULT_FAULT_REGS_EXIST != 0)
+#if (ARM_FAULT_FAULT_REGS_EXIST == 0)   // If fault registers do not exist
+  /* Output: Message if fault registers do not exist */
+  if (fault_info_valid != 0) {
+    if (ARM_FaultInfo.info.content.state_context == 0U) {
+      evt_id_inc = 0U;
+    } else {
+      evt_id_inc = 1U;
+    }
+
+    (void)EventRecord2(EvtFault_FaultInfo_NoFaultRegs + evt_id_inc, return_address, 0U);
+  }
+#endif
+
+#if (ARM_FAULT_FAULT_REGS_EXIST != 0)   // If fault registers exist
   /* Output: Decoded HardFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
     uint32_t scb_hfsr = ARM_FaultInfo.SCB_HFSR;
 
     if ((scb_hfsr & (SCB_HFSR_VECTTBL_Msk   |
                      SCB_HFSR_FORCED_Msk    |
                      SCB_HFSR_DEBUGEVT_Msk  )) != 0U) {
 
-      if (state_context_valid == 0) {
+      if (ARM_FaultInfo.info.content.state_context == 0U) {
         evt_id_inc = 0U;
       } else {
         evt_id_inc = 1U;
@@ -194,7 +156,7 @@ void ARM_FaultRecord (void) {
   }
 
   /* Output: Decoded MemManage fault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
     uint32_t scb_cfsr  = ARM_FaultInfo.SCB_CFSR;
     uint32_t scb_mmfar = ARM_FaultInfo.SCB_MMFAR;
 
@@ -207,7 +169,7 @@ void ARM_FaultRecord (void) {
                      SCB_CFSR_MSTKERR_Msk   )) != 0U) {
 
       evt_id_inc = 0U;
-      if (state_context_valid != 0) {
+      if (ARM_FaultInfo.info.content.state_context != 0U) {
         evt_id_inc += 1U;
       }
       if ((scb_cfsr & SCB_CFSR_MMARVALID_Msk) != 0U) {
@@ -235,7 +197,7 @@ void ARM_FaultRecord (void) {
   }
 
   /* Output: Decoded BusFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
     uint32_t scb_cfsr = ARM_FaultInfo.SCB_CFSR;
     uint32_t scb_bfar = ARM_FaultInfo.SCB_BFAR;
 
@@ -249,7 +211,7 @@ void ARM_FaultRecord (void) {
                      SCB_CFSR_STKERR_Msk      )) != 0U) {
 
       evt_id_inc = 0U;
-      if (state_context_valid != 0) {
+      if (ARM_FaultInfo.info.content.state_context != 0U) {
         evt_id_inc += 1U;
       }
       if ((scb_cfsr & SCB_CFSR_BFARVALID_Msk) != 0U) {
@@ -273,17 +235,17 @@ void ARM_FaultRecord (void) {
       }
 #ifdef SCB_CFSR_LSPERR_Msk
       if ((scb_cfsr & SCB_CFSR_LSPERR_Msk) != 0U) {
-        (void)EventRecord2(EvtFault_BusFault_LSPERR   + evt_id_inc, return_address, scb_bfar);
+        (void)EventRecord2(EvtFault_BusFault_LSPERR      + evt_id_inc, return_address, scb_bfar);
       }
 #endif
       if ((scb_cfsr & SCB_CFSR_BFARVALID_Msk) != 0U) {
-        (void)EventRecord2(EvtFault_BusFault_IBUSERR   + evt_id_inc, return_address, scb_bfar);
+        (void)EventRecord2(EvtFault_BusFault_IBUSERR     + evt_id_inc, return_address, scb_bfar);
       }
     }
   }
 
   /* Output Decoded UsageFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
     uint32_t scb_cfsr = ARM_FaultInfo.SCB_CFSR;
 
     if ((scb_cfsr & (SCB_CFSR_UNDEFINSTR_Msk |
@@ -296,7 +258,7 @@ void ARM_FaultRecord (void) {
                      SCB_CFSR_UNALIGNED_Msk  |
                      SCB_CFSR_DIVBYZERO_Msk  )) != 0U) {
 
-      if (state_context_valid == 0) {
+      if (ARM_FaultInfo.info.content.state_context == 0U) {
         evt_id_inc = 0U;
       } else {
         evt_id_inc = 1U;
@@ -330,7 +292,7 @@ void ARM_FaultRecord (void) {
 
 #if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
   /* Output: Decoded SecureFault information */
-  if ((fault_info_valid != 0) && (ARM_FaultInfo.type.fault_regs != 0U)) {
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.secure_fault_regs != 0U)) {
     uint32_t scb_sfsr = ARM_FaultInfo.SCB_SFSR;
     uint32_t scb_sfar = ARM_FaultInfo.SCB_SFAR;
 
@@ -343,7 +305,7 @@ void ARM_FaultRecord (void) {
                      SAU_SFSR_LSERR_Msk   )) != 0U) {
 
       evt_id_inc = 0U;
-      if (state_context_valid != 0) {
+      if (ARM_FaultInfo.info.content.state_context != 0U) {
         evt_id_inc += 1U;
       }
       if ((scb_sfsr & SAU_SFSR_SFARVALID_Msk) != 0U) {
@@ -375,39 +337,4 @@ void ARM_FaultRecord (void) {
   }
 #endif
 #endif
-}
-
-
-// Helper functions
-
-/**
-  Calculate CRC-32 on data block in memory
-  \param[in]    init_val        initial CRC value
-  \param[in]    data_ptr        pointer to data
-  \param[in]    data_len        data length (in bytes)
-  \param[in]    polynom         CRC polynom
-  \return       CRC-32 value (32-bit)
-*/
-static uint32_t CalcCRC32 (      uint32_t init_val,
-                           const uint8_t *data_ptr,
-                                 uint32_t data_len,
-                                 uint32_t polynom) {
-  uint32_t crc32, i;
-
-  crc32 = init_val;
-  while (data_len != 0U) {
-    crc32 ^= ((uint32_t)*data_ptr) << 24;
-    for (i = 8U; i != 0U; i--) {
-      if ((crc32 & 0x80000000U) != 0U) {
-        crc32 <<= 1;
-        crc32  ^= polynom;
-      } else {
-        crc32 <<= 1;
-      }
-    }
-    data_ptr++;
-    data_len--;
-  }
-
-  return crc32;
 }

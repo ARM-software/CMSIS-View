@@ -2312,9 +2312,7 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = __DOXYGEN__ \
-                         ARM_FAULT_FAULT_REGS_EXIST \
-                         ARM_FAULT_ARCH_ARMV8x_M \
-                         ARM_FAULT_ARCH_ARMV8x_M_MAIN
+                         ARM_FAULT_FAULT_REGS_EXIST
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

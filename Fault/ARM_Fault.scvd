@@ -1,88 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component_viewer schemaVersion="1.2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
-<component name="Fault" version="0.4.0"/>
+<component name="Fault" version="0.5.0"/>
 
   <typedefs>
     <!-- VersionString_t -->
-    <typedef  name="VersionString_t"            size="16">
-      <member name="char"                       type="uint8_t"  offset="0"/>
+    <typedef  name="VersionString_t"    size="16">
+      <member name="char"               type="uint8_t"  offset="0"/>
     </typedef>
 
-    <!-- ARM_FaultInfo: Common -->
-    <typedef  name="Common_t"                   size="16">
-      <member name="magic_number"               type="uint32_t" offset="0"/>
-      <member name="crc32"                      type="uint32_t" offset="4"/>
-      <member name="count"                      type="uint32_t" offset="8"/>
+    <!-- ARM_FaultInfo_t -->
+    <typedef  name="ARM_FaultInfo_t"    size="108">
+      <member name="magic_number"       type="uint32_t" offset="0"/>
+      <member name="crc32"              type="uint32_t" offset="4"/>
+      <member name="count"              type="uint32_t" offset="8"/>
       <!-- Type -->
-      <member name="version_minor"              type="uint8_t"  offset="12"/>
-      <member name="version_major"              type="uint8_t"  offset="13"/>
-      <member name="type_flags"                 type="uint16_t" offset="14"/>
+      <member name="version_minor"      type="uint8_t"  offset="12"/>
+      <member name="version_major"      type="uint8_t"  offset="13"/>
+      <member name="content_flags"      type="uint16_t" offset="14"/>
+      <member name="R0"                 type="uint32_t" offset="16"/>
+      <member name="R1"                 type="uint32_t" offset="20"/>
+      <member name="R2"                 type="uint32_t" offset="24"/>
+      <member name="R3"                 type="uint32_t" offset="28"/>
+      <member name="R4"                 type="uint32_t" offset="32"/>
+      <member name="R5"                 type="uint32_t" offset="36"/>
+      <member name="R6"                 type="uint32_t" offset="40"/>
+      <member name="R7"                 type="uint32_t" offset="44"/>
+      <member name="R8"                 type="uint32_t" offset="48"/>
+      <member name="R9"                 type="uint32_t" offset="52"/>
+      <member name="R10"                type="uint32_t" offset="56"/>
+      <member name="R11"                type="uint32_t" offset="60"/>
+      <member name="R12"                type="uint32_t" offset="64"/>
+      <member name="LR"                 type="uint32_t" offset="68"/>
+      <member name="ReturnAddress"      type="uint32_t" offset="72"/>
+      <member name="xPSR"               type="uint32_t" offset="76"/>
+      <member name="IntegritySignature" type="uint32_t" offset="80"/>
+      <member name="xPSR_in_handler"    type="uint32_t" offset="84"/>
+      <member name="EXC_RETURN"         type="uint32_t" offset="88"/>
+      <member name="MSP"                type="uint32_t" offset="92"/>
+      <member name="PSP"                type="uint32_t" offset="96"/>
+      <member name="MSPLIM"             type="uint32_t" offset="100"/>
+      <member name="PSPLIM"             type="uint32_t" offset="104"/>
     </typedef>
 
-    <!-- ARM_FaultInfo: State Context -->
-    <typedef  name="StateContext_t"             size="48">
-      <member name="R0"                         type="uint32_t" offset="16"/>
-      <member name="R1"                         type="uint32_t" offset="20"/>
-      <member name="R2"                         type="uint32_t" offset="24"/>
-      <member name="R3"                         type="uint32_t" offset="28"/>
-      <member name="R12"                        type="uint32_t" offset="32"/>
-      <member name="LR"                         type="uint32_t" offset="36"/>
-      <member name="ReturnAddress"              type="uint32_t" offset="40"/>
-      <member name="xPSR"                       type="uint32_t" offset="44"/>
-    </typedef>
-
-    <!-- ARM_FaultInfo: Common Registers -->
-    <typedef  name="CommonRegisters_t"          size="64">
-      <member name="xPSR"                       type="uint32_t" offset="48"/>
-      <member name="EXC_RETURN"                 type="uint32_t" offset="52"/>
-      <member name="MSP"                        type="uint32_t" offset="56"/>
-      <member name="PSP"                        type="uint32_t" offset="60"/>
-    </typedef>
-
-    <!-- ARM_FaultInfo: Fault Registers -->
-    <typedef  name="FaultRegisters_t"           size="88">
-      <member name="SCB_CFSR"                   type="uint32_t" offset="64"/>
-      <member name="SCB_HFSR"                   type="uint32_t" offset="68"/>
-      <member name="SCB_DFSR"                   type="uint32_t" offset="72"/>
-      <member name="SCB_MMFAR"                  type="uint32_t" offset="76"/>
-      <member name="SCB_BFAR"                   type="uint32_t" offset="80"/>
-      <member name="SCB_AFSR"                   type="uint32_t" offset="84"/>
-    </typedef>
-
-    <!-- ARM_FaultInfo: Additional State Context -->
-    <typedef  name="AdditionalStateContext_t"   size="128">
-      <member name="IntegritySignature"         type="uint32_t" offset="88"/>
-      <member name="Reserved"                   type="uint32_t" offset="92"/>
-      <member name="R4"                         type="uint32_t" offset="96"/>
-      <member name="R5"                         type="uint32_t" offset="100"/>
-      <member name="R6"                         type="uint32_t" offset="104"/>
-      <member name="R7"                         type="uint32_t" offset="108"/>
-      <member name="R8"                         type="uint32_t" offset="112"/>
-      <member name="R9"                         type="uint32_t" offset="116"/>
-      <member name="R10"                        type="uint32_t" offset="120"/>
-      <member name="R11"                        type="uint32_t" offset="124"/>
-    </typedef>
-
-    <!-- ARM_FaultInfo: Armv8m Registers -->
-    <typedef  name="Armv8mRegisters_t"          size="136">
-      <member name="MSPLIM"                     type="uint32_t" offset="128"/>
-      <member name="PSPLIM"                     type="uint32_t" offset="132"/>
-    </typedef>
-
-    <!-- ARM_FaultInfo: Armv8m Fault Registers -->
-    <typedef  name="Armv8mFaultRegisters_t"     size="144">
-      <member name="SCB_SFSR"                   type="uint32_t" offset="136"/>
-      <member name="SCB_SFAR"                   type="uint32_t" offset="140"/>
+    <!-- ARM_FaultInfo: SCB_CFSR .. SCB_SFAR -->
+    <typedef  name="SCB_t"              size="140">
+      <member name="CFSR"               type="uint32_t" offset="108"/>
+      <member name="HFSR"               type="uint32_t" offset="112"/>
+      <member name="DFSR"               type="uint32_t" offset="116"/>
+      <member name="MMFAR"              type="uint32_t" offset="120"/>
+      <member name="BFAR"               type="uint32_t" offset="124"/>
+      <member name="AFSR"               type="uint32_t" offset="128"/>
+      <member name="SFSR"               type="uint32_t" offset="132"/>
+      <member name="SFAR"               type="uint32_t" offset="136"/>
     </typedef>
 
     <!-- Enumerated values -->
-    <typedef name="Exception_t"                 size="2">
-      <member name="val"                        type="uint16_t" offset="0">
-        <enum name="HardFault"                  value="3"/>
-        <enum name="MemManage fault"            value="4"/>
-        <enum name="BusFault"                   value="5"/>
-        <enum name="UsageFault"                 value="6"/>
-        <enum name="SecureFault"                value="7"/>
+    <typedef name="Exception_t"         size="2">
+      <member name="val"                type="uint16_t" offset="0">
+        <enum name="HardFault"          value="3"/>
+        <enum name="MemManage fault"    value="4"/>
+        <enum name="BusFault"           value="5"/>
+        <enum name="UsageFault"         value="6"/>
+        <enum name="SecureFault"        value="7"/>
       </member>
     </typedef>
   </typedefs>
@@ -90,32 +69,31 @@
   <objects>
     <object name="Fault">
       <!-- Read component version -->
-      <read name="Version"                                              type="VersionString_t"             symbol="ARM_FaultStorage.c/ARM_FaultVersion"/>
+      <read name="Version"                                              type="VersionString_t"             symbol="ARM_FaultVersion"/>
 
-      <!-- Read Common information -->
-      <read name="common"                                               type="Common_t"                    symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
+      <!-- Read ARM_FaultInfo -->
+      <read name="ARM_FaultInfo"                                        type="ARM_FaultInfo_t"             symbol="ARM_FaultInfo"/>
 
       <!-- Create variables used for conditions -->
       <var  name="fault_info_valid"                                     type="uint8_t"                     value="0"/>
-      <var  name="fault_regs_exist"                                     type="uint16_t"                    value="0"/>
-      <var  name="state_ctx_valid"                                      type="uint32_t"                    value="0"/>
-      <var  name="arch_armv8x_m"                                        type="uint16_t"                    value="0"/>
-      <var  name="add_ctx_valid"                                        type="uint32_t"                    value="0"/>
-      <var  name="tz_secure"                                            type="uint16_t"                    value="0"/>
+      <var  name="state_context"                                        type="uint8_t"                     value="0"/>
+      <var  name="limit_regs"                                           type="uint8_t"                     value="0"/>
+      <var  name="fault_regs"                                           type="uint8_t"                     value="0"/>
+      <var  name="secure_fault_regs"                                    type="uint8_t"                     value="0"/>
+      <var  name="armv8m"                                               type="uint8_t"                     value="0"/>
+      <var  name="tz_secure"                                            type="uint8_t"                     value="0"/>
 
       <!-- Calculate values of variables used for conditions -->
-      <calc>fault_info_valid = (common.magic_number == 0x52746C46);</calc>
-      <calc>fault_regs_exist = fault_info_valid &amp;&amp; (common.type_flags &amp; 1);</calc>
-      <calc>arch_armv8x_m    = fault_info_valid &amp;&amp; (common.type_flags &amp; 2) &gt;&gt; 1;</calc>
-      <calc>tz_secure        = fault_info_valid &amp;&amp; (common.type_flags &amp; 4) &gt;&gt; 2;</calc>
+      <calc>fault_info_valid  = (ARM_FaultInfo.magic_number == 0x52746C46);</calc>
+      <calc>state_context     = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  1);</calc>
+      <calc>limit_regs        = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  2) &gt;&gt; 1;</calc>
+      <calc>fault_regs        = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  4) &gt;&gt; 2;</calc>
+      <calc>secure_fault_regs = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  8) &gt;&gt; 3;</calc>
+      <calc>armv8m            = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp; 16) &gt;&gt; 4;</calc>
+      <calc>tz_secure         = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp; 32) &gt;&gt; 5;</calc>
 
-      <!-- Read content of existing ARM_FaultInfo structures -->
-      <read name="state_context"                cond="fault_info_valid" type="StateContext_t"              symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
-      <read name="common_registers"             cond="fault_info_valid" type="CommonRegisters_t"           symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
-      <read name="fault_registers"              cond="fault_regs_exist" type="FaultRegisters_t"            symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
-      <read name="additonal_state_context"      cond="arch_armv8x_m"    type="AdditionalStateContext_t"    symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
-      <read name="armv8_m_registers"            cond="arch_armv8x_m"    type="Armv8mRegisters_t"           symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
-      <read name="armv8_m_fault_registers"      cond="tz_secure"        type="Armv8mFaultRegisters_t"      symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
+      <!-- Read content of Fault Registers if it exists -->
+      <read name="SCB"                          cond="fault_regs"       type="SCB_t"                       symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
 
       <!-- Create variables used for display -->
       <var  name="cfsr"                                                 type="uint32_t"                    value="0"/>
@@ -125,66 +103,66 @@
       <var  name="hfsr"                                                 type="uint32_t"                    value="0"/>
       <var  name="dfsr"                                                 type="uint32_t"                    value="0"/>
       <var  name="sfsr"                                                 type="uint32_t"                    value="0"/>
-      <var  name="cr_exc_return"                                        type="uint32_t"                    value="0"/>
-      <var  name="cr_xpsr_exc"                                          type="Exception_t"                 value="0"/>
-      <var  name="sc_xpsr_exc"                                          type="Exception_t"                 value="0"/>
+      <var  name="exc_return"                                           type="uint32_t"                    value="0"/>
+      <var  name="xpsr_exc"                                             type="Exception_t"                 value="0"/>
+      <var  name="xpsr_exc_in_handler"                                  type="Exception_t"                 value="0"/>
 
       <!-- Calculate values of variables used for display -->
-      <calc cond="fault_regs_exist">cfsr            = (fault_registers.SCB_CFSR);</calc>
-      <calc cond="fault_regs_exist">ufsr            =  cfsr               &gt;&gt; 16;</calc>
-      <calc cond="fault_regs_exist">bfsr            = (cfsr &amp; 0xFF00) &gt;&gt; 8;</calc>
-      <calc cond="fault_regs_exist">mmfsr           = (cfsr &amp; 0xFF);</calc>
-      <calc cond="fault_regs_exist">hfsr            = (fault_registers.SCB_HFSR);</calc>
-      <calc cond="fault_regs_exist">dfsr            = (fault_registers.SCB_DFSR);</calc>
-      <calc cond="tz_secure"        >sfsr            = (armv8_m_fault_registers.SCB_SFSR);</calc>
-      <calc cond="fault_info_valid">cr_exc_return   = (common_registers.EXC_RETURN);</calc>
-      <calc cond="fault_info_valid">cr_xpsr_exc.val = (common_registers.xPSR &amp; 0x000001FF);</calc>
-      <calc cond="fault_info_valid">sc_xpsr_exc.val = (state_context.xPSR    &amp; 0x000001FF);</calc>
-
-      <!-- Determine if state context is valid (if fault was not a stacking fault) -->
-      <calc>state_ctx_valid = fault_info_valid &amp;&amp; ((cfsr &amp; 0x00101010) == 0);</calc>
-
-      <!-- Determine if additional state context is valid (if DCRS (bit 5) of EXC_RETURN in the handler is 0) -->
-      <calc>add_ctx_valid   = fault_info_valid &amp;&amp; arch_armv8x_m &amp;&amp; ((cr_exc_return &amp; 0x20) == 0);</calc>
+      <calc cond="fault_regs"      >cfsr            = (SCB.CFSR);</calc>
+      <calc cond="fault_regs"      >ufsr            =  cfsr               &gt;&gt; 16;</calc>
+      <calc cond="fault_regs"      >bfsr            = (cfsr &amp; 0xFF00) &gt;&gt; 8;</calc>
+      <calc cond="fault_regs"      >mmfsr           = (cfsr &amp; 0xFF);</calc>
+      <calc cond="fault_regs"      >hfsr            = (SCB.HFSR);</calc>
+      <calc cond="fault_regs"      >dfsr            = (SCB.DFSR);</calc>
+      <calc cond="tz_secure"       >sfsr            = (SCB.SFSR);</calc>
+      <calc cond="fault_info_valid">exc_return      = (ARM_FaultInfo.EXC_RETURN);</calc>
+      <calc cond="fault_info_valid">xpsr_exc.val            = (ARM_FaultInfo.xPSR            &amp; 0x000001FF);</calc>
+      <calc cond="fault_info_valid">xpsr_exc_in_handler.val = (ARM_FaultInfo.xPSR_in_handler &amp; 0x000001FF);</calc>
 
       <out  name="Fault">
         <item property="Version"                                        value="%t[Version]"/>
-        <item property="Info"                   cond="fault_info_valid==0" value="No fault saved yet!" bold="1"/>
-<!--    <item property="ARM_FaultInfo version"  cond="fault_info_valid" value="%d[common.version_major].%d[common.version_minor]"/> -->
-        <item property="Fault count"            cond="fault_info_valid" value="%d[common.count]"/>
-        <item property="Exception stacked State Context" 
-                                                cond="state_ctx_valid"  value="">
-          <item property="R0"                                           value="%x[state_context.R0]"/>
-          <item property="R1"                                           value="%x[state_context.R1]"/>
-          <item property="R2"                                           value="%x[state_context.R2]"/>
-          <item property="R3"                                           value="%x[state_context.R3]"/>
-          <item property="R4"                   cond="add_ctx_valid"    value="%x[additonal_state_context.R4]"/>
-          <item property="R5"                   cond="add_ctx_valid"    value="%x[additonal_state_context.R5]"/>
-          <item property="R6"                   cond="add_ctx_valid"    value="%x[additonal_state_context.R6]"/>
-          <item property="R7"                   cond="add_ctx_valid"    value="%x[additonal_state_context.R7]"/>
-          <item property="R8"                   cond="add_ctx_valid"    value="%x[additonal_state_context.R8]"/>
-          <item property="R9"                   cond="add_ctx_valid"    value="%x[additonal_state_context.R9]"/>
-          <item property="R10"                  cond="add_ctx_valid"    value="%x[additonal_state_context.R10]"/>
-          <item property="R11"                  cond="add_ctx_valid"    value="%x[additonal_state_context.R11]"/>
-          <item property="R12"                                          value="%x[state_context.R12]"/>
-          <item property="Link Register"                                value="%x[state_context.LR]"/>
-          <item property="Return Address"                               value="%x[state_context.ReturnAddress]"/>
-          <item property="xPSR"                                         value="%x[state_context.xPSR]">
-            <item property="Exception"                                  value="%E[sc_xpsr_exc.val]"/>
+        <item property="Info"                   cond="fault_info_valid==0" value="No fault saved yet or fault information is invalid!" bold="1"/>
+        <item property="Fault count"            cond="fault_info_valid" value="%d[ARM_FaultInfo.count]"/>
+        <item property="Registers"              cond="fault_info_valid" value="">
+          <item property="R0"                   cond="state_context"    value="%x[ARM_FaultInfo.R0]"/>
+          <item property="R0"                   cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="R1"                   cond="state_context"    value="%x[ARM_FaultInfo.R1]"/>
+          <item property="R1"                   cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="R2"                   cond="state_context"    value="%x[ARM_FaultInfo.R2]"/>
+          <item property="R2"                   cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="R3"                   cond="state_context"    value="%x[ARM_FaultInfo.R3]"/>
+          <item property="R3"                   cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="R4"                                           value="%x[ARM_FaultInfo.R4]"/>
+          <item property="R5"                                           value="%x[ARM_FaultInfo.R5]"/>
+          <item property="R6"                                           value="%x[ARM_FaultInfo.R6]"/>
+          <item property="R7"                                           value="%x[ARM_FaultInfo.R7]"/>
+          <item property="R8"                                           value="%x[ARM_FaultInfo.R8]"/>
+          <item property="R9"                                           value="%x[ARM_FaultInfo.R9]"/>
+          <item property="R10"                                          value="%x[ARM_FaultInfo.R10]"/>
+          <item property="R11"                                          value="%x[ARM_FaultInfo.R11]"/>
+          <item property="R12"                  cond="state_context"    value="%x[ARM_FaultInfo.R12]"/>
+          <item property="R12"                  cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="Link Register"        cond="state_context"    value="%x[ARM_FaultInfo.LR]"/>
+          <item property="Link Register"        cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="Return Address (PC)"  cond="state_context"    value="%x[ARM_FaultInfo.ReturnAddress]"/>
+          <item property="Return Address (PC)"  cond="!state_context"   value="unknown (was not stacked)"/>
+          <item property="xPSR"                 cond="state_context"    value="%x[ARM_FaultInfo.xPSR]">
+            <item property="Exception"          cond="fault_info_valid" value="%E[xpsr_exc.val]"/>
           </item>
+          <item property="xPSR"                 cond="!state_context"       value="unknown (was not stacked)"/>
         </item>
         <item property="Exception State"        cond="fault_info_valid" value="">
-          <item property="xPSR"                 cond="fault_info_valid" value="%x[common_registers.xPSR]">
-            <item property="Exception"          cond="fault_info_valid" value="%E[cr_xpsr_exc.val]"/>
+          <item property="xPSR"                 cond="fault_info_valid" value="%x[ARM_FaultInfo.xPSR_in_handler]">
+            <item property="Exception"                                  value="%E[xpsr_exc_in_handler.val]"/>
           </item>
-          <item property="Exception Return"     cond="fault_info_valid" value="%x[common_registers.EXC_RETURN]"/>
-          <item property="MSP"                  cond="fault_info_valid" value="%x[common_registers.MSP]"/>
-          <item property="PSP"                  cond="fault_info_valid" value="%x[common_registers.PSP]"/>
-          <item property="MSPLIM"               cond="arch_armv8x_m"    value="%x[armv8_m_registers.MSPLIM]"/>
-          <item property="PSPLIM"               cond="arch_armv8x_m"    value="%x[armv8_m_registers.PSPLIM]"/>
+          <item property="Exception Return"     cond="fault_info_valid" value="%x[ARM_FaultInfo.EXC_RETURN]"/>
+          <item property="MSP"                  cond="fault_info_valid" value="%x[ARM_FaultInfo.MSP]"/>
+          <item property="MSPLIM"               cond="limit_regs"       value="%x[ARM_FaultInfo.MSPLIM]"/>
+          <item property="PSP"                  cond="fault_info_valid" value="%x[ARM_FaultInfo.PSP]"/>
+          <item property="PSPLIM"               cond="limit_regs"       value="%x[ARM_FaultInfo.PSPLIM]"/>
         </item>
-        <item property="Fault Registers"        cond="fault_regs_exist" value=""                                        alert="(ufsr) || (bfsr) || (mmfsr) || (hfsr) || (dfsr) || (sfsr)">
-          <item property="CFSR"                                         value="%x[(fault_registers.SCB_CFSR)]"          alert="(fault_registers.SCB_CFSR)">
+        <item property="Fault Registers"        cond="fault_regs"       value=""                                        alert="(ufsr) || (bfsr) || (mmfsr) || (hfsr) || (dfsr) || (sfsr)">
+          <item property="CFSR"                                         value="%x[(SCB.CFSR)]"                          alert="(SCB.CFSR)">
             <item property="UFSR"                                       value="%x[(ufsr)]"                              alert="(ufsr)">
               <item property="DIVBYZERO"                                value="%d[(ufsr &amp; 0x0200) &gt;&gt; 9]"      alert="(ufsr &amp; 0x0200) &gt;&gt; 9"/>
               <item property="UNALIGNED"                                value="%d[(ufsr &amp; 0x0100) &gt;&gt; 8]"      alert="(ufsr &amp; 0x0100) &gt;&gt; 8"/>
@@ -217,17 +195,17 @@
             <item property="FORCED"                                     value="%d[(hfsr &amp; 0x40000000) &gt;&gt; 30]" alert="(hfsr &amp; 0x40000000) &gt;&gt; 30"/>
             <item property="VECTTBL"                                    value="%d[(hfsr &amp; 0x00000002) &gt;&gt;  1]" alert="(hfsr &amp; 0x00000002) &gt;&gt;  1"/>
           </item>
-          <item property="DFSR"                                         value="%x[(dfsr)]"                              bold="(dfsr)">
-            <item property="PMU"                cond="arch_armv8x_m"    value="%d[(dfsr &amp; 0x20) &gt;&gt;  5]"       bold="(dfsr &amp; 0x20) &gt;&gt; 5"/>
-            <item property="EXTERNAL"                                   value="%d[(dfsr &amp; 0x10) &gt;&gt;  4]"       bold="(dfsr &amp; 0x10) &gt;&gt; 4"/>
-            <item property="VCATCH"                                     value="%d[(dfsr &amp; 0x08) &gt;&gt;  3]"       bold="(dfsr &amp; 0x08) &gt;&gt; 3"/>
-            <item property="DWTTRAP"                                    value="%d[(dfsr &amp; 0x04) &gt;&gt;  2]"       bold="(dfsr &amp; 0x04) &gt;&gt; 2"/>
-            <item property="BKPT"                                       value="%d[(dfsr &amp; 0x02) &gt;&gt;  1]"       bold="(dfsr &amp; 0x02) &gt;&gt; 1"/>
-            <item property="HALTED"                                     value="%d[(dfsr &amp; 0x01)]"                   bold="(dfsr &amp; 0x01)"/>
+          <item property="DFSR"                                         value="%x[(dfsr)]">
+            <item property="PMU"                cond="armv8m"           value="%d[(dfsr &amp; 0x20) &gt;&gt;  5]"/>
+            <item property="EXTERNAL"                                   value="%d[(dfsr &amp; 0x10) &gt;&gt;  4]"/>
+            <item property="VCATCH"                                     value="%d[(dfsr &amp; 0x08) &gt;&gt;  3]"/>
+            <item property="DWTTRAP"                                    value="%d[(dfsr &amp; 0x04) &gt;&gt;  2]"/>
+            <item property="BKPT"                                       value="%d[(dfsr &amp; 0x02) &gt;&gt;  1]"/>
+            <item property="HALTED"                                     value="%d[(dfsr &amp; 0x01)]"/>
           </item>
-          <item property="MMFAR"                                        value="%x[(fault_registers.SCB_MMFAR)]"         bold="(fault_registers.SCB_MMFAR)"/>
-          <item property="BFAR"                                         value="%x[(fault_registers.SCB_BFAR)]"          bold="(fault_registers.SCB_BFAR)"/>
-          <item property="AFSR"                                         value="%x[(fault_registers.SCB_AFSR)]"          bold="(fault_registers.SCB_AFSR)"/>
+          <item property="MMFAR"                                        value="%x[(SCB.MMFAR)]"/>
+          <item property="BFAR"                                         value="%x[(SCB.BFAR)]"/>
+          <item property="AFSR"                                         value="%x[(SCB.AFSR)]"/>
           <item property="SFSR"                 cond="tz_secure"        value="%x[(sfsr)]"                              alert="(sfsr)">
             <item property="LSERR"                                      value="%d[(sfsr &amp; 0x80) &gt;&gt; 7]"        alert="(sfsr &amp; 0x80) &gt;&gt; 7"/>
             <item property="SFARVALID"                                  value="%d[(sfsr &amp; 0x40) &gt;&gt; 6]"        alert="(sfsr &amp; 0x40) &gt;&gt; 6"/>
@@ -238,7 +216,7 @@
             <item property="INVIS"                                      value="%d[(sfsr &amp; 0x02) &gt;&gt; 1]"        alert="(sfsr &amp; 0x02) &gt;&gt; 1"/>
             <item property="INVEP"                                      value="%d[(sfsr &amp; 0x01)]"                   alert="(sfsr &amp; 0x01)"/>
           </item>
-          <item property="SFAR"                 cond="tz_secure"        value="%x[(armv8_m_fault_registers.SCB_SFAR)]"  bold="(armv8_m_fault_registers.SCB_SFAR)"/>
+          <item property="SFAR"                 cond="tz_secure"        value="%x[(SCB.SFAR)]"/>
         </item>
       </out>
     </object>
@@ -249,123 +227,125 @@
       <component name="Fault Event" brief="Fault" no="0xEE" info="Saved Fault Event"/>
     </group>
 
-    <event id="0xEE00" level="Op"    property="Fault"       value="No fault saved yet!"/>
-    <event id="0xEE01" level="Error" property="Fault"       value="Invalid CRC of the saved fault information!"/>
+    <event id="0xEE00" level="Op"    property="Fault"       value="No fault saved yet or fault information is invalid!"/>
 
-    <event id="0xEE02" level="Error" property="HardFault"   value="Bus error on vector read"/>
-    <event id="0xEE03" level="Error" property="HardFault"   value="Bus error on vector read (PC=%x[val1])"/>
+    <event id="0xEE01" level="Error" property="Fault"       value="Unknown fault - fault registers do not exist"/>
+    <event id="0xEE02" level="Error" property="Fault"       value="Unknown fault - fault registers do not exist (PC=%x[val1])"/>
 
-    <event id="0xEE04" level="Error" property="HardFault"   value="Escalated fault (original fault was disabled or it caused another lower priority fault)"/>
-    <event id="0xEE05" level="Error" property="HardFault"   value="Escalated fault (original fault was disabled or it caused another lower priority fault) (PC=%x[val1])"/>
+    <event id="0xEE03" level="Error" property="HardFault"   value="Bus error on vector read"/>
+    <event id="0xEE04" level="Error" property="HardFault"   value="Bus error on vector read (PC=%x[val1])"/>
 
-    <event id="0xEE06" level="Error" property="HardFault"   value="Breakpoint hit with Debug Monitor disabled"/>
-    <event id="0xEE07" level="Error" property="HardFault"   value="Breakpoint hit with Debug Monitor disabled (PC=%x[val1])"/>
+    <event id="0xEE05" level="Error" property="HardFault"   value="Escalated fault (original fault was disabled or it caused another lower priority fault)"/>
+    <event id="0xEE06" level="Error" property="HardFault"   value="Escalated fault (original fault was disabled or it caused another lower priority fault) (PC=%x[val1])"/>
 
-    <event id="0xEE08" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault"/>
-    <event id="0xEE09" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1])"/>
-    <event id="0xEE0A" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (mem addr=%x(val2))"/>
-    <event id="0xEE0B" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE07" level="Error" property="HardFault"   value="Breakpoint hit with Debug Monitor disabled"/>
+    <event id="0xEE08" level="Error" property="HardFault"   value="Breakpoint hit with Debug Monitor disabled (PC=%x[val1])"/>
 
-    <event id="0xEE0C" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault"/>
-    <event id="0xEE0D" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1])"/>
-    <event id="0xEE0E" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (mem addr=%x(val2))"/>
-    <event id="0xEE0F" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE09" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault"/>
+    <event id="0xEE0A" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1])"/>
+    <event id="0xEE0B" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (mem addr=%x(val2))"/>
+    <event id="0xEE0C" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE10" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation"/>
-    <event id="0xEE11" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1])"/>
-    <event id="0xEE12" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (mem addr=%x(val2))"/>
-    <event id="0xEE13" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE0D" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault"/>
+    <event id="0xEE0E" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1])"/>
+    <event id="0xEE0F" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (mem addr=%x(val2))"/>
+    <event id="0xEE10" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE14" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation"/>
-    <event id="0xEE15" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation (mem addr=%x(val2))"/>
+    <event id="0xEE11" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation"/>
+    <event id="0xEE12" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1])"/>
+    <event id="0xEE13" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (mem addr=%x(val2))"/>
+    <event id="0xEE14" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE16" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation"/>
-    <event id="0xEE17" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1])"/>
-    <event id="0xEE18" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (mem addr=%x(val2))"/>
-    <event id="0xEE19" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE15" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation"/>
+    <event id="0xEE16" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation (mem addr=%x(val2))"/>
 
-    <event id="0xEE1A" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault"/>
-    <event id="0xEE1B" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1])"/>
-    <event id="0xEE1C" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (mem addr=%x(val2))"/>
-    <event id="0xEE1D" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE17" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation"/>
+    <event id="0xEE18" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1])"/>
+    <event id="0xEE19" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (mem addr=%x(val2))"/>
+    <event id="0xEE1A" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE1E" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise)"/>
-    <event id="0xEE1F" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1])"/>
-    <event id="0xEE20" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (mem addr=%x(val2))"/>
-    <event id="0xEE21" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE1B" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault"/>
+    <event id="0xEE1C" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1])"/>
+    <event id="0xEE1D" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (mem addr=%x(val2))"/>
+    <event id="0xEE1E" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE22" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise)"/>
-    <event id="0xEE23" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1])"/>
-    <event id="0xEE24" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (mem addr=%x(val2))"/>
-    <event id="0xEE25" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE1F" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise)"/>
+    <event id="0xEE20" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1])"/>
+    <event id="0xEE21" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (mem addr=%x(val2))"/>
+    <event id="0xEE22" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE26" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault"/>
-    <event id="0xEE27" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1])"/>
-    <event id="0xEE28" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (mem addr=%x(val2))"/>
-    <event id="0xEE29" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE23" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise)"/>
+    <event id="0xEE24" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1])"/>
+    <event id="0xEE25" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (mem addr=%x(val2))"/>
+    <event id="0xEE26" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE2A" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault"/>
-    <event id="0xEE2B" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault (mem addr=%x(val2))"/>
+    <event id="0xEE27" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault"/>
+    <event id="0xEE28" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1])"/>
+    <event id="0xEE29" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (mem addr=%x(val2))"/>
+    <event id="0xEE2A" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE2C" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault"/>
-    <event id="0xEE2D" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1])"/>
-    <event id="0xEE2E" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (mem addr=%x(val2))"/>
-    <event id="0xEE2F" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE2B" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault"/>
+    <event id="0xEE2C" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault (mem addr=%x(val2))"/>
 
-    <event id="0xEE30" level="Error" property="UsageFault"  value="Execution of undefined instruction"/>
-    <event id="0xEE31" level="Error" property="UsageFault"  value="Execution of undefined instruction (PC=%x[val1])"/>
+    <event id="0xEE2D" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault"/>
+    <event id="0xEE2E" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1])"/>
+    <event id="0xEE2F" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (mem addr=%x(val2))"/>
+    <event id="0xEE30" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE32" level="Error" property="UsageFault"  value="Execution of Thumb instruction with Thumb mode turned off"/>
-    <event id="0xEE33" level="Error" property="UsageFault"  value="Execution of Thumb instruction with Thumb mode turned off (PC=%x[val1])"/>
+    <event id="0xEE31" level="Error" property="UsageFault"  value="Execution of undefined instruction"/>
+    <event id="0xEE32" level="Error" property="UsageFault"  value="Execution of undefined instruction (PC=%x[val1])"/>
 
-    <event id="0xEE34" level="Error" property="UsageFault"  value="Invalid exception return value"/>
-    <event id="0xEE35" level="Error" property="UsageFault"  value="Invalid exception return value (PC=%x[val1])"/>
+    <event id="0xEE33" level="Error" property="UsageFault"  value="Execution of Thumb instruction with Thumb mode turned off"/>
+    <event id="0xEE34" level="Error" property="UsageFault"  value="Execution of Thumb instruction with Thumb mode turned off (PC=%x[val1])"/>
 
-    <event id="0xEE36" level="Error" property="UsageFault"  value="Coprocessor instruction with coprocessor disabled or non-existent"/>
-    <event id="0xEE37" level="Error" property="UsageFault"  value="Coprocessor instruction with coprocessor disabled or non-existent (PC=%x[val1])"/>
+    <event id="0xEE35" level="Error" property="UsageFault"  value="Invalid exception return value"/>
+    <event id="0xEE36" level="Error" property="UsageFault"  value="Invalid exception return value (PC=%x[val1])"/>
 
-    <event id="0xEE38" level="Error" property="UsageFault"  value="Stack overflow"/>
+    <event id="0xEE37" level="Error" property="UsageFault"  value="Coprocessor instruction with coprocessor disabled or non-existent"/>
+    <event id="0xEE38" level="Error" property="UsageFault"  value="Coprocessor instruction with coprocessor disabled or non-existent (PC=%x[val1])"/>
 
-    <event id="0xEE39" level="Error" property="UsageFault"  value="Unaligned load/store"/>
-    <event id="0xEE3A" level="Error" property="UsageFault"  value="Unaligned load/store (PC=%x[val1])"/>
+    <event id="0xEE39" level="Error" property="UsageFault"  value="Stack overflow"/>
 
-    <event id="0xEE3B" level="Error" property="UsageFault"  value="Divide by 0"/>
-    <event id="0xEE3C" level="Error" property="UsageFault"  value="Divide by 0 (PC=%x[val1])"/>
+    <event id="0xEE3A" level="Error" property="UsageFault"  value="Unaligned load/store"/>
+    <event id="0xEE3B" level="Error" property="UsageFault"  value="Unaligned load/store (PC=%x[val1])"/>
 
-    <event id="0xEE3D" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state"/>
-    <event id="0xEE3E" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1])"/>
-    <event id="0xEE3F" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (mem addr=%x(val2))"/>
-    <event id="0xEE40" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE3C" level="Error" property="UsageFault"  value="Divide by 0"/>
+    <event id="0xEE3D" level="Error" property="UsageFault"  value="Divide by 0 (PC=%x[val1])"/>
 
-    <event id="0xEE41" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking"/>
-    <event id="0xEE42" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1])"/>
-    <event id="0xEE43" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (mem addr=%x(val2))"/>
-    <event id="0xEE44" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE3E" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state"/>
+    <event id="0xEE3F" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1])"/>
+    <event id="0xEE40" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (mem addr=%x(val2))"/>
+    <event id="0xEE41" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE45" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES"/>
-    <event id="0xEE46" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1])"/>
-    <event id="0xEE47" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (mem addr=%x(val2))"/>
-    <event id="0xEE48" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE42" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking"/>
+    <event id="0xEE43" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1])"/>
+    <event id="0xEE44" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (mem addr=%x(val2))"/>
+    <event id="0xEE45" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE49" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space"/>
-    <event id="0xEE4A" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1])"/>
-    <event id="0xEE4B" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (mem addr=%x(val2))"/>
-    <event id="0xEE4C" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE46" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES"/>
+    <event id="0xEE47" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1])"/>
+    <event id="0xEE48" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (mem addr=%x(val2))"/>
+    <event id="0xEE49" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE4D" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such"/>
-    <event id="0xEE4E" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1])"/>
-    <event id="0xEE4F" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (mem addr=%x(val2))"/>
-    <event id="0xEE50" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE4A" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space"/>
+    <event id="0xEE4B" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1])"/>
+    <event id="0xEE4C" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (mem addr=%x(val2))"/>
+    <event id="0xEE4D" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE51" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation"/>
-    <event id="0xEE52" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1])"/>
-    <event id="0xEE53" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (mem addr=%x(val2))"/>
-    <event id="0xEE54" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE4E" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such"/>
+    <event id="0xEE4F" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1])"/>
+    <event id="0xEE50" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (mem addr=%x(val2))"/>
+    <event id="0xEE51" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1], mem addr=%x(val2))"/>
 
-    <event id="0xEE55" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure"/>
-    <event id="0xEE56" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1])"/>
-    <event id="0xEE57" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (mem addr=%x(val2))"/>
-    <event id="0xEE58" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE52" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation"/>
+    <event id="0xEE53" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1])"/>
+    <event id="0xEE54" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (mem addr=%x(val2))"/>
+    <event id="0xEE55" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1], mem addr=%x(val2))"/>
+
+    <event id="0xEE56" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure"/>
+    <event id="0xEE57" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1])"/>
+    <event id="0xEE58" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (mem addr=%x(val2))"/>
+    <event id="0xEE59" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1], mem addr=%x(val2))"/>
   </events>
 
 </component_viewer>
