@@ -73,7 +73,7 @@
 // Fault component version information
 const char ARM_FaultVersion[] = ARM_FAULT_VERSION;
 
-// Fault Information
+// Fault information
 ARM_FaultInfo_t ARM_FaultInfo __NO_INIT;
 
 // Local function prototype
@@ -153,7 +153,7 @@ __NAKED void ARM_FaultSave (void) {
     "adds  r3,  r3, #1\n"                   // Increment count value
     "stm   r2!, {r3}\n"                     // Store new count value
 
- /* --- Store ARM_FaultInfo.info: version, armv8m and tz_secure bits --- */
+ /* --- Store ARM_FaultInfo.info: version and compile-time content information --- */
     "ldr   r0,  =%c[info_val]\n"            // Load  info value
     "str   r0,  [r2]\n"                     // Store info value
 
@@ -229,6 +229,19 @@ __NAKED void ARM_FaultSave (void) {
 
   "r6_points_to_stack:\n"
 
+    /* Set ARM_FaultInfo.info.content.tz_fault_mode to 1 if the fault happened in the Secure World --- */
+#if (ARM_FAULT_TZ_SECURE != 0)              // If code was compiled for and is running in Secure World
+    "lsrs  r4,  r7, #1\n"                   // Shift   bit [0] of R7 into Carry flag
+    "bcs   tz_fault_mode_end\n"             // If      bit [0] of R7 == 1, do not set tz_fault_mode bit
+  "set_tz_fault_mode:\n"                    // else if bit [0] of R7 == 0,        set tz_fault_mode bit
+    "ldr   r0,  =%c[info_addr]\n"           // Load info address
+    "ldr   r1,  [r0]\n"                     // Load info value
+    "ldr   r2,  =%c[info_tz_fault_mode_msk]\n"  // Load tz_fault_mode bit mask
+    "orrs  r1,  r2\n"                       // OR it with content of the info
+    "str   r1,  [r0]\n"                     // Store updated info value back
+  "tz_fault_mode_end:\n"
+#endif
+
  /* --- Determine stack validity --- */
 
  /* Determine if stack is valid.
@@ -258,7 +271,7 @@ __NAKED void ARM_FaultSave (void) {
     "ldr   r1,  =%c[cfsr_err_msk]\n"        // R1 = SCB_CFSR_Stack_Err_Msk
     "ands  r0,  r1\n"                       // Mask CFSR value with stacking error bits
     "beq   stack_check_end\n"               // If   no stacking error (== 0), jump to stack_check_end
-  "stack_check_failed:\n"                   // else if stacking error (!= 0), stack information is invalid
+  "stack_info_is_invalid:\n"                // else if stacking error (!= 0), stack information is invalid
     "movs  r3,  #2\n"                       // R3  =  1 << 1
     "orrs  r7,  r3\n"                       // R7 |= (1 << 1)
 #endif
@@ -310,7 +323,7 @@ __NAKED void ARM_FaultSave (void) {
 
   "state_context_end:\n"
 
- /* --- Store xPSR_in_handler, EXC_RETURN, MSP, PSP into ARM_FaultInfo --- */
+ /* --- Store EXC_xPSR, EXC_RETURN, MSP, PSP into ARM_FaultInfo --- */
     "mrs   r0,  xpsr\n"                     // R0 = current xPSR
     "mov   r1,  lr\n"                       // R1 = current LR (exception return code)
 #if (ARM_FAULT_TZ_SECURE != 0)              // If code was compiled for and is running in Secure World
@@ -325,8 +338,8 @@ __NAKED void ARM_FaultSave (void) {
     "mrs   r2,  msp\n"                      // R0 = current MSP
     "mrs   r3,  psp\n"                      // R1 = current PSP
   "store_regs:\n"
-    "ldr   r5,  =%c[xPSR_in_handler_addr]\n"   // Load xPSR_in_handler address
-    "stm   r5!, {r0-r3}\n"                  // Store xPSR_in_handler, EXC_RETURN, MSP, PSP
+    "ldr   r5,  =%c[EXC_xPSR_addr]\n"       // Load  EXC_xPSR address
+    "stm   r5!, {r0-r3}\n"                  // Store EXC_xPSR, EXC_RETURN, MSP, PSP
 
  /* --- Store MSPLIM and PSPLIM (if they are available) into ARM_FaultInfo --- */
  /* Armv8-M Baseline does not have MSPLIM_NS and PSPLIM_NS */
@@ -368,15 +381,18 @@ __NAKED void ARM_FaultSave (void) {
  ,  [info_addr]                         "i" (&ARM_FaultInfo.info)
  ,  [info_val]                          "i" (ARM_FAULT_FAULT_INFO_VER_MINOR
                                          |  (ARM_FAULT_FAULT_INFO_VER_MAJOR << 8)
-                                         |  (ARM_FAULT_ARCH_ARMV8x_M        << 20)
-                                         |  (ARM_FAULT_TZ_SECURE            << 21))
- ,  [info_state_context_msk]            "i" (1U << 16)
- ,  [info_limit_regs_msk]               "i" (1U << 17)
+                                         |  (ARM_FAULT_FAULT_REGS_EXIST     << 16)
+                                         |  (ARM_FAULT_ARCH_ARMV8x_M_MAIN   << 17)
+                                         |  (ARM_FAULT_TZ_ENABLED           << 18)
+                                         |  (ARM_FAULT_TZ_SECURE            << 19))
+ ,  [info_tz_fault_mode_msk]            "i" (1U << 20)
+ ,  [info_state_context_msk]            "i" (1U << 21)
+ ,  [info_limit_regs_msk]               "i" (1U << 22)
  ,  [r0_addr]                           "i" (&ARM_FaultInfo.R0)
  ,  [r4_addr]                           "i" (&ARM_FaultInfo.R4)
  ,  [r12_addr]                          "i" (&ARM_FaultInfo.R12)
  ,  [IntegritySignature_addr]           "i" (&ARM_FaultInfo.IntegritySignature)
- ,  [xPSR_in_handler_addr]              "i" (&ARM_FaultInfo.xPSR_in_handler)
+ ,  [EXC_xPSR_addr]                     "i" (&ARM_FaultInfo.EXC_xPSR)
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)
  ,  [cfsr_err_msk]                      "i" (SCB_CFSR_Stack_Err_Msk)
  ,  [cfsr_addr]                         "i" (SCB_BASE + offsetof(SCB_Type, CFSR))
@@ -404,12 +420,12 @@ __NAKED void ARM_FaultSave (void) {
 #endif
     "ldr   r4,  =%c[scb_base_addr]\n"       // Load SCB BASE address
   "load_fault_regs:\n"
-    "ldr   r5,  =%c[scb_regs_addr]\n"       // Load start address of SCB registers in ARM_FaultInfo
+    "ldr   r5,  =%c[csfr_reg_addr]\n"       // Load fault registers start address (CSFR) in ARM_FaultInfo
     "ldr   r0,  [r4, %[cfsr_ofs]]\n"        // R0 = SCB_CFSR
     "ldr   r1,  [r4, %[hfsr_ofs]]\n"        // R1 = SCB_HFSR
     "ldr   r2,  [r4, %[dfsr_ofs]]\n"        // R2 = SCB_DFSR
     "ldr   r3,  [r4, %[mmfar_ofs]]\n"       // R3 = SCB_MMFAR
-    "stm   r5!, {r0-r3}\n"                  // Store SCB_CFSR, SCB_HFSR, SCB_DFSR and SCB_MMFAR
+    "stm   r5!, {r0-r3}\n"                  // Store CFSR, HFSR, DFSR and MMFAR
     "ldr   r0,  [r4, %[bfar_ofs]]\n"        // R0 = SCB_BFSR
     "ldr   r1,  [r4, %[afsr_ofs]]\n"        // R1 = SCB_AFSR
     "stm   r5!, {r0, r1}\n"                 // Store BFSR and AFSR
@@ -421,10 +437,25 @@ __NAKED void ARM_FaultSave (void) {
     "orrs  r1,  r2\n"                       // OR it with content of the info
     "str   r1,  [r0]\n"                     // Store updated info value back
 
+ /* --- Armv8.1-M Mainline RAS Fault Status Register (RFSR) --- */
+#if (ARM_FAULT_ARCH_ARMV8_1M_MAIN != 0)     // If arch is Armv8.1-M Mainline
+    "ldr   r5,  =%c[rfsr_reg_addr]\n"       // Load address of RFSR register in ARM_FaultInfo
+    "ldr   r0,  [r4, %[rfsr_ofs]]\n"        // R0 = SCB_RFSR
+    "str   r0,  [r5]\n"                     // Store RFSR
+
+    /* Set ARM_FaultInfo.info.content.ras_fault_reg to 1 --- */
+    "ldr   r0,  =%c[info_addr]\n"           // Load info address
+    "ldr   r1,  [r0]\n"                     // Load info value
+    "ldr   r2,  =%c[info_ras_fault_reg_msk]\n"  // Load value for setting ras_fault_reg bit
+    "orrs  r1,  r2\n"                       // OR it with content of the info
+    "str   r1,  [r0]\n"                     // Store updated info value back
+#endif
+
  /* --- Armv8/8.1-M Mainline Fault Registers --- */
  /* Store values of Armv8/8.1-M Fault Registers (Mainline only) if code is running in Secure World into ARM_FaultInfo */
 #if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)     // If arch is Armv8-M Mainline
 #if (ARM_FAULT_TZ_SECURE != 0)              // If code was compiled for and is running in Secure World
+    "ldr   r5,  =%c[sfsr_reg_addr]\n"       // Load address of SFSR register in ARM_FaultInfo
     "ldr   r4,  =%c[scb_base_addr]\n"       // Load SCB BASE address
     "ldr   r0,  [r4, %[sfsr_ofs]]\n"        // R0 = SFSR
     "ldr   r1,  [r4, %[sfar_ofs]]\n"        // R1 = SFAR
@@ -443,10 +474,11 @@ __NAKED void ARM_FaultSave (void) {
  :  /* no outputs */
  :  /* inputs */
     [info_addr]                         "i" (&ARM_FaultInfo.info)
- ,  [info_fault_regs_msk]               "i" (1U << 18)
- ,  [info_secure_fault_regs_msk]        "i" (1U << 19)
+ ,  [info_fault_regs_msk]               "i" (1U << 23)
+ ,  [info_secure_fault_regs_msk]        "i" (1U << 24)
+ ,  [info_ras_fault_reg_msk]            "i" (1U << 25)
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)
- ,  [scb_regs_addr]                     "i" (&ARM_FaultInfo.SCB_CFSR)
+ ,  [csfr_reg_addr]                     "i" (&ARM_FaultInfo.CFSR)
  ,  [scb_base_addr]                     "i" (SCB_BASE)
  ,  [cfsr_ofs]                          "i" (offsetof(SCB_Type, CFSR ))
  ,  [hfsr_ofs]                          "i" (offsetof(SCB_Type, HFSR ))
@@ -456,9 +488,14 @@ __NAKED void ARM_FaultSave (void) {
  ,  [afsr_ofs]                          "i" (offsetof(SCB_Type, AFSR ))
 #if (ARM_FAULT_TZ_SECURE != 0)
  ,  [scb_ns_base_addr]                  "i" (SCB_BASE_NS)
-#if (ARM_FAULT_ARCH_ARMV8x_M_MAIN !=0)
+#if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
+ ,  [sfsr_reg_addr]                     "i" (&ARM_FaultInfo.SFSR)
  ,  [sfsr_ofs]                          "i" (offsetof(SCB_Type, SFSR ))
  ,  [sfar_ofs]                          "i" (offsetof(SCB_Type, SFAR ))
+#if (ARM_FAULT_ARCH_ARMV8_1M_MAIN != 0)
+ ,  [rfsr_reg_addr]                     "i" (&ARM_FaultInfo.RFSR)
+ ,  [rfsr_ofs]                          "i" (offsetof(SCB_Type, RFSR ))
+#endif
 #endif
 #endif
 #endif

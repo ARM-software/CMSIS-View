@@ -69,7 +69,7 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cversion="0.5.0" condition="Cortex-M Device">
+    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cversion="0.6.0" condition="Cortex-M Device">
       <description>Fault Storage</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_Fault_Storage
@@ -77,12 +77,12 @@
       <files>
         <file category="header" name="Fault/Include/ARM_Fault.h"/>
         <file category="source" name="Fault/Source/ARM_FaultStorage.c"/>
-        <file category="source" name="Fault/Template/ARM_FaultPrint.c" version="0.5.0" attr="template" select="Output decoded fault information via STDIO"/>
+        <file category="source" name="Fault/Template/ARM_FaultPrint.c" version="0.6.0" attr="template" select="Output decoded fault information via STDIO"/>
         <file category="doc"    name="Documentation/html/index.html"/>
         <file category="other"  name="Fault/ARM_Fault.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cversion="0.5.0" condition="ConditionsForFaultRecord">
+    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cversion="0.6.0" condition="ConditionsForFaultRecord">
       <description>Fault Record (Output decoded fault information via EventRecorder)</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_Fault_Record

@@ -24,7 +24,7 @@
 #include "RTE_Components.h"
 #include  CMSIS_device_header
 
-// Check if Arm Architecture is supported
+// Check if Arm architecture is supported
 #if  ((!defined(__ARM_ARCH_6M__)        || (__ARM_ARCH_6M__        == 0)) && \
       (!defined(__ARM_ARCH_7M__)        || (__ARM_ARCH_7M__        == 0)) && \
       (!defined(__ARM_ARCH_7EM__)       || (__ARM_ARCH_7EM__       == 0)) && \
@@ -44,7 +44,7 @@
 #define ARM_FAULT_FAULT_REGS_EXIST     (0)
 #endif
 
-// Determine if architecture is Armv8/8.1-M architecture
+// Determine if architecture is Armv8/8.1-M
 #if   ((defined(__ARM_ARCH_8M_BASE__)   && (__ARM_ARCH_8M_BASE__   != 0)) || \
        (defined(__ARM_ARCH_8M_MAIN__)   && (__ARM_ARCH_8M_MAIN__   != 0)) || \
        (defined(__ARM_ARCH_8_1M_MAIN__) && (__ARM_ARCH_8_1M_MAIN__ != 0))    )
@@ -53,19 +53,33 @@
 #define ARM_FAULT_ARCH_ARMV8x_M        (0)
 #endif
 
-// Determine if architecture is Armv8-M Baseline architecture
+// Determine if architecture is Armv8-M Baseline
 #if    (defined(__ARM_ARCH_8M_BASE__)   && (__ARM_ARCH_8M_BASE__   != 0))
 #define ARM_FAULT_ARCH_ARMV8_M_BASE    (1)
 #else
 #define ARM_FAULT_ARCH_ARMV8_M_BASE    (0)
 #endif
 
-// Determine if architecture is Armv8-M Mainline or Armv8.1 architecture
+// Determine if architecture is Armv8-M Mainline or Armv8.1 Mainline
 #if   ((defined(__ARM_ARCH_8M_MAIN__)   && (__ARM_ARCH_8M_MAIN__   != 0)) || \
        (defined(__ARM_ARCH_8_1M_MAIN__) && (__ARM_ARCH_8_1M_MAIN__ != 0))    )
 #define ARM_FAULT_ARCH_ARMV8x_M_MAIN   (1)
 #else
 #define ARM_FAULT_ARCH_ARMV8x_M_MAIN   (0)
+#endif
+
+// Determine if architecture is Armv8.1-M Mainline
+#if    (defined(__ARM_ARCH_8_1M_MAIN__) && (__ARM_ARCH_8_1M_MAIN__ != 0))
+#define ARM_FAULT_ARCH_ARMV8_1M_MAIN   (1)
+#else
+#define ARM_FAULT_ARCH_ARMV8_1M_MAIN   (0)
+#endif
+
+// Determine if the code is compiled with Cortex-M Security Extensions enabled
+#if     defined (__ARM_FEATURE_CMSE)
+#define ARM_FAULT_TZ_ENABLED           (1)
+#else
+#define ARM_FAULT_TZ_ENABLED           (0)
 #endif
 
 // Determine if the code is compiled for Secure World
@@ -76,11 +90,11 @@
 #endif
 
 // Fault component version
-#define ARM_FAULT_VERSION              "0.5.0"
+#define ARM_FAULT_VERSION              "0.6.0"
 
 // Fault Information structure type version
 #define ARM_FAULT_FAULT_INFO_VER_MAJOR (0U)             // ARM_FaultInfo type version.major
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (2U)             // ARM_FaultInfo type version.minor
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (3U)             // ARM_FaultInfo type version.minor
 
 #ifdef __cplusplus
 extern "C" {
@@ -98,13 +112,21 @@ typedef struct {
       uint8_t major;                    //!< Fault information structure version: major, see \ref ARM_FAULT_FAULT_INFO_VER_MAJOR
     } version;
     struct {
+                                        // Compile-time information
+      uint16_t fault_regs_exist  :  1;  //!< Fault registers: 0 - absent; 1 - available
+      uint16_t armv8x_m_main     :  1;  //!< Armv8/8.1-M Mainline information: 0 - absent; 1 - available
+      uint16_t tz_enabled        :  1;  //!< TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled
+      uint16_t tz_save_mode      :  1;  //!< Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode
+
+                                        // Runtime-time information
+      uint16_t tz_fault_mode     :  1;  //!< Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode
       uint16_t state_context     :  1;  //!< State Context: 0 - was not saved; 1 - was saved
       uint16_t limit_regs        :  1;  //!< MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved
-      uint16_t fault_regs        :  1;  //!< Fault registers:  0 - were not saved; 1 - were saved
-      uint16_t secure_fault_regs :  1;  //!< Secure Fault registers:  0 - were not saved; 1 - were saved
-      uint16_t armv8m            :  1;  //!< Armv8/8.1-M information: 0 - absent; 1 - available
-      uint16_t tz_secure         :  1;  //!< Recording was done running in: 0 - tz-disabled or non-secure mode; 1 - secure mode
-      uint16_t reserved          : 10;  //!< Reserved (0)
+      uint16_t fault_regs        :  1;  //!< Fault registers: 0 - were not saved; 1 - were saved
+      uint16_t secure_fault_regs :  1;  //!< Secure Fault registers: 0 - were not saved; 1 - were saved
+      uint16_t ras_fault_reg     :  1;  //!< RAS Fault register: 0 - was not saved; 1 - was saved
+
+      uint16_t reserved          :  6;  //!< Reserved (0)
     } content;
   } info;
 
@@ -127,7 +149,7 @@ typedef struct {
 
   uint32_t IntegritySignature;          //!< Integrity Signature (only for Armv8/8.1-M arch)
 
-  uint32_t xPSR_in_handler;             //!< Program Status Register value, in exception handler
+  uint32_t EXC_xPSR;                    //!< Program Status Register value, in exception handler
   uint32_t EXC_RETURN;                  //!< Exception Return code (LR), in exception handler
   uint32_t MSP;                         //!< Main    Stack Pointer value
   uint32_t PSP;                         //!< Process Stack Pointer value
@@ -135,16 +157,19 @@ typedef struct {
   uint32_t PSPLIM;                      //!< Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch)
 
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-  uint32_t SCB_CFSR;                    //!< System Control Block - Configurable Fault Status  Register value
-  uint32_t SCB_HFSR;                    //!< System Control Block - HardFault          Status  Register value
-  uint32_t SCB_DFSR;                    //!< System Control Block - Debug Fault        Status  Register value
-  uint32_t SCB_MMFAR;                   //!< System Control Block - MemManage Fault    Address Register value
-  uint32_t SCB_BFAR;                    //!< System Control Block - BusFault           Address Register value
-  uint32_t SCB_AFSR;                    //!< System Control Block - Auxiliary Fault    Status  Register value
+  uint32_t CFSR;                        //!< System Control Block - Configurable Fault Status  Register value
+  uint32_t HFSR;                        //!< System Control Block - HardFault          Status  Register value
+  uint32_t DFSR;                        //!< System Control Block - Debug Fault        Status  Register value
+  uint32_t MMFAR;                       //!< System Control Block - MemManage Fault    Address Register value
+  uint32_t BFAR;                        //!< System Control Block - BusFault           Address Register value
+  uint32_t AFSR;                        //!< System Control Block - Auxiliary Fault    Status  Register value
 
-  // Additional Armv8/8.1-M Mainline arch specific Secure Fault Registers
-  uint32_t SCB_SFSR;                    //!< System Control Block - Secure Fault       Status  Register value
-  uint32_t SCB_SFAR;                    //!< System Control Block - Secure Fault       Address Register value
+  // Additional Armv8/8.1-M Mainline arch specific fault registers
+  uint32_t SFSR;                        //!< System Control Block - Secure Fault       Status  Register value
+  uint32_t SFAR;                        //!< System Control Block - Secure Fault       Address Register value
+
+  // Additional Armv8.1-M Mainline arch specific fault register
+  uint32_t RFSR;                        //!< System Control Block - RAS Fault          Status  Register value
 #endif
 } ARM_FaultInfo_t;
 
