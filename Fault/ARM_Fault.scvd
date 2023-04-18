@@ -42,7 +42,7 @@
       <member name="PSPLIM"             type="uint32_t" offset="104"/>
     </typedef>
 
-    <!-- ARM_FaultInfo: CFSR .. RSFR -->
+    <!-- ARM_FaultInfo: CFSR .. RFSR -->
     <typedef  name="FaultRegs_t"        size="144">
       <member name="CFSR"               type="uint32_t" offset="108"/>
       <member name="HFSR"               type="uint32_t" offset="112"/>
@@ -150,7 +150,7 @@
       <calc cond="fault_regs"       >dfsr                  = (FaultRegs.DFSR);</calc>
       <calc cond="secure_fault_regs">sfsr                  = (FaultRegs.SFSR);</calc>
       <calc cond="ras_fault_reg"    >rfsr                  = (FaultRegs.RFSR);</calc>
-      <calc cond="ras_fault_reg"    >rsfr_uet.val          = (FaultRegs.RFSR &amp; 3);</calc>
+      <calc cond="ras_fault_reg"    >rfsr_uet.val          = (FaultRegs.RFSR &amp; 3);</calc>
 
       <out  name="Fault">
         <item property="Version"                                         value="%t[Version]"/>
@@ -254,10 +254,10 @@
             <item property="INVEP"                                       value="%d[(sfsr &amp; 0x01)]"                   alert="(sfsr &amp; 0x01)"/>
           </item>
           <item property="SFAR"                 cond="secure_fault_regs" value="%x[(FaultRegs.SFAR)]"/>
-          <item property="RFSR"                 cond="ras_fault_reg"     value="%x[(rsfr)]">
+          <item property="RFSR"                 cond="ras_fault_reg"     value="%x[(rfsr)]">
             <item property="V"                                           value="%d[(rfsr &amp; 0x80000000) &gt;&gt; 31]"/>
             <item property="IS"                                          value="%x[(rfsr &amp; 0x7FFF0000) &gt;&gt; 16]"/>
-            <item property="UET"                                         value="%E[rfsr_uet.val]"/>
+            <item property="UET"                                         value="%E[(rfsr_uet.val)]"/>
           </item>
         </item>
       </out>
