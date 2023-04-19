@@ -71,10 +71,10 @@
 #define ARM_FAULT_CRC32_POLYNOM        (0x04C11DB7U)    // ARM Fault CRC-32 polynom
 
 // Fault component version information
-const char ARM_FaultVersion[] = ARM_FAULT_VERSION;
+const char ARM_FaultVersion[] __USED = ARM_FAULT_VERSION;
 
 // Fault information
-ARM_FaultInfo_t ARM_FaultInfo __NO_INIT;
+ARM_FaultInfo_t ARM_FaultInfo __USED __NO_INIT;
 
 // Local function prototype
 static uint32_t CalcCRC32 (      uint32_t init_val,
