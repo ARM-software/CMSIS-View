@@ -285,54 +285,54 @@
 
     <event id="0xEE09" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault"/>
     <event id="0xEE0A" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1])"/>
-    <event id="0xEE0B" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (mem addr=%x(val2))"/>
-    <event id="0xEE0C" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE0B" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (mem addr=%x[val2])"/>
+    <event id="0xEE0C" level="Error" property="MemManage"   value="Instruction execution failure due to MPU violation or fault (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE0D" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault"/>
     <event id="0xEE0E" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1])"/>
-    <event id="0xEE0F" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (mem addr=%x(val2))"/>
-    <event id="0xEE10" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE0F" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (mem addr=%x[val2])"/>
+    <event id="0xEE10" level="Error" property="MemManage"   value="Data access failure due to MPU violation or fault (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE11" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation"/>
     <event id="0xEE12" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1])"/>
-    <event id="0xEE13" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (mem addr=%x(val2))"/>
-    <event id="0xEE14" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE13" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (mem addr=%x[val2])"/>
+    <event id="0xEE14" level="Error" property="MemManage"   value="Exception exit unstacking failure due to MPU access violation (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE15" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation"/>
-    <event id="0xEE16" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation (mem addr=%x(val2))"/>
+    <event id="0xEE16" level="Error" property="MemManage"   value="Exception entry stacking failure due to MPU access violation (mem addr=%x[val2])"/>
 
     <event id="0xEE17" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation"/>
     <event id="0xEE18" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1])"/>
-    <event id="0xEE19" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (mem addr=%x(val2))"/>
-    <event id="0xEE1A" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE19" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (mem addr=%x[val2])"/>
+    <event id="0xEE1A" level="Error" property="MemManage"   value="Floating-point lazy stacking failure due to MPU access violation (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE1B" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault"/>
     <event id="0xEE1C" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1])"/>
-    <event id="0xEE1D" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (mem addr=%x(val2))"/>
-    <event id="0xEE1E" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE1D" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (mem addr=%x[val2])"/>
+    <event id="0xEE1E" level="Error" property="BusFault"    value="Instruction prefetch failure due to bus fault (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE1F" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise)"/>
     <event id="0xEE20" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1])"/>
-    <event id="0xEE21" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (mem addr=%x(val2))"/>
-    <event id="0xEE22" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE21" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (mem addr=%x[val2])"/>
+    <event id="0xEE22" level="Error" property="BusFault"    value="Data access failure due to bus fault (precise) (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE23" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise)"/>
     <event id="0xEE24" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1])"/>
-    <event id="0xEE25" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (mem addr=%x(val2))"/>
-    <event id="0xEE26" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE25" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (mem addr=%x[val2])"/>
+    <event id="0xEE26" level="Error" property="BusFault"    value="Data access failure due to bus fault (imprecise) (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE27" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault"/>
     <event id="0xEE28" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1])"/>
-    <event id="0xEE29" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (mem addr=%x(val2))"/>
-    <event id="0xEE2A" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE29" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (mem addr=%x[val2])"/>
+    <event id="0xEE2A" level="Error" property="BusFault"    value="Exception exit unstacking failure due to bus fault (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE2B" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault"/>
-    <event id="0xEE2C" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault (mem addr=%x(val2))"/>
+    <event id="0xEE2C" level="Error" property="BusFault"    value="Exception entry stacking failure due to bus fault (mem addr=%x[val2])"/>
 
     <event id="0xEE2D" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault"/>
     <event id="0xEE2E" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1])"/>
-    <event id="0xEE2F" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (mem addr=%x(val2))"/>
-    <event id="0xEE30" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE2F" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (mem addr=%x[val2])"/>
+    <event id="0xEE30" level="Error" property="BusFault"    value="Floating-point lazy stacking failure due to bus fault (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE31" level="Error" property="UsageFault"  value="Execution of undefined instruction"/>
     <event id="0xEE32" level="Error" property="UsageFault"  value="Execution of undefined instruction (PC=%x[val1])"/>
@@ -356,38 +356,38 @@
 
     <event id="0xEE3E" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state"/>
     <event id="0xEE3F" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1])"/>
-    <event id="0xEE40" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (mem addr=%x(val2))"/>
-    <event id="0xEE41" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE40" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (mem addr=%x[val2])"/>
+    <event id="0xEE41" level="Error" property="SecureFault" value="Invalid entry point due to invalid attempt to enter Secure state (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE42" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking"/>
     <event id="0xEE43" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1])"/>
-    <event id="0xEE44" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (mem addr=%x(val2))"/>
-    <event id="0xEE45" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE44" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (mem addr=%x[val2])"/>
+    <event id="0xEE45" level="Error" property="SecureFault" value="Invalid integrity signature in exception stack frame found on unstacking (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE46" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES"/>
     <event id="0xEE47" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1])"/>
-    <event id="0xEE48" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (mem addr=%x(val2))"/>
-    <event id="0xEE49" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE48" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (mem addr=%x[val2])"/>
+    <event id="0xEE49" level="Error" property="SecureFault" value="Invalid exception return due to mismatch on EXC_RETURN.DCRS or EXC_RETURN.ES (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE4A" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space"/>
     <event id="0xEE4B" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1])"/>
-    <event id="0xEE4C" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (mem addr=%x(val2))"/>
-    <event id="0xEE4D" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE4C" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (mem addr=%x[val2])"/>
+    <event id="0xEE4D" level="Error" property="SecureFault" value="Attribution unit violation due to Non-secure access to Secure address space (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE4E" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such"/>
     <event id="0xEE4F" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1])"/>
-    <event id="0xEE50" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (mem addr=%x(val2))"/>
-    <event id="0xEE51" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE50" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (mem addr=%x[val2])"/>
+    <event id="0xEE51" level="Error" property="SecureFault" value="Invalid transaction caused by domain crossing branch not flagged as such (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE52" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation"/>
     <event id="0xEE53" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1])"/>
-    <event id="0xEE54" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (mem addr=%x(val2))"/>
-    <event id="0xEE55" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE54" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (mem addr=%x[val2])"/>
+    <event id="0xEE55" level="Error" property="SecureFault" value="Lazy stacking preservation failure due to SAU or IDAU violation (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE56" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure"/>
     <event id="0xEE57" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1])"/>
-    <event id="0xEE58" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (mem addr=%x(val2))"/>
-    <event id="0xEE59" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1], mem addr=%x(val2))"/>
+    <event id="0xEE58" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (mem addr=%x[val2])"/>
+    <event id="0xEE59" level="Error" property="SecureFault" value="Lazy stacking activation or deactivation failure (PC=%x[val1], mem addr=%x[val2])"/>
 
     <event id="0xEE5A" level="Error" property="RAS Fault"   value="RAS Fault Status Register value = %x[val2]"/>
     <event id="0xEE5B" level="Error" property="RAS Fault"   value="RAS Fault Status Register value = %x[val2] (PC=%x[val1])"/>

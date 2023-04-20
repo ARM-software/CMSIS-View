@@ -246,9 +246,6 @@ void ARM_FaultRecord (void) {
         (void)EventRecord2(EvtFault_BusFault_LSPERR      + evt_id_inc, return_address, scb_bfar);
       }
 #endif
-      if ((scb_cfsr & SCB_CFSR_BFARVALID_Msk) != 0U) {
-        (void)EventRecord2(EvtFault_BusFault_IBUSERR     + evt_id_inc, return_address, scb_bfar);
-      }
     }
   }
 

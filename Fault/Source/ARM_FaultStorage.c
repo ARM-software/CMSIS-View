@@ -565,8 +565,8 @@ __NAKED void ARM_FaultSave (void) {
   "restored_r4_to_r7:\n"
 
  /* Jump to ARM_FaultExit function */
-    "ldr   r0,  =ARM_FaultExit\n\t"
-    "mov   pc,  r0\n\t"
+    "ldr   r0,  =ARM_FaultExit\n"
+    "mov   pc,  r0\n"
 
  /* Inline assembly template operands */
  :  /* no outputs */
