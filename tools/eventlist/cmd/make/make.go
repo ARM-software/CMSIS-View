@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Arm Limited. All rights reserved.
+ * Copyright (c) 2023 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -37,8 +37,9 @@ const program = "eventlist"
 const mainPath = "./cmd/" + program
 const resourceFileName = "resource.syso"
 const unknownVersion = "0.0.0.0"
+const unknownYear = "2023"
 
-var legalCopyright = " (C) 2022 Arm Ltd. and Contributors"
+var legalCopyright = "Arm Ltd. and Contributors"
 
 // Errors
 var ErrGitTag = errors.New("git tag error")
@@ -64,13 +65,13 @@ type runner struct {
 func (r runner) run(command string) {
 	switch {
 	case command == "build":
-		versionStr, err := createResourceInfoFile(r.options.targetArch)
+		versionInfo, err := createResourceInfoFile(r.options.targetArch)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-		versionInfo := versionStr + legalCopyright
-		if err = r.build(r.options, versionInfo); err != nil {
+		info := versionInfo.StringFileInfo.FileVersion + " " + versionInfo.StringFileInfo.LegalCopyright
+		if err = r.build(r.options, info); err != nil {
 			fmt.Println(err.Error())
 		}
 	case command == "test":
@@ -99,6 +100,7 @@ func (r runner) run(command string) {
 
 func (r runner) executeCommand(command string) (err error) {
 	var stdout, stderr bytes.Buffer
+	fmt.Println(command)
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -121,7 +123,7 @@ func (r runner) build(options Options, versionInfo string) (err error) {
 		extn = ".exe"
 	}
 	cmd := "GOOS=" + options.targetOs + " GOARCH=" + options.targetArch +
-		" go build -ldflags '-X \"main.versionInfo=" + versionInfo +
+		" go build -v -ldflags '-X \"main.versionInfo=" + versionInfo +
 		"\"' -o " + options.outDir + "/" + program + extn + " " + mainPath
 
 	if err = r.executeCommand(cmd); err == nil {
@@ -179,7 +181,7 @@ func (r runner) format() {
 func fetchVersionInfoFromGit() (version version, err error) {
 	out, err := exec.Command("git", "describe", "--tags", "--match", "tools/eventlist/*").Output()
 	if len(out) == 0 && err != nil {
-		fmt.Println("warning: no release tag found, setting version to default \"0.0.0.0\"")
+		fmt.Println("warning: no release tag found, setting version to default \"" + unknownVersion + "\"")
 		return newVersion(unknownVersion)
 	}
 	if err != nil {
@@ -196,11 +198,21 @@ func fetchVersionInfoFromGit() (version version, err error) {
 	return newVersion(tokens[2])
 }
 
-func createResourceInfoFile(arch string) (version string, err error) {
+func fetchChangeYearFromGit() (year string) {
+	out, err := exec.Command("git", "log", "-n", "1", "--format=%ad", "--date=format:%Y").Output()
+	if len(out) == 0 || err != nil {
+		fmt.Println("warning: no change log found, setting year to default \"" + unknownYear + "\"")
+		return unknownYear
+	}
+	return strings.TrimSpace(string(out))
+}
+
+func createResourceInfoFile(arch string) (version goversioninfo.VersionInfo, err error) {
 	gitVersion, err := fetchVersionInfoFromGit()
 	if err != nil {
 		return
 	}
+	gitYear := fetchChangeYearFromGit()
 
 	verInfo := goversioninfo.VersionInfo{}
 
@@ -219,7 +231,7 @@ func createResourceInfoFile(arch string) (version string, err error) {
 		OriginalFilename: program + ".exe",
 		FileVersion:      gitVersion.String(),
 		ProductVersion:   gitVersion.String(),
-		LegalCopyright:   "Copyright" + legalCopyright,
+		LegalCopyright:   "Copyright (c) 2022-" + gitYear + " " + legalCopyright,
 	}
 	verInfo.VarFileInfo.Translation = goversioninfo.Translation{
 		LangID:    1033,
@@ -231,8 +243,7 @@ func createResourceInfoFile(arch string) (version string, err error) {
 	// Write the data to a buffer
 	verInfo.Walk()
 
-	return verInfo.StringFileInfo.FileVersion,
-		verInfo.WriteSyso(mainPath+"/"+resourceFileName, arch)
+	return verInfo, verInfo.WriteSyso(mainPath+"/"+resourceFileName, arch)
 }
 
 func isCommandValid(command string) (result bool) {
