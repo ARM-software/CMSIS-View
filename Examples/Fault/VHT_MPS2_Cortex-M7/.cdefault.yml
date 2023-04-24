@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.5.0/tools/projmgr/schemas/cdefault.schema.json
+
+default:
+  compiler: AC6
+
+  misc:
+    - for-compiler: AC6
+      C-CPP:
+        - -fshort-wchar
+        - -fshort-enums
+        - -Wno-macro-redefined
+        - -Wno-pragma-pack
+        - -Wno-parentheses-equality
+      C:
+        - -std=c99
+      ASM:
+        - -masm=auto
+      Link:
+        - --entry=Reset_Handler
+
+    - for-compiler: GCC
+      C-CPP:
+        - -Wall
+      C:
+        - -std=gnu99
+      Link:
+        - --specs=nosys.specs
+        - --entry=Reset_Handler
