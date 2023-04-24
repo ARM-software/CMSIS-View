@@ -448,7 +448,7 @@ __STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {
 
 typedef int32_t FILEHANDLE;
 
-static FILEHANDLE FileHandle = -1;
+static FILEHANDLE FileHandle __NO_INIT;
 
 static FILEHANDLE sys_open (const char *name, uint32_t openmode) {
   //lint --e{446} "side effect in initializer"
