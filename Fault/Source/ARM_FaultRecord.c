@@ -25,7 +25,7 @@
 #include "EventRecorder.h"
 
 // ARM Fault component number
-#define EvtFault_No     0xEEU           // Component number for ARM Fault Record
+#define EvtFault_No     0xEEU           // Component number for ARM Fault
 
 // ARM Fault Event IDs
 #define EvtFault_FaultInfo_Invalid      EventID(EventLevelOp,    EvtFault_No, 0x00U)
@@ -58,6 +58,8 @@
 #define EvtFault_SecureFault_INVTRAN    EventID(EventLevelError, EvtFault_No, 0x4EU)
 #define EvtFault_SecureFault_LSPERR     EventID(EventLevelError, EvtFault_No, 0x52U)
 #define EvtFault_SecureFault_LSERR      EventID(EventLevelError, EvtFault_No, 0x56U)
+#define EvtFault_RAS_Fault              EventID(EventLevelError, EvtFault_No, 0x5AU)
+#define EvtFault_TZ_Info                EventID(EventLevelOp,    EvtFault_No, 0x5CU)
 
 // Armv8/8.1-M Mainline architecture related defines
 #if    (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
@@ -115,6 +117,12 @@ void ARM_FaultRecord (void) {
     // Fault information is valid
   }
 
+#if (ARM_FAULT_TZ_ENABLED != 0)         // If TrustZone is enabled
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.tz_enabled != 0U)) {
+    (void)EventRecord2(EvtFault_TZ_Info, ARM_FaultInfo.info.content.tz_fault_mode, ARM_FaultInfo.info.content.tz_save_mode);
+  }
+#endif
+
 #if (ARM_FAULT_FAULT_REGS_EXIST == 0)   // If fault registers do not exist
   /* Output: Message if fault registers do not exist */
   if (fault_info_valid != 0) {
@@ -131,7 +139,7 @@ void ARM_FaultRecord (void) {
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)   // If fault registers exist
   /* Output: Decoded HardFault information */
   if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
-    uint32_t scb_hfsr = ARM_FaultInfo.SCB_HFSR;
+    uint32_t scb_hfsr = ARM_FaultInfo.HFSR;
 
     if ((scb_hfsr & (SCB_HFSR_VECTTBL_Msk   |
                      SCB_HFSR_FORCED_Msk    |
@@ -157,8 +165,8 @@ void ARM_FaultRecord (void) {
 
   /* Output: Decoded MemManage fault information */
   if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
-    uint32_t scb_cfsr  = ARM_FaultInfo.SCB_CFSR;
-    uint32_t scb_mmfar = ARM_FaultInfo.SCB_MMFAR;
+    uint32_t scb_cfsr  = ARM_FaultInfo.CFSR;
+    uint32_t scb_mmfar = ARM_FaultInfo.MMFAR;
 
     if ((scb_cfsr & (SCB_CFSR_IACCVIOL_Msk  |
                      SCB_CFSR_DACCVIOL_Msk  |
@@ -198,8 +206,8 @@ void ARM_FaultRecord (void) {
 
   /* Output: Decoded BusFault information */
   if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
-    uint32_t scb_cfsr = ARM_FaultInfo.SCB_CFSR;
-    uint32_t scb_bfar = ARM_FaultInfo.SCB_BFAR;
+    uint32_t scb_cfsr = ARM_FaultInfo.CFSR;
+    uint32_t scb_bfar = ARM_FaultInfo.BFAR;
 
     if ((scb_cfsr & (SCB_CFSR_IBUSERR_Msk     |
                      SCB_CFSR_PRECISERR_Msk   |
@@ -238,15 +246,12 @@ void ARM_FaultRecord (void) {
         (void)EventRecord2(EvtFault_BusFault_LSPERR      + evt_id_inc, return_address, scb_bfar);
       }
 #endif
-      if ((scb_cfsr & SCB_CFSR_BFARVALID_Msk) != 0U) {
-        (void)EventRecord2(EvtFault_BusFault_IBUSERR     + evt_id_inc, return_address, scb_bfar);
-      }
     }
   }
 
   /* Output Decoded UsageFault information */
   if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.fault_regs != 0U)) {
-    uint32_t scb_cfsr = ARM_FaultInfo.SCB_CFSR;
+    uint32_t scb_cfsr = ARM_FaultInfo.CFSR;
 
     if ((scb_cfsr & (SCB_CFSR_UNDEFINSTR_Msk |
                      SCB_CFSR_INVSTATE_Msk   |
@@ -293,8 +298,8 @@ void ARM_FaultRecord (void) {
 #if (ARM_FAULT_ARCH_ARMV8x_M_MAIN != 0)
   /* Output: Decoded SecureFault information */
   if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.secure_fault_regs != 0U)) {
-    uint32_t scb_sfsr = ARM_FaultInfo.SCB_SFSR;
-    uint32_t scb_sfar = ARM_FaultInfo.SCB_SFAR;
+    uint32_t scb_sfsr = ARM_FaultInfo.SFSR;
+    uint32_t scb_sfar = ARM_FaultInfo.SFAR;
 
     if ((scb_sfsr & (SAU_SFSR_INVEP_Msk   |
                      SAU_SFSR_INVIS_Msk   |
@@ -333,6 +338,23 @@ void ARM_FaultRecord (void) {
       if ((scb_sfsr & SAU_SFSR_LSERR_Msk) != 0U) {
         (void)EventRecord2(EvtFault_SecureFault_LSERR   + evt_id_inc, return_address, scb_sfar);
       }
+    }
+  }
+#endif
+
+#if (ARM_FAULT_ARCH_ARMV8_1M_MAIN != 0)
+  /* Output: RAS Fault information */
+  if ((fault_info_valid != 0) && (ARM_FaultInfo.info.content.ras_fault_reg != 0U)) {
+    uint32_t scb_rfsr = ARM_FaultInfo.RFSR;
+
+    if ((scb_rfsr & SCB_RFSR_V_Msk) != 0U) {
+
+      evt_id_inc = 0U;
+      if (ARM_FaultInfo.info.content.state_context != 0U) {
+        evt_id_inc += 1U;
+      }
+
+      (void)EventRecord2(EvtFault_RAS_Fault + evt_id_inc, return_address, scb_rfsr);
     }
   }
 #endif
