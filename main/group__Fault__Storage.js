@@ -2,13 +2,20 @@ var group__Fault__Storage =
 [
     [ "Macros", "group__Fault__Storage__Macros.html", "group__Fault__Storage__Macros" ],
     [ "ARM_FaultInfo_t", "group__Fault__Storage.html#structARM__FaultInfo__t", [
+      [ "AFSR", "group__Fault__Storage.html#ad2ab4153b2a2a2ae20d920d8c8e2a73b", null ],
+      [ "BFAR", "group__Fault__Storage.html#aee8ac8e55f00f609eea87a02c05b62dd", null ],
+      [ "CFSR", "group__Fault__Storage.html#a07fa982352a7382850ac29ad3e181b2d", null ],
       [ "count", "group__Fault__Storage.html#a86988a65e0d3ece7990c032c159786d6", null ],
       [ "crc32", "group__Fault__Storage.html#a7ba6d986496f16e7c9bb92ea0265914d", null ],
+      [ "DFSR", "group__Fault__Storage.html#ae8d2d700d6a9735423a52a48a62b50b6", null ],
       [ "EXC_RETURN", "group__Fault__Storage.html#ac699e8a2ada09ddf3f7df240c8032a53", null ],
+      [ "EXC_xPSR", "group__Fault__Storage.html#a0215dc879780a0d6a79258b82956df4a", null ],
+      [ "HFSR", "group__Fault__Storage.html#a7b5519d571d58cc389ee2862629f325f", null ],
       [ "info", "group__Fault__Storage.html#ab04b9b327f38315ae6b99791570cfde9", null ],
       [ "IntegritySignature", "group__Fault__Storage.html#a972b05b20154d3b04b487468986fd6f0", null ],
       [ "LR", "group__Fault__Storage.html#a3314de2ca1fccad1fe0411e61b2d282d", null ],
       [ "magic_number", "group__Fault__Storage.html#a45eaf7e07ea0226c1328ee7d4a5f7948", null ],
+      [ "MMFAR", "group__Fault__Storage.html#a5cbdc7968b441ac9bc3be938b9faa98d", null ],
       [ "MSP", "group__Fault__Storage.html#a44133716bf1f8c1f60fc73a4a5799dd9", null ],
       [ "MSPLIM", "group__Fault__Storage.html#a455c50d286e3afa2c14dc6712f95f376", null ],
       [ "PSP", "group__Fault__Storage.html#a4465a910abcbdf89240e5e808246ba0c", null ],
@@ -27,16 +34,10 @@ var group__Fault__Storage =
       [ "R8", "group__Fault__Storage.html#a7982db8ebbe623de80374009f7650e76", null ],
       [ "R9", "group__Fault__Storage.html#a0df18fdea4760a9f71b31f1a12e66958", null ],
       [ "ReturnAddress", "group__Fault__Storage.html#a79d90bf04aa3b096b74d8f270b00000f", null ],
-      [ "SCB_AFSR", "group__Fault__Storage.html#a111ea8a6b0404e78a64239f5309ec56b", null ],
-      [ "SCB_BFAR", "group__Fault__Storage.html#a75e07b2a054bce39712cd25d5ac3a49e", null ],
-      [ "SCB_CFSR", "group__Fault__Storage.html#a748b97139222c35e8b1612f94c2f0ed5", null ],
-      [ "SCB_DFSR", "group__Fault__Storage.html#af50ca1735205d115d328093a79a8df9a", null ],
-      [ "SCB_HFSR", "group__Fault__Storage.html#ae922fbdbcd30c92c6445cddaeac83690", null ],
-      [ "SCB_MMFAR", "group__Fault__Storage.html#a5429e9e6a9adc6e09644e064166d9c03", null ],
-      [ "SCB_SFAR", "group__Fault__Storage.html#a4e69c506c3e5df6ca086e96cb1420836", null ],
-      [ "SCB_SFSR", "group__Fault__Storage.html#a940cdef6313aecc9c0b9b0a58e692a3a", null ],
-      [ "xPSR", "group__Fault__Storage.html#a1d6c6767a3d4bb9e9bf57f8cb4bc0613", null ],
-      [ "xPSR_in_handler", "group__Fault__Storage.html#a85df7bf2fec54c01dfc0c4f228acc1a1", null ]
+      [ "RFSR", "group__Fault__Storage.html#a57d628f50f288a4c1bea4e591b928b63", null ],
+      [ "SFAR", "group__Fault__Storage.html#aedff16ec4aa66d768cafb2d665ea7902", null ],
+      [ "SFSR", "group__Fault__Storage.html#a7c07458db9cae1be1afcb3ce8b4562fe", null ],
+      [ "xPSR", "group__Fault__Storage.html#a1d6c6767a3d4bb9e9bf57f8cb4bc0613", null ]
     ] ],
     [ "ARM_FaultInfo_t.info", "group__Fault__Storage.html#structARM__FaultInfo__t_8info", [
       [ "content", "group__Fault__Storage.html#a9a0364b9e99bb480dd25e1f0284c8555", null ],
@@ -47,13 +48,17 @@ var group__Fault__Storage =
       [ "minor", "group__Fault__Storage.html#aab846c0e3717a3e7d14af45cab70b44a", null ]
     ] ],
     [ "ARM_FaultInfo_t.info.content", "group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content", [
-      [ "armv8m", "group__Fault__Storage.html#a25edef5dd9e93b5aaddb386196d71262", null ],
+      [ "armv8x_m_main", "group__Fault__Storage.html#a3e2282a01ae701b1799d5ceeba0d9df1", null ],
       [ "fault_regs", "group__Fault__Storage.html#ada60f4dec912ed64ef4483ef7f6978ac", null ],
+      [ "fault_regs_exist", "group__Fault__Storage.html#abe7da22b8270e94abfea92115d3b9e09", null ],
       [ "limit_regs", "group__Fault__Storage.html#a2453a9764d85670260f845e5529cf8b2", null ],
+      [ "ras_fault_reg", "group__Fault__Storage.html#a8df986901996973b209ee61f613b64eb", null ],
       [ "reserved", "group__Fault__Storage.html#a7f005c3fa691e77c52d3297cc2699072", null ],
       [ "secure_fault_regs", "group__Fault__Storage.html#aba549a313935295d5c3c369c98797ca7", null ],
       [ "state_context", "group__Fault__Storage.html#ab4ccde3b9a92cdff55dd8c38df00d08e", null ],
-      [ "tz_secure", "group__Fault__Storage.html#abc705802f37ff7e0bb850df6e2e9467e", null ]
+      [ "tz_enabled", "group__Fault__Storage.html#aa4e096cc0141aae8bf3d2933160012e0", null ],
+      [ "tz_fault_mode", "group__Fault__Storage.html#aa32fa2478d16d03202d24bf8410054ac", null ],
+      [ "tz_save_mode", "group__Fault__Storage.html#ad6178aec9b1fd8a2212fc87c9db68ca4", null ]
     ] ],
     [ "ARM_FaultClear", "group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346", null ],
     [ "ARM_FaultExit", "group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292", null ],

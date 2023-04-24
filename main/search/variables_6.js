@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['psp_0',['PSP',['../group__Fault__Storage.html#a4465a910abcbdf89240e5e808246ba0c',1,'ARM_FaultInfo_t']]],
-  ['psplim_1',['PSPLIM',['../group__Fault__Storage.html#ae09bc7991f56b5e12f03fcbc149537b6',1,'ARM_FaultInfo_t']]]
+  ['info_0',['info',['../group__Fault__Storage.html#ab04b9b327f38315ae6b99791570cfde9',1,'ARM_FaultInfo_t']]],
+  ['integritysignature_1',['IntegritySignature',['../group__Fault__Storage.html#a972b05b20154d3b04b487468986fd6f0',1,'ARM_FaultInfo_t']]]
 ];

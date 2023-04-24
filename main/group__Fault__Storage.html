@@ -180,6 +180,24 @@ Variables</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
+<a id="ad2ab4153b2a2a2ae20d920d8c8e2a73b" name="ad2ab4153b2a2a2ae20d920d8c8e2a73b"></a>uint32_t</td>
+<td class="fieldname">
+AFSR</td>
+<td class="fielddoc">
+System Control Block - Auxiliary Fault Status Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="aee8ac8e55f00f609eea87a02c05b62dd" name="aee8ac8e55f00f609eea87a02c05b62dd"></a>uint32_t</td>
+<td class="fieldname">
+BFAR</td>
+<td class="fielddoc">
+System Control Block - BusFault Address Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a07fa982352a7382850ac29ad3e181b2d" name="a07fa982352a7382850ac29ad3e181b2d"></a>uint32_t</td>
+<td class="fieldname">
+CFSR</td>
+<td class="fielddoc">
+System Control Block - Configurable Fault Status Register value. </td></tr>
+<tr><td class="fieldtype">
 <a id="a86988a65e0d3ece7990c032c159786d6" name="a86988a65e0d3ece7990c032c159786d6"></a>uint32_t</td>
 <td class="fieldname">
 count</td>
@@ -192,11 +210,29 @@ crc32</td>
 <td class="fielddoc">
 CRC32 of the structure content (excluding magic_number and crc32 fields) </td></tr>
 <tr><td class="fieldtype">
+<a id="ae8d2d700d6a9735423a52a48a62b50b6" name="ae8d2d700d6a9735423a52a48a62b50b6"></a>uint32_t</td>
+<td class="fieldname">
+DFSR</td>
+<td class="fielddoc">
+System Control Block - Debug Fault Status Register value. </td></tr>
+<tr><td class="fieldtype">
 <a id="ac699e8a2ada09ddf3f7df240c8032a53" name="ac699e8a2ada09ddf3f7df240c8032a53"></a>uint32_t</td>
 <td class="fieldname">
 EXC_RETURN</td>
 <td class="fielddoc">
 Exception Return code (LR), in exception handler. </td></tr>
+<tr><td class="fieldtype">
+<a id="a0215dc879780a0d6a79258b82956df4a" name="a0215dc879780a0d6a79258b82956df4a"></a>uint32_t</td>
+<td class="fieldname">
+EXC_xPSR</td>
+<td class="fielddoc">
+Program Status Register value, in exception handler. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7b5519d571d58cc389ee2862629f325f" name="a7b5519d571d58cc389ee2862629f325f"></a>uint32_t</td>
+<td class="fieldname">
+HFSR</td>
+<td class="fielddoc">
+System Control Block - HardFault Status Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="ab04b9b327f38315ae6b99791570cfde9" name="ab04b9b327f38315ae6b99791570cfde9"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td>
 <td class="fieldname">
@@ -221,6 +257,12 @@ Link Register (R14) value. </td></tr>
 magic_number</td>
 <td class="fielddoc">
 Magic number (ASCII "FltR") </td></tr>
+<tr><td class="fieldtype">
+<a id="a5cbdc7968b441ac9bc3be938b9faa98d" name="a5cbdc7968b441ac9bc3be938b9faa98d"></a>uint32_t</td>
+<td class="fieldname">
+MMFAR</td>
+<td class="fielddoc">
+System Control Block - MemManage Fault Address Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a44133716bf1f8c1f60fc73a4a5799dd9" name="a44133716bf1f8c1f60fc73a4a5799dd9"></a>uint32_t</td>
 <td class="fieldname">
@@ -330,51 +372,21 @@ ReturnAddress</td>
 <td class="fielddoc">
 Return address from exception. </td></tr>
 <tr><td class="fieldtype">
-<a id="a111ea8a6b0404e78a64239f5309ec56b" name="a111ea8a6b0404e78a64239f5309ec56b"></a>uint32_t</td>
+<a id="a57d628f50f288a4c1bea4e591b928b63" name="a57d628f50f288a4c1bea4e591b928b63"></a>uint32_t</td>
 <td class="fieldname">
-SCB_AFSR</td>
+RFSR</td>
 <td class="fielddoc">
-System Control Block - Auxiliary Fault Status Register value. </td></tr>
+System Control Block - RAS Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a75e07b2a054bce39712cd25d5ac3a49e" name="a75e07b2a054bce39712cd25d5ac3a49e"></a>uint32_t</td>
+<a id="aedff16ec4aa66d768cafb2d665ea7902" name="aedff16ec4aa66d768cafb2d665ea7902"></a>uint32_t</td>
 <td class="fieldname">
-SCB_BFAR</td>
-<td class="fielddoc">
-System Control Block - BusFault Address Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a748b97139222c35e8b1612f94c2f0ed5" name="a748b97139222c35e8b1612f94c2f0ed5"></a>uint32_t</td>
-<td class="fieldname">
-SCB_CFSR</td>
-<td class="fielddoc">
-System Control Block - Configurable Fault Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="af50ca1735205d115d328093a79a8df9a" name="af50ca1735205d115d328093a79a8df9a"></a>uint32_t</td>
-<td class="fieldname">
-SCB_DFSR</td>
-<td class="fielddoc">
-System Control Block - Debug Fault Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="ae922fbdbcd30c92c6445cddaeac83690" name="ae922fbdbcd30c92c6445cddaeac83690"></a>uint32_t</td>
-<td class="fieldname">
-SCB_HFSR</td>
-<td class="fielddoc">
-System Control Block - HardFault Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a5429e9e6a9adc6e09644e064166d9c03" name="a5429e9e6a9adc6e09644e064166d9c03"></a>uint32_t</td>
-<td class="fieldname">
-SCB_MMFAR</td>
-<td class="fielddoc">
-System Control Block - MemManage Fault Address Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a4e69c506c3e5df6ca086e96cb1420836" name="a4e69c506c3e5df6ca086e96cb1420836"></a>uint32_t</td>
-<td class="fieldname">
-SCB_SFAR</td>
+SFAR</td>
 <td class="fielddoc">
 System Control Block - Secure Fault Address Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a940cdef6313aecc9c0b9b0a58e692a3a" name="a940cdef6313aecc9c0b9b0a58e692a3a"></a>uint32_t</td>
+<a id="a7c07458db9cae1be1afcb3ce8b4562fe" name="a7c07458db9cae1be1afcb3ce8b4562fe"></a>uint32_t</td>
 <td class="fieldname">
-SCB_SFSR</td>
+SFSR</td>
 <td class="fielddoc">
 System Control Block - Secure Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
@@ -383,12 +395,6 @@ System Control Block - Secure Fault Status Register value. </td></tr>
 xPSR</td>
 <td class="fielddoc">
 Program Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a85df7bf2fec54c01dfc0c4f228acc1a1" name="a85df7bf2fec54c01dfc0c4f228acc1a1"></a>uint32_t</td>
-<td class="fieldname">
-xPSR_in_handler</td>
-<td class="fielddoc">
-Program Status Register value, in exception handler. </td></tr>
 </table>
 
 </div>
@@ -466,11 +472,11 @@ Fault information structure version: minor, see <a class="el" href="group__Fault
 <div class="textblock"></div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a25edef5dd9e93b5aaddb386196d71262" name="a25edef5dd9e93b5aaddb386196d71262"></a>uint16_t</td>
+<a id="a3e2282a01ae701b1799d5ceeba0d9df1" name="a3e2282a01ae701b1799d5ceeba0d9df1"></a>uint16_t</td>
 <td class="fieldname">
-armv8m: 1</td>
+armv8x_m_main: 1</td>
 <td class="fielddoc">
-Armv8/8.1-M information: 0 - absent; 1 - available. </td></tr>
+Armv8/8.1-M Mainline information: 0 - absent; 1 - available. </td></tr>
 <tr><td class="fieldtype">
 <a id="ada60f4dec912ed64ef4483ef7f6978ac" name="ada60f4dec912ed64ef4483ef7f6978ac"></a>uint16_t</td>
 <td class="fieldname">
@@ -478,15 +484,27 @@ fault_regs: 1</td>
 <td class="fielddoc">
 Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
 <tr><td class="fieldtype">
+<a id="abe7da22b8270e94abfea92115d3b9e09" name="abe7da22b8270e94abfea92115d3b9e09"></a>uint16_t</td>
+<td class="fieldname">
+fault_regs_exist: 1</td>
+<td class="fielddoc">
+Fault registers: 0 - absent; 1 - available. </td></tr>
+<tr><td class="fieldtype">
 <a id="a2453a9764d85670260f845e5529cf8b2" name="a2453a9764d85670260f845e5529cf8b2"></a>uint16_t</td>
 <td class="fieldname">
 limit_regs: 1</td>
 <td class="fielddoc">
 MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved. </td></tr>
 <tr><td class="fieldtype">
+<a id="a8df986901996973b209ee61f613b64eb" name="a8df986901996973b209ee61f613b64eb"></a>uint16_t</td>
+<td class="fieldname">
+ras_fault_reg: 1</td>
+<td class="fielddoc">
+RAS Fault register: 0 - was not saved; 1 - was saved. </td></tr>
+<tr><td class="fieldtype">
 <a id="a7f005c3fa691e77c52d3297cc2699072" name="a7f005c3fa691e77c52d3297cc2699072"></a>uint16_t</td>
 <td class="fieldname">
-reserved: 10</td>
+reserved: 6</td>
 <td class="fielddoc">
 Reserved (0) </td></tr>
 <tr><td class="fieldtype">
@@ -502,11 +520,23 @@ state_context: 1</td>
 <td class="fielddoc">
 State Context: 0 - was not saved; 1 - was saved. </td></tr>
 <tr><td class="fieldtype">
-<a id="abc705802f37ff7e0bb850df6e2e9467e" name="abc705802f37ff7e0bb850df6e2e9467e"></a>uint16_t</td>
+<a id="aa4e096cc0141aae8bf3d2933160012e0" name="aa4e096cc0141aae8bf3d2933160012e0"></a>uint16_t</td>
 <td class="fieldname">
-tz_secure: 1</td>
+tz_enabled: 1</td>
 <td class="fielddoc">
-Recording was done running in: 0 - tz-disabled or non-secure mode; 1 - secure mode. </td></tr>
+TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled. </td></tr>
+<tr><td class="fieldtype">
+<a id="aa32fa2478d16d03202d24bf8410054ac" name="aa32fa2478d16d03202d24bf8410054ac"></a>uint16_t</td>
+<td class="fieldname">
+tz_fault_mode: 1</td>
+<td class="fielddoc">
+Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="ad6178aec9b1fd8a2212fc87c9db68ca4" name="ad6178aec9b1fd8a2212fc87c9db68ca4"></a>uint16_t</td>
+<td class="fieldname">
+tz_save_mode: 1</td>
+<td class="fielddoc">
+Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
 </table>
 
 </div>

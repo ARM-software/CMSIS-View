@@ -51,6 +51,7 @@ var searchData=
   ['evtstatistics_5fno_48',['EvtStatistics_No',['../group__EventRecorder__CompNoDefs.html#ga0dc3370661899f6f018283bbf65ce8dc',1,'EventRecorder.h']]],
   ['examples_49',['Examples',['../ExampleProjects.html',1,'index']]],
   ['exc_5freturn_50',['EXC_RETURN',['../group__Fault__Storage.html#ac699e8a2ada09ddf3f7df240c8032a53',1,'ARM_FaultInfo_t']]],
-  ['exception_20fault_20analysis_51',['Exception Fault Analysis',['../fault.html',1,'index']]],
-  ['expressions_52',['Expressions',['../scvd_expression.html',1,'SCVD_Format']]]
+  ['exc_5fxpsr_51',['EXC_xPSR',['../group__Fault__Storage.html#a0215dc879780a0d6a79258b82956df4a',1,'ARM_FaultInfo_t']]],
+  ['exception_20fault_20analysis_52',['Exception Fault Analysis',['../fault.html',1,'index']]],
+  ['expressions_53',['Expressions',['../scvd_expression.html',1,'SCVD_Format']]]
 ];
