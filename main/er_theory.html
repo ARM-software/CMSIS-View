@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('er_theory.html',''); initResizable(); 
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p >This section describes how the <b>Event Recorder</b> collects event data, generates time stamps, and transfers this information via a debug unit to a host computer.</p>
-<p >The <b>Event Recorder</b> is implemented in the target application using the software component <b>Compiler:Event Recorder</b> which adds the source file <em>EventRecorder.c</em> to the application. Each event is stored in a 16-byte structure that is composed of a 16-bit <em>id</em>, 32-bit time stamp, two 32-bit data values and consistency check values.</p>
+<p >The <b>Event Recorder</b> is implemented in the target application using the software component <b>CMSIS-View:Event Recorder</b> which adds the source file <em>EventRecorder.c</em> to the application. Each event is stored in a 16-byte structure that is composed of a 16-bit <em>id</em>, 32-bit time stamp, two 32-bit data values and consistency check values.</p>
 <p >To store these events, a circular buffer is provided that can store a minimum of 8 events. The size of this circular buffer is configurable with the <code>#define EVENT_RECORD_COUNT</code>.</p>
 <h1><a class="anchor" id="event_id"></a>
 Event id</h1>
@@ -166,7 +166,7 @@ Event id</h1>
 </ul>
 <h1><a class="anchor" id="er_config"></a>
 Configuration</h1>
-<p >Selecting the software component <b>Compiler:Event Recorder</b> to a project will add the file <em>EventRecorderConf.h</em> that is used to define the configuration parameters of the <b>Event Recorder</b>. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:</p>
+<p >Selecting the software component <b>CMSIS-View:Event Recorder</b> to a project will add the file <em>EventRecorderConf.h</em> that is used to define the configuration parameters of the <b>Event Recorder</b>. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:</p>
 <p ><img src="config_wizard.png" alt="" class="inline" title="EventRecorderConf.h in Configuration Wizard View"/> <br  />
 </p>
 <table class="markdownTable">
