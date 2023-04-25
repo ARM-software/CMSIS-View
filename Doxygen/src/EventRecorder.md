@@ -34,7 +34,7 @@ During program execution, the debugger reads the content of the **event buffer**
 This section describes how the **Event Recorder** collects event data, generates time stamps, and transfers this information via a debug unit to a host computer.
 
 The **Event Recorder** is implemented in the target application using the software component
-**Compiler:Event Recorder** which adds the source file *EventRecorder.c* to the application. Each event is stored in a 16-byte structure that is composed of a 16-bit *id*, 32-bit time stamp, two 32-bit data values and consistency check values.
+**CMSIS-View:Event Recorder** which adds the source file *EventRecorder.c* to the application. Each event is stored in a 16-byte structure that is composed of a 16-bit *id*, 32-bit time stamp, two 32-bit data values and consistency check values.
 
 To store these events, a circular buffer is provided that can store a minimum of 8 events. The size of this circular buffer is configurable with the
 `#define EVENT_RECORD_COUNT`.
@@ -79,7 +79,7 @@ The following sections describe:
 
 ## Configuration {#er_config}
 
-Selecting the software component **Compiler:Event Recorder** to a project will add the file *EventRecorderConf.h* that is used to define the configuration parameters of the **Event Recorder**. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:
+Selecting the software component **CMSIS-View:Event Recorder** to a project will add the file *EventRecorderConf.h* that is used to define the configuration parameters of the **Event Recorder**. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:
 
 ![EventRecorderConf.h in Configuration Wizard View](./images/config_wizard.png "EventRecorderConf.h in Configuration Wizard View")
 <br/>
@@ -203,14 +203,14 @@ The software packs for MDK-Middleware, CMSIS, CMSIS-FreeRTOS already contain the
 ## Add Event Recorder Component{#Add_Event_Recorder}
 
 To use the Event Recorder in an application, you need to:
-  - Select the software component **Compiler:Event Recorder** using the RTE management dialog.<br/>
+  - Select the software component **CMSIS-View:Event Recorder** using the RTE management dialog.<br/>
     ![Select Event Recorder](./images/SelEventRecorder.png)
     \note Usually, you select the **DAP** variant. If you are using a simulation model (FastModel or Arm Virtual Hardware),
     you can select \ref er_semihosting to write the Event Recorder data into a file on the PC.
   - Include the EventRecorder.h header file and add the event recorder initialization function to the source code:
   ```
     :
-  #include "EventRecorder.h"                        // Keil::Compiler:Event Messaging
+  #include "EventRecorder.h"                        // ARM::CMSIS-View:Event Recorder
     :
   int main (void) {
     :
@@ -260,7 +260,7 @@ For example, split IRAM1 into two regions. Reduce size of IRAM1 by 0x800 and cre
    ![Create RAM area](./images/create_iram2.png)
 
 
-3. In the **Options for Component Class 'Compiler'** dialog (opens with right-click on **EventRecorder.c** in the **Project** window), on the **Memory** tab, assign **Zero Initialized Data** to the IRAM2 region.
+3. In the **Options for Component Class 'CMSIS-View'** dialog (opens with right-click on **EventRecorder.c** in the **Project** window), on the **Memory** tab, assign **Zero Initialized Data** to the IRAM2 region.
     ![Create RAM area](./images/er_memory_location.png)
 
 4. Build the application to place the Event Recorder data buffers to uninitialized RAM. You may verify the generated scatter
@@ -288,7 +288,7 @@ For example, split IRAM1 into two regions. Reduce size of IRAM1 by 0x800 and cre
 \note
 - If the Event Recorder data buffer is not in uninitialized memory, the **Command** window of the debugger displays:
   "Warning: Event Recorder not located in uninitialized memory!".
-- <a target="_blank" href="- <a target="_blank" href="https://developer.arm.com/documentation/ka003868/latest">Knowledgebase article 4012</a> explains how to create custom memory areas in uVision.
+- <a target="_blank" href="https://developer.arm.com/documentation/ka003868/latest">Knowledgebase article 4012</a> explains how to create custom memory areas in uVision.
 - If your RAM is not big enough to separate the Event Recorder area from the Flash programming area, make sure that you
   enable "Reset and Run" for the **Download Function**:
   \image html reset_and_run.png
@@ -327,7 +327,7 @@ These \ref EventRecorder_Data functions receive as first parameter an *id* event
 
 **Example:**
 ```
-#include "EventRecorder.h"                       // Keil::Compiler:Event Messaging
+#include "EventRecorder.h"                       // ARM::CMSIS-View:Event Recorder
 
 int some_error = 0;                              // error flag
 char string[10] = "MyTest";                      // some test string

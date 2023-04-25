@@ -106,7 +106,7 @@ typedef struct {
   uint32_t crc32;                       //!< CRC32 of the structure content (excluding magic_number and crc32 fields)
   uint32_t count;                       //!< Saved faults counter
 
-  struct {                              //!< Structure version and content information
+  struct {                              // Structure version and content information
     struct {
       uint8_t minor;                    //!< Fault information structure version: minor, see \ref ARM_FAULT_FAULT_INFO_VER_MINOR
       uint8_t major;                    //!< Fault information structure version: major, see \ref ARM_FAULT_FAULT_INFO_VER_MAJOR
@@ -183,28 +183,28 @@ extern ARM_FaultInfo_t ARM_FaultInfo;
 
 // ARM Fault Storage functions -------------------------------------------------
 
-/// Clear the saved fault information.
+/// \brief Clear the saved fault information.
 extern void ARM_FaultClear (void);
 
-/// Check if the fault occurred and if the fault information was saved properly.
+/// \brief Check if the fault occurred and if the fault information was saved properly.
 /// \return       status (1 = fault occurred and valid fault information exists,
 ///                       0 = no fault information saved yet or fault information is invalid)
 extern uint32_t ARM_FaultOccurred (void);
 
-/// Save the fault information.
+/// \brief Save the fault information.
 extern void ARM_FaultSave (void);
 
-/// Callback function called after fault information was saved.
+/// \brief Callback function called after fault information was saved.
 extern void ARM_FaultExit (void);
 
 // ARM Fault User Code template ------------------------
 
-/// Output decoded fault information via STDIO.
+/// \brief Output decoded fault information via STDIO.
 extern void ARM_FaultPrint (void);
 
 // ARM Fault Record function ---------------------------------------------------
 
-/// Output decoded fault information via EventRecorder.
+/// \brief Output decoded fault information via EventRecorder.
 extern void ARM_FaultRecord (void);
 
 #ifdef __cplusplus

@@ -22,6 +22,7 @@ PACK_BUILD=./build
 PACK_DIRS="
   Documentation
   EventRecorder
+  Examples
   Fault
 "
 

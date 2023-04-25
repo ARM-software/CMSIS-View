@@ -14,9 +14,10 @@ This repository contains the source code of:
     ┣ 📂 Documentation    Target directory for generated documentation
     ┣ 📂 Doxygen          Source directory for documentation
     ┣ 📂 EventRecorder    Source code of EventRecorder software component
-    ┣ 📂 Examples         Usage examples of the EventRecorder component
-    ┣ 📂 tools            EventList command line tool source code
-    ┗ 📂 Scripts          Helper scripts
+    ┣ 📂 Examples         Usage examples
+    ┣ 📂 Fault            Source code of Fault software component
+    ┣ 📂 Schema           Schema files
+    ┗ 📂 tools            EventList command line tool source code
 ```
 
 ## Generating Software Pack
@@ -54,47 +55,11 @@ The version and changelog embedded into the documentation and pack are inferred 
 local Git history. In order to get the full changelog one needs to have a full clone (not
 a shallow one) including all release tags.
 
-One can check the inferred version by calling the helper script:
-
-```bash
-CMSIS-View $ ./Scripts/git_describe.sh
-Git version: '1.2.4-dev5+g6a00f35'
-1.2.4-dev5+g6a00f35
-^ ^ ^    ^ ^
-| | |    | ┗ Commit SHA of the commit used for generation
-| | |    ┗ Number of commits added since latest tag
-| | ┗ Patch version from the latest tag incremented by one
-| ┗ Minor version as in the latest tag
-┗ Major version as in the latest tag
-``` 
-
-The full changelog can be inspected by calling the helper script:
-
-```bash
-CMSIS-View $ ./Scripts/gen_changelog.sh [-h] [-f <format>]
-Generating changelog ...
-Git version: '1.2.4-dev5+g6a00f35'
-1.2.3 (2022-07-28)
-- EventRecorder
-  - Change 1
-  - Change 2
-- EventList
-  - Change 1
-  - Change 2
-1.1.1 (2022-03-31)
-Added clock frequency to internal Event Recorder Initialization message
-1.1.0 (2022-02-25)
-Added Event Recorder logging via Semihosting
-1.0.0 (2021-01-28)
-Add EventRecorder component
-```
-
 The version numbers are taken from the available tags. The shown release dates and
 changelogs are one of:
 
 1. For annotated tags the tagger date and the associated message is used.
 2. For simple tags the committer date and message of the pointed-to commit is used.
-
 
 ## License
 

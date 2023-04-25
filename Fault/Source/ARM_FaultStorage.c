@@ -43,6 +43,8 @@
     #define __NO_INIT __attribute__ ((section (".bss.noinit")))
   #elif defined (__GNUC__)                                           /* GNU Compiler */
     #define __NO_INIT __attribute__ ((section (".noinit")))
+  #elif defined (__ICCARM__)                                         /* IAR Compiler */
+    #define __NO_INIT __attribute__ ((section (".noinit")))
   #else
     #warning "No compiler specific solution for __NO_INIT. __NO_INIT is ignored."
     #define __NO_INIT
