@@ -143,7 +143,7 @@ typedef struct {
                                 //      [31]: Toggle bit
 } EventRecord_t;
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
 
 /* Event Record Types (Log) */
 #define EVENT_TYPE_DATA         0x0001U // EventRecordData
@@ -411,7 +411,7 @@ __STATIC_INLINE void UnlockRecord (uint32_t *mem, uint32_t info) {
 
 /* Semihosting */
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
 
 #ifndef EVENT_LOG_FILENAME
 #define EVENT_LOG_FILENAME      "EventRecorder.log"
@@ -535,7 +535,7 @@ static uint32_t EventRecordItem (uint32_t id, uint32_t ts, uint32_t val1, uint32
 }
 
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
 
 /**
   Record an event with variable data size to a log file
@@ -629,7 +629,7 @@ static void EventRecord4_Log (uint32_t id,
 #endif
 
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
 
 /**
   Get timestamp and handle overflow
@@ -957,7 +957,7 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     EventStatus.records_written = 0U;
     EventStatus.records_dumped  = 0U;
     memset(&EventBuffer[0], 0, sizeof(EventBuffer));
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
     FileHandle = sys_open(EVENT_LOG_FILENAME, MODE_wb);
 #endif
   } else {
@@ -1015,7 +1015,7 @@ uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start) {
     (void)EventRecorderEnable(EventRecordAll, EvtStatistics_No, EvtStatistics_No);
     (void)EventRecorderEnable(EventRecordOp,  EvtPrintf_No,     EvtPrintf_No);
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
     uint64_t ts64 = EventGetTS64();
     EventRecord2_Log(ID_EVENT_INIT & EVENT_RECORD_ID_MASK, EventStatus.init_count, EventStatus.ts_freq, ts64);
     ts = (uint32_t)ts64;
@@ -1104,7 +1104,7 @@ uint32_t EventRecorderStart (void) {
   }
   EventStatus.state = 1U;
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
   uint64_t ts64 = EventGetTS64();
   EventRecord2_Log(ID_EVENT_START & EVENT_RECORD_ID_MASK, 0U, 0U, ts64);
   ts = (uint32_t)ts64;
@@ -1130,7 +1130,7 @@ uint32_t EventRecorderStop (void) {
   }
   EventStatus.state = 0U;
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
   uint64_t ts64 = EventGetTS64();
   EventRecord2_Log(ID_EVENT_STOP & EVENT_RECORD_ID_MASK, 0U, 0U, ts64);
   ts = (uint32_t)ts64;
@@ -1152,7 +1152,7 @@ uint32_t EventRecorderClockUpdate (void) {
 
   EventStatus.ts_freq = EventRecorderTimerGetFreq();
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
   uint64_t ts64 = EventGetTS64();
   EventRecord2_Log(ID_EVENT_CLOCK & EVENT_RECORD_ID_MASK, EventStatus.ts_freq, 0U, ts64);
   ts = (uint32_t)ts64;
@@ -1191,7 +1191,7 @@ uint32_t EventRecordData (uint32_t id, const void *data, uint32_t len) {
     return 1U;
   }
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
   uint64_t ts64 = EventGetTS64();
   EventRecordData_Log(id, data, len, ts64);
   ts = (uint32_t)ts64;
@@ -1273,7 +1273,7 @@ uint32_t EventRecord2 (uint32_t id, uint32_t val1, uint32_t val2) {
     return 1U;
   }
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
   uint64_t ts64 = EventGetTS64();
   EventRecord2_Log(id, val1, val2, ts64);
   ts = (uint32_t)ts64;
@@ -1309,7 +1309,7 @@ uint32_t EventRecord4 (uint32_t id,
     return 1U;
   }
 
-#ifdef RTE_Compiler_EventRecorder_Semihosting
+#ifdef RTE_CMSIS_View_EventRecorder_Semihosting
   uint64_t ts64 = EventGetTS64();
   EventRecord4_Log(id, val1, val2, val3, val4, ts64);
   ts = (uint32_t)ts64;
