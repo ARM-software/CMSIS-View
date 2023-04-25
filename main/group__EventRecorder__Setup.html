@@ -137,14 +137,14 @@ Functions</h2></td></tr>
 <p >Functions that initialize and control the event recorder and configure event filtering. </p>
 <p >This section contains the functions that initialize and control the event recorder and configure event filtering. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gafbdda947535a6f848fa3d7c6d5c19411" name="gafbdda947535a6f848fa3d7c6d5c19411"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafbdda947535a6f848fa3d7c6d5c19411">&#9670;&nbsp;</a></span>EventRecorderDisable()</h2>
+<a id="gac5369fe03bdcb771bacb25d7734a5f23" name="gac5369fe03bdcb771bacb25d7734a5f23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac5369fe03bdcb771bacb25d7734a5f23">&#9670;&nbsp;</a></span>EventRecorderInitialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t EventRecorderDisable </td>
+          <td class="memname">uint32_t EventRecorderInitialize </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>recording</em>, </td>
@@ -153,13 +153,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>comp_start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>comp_end</em>&#160;</td>
+          <td class="paramname"><em>start</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -168,21 +162,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Disable recording of events with specified level and component range </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Initialize Event Recorder </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recording</td><td>level mask for event record filter </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">comp_start</td><td>first component number of range </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">comp_end</td><td>last Component number of range </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recording</td><td>initial level mask for event record filter </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">start</td><td>initial recording setup (1=start, 0=stop) </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>status (1=Success, 0=Failure)</dd></dl>
-<p>The function <a class="el" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> configures the event filter for a software component. The events will be generated for the event level <em><b>recording</b> and</em> between the range specified with <em>comp_start</em> and <em>comp_end</em>. The parameter <em><b>recording</b> takes</em> values from <a class="el" href="group__EventRecorder__recdefs.html">Recording Control</a>.</p>
-<p >Multiple calls to <a class="el" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> are permitted and disable the recording of event messages.</p>
-<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><a class="code hl_function" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#gad65878735749f995be17f7bee2db058b" title="Record events with level EventLevelDetail.">EventRecordDetail</a>, 0, 0xFE);                 <span class="comment">// stop recording &#39;Detail&#39; events of component number 0 - 0xFE</span></div>
-<div class="line">  :</div>
-<div class="line"><a class="code hl_function" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga259409bf85dea63e445ab3936f226110" title="Record events with level EventLevelAPI.">EventRecordAPI</a>+<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga57d5e34150a02197cfc98a3438eb155c" title="Record events with level EventLevelOp.">EventRecordOp</a>, 0x80, 0xBF);   <span class="comment">// stop recording &#39;API&#39; and &#39;Op&#39; events of component number 0x80 - 0xFE</span></div>
-<div class="line"><a class="code hl_function" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 0xC0, 0xCF);                 <span class="comment">// stop recording all events of component number 0xC0 - 0xCF</span></div>
+<p>Call the function <b>EventRecorderInitialize</b> from the user code to set up the Event Recorder. The function initializes all buffers and configures the timer (if configured).</p>
+<p >The parameter <em><b>recording</b> takes</em> values from <a class="el" href="group__EventRecorder__recdefs.html">Recording Control</a>.</p>
+<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> main (<span class="keywordtype">void</span>) {                               <span class="comment">// main function</span></div>
+<div class="line">                                                </div>
+<div class="line">  HAL_Init();                                   <span class="comment">// initialize hardware abstraction layer</span></div>
+<div class="line">  SystemClock_Config();                         <span class="comment">// configure the system clock</span></div>
+<div class="line">  MemoryBus_Config();                           <span class="comment">// configure the memory bus system</span></div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1);  <span class="comment">// initialize and start Event Recorder</span></div>
+<div class="line"> </div>
+<div class="line">  ...</div>
+<div class="line">}</div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -235,14 +234,14 @@ Functions</h2></td></tr>
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="gac5369fe03bdcb771bacb25d7734a5f23" name="gac5369fe03bdcb771bacb25d7734a5f23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac5369fe03bdcb771bacb25d7734a5f23">&#9670;&nbsp;</a></span>EventRecorderInitialize()</h2>
+<a id="gafbdda947535a6f848fa3d7c6d5c19411" name="gafbdda947535a6f848fa3d7c6d5c19411"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafbdda947535a6f848fa3d7c6d5c19411">&#9670;&nbsp;</a></span>EventRecorderDisable()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t EventRecorderInitialize </td>
+          <td class="memname">uint32_t EventRecorderDisable </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>recording</em>, </td>
@@ -251,7 +250,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>start</em>&#160;</td>
+          <td class="paramname"><em>comp_start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>comp_end</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -260,26 +265,21 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Initialize Event Recorder </p><dl class="params"><dt>Parameters</dt><dd>
+<p >Disable recording of events with specified level and component range </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">recording</td><td>initial level mask for event record filter </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">start</td><td>initial recording setup (1=start, 0=stop) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">recording</td><td>level mask for event record filter </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comp_start</td><td>first component number of range </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">comp_end</td><td>last Component number of range </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>status (1=Success, 0=Failure)</dd></dl>
-<p>Call the function <b>EventRecorderInitialize</b> from the user code to set up the Event Recorder. The function initializes all buffers and configures the timer (if configured).</p>
-<p >The parameter <em><b>recording</b> takes</em> values from <a class="el" href="group__EventRecorder__recdefs.html">Recording Control</a>.</p>
-<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> main (<span class="keywordtype">void</span>) {                               <span class="comment">// main function</span></div>
-<div class="line">                                                </div>
-<div class="line">  HAL_Init();                                   <span class="comment">// initialize hardware abstraction layer</span></div>
-<div class="line">  SystemClock_Config();                         <span class="comment">// configure the system clock</span></div>
-<div class="line">  MemoryBus_Config();                           <span class="comment">// configure the memory bus system</span></div>
-<div class="line"> </div>
-<div class="line">  <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1);  <span class="comment">// initialize and start Event Recorder</span></div>
-<div class="line"> </div>
-<div class="line">  ...</div>
-<div class="line">}</div>
+<p>The function <a class="el" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> configures the event filter for a software component. The events will be generated for the event level <em><b>recording</b> and</em> between the range specified with <em>comp_start</em> and <em>comp_end</em>. The parameter <em><b>recording</b> takes</em> values from <a class="el" href="group__EventRecorder__recdefs.html">Recording Control</a>.</p>
+<p >Multiple calls to <a class="el" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> are permitted and disable the recording of event messages.</p>
+<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><a class="code hl_function" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#gad65878735749f995be17f7bee2db058b" title="Record events with level EventLevelDetail.">EventRecordDetail</a>, 0, 0xFE);                 <span class="comment">// stop recording &#39;Detail&#39; events of component number 0 - 0xFE</span></div>
+<div class="line">  :</div>
+<div class="line"><a class="code hl_function" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga259409bf85dea63e445ab3936f226110" title="Record events with level EventLevelAPI.">EventRecordAPI</a>+<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga57d5e34150a02197cfc98a3438eb155c" title="Record events with level EventLevelOp.">EventRecordOp</a>, 0x80, 0xBF);   <span class="comment">// stop recording &#39;API&#39; and &#39;Op&#39; events of component number 0x80 - 0xFE</span></div>
+<div class="line"><a class="code hl_function" href="group__EventRecorder__Setup.html#gafbdda947535a6f848fa3d7c6d5c19411">EventRecorderDisable</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 0xC0, 0xCF);                 <span class="comment">// stop recording all events of component number 0xC0 - 0xCF</span></div>
 </div><!-- fragment --> 
 </div>
 </div>

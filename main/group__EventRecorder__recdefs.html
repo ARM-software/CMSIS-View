@@ -139,51 +139,19 @@ Macros</h2></td></tr>
 <p >The following controls specify event recording levels and supply values for the parameter <em>recording</em> of <a class="el" href="group__EventRecorder__Setup.html">Event Recorder Setup</a> functions.</p>
 <dl class="section note"><dt>Note</dt><dd>Multiple recording levels can be added: <a class="el" href="group__EventRecorder__recdefs.html#ga259409bf85dea63e445ab3936f226110">EventRecordAPI</a> + <a class="el" href="group__EventRecorder__recdefs.html#ga57d5e34150a02197cfc98a3438eb155c">EventRecordOp</a> specifies API and Operation. </dd></dl>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga974d33703cba889a6597cb7e6f7a1a49" name="ga974d33703cba889a6597cb7e6f7a1a49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga974d33703cba889a6597cb7e6f7a1a49">&#9670;&nbsp;</a></span>EventRecordAll</h2>
+<a id="ga0c02631a9509e4f0767df86459fb08fa" name="ga0c02631a9509e4f0767df86459fb08fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0c02631a9509e4f0767df86459fb08fa">&#9670;&nbsp;</a></span>EventRecordNone</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define EventRecordAll&#160;&#160;&#160;0x0FU</td>
+          <td class="memname">#define EventRecordNone&#160;&#160;&#160;0x00U</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Record events with any level. </p>
-
-</div>
-</div>
-<a id="ga259409bf85dea63e445ab3936f226110" name="ga259409bf85dea63e445ab3936f226110"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga259409bf85dea63e445ab3936f226110">&#9670;&nbsp;</a></span>EventRecordAPI</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventRecordAPI&#160;&#160;&#160;0x02U</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Record events with level <a class="el" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06">EventLevelAPI</a>. </p>
-
-</div>
-</div>
-<a id="gad65878735749f995be17f7bee2db058b" name="gad65878735749f995be17f7bee2db058b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad65878735749f995be17f7bee2db058b">&#9670;&nbsp;</a></span>EventRecordDetail</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventRecordDetail&#160;&#160;&#160;0x08U</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Record events with level <a class="el" href="group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea">EventLevelDetail</a>. </p>
+<p>Record events is disabled. </p>
 
 </div>
 </div>
@@ -203,19 +171,19 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="ga0c02631a9509e4f0767df86459fb08fa" name="ga0c02631a9509e4f0767df86459fb08fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0c02631a9509e4f0767df86459fb08fa">&#9670;&nbsp;</a></span>EventRecordNone</h2>
+<a id="ga259409bf85dea63e445ab3936f226110" name="ga259409bf85dea63e445ab3936f226110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga259409bf85dea63e445ab3936f226110">&#9670;&nbsp;</a></span>EventRecordAPI</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define EventRecordNone&#160;&#160;&#160;0x00U</td>
+          <td class="memname">#define EventRecordAPI&#160;&#160;&#160;0x02U</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Record events is disabled. </p>
+<p>Record events with level <a class="el" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06">EventLevelAPI</a>. </p>
 
 </div>
 </div>
@@ -232,6 +200,38 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Record events with level <a class="el" href="group__EventRecorder__leveldefs.html#ga45955a55988126e124b2c6595812c9f4">EventLevelOp</a>. </p>
+
+</div>
+</div>
+<a id="gad65878735749f995be17f7bee2db058b" name="gad65878735749f995be17f7bee2db058b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad65878735749f995be17f7bee2db058b">&#9670;&nbsp;</a></span>EventRecordDetail</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventRecordDetail&#160;&#160;&#160;0x08U</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Record events with level <a class="el" href="group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea">EventLevelDetail</a>. </p>
+
+</div>
+</div>
+<a id="ga974d33703cba889a6597cb7e6f7a1a49" name="ga974d33703cba889a6597cb7e6f7a1a49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga974d33703cba889a6597cb7e6f7a1a49">&#9670;&nbsp;</a></span>EventRecordAll</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventRecordAll&#160;&#160;&#160;0x0FU</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Record events with any level. </p>
 
 </div>
 </div>

@@ -247,210 +247,6 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="gab30990477409902c0a721f5d7ec15cbd" name="gab30990477409902c0a721f5d7ec15cbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab30990477409902c0a721f5d7ec15cbd">&#9670;&nbsp;</a></span>EventStartB</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventStartB</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">slot</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF40U+<a class="el" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06">EventLevelAPI</a>+((slot) &amp; 0xFU), ((uint32_t) __FILE__), __LINE__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The macro <b>EventStartB</b> generates a start event for group B with the specified <em>slot</em> number. The Event Recorder stores filename and line number of the call.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ga2dfd99f7a775a8fd487ea62aa6e7f00a" name="ga2dfd99f7a775a8fd487ea62aa6e7f00a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2dfd99f7a775a8fd487ea62aa6e7f00a">&#9670;&nbsp;</a></span>EventStartBv</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventStartBv</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">slot, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">v1, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">v2&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF50U+<a class="el" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06">EventLevelAPI</a>+((slot) &amp; 0xFU), (v1), (v2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The macro <b>EventStartBv</b> generates a start event for group B with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">v1</td><td>first data value </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">v2</td><td>second data value </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="gaa847ea3ad2a5b60f0fb7db7fc5ab0854" name="gaa847ea3ad2a5b60f0fb7db7fc5ab0854"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa847ea3ad2a5b60f0fb7db7fc5ab0854">&#9670;&nbsp;</a></span>EventStartC</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventStartC</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">slot</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF80U+<a class="el" href="group__EventRecorder__leveldefs.html#ga45955a55988126e124b2c6595812c9f4">EventLevelOp</a>+((slot) &amp; 0xFU), ((uint32_t) __FILE__), __LINE__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The macro <b>EventStartC</b> generates a start event for group C with the specified <em>slot</em> number. The Event Recorder stores filename and line number of the call.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="gada42783add80fbe0a262f07b07235289" name="gada42783add80fbe0a262f07b07235289"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gada42783add80fbe0a262f07b07235289">&#9670;&nbsp;</a></span>EventStartCv</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventStartCv</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">slot, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">v1, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">v2&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF90U+<a class="el" href="group__EventRecorder__leveldefs.html#ga45955a55988126e124b2c6595812c9f4">EventLevelOp</a>+((slot) &amp; 0xFU), (v1), (v2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The macro <b>EventStartCv</b> generates a start event for group C with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">v1</td><td>first data value </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">v2</td><td>second data value </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ga37b71fdaf8f8d7f58d44b16e6140b14a" name="ga37b71fdaf8f8d7f58d44b16e6140b14a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga37b71fdaf8f8d7f58d44b16e6140b14a">&#9670;&nbsp;</a></span>EventStartD</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventStartD</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">slot</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEFC0U+<a class="el" href="group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea">EventLevelDetail</a>+((slot) &amp; 0xFU), ((uint32_t) __FILE__), __LINE__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The macro <b>EventStartD</b> generates a start event for group D with the specified <em>slot</em> number. The Event Recorder stores filename and line number of the call.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ga1d6493b29d069a02e74de12536d45110" name="ga1d6493b29d069a02e74de12536d45110"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1d6493b29d069a02e74de12536d45110">&#9670;&nbsp;</a></span>EventStartDv</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define EventStartDv</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">slot, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">v1, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">v2&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEFD0U+<a class="el" href="group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea">EventLevelDetail</a>+((slot) &amp; 0xFU), (v1), (v2))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >The macro <b>EventStartDv</b> generates a start event for group D with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">v1</td><td>first data value </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">v2</td><td>second data value </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="ga272b6974b8639ccdbde641aee2f32f80" name="ga272b6974b8639ccdbde641aee2f32f80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga272b6974b8639ccdbde641aee2f32f80">&#9670;&nbsp;</a></span>EventStopA</h2>
 
@@ -508,6 +304,74 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >The macro <b>EventStopAv</b> generates a stop event for group A with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v1</td><td>first data value </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v2</td><td>second data value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gab30990477409902c0a721f5d7ec15cbd" name="gab30990477409902c0a721f5d7ec15cbd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab30990477409902c0a721f5d7ec15cbd">&#9670;&nbsp;</a></span>EventStartB</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventStartB</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">slot</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF40U+<a class="el" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06">EventLevelAPI</a>+((slot) &amp; 0xFU), ((uint32_t) __FILE__), __LINE__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The macro <b>EventStartB</b> generates a start event for group B with the specified <em>slot</em> number. The Event Recorder stores filename and line number of the call.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga2dfd99f7a775a8fd487ea62aa6e7f00a" name="ga2dfd99f7a775a8fd487ea62aa6e7f00a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2dfd99f7a775a8fd487ea62aa6e7f00a">&#9670;&nbsp;</a></span>EventStartBv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventStartBv</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">slot, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">v1, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">v2&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF50U+<a class="el" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06">EventLevelAPI</a>+((slot) &amp; 0xFU), (v1), (v2))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The macro <b>EventStartBv</b> generates a start event for group B with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
@@ -587,6 +451,74 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="gaa847ea3ad2a5b60f0fb7db7fc5ab0854" name="gaa847ea3ad2a5b60f0fb7db7fc5ab0854"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa847ea3ad2a5b60f0fb7db7fc5ab0854">&#9670;&nbsp;</a></span>EventStartC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventStartC</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">slot</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF80U+<a class="el" href="group__EventRecorder__leveldefs.html#ga45955a55988126e124b2c6595812c9f4">EventLevelOp</a>+((slot) &amp; 0xFU), ((uint32_t) __FILE__), __LINE__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The macro <b>EventStartC</b> generates a start event for group C with the specified <em>slot</em> number. The Event Recorder stores filename and line number of the call.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gada42783add80fbe0a262f07b07235289" name="gada42783add80fbe0a262f07b07235289"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gada42783add80fbe0a262f07b07235289">&#9670;&nbsp;</a></span>EventStartCv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventStartCv</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">slot, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">v1, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">v2&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEF90U+<a class="el" href="group__EventRecorder__leveldefs.html#ga45955a55988126e124b2c6595812c9f4">EventLevelOp</a>+((slot) &amp; 0xFU), (v1), (v2))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The macro <b>EventStartCv</b> generates a start event for group C with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v1</td><td>first data value </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v2</td><td>second data value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga6b39b6771769a2a9e1ba9c8fda33e1d7" name="ga6b39b6771769a2a9e1ba9c8fda33e1d7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6b39b6771769a2a9e1ba9c8fda33e1d7">&#9670;&nbsp;</a></span>EventStopC</h2>
 
@@ -644,6 +576,74 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >The macro <b>EventStopCv</b> generates a stop event for group C with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v1</td><td>first data value </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">v2</td><td>second data value </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga37b71fdaf8f8d7f58d44b16e6140b14a" name="ga37b71fdaf8f8d7f58d44b16e6140b14a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga37b71fdaf8f8d7f58d44b16e6140b14a">&#9670;&nbsp;</a></span>EventStartD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventStartD</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">slot</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEFC0U+<a class="el" href="group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea">EventLevelDetail</a>+((slot) &amp; 0xFU), ((uint32_t) __FILE__), __LINE__)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The macro <b>EventStartD</b> generates a start event for group D with the specified <em>slot</em> number. The Event Recorder stores filename and line number of the call.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga1d6493b29d069a02e74de12536d45110" name="ga1d6493b29d069a02e74de12536d45110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1d6493b29d069a02e74de12536d45110">&#9670;&nbsp;</a></span>EventStartDv</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EventStartDv</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">slot, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">v1, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">v2&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (0xEFD0U+<a class="el" href="group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea">EventLevelDetail</a>+((slot) &amp; 0xFU), (v1), (v2))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >The macro <b>EventStartDv</b> generates a start event for group D with the specified <em>slot</em> number. The Event Recorder stores the integer value parameters <em>v1</em>, <em>v2</em>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">slot</td><td>slot number (up to 16 slots, 0..15) </td></tr>

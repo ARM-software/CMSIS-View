@@ -130,7 +130,6 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structARM__FaultInfo__t_8info"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td></tr>
 <tr class="separator:structARM__FaultInfo__t_8info"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structARM__FaultInfo__t_8info_8version"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td></tr>
-<tr class="memdesc:structARM__FaultInfo__t_8info_8version"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; Structure version and content information  <a href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">More...</a><br /></td></tr>
 <tr class="separator:structARM__FaultInfo__t_8info_8version"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structARM__FaultInfo__t_8info_8content"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content">ARM_FaultInfo_t.info.content</a></td></tr>
 <tr class="separator:structARM__FaultInfo__t_8info_8content"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +140,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga798a3b6672c119384b761e5f1fa6d346"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the saved fault information.  <a href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346">More...</a><br /></td></tr>
 <tr class="separator:ga798a3b6672c119384b761e5f1fa6d346"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga46ed1c1d7ede7bea91130d1e93ab4fe1"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#ga46ed1c1d7ede7bea91130d1e93ab4fe1">ARM_FaultOccurred</a> (void)</td></tr>
+<tr class="memdesc:ga46ed1c1d7ede7bea91130d1e93ab4fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the fault occurred and if the fault information was saved properly.  <a href="group__Fault__Storage.html#ga46ed1c1d7ede7bea91130d1e93ab4fe1">More...</a><br /></td></tr>
 <tr class="separator:ga46ed1c1d7ede7bea91130d1e93ab4fe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4a614184dca42fb415d0a01ba03163e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> (void)</td></tr>
 <tr class="memdesc:ga4a614184dca42fb415d0a01ba03163e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the fault information.  <a href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">More...</a><br /></td></tr>
@@ -180,29 +180,11 @@ Variables</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="ad2ab4153b2a2a2ae20d920d8c8e2a73b" name="ad2ab4153b2a2a2ae20d920d8c8e2a73b"></a>uint32_t</td>
+<a id="a45eaf7e07ea0226c1328ee7d4a5f7948" name="a45eaf7e07ea0226c1328ee7d4a5f7948"></a>uint32_t</td>
 <td class="fieldname">
-AFSR</td>
+magic_number</td>
 <td class="fielddoc">
-System Control Block - Auxiliary Fault Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="aee8ac8e55f00f609eea87a02c05b62dd" name="aee8ac8e55f00f609eea87a02c05b62dd"></a>uint32_t</td>
-<td class="fieldname">
-BFAR</td>
-<td class="fielddoc">
-System Control Block - BusFault Address Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a07fa982352a7382850ac29ad3e181b2d" name="a07fa982352a7382850ac29ad3e181b2d"></a>uint32_t</td>
-<td class="fieldname">
-CFSR</td>
-<td class="fielddoc">
-System Control Block - Configurable Fault Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a86988a65e0d3ece7990c032c159786d6" name="a86988a65e0d3ece7990c032c159786d6"></a>uint32_t</td>
-<td class="fieldname">
-count</td>
-<td class="fielddoc">
-Saved faults counter. </td></tr>
+Magic number (ASCII "FltR") </td></tr>
 <tr><td class="fieldtype">
 <a id="a7ba6d986496f16e7c9bb92ea0265914d" name="a7ba6d986496f16e7c9bb92ea0265914d"></a>uint32_t</td>
 <td class="fieldname">
@@ -210,83 +192,17 @@ crc32</td>
 <td class="fielddoc">
 CRC32 of the structure content (excluding magic_number and crc32 fields) </td></tr>
 <tr><td class="fieldtype">
-<a id="ae8d2d700d6a9735423a52a48a62b50b6" name="ae8d2d700d6a9735423a52a48a62b50b6"></a>uint32_t</td>
+<a id="a86988a65e0d3ece7990c032c159786d6" name="a86988a65e0d3ece7990c032c159786d6"></a>uint32_t</td>
 <td class="fieldname">
-DFSR</td>
+count</td>
 <td class="fielddoc">
-System Control Block - Debug Fault Status Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="ac699e8a2ada09ddf3f7df240c8032a53" name="ac699e8a2ada09ddf3f7df240c8032a53"></a>uint32_t</td>
-<td class="fieldname">
-EXC_RETURN</td>
-<td class="fielddoc">
-Exception Return code (LR), in exception handler. </td></tr>
-<tr><td class="fieldtype">
-<a id="a0215dc879780a0d6a79258b82956df4a" name="a0215dc879780a0d6a79258b82956df4a"></a>uint32_t</td>
-<td class="fieldname">
-EXC_xPSR</td>
-<td class="fielddoc">
-Program Status Register value, in exception handler. </td></tr>
-<tr><td class="fieldtype">
-<a id="a7b5519d571d58cc389ee2862629f325f" name="a7b5519d571d58cc389ee2862629f325f"></a>uint32_t</td>
-<td class="fieldname">
-HFSR</td>
-<td class="fielddoc">
-System Control Block - HardFault Status Register value. </td></tr>
+Saved faults counter. </td></tr>
 <tr><td class="fieldtype">
 <a id="ab04b9b327f38315ae6b99791570cfde9" name="ab04b9b327f38315ae6b99791570cfde9"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td>
 <td class="fieldname">
 info</td>
 <td class="fielddoc">
 </td></tr>
-<tr><td class="fieldtype">
-<a id="a972b05b20154d3b04b487468986fd6f0" name="a972b05b20154d3b04b487468986fd6f0"></a>uint32_t</td>
-<td class="fieldname">
-IntegritySignature</td>
-<td class="fielddoc">
-Integrity Signature (only for Armv8/8.1-M arch) </td></tr>
-<tr><td class="fieldtype">
-<a id="a3314de2ca1fccad1fe0411e61b2d282d" name="a3314de2ca1fccad1fe0411e61b2d282d"></a>uint32_t</td>
-<td class="fieldname">
-LR</td>
-<td class="fielddoc">
-Link Register (R14) value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a45eaf7e07ea0226c1328ee7d4a5f7948" name="a45eaf7e07ea0226c1328ee7d4a5f7948"></a>uint32_t</td>
-<td class="fieldname">
-magic_number</td>
-<td class="fielddoc">
-Magic number (ASCII "FltR") </td></tr>
-<tr><td class="fieldtype">
-<a id="a5cbdc7968b441ac9bc3be938b9faa98d" name="a5cbdc7968b441ac9bc3be938b9faa98d"></a>uint32_t</td>
-<td class="fieldname">
-MMFAR</td>
-<td class="fielddoc">
-System Control Block - MemManage Fault Address Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a44133716bf1f8c1f60fc73a4a5799dd9" name="a44133716bf1f8c1f60fc73a4a5799dd9"></a>uint32_t</td>
-<td class="fieldname">
-MSP</td>
-<td class="fielddoc">
-Main Stack Pointer value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a455c50d286e3afa2c14dc6712f95f376" name="a455c50d286e3afa2c14dc6712f95f376"></a>uint32_t</td>
-<td class="fieldname">
-MSPLIM</td>
-<td class="fielddoc">
-Main Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
-<tr><td class="fieldtype">
-<a id="a4465a910abcbdf89240e5e808246ba0c" name="a4465a910abcbdf89240e5e808246ba0c"></a>uint32_t</td>
-<td class="fieldname">
-PSP</td>
-<td class="fielddoc">
-Process Stack Pointer value. </td></tr>
-<tr><td class="fieldtype">
-<a id="ae09bc7991f56b5e12f03fcbc149537b6" name="ae09bc7991f56b5e12f03fcbc149537b6"></a>uint32_t</td>
-<td class="fieldname">
-PSPLIM</td>
-<td class="fielddoc">
-Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
 <tr><td class="fieldtype">
 <a id="a2396b29a5d3434f4ed3c248523270330" name="a2396b29a5d3434f4ed3c248523270330"></a>uint32_t</td>
 <td class="fieldname">
@@ -299,24 +215,6 @@ R0 Register value. </td></tr>
 R1</td>
 <td class="fielddoc">
 R1 Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="add1ccfa070e769fa0997305a16890c25" name="add1ccfa070e769fa0997305a16890c25"></a>uint32_t</td>
-<td class="fieldname">
-R10</td>
-<td class="fielddoc">
-R10 Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="aa7856f89a3a397c558c6649be8e66dc8" name="aa7856f89a3a397c558c6649be8e66dc8"></a>uint32_t</td>
-<td class="fieldname">
-R11</td>
-<td class="fielddoc">
-R11 Register value. </td></tr>
-<tr><td class="fieldtype">
-<a id="a91258eb79edc2231a6c7dbc2ff14c13a" name="a91258eb79edc2231a6c7dbc2ff14c13a"></a>uint32_t</td>
-<td class="fieldname">
-R12</td>
-<td class="fielddoc">
-R12 Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a5d193f7a0912b76f2101cc5388c7b71b" name="a5d193f7a0912b76f2101cc5388c7b71b"></a>uint32_t</td>
 <td class="fieldname">
@@ -366,23 +264,119 @@ R9</td>
 <td class="fielddoc">
 R9 Register value. </td></tr>
 <tr><td class="fieldtype">
+<a id="add1ccfa070e769fa0997305a16890c25" name="add1ccfa070e769fa0997305a16890c25"></a>uint32_t</td>
+<td class="fieldname">
+R10</td>
+<td class="fielddoc">
+R10 Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="aa7856f89a3a397c558c6649be8e66dc8" name="aa7856f89a3a397c558c6649be8e66dc8"></a>uint32_t</td>
+<td class="fieldname">
+R11</td>
+<td class="fielddoc">
+R11 Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a91258eb79edc2231a6c7dbc2ff14c13a" name="a91258eb79edc2231a6c7dbc2ff14c13a"></a>uint32_t</td>
+<td class="fieldname">
+R12</td>
+<td class="fielddoc">
+R12 Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a3314de2ca1fccad1fe0411e61b2d282d" name="a3314de2ca1fccad1fe0411e61b2d282d"></a>uint32_t</td>
+<td class="fieldname">
+LR</td>
+<td class="fielddoc">
+Link Register (R14) value. </td></tr>
+<tr><td class="fieldtype">
 <a id="a79d90bf04aa3b096b74d8f270b00000f" name="a79d90bf04aa3b096b74d8f270b00000f"></a>uint32_t</td>
 <td class="fieldname">
 ReturnAddress</td>
 <td class="fielddoc">
 Return address from exception. </td></tr>
 <tr><td class="fieldtype">
-<a id="a57d628f50f288a4c1bea4e591b928b63" name="a57d628f50f288a4c1bea4e591b928b63"></a>uint32_t</td>
+<a id="a1d6c6767a3d4bb9e9bf57f8cb4bc0613" name="a1d6c6767a3d4bb9e9bf57f8cb4bc0613"></a>uint32_t</td>
 <td class="fieldname">
-RFSR</td>
+xPSR</td>
 <td class="fielddoc">
-System Control Block - RAS Fault Status Register value. </td></tr>
+Program Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="aedff16ec4aa66d768cafb2d665ea7902" name="aedff16ec4aa66d768cafb2d665ea7902"></a>uint32_t</td>
+<a id="a972b05b20154d3b04b487468986fd6f0" name="a972b05b20154d3b04b487468986fd6f0"></a>uint32_t</td>
 <td class="fieldname">
-SFAR</td>
+IntegritySignature</td>
 <td class="fielddoc">
-System Control Block - Secure Fault Address Register value. </td></tr>
+Integrity Signature (only for Armv8/8.1-M arch) </td></tr>
+<tr><td class="fieldtype">
+<a id="a0215dc879780a0d6a79258b82956df4a" name="a0215dc879780a0d6a79258b82956df4a"></a>uint32_t</td>
+<td class="fieldname">
+EXC_xPSR</td>
+<td class="fielddoc">
+Program Status Register value, in exception handler. </td></tr>
+<tr><td class="fieldtype">
+<a id="ac699e8a2ada09ddf3f7df240c8032a53" name="ac699e8a2ada09ddf3f7df240c8032a53"></a>uint32_t</td>
+<td class="fieldname">
+EXC_RETURN</td>
+<td class="fielddoc">
+Exception Return code (LR), in exception handler. </td></tr>
+<tr><td class="fieldtype">
+<a id="a44133716bf1f8c1f60fc73a4a5799dd9" name="a44133716bf1f8c1f60fc73a4a5799dd9"></a>uint32_t</td>
+<td class="fieldname">
+MSP</td>
+<td class="fielddoc">
+Main Stack Pointer value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a4465a910abcbdf89240e5e808246ba0c" name="a4465a910abcbdf89240e5e808246ba0c"></a>uint32_t</td>
+<td class="fieldname">
+PSP</td>
+<td class="fielddoc">
+Process Stack Pointer value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a455c50d286e3afa2c14dc6712f95f376" name="a455c50d286e3afa2c14dc6712f95f376"></a>uint32_t</td>
+<td class="fieldname">
+MSPLIM</td>
+<td class="fielddoc">
+Main Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
+<tr><td class="fieldtype">
+<a id="ae09bc7991f56b5e12f03fcbc149537b6" name="ae09bc7991f56b5e12f03fcbc149537b6"></a>uint32_t</td>
+<td class="fieldname">
+PSPLIM</td>
+<td class="fielddoc">
+Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
+<tr><td class="fieldtype">
+<a id="a07fa982352a7382850ac29ad3e181b2d" name="a07fa982352a7382850ac29ad3e181b2d"></a>uint32_t</td>
+<td class="fieldname">
+CFSR</td>
+<td class="fielddoc">
+System Control Block - Configurable Fault Status Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7b5519d571d58cc389ee2862629f325f" name="a7b5519d571d58cc389ee2862629f325f"></a>uint32_t</td>
+<td class="fieldname">
+HFSR</td>
+<td class="fielddoc">
+System Control Block - HardFault Status Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="ae8d2d700d6a9735423a52a48a62b50b6" name="ae8d2d700d6a9735423a52a48a62b50b6"></a>uint32_t</td>
+<td class="fieldname">
+DFSR</td>
+<td class="fielddoc">
+System Control Block - Debug Fault Status Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a5cbdc7968b441ac9bc3be938b9faa98d" name="a5cbdc7968b441ac9bc3be938b9faa98d"></a>uint32_t</td>
+<td class="fieldname">
+MMFAR</td>
+<td class="fielddoc">
+System Control Block - MemManage Fault Address Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="aee8ac8e55f00f609eea87a02c05b62dd" name="aee8ac8e55f00f609eea87a02c05b62dd"></a>uint32_t</td>
+<td class="fieldname">
+BFAR</td>
+<td class="fielddoc">
+System Control Block - BusFault Address Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="ad2ab4153b2a2a2ae20d920d8c8e2a73b" name="ad2ab4153b2a2a2ae20d920d8c8e2a73b"></a>uint32_t</td>
+<td class="fieldname">
+AFSR</td>
+<td class="fielddoc">
+System Control Block - Auxiliary Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
 <a id="a7c07458db9cae1be1afcb3ce8b4562fe" name="a7c07458db9cae1be1afcb3ce8b4562fe"></a>uint32_t</td>
 <td class="fieldname">
@@ -390,11 +384,17 @@ SFSR</td>
 <td class="fielddoc">
 System Control Block - Secure Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a1d6c6767a3d4bb9e9bf57f8cb4bc0613" name="a1d6c6767a3d4bb9e9bf57f8cb4bc0613"></a>uint32_t</td>
+<a id="aedff16ec4aa66d768cafb2d665ea7902" name="aedff16ec4aa66d768cafb2d665ea7902"></a>uint32_t</td>
 <td class="fieldname">
-xPSR</td>
+SFAR</td>
 <td class="fielddoc">
-Program Status Register value. </td></tr>
+System Control Block - Secure Fault Address Register value. </td></tr>
+<tr><td class="fieldtype">
+<a id="a57d628f50f288a4c1bea4e591b928b63" name="a57d628f50f288a4c1bea4e591b928b63"></a>uint32_t</td>
+<td class="fieldname">
+RFSR</td>
+<td class="fielddoc">
+System Control Block - RAS Fault Status Register value. </td></tr>
 </table>
 
 </div>
@@ -413,17 +413,17 @@ Program Status Register value. </td></tr>
 <div class="textblock"></div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
+<a id="a2af72f100c356273d46284f6fd1dfc08" name="a2af72f100c356273d46284f6fd1dfc08"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td>
+<td class="fieldname">
+version</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
 <a id="a9a0364b9e99bb480dd25e1f0284c8555" name="a9a0364b9e99bb480dd25e1f0284c8555"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content">ARM_FaultInfo_t.info.content</a></td>
 <td class="fieldname">
 content</td>
 <td class="fielddoc">
 </td></tr>
-<tr><td class="fieldtype">
-<a id="a2af72f100c356273d46284f6fd1dfc08" name="a2af72f100c356273d46284f6fd1dfc08"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td>
-<td class="fieldname">
-version</td>
-<td class="fielddoc">
-&lt; Structure version and content information </td></tr>
 </table>
 
 </div>
@@ -439,21 +439,20 @@ version</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p >&lt; Structure version and content information </p>
-</div><table class="fieldtable">
+<div class="textblock"></div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="af1425da40a9f2d21ab702a1c7feae026" name="af1425da40a9f2d21ab702a1c7feae026"></a>uint8_t</td>
-<td class="fieldname">
-major</td>
-<td class="fielddoc">
-Fault information structure version: major, see <a class="el" href="group__Fault__Storage__Macros.html#gad806d6d81404dc3297a9e0097ee41f5e">ARM_FAULT_FAULT_INFO_VER_MAJOR</a>. </td></tr>
 <tr><td class="fieldtype">
 <a id="aab846c0e3717a3e7d14af45cab70b44a" name="aab846c0e3717a3e7d14af45cab70b44a"></a>uint8_t</td>
 <td class="fieldname">
 minor</td>
 <td class="fielddoc">
 Fault information structure version: minor, see <a class="el" href="group__Fault__Storage__Macros.html#gafa7f6c005137393af25375ed25a3d90d">ARM_FAULT_FAULT_INFO_VER_MINOR</a>. </td></tr>
+<tr><td class="fieldtype">
+<a id="af1425da40a9f2d21ab702a1c7feae026" name="af1425da40a9f2d21ab702a1c7feae026"></a>uint8_t</td>
+<td class="fieldname">
+major</td>
+<td class="fielddoc">
+Fault information structure version: major, see <a class="el" href="group__Fault__Storage__Macros.html#gad806d6d81404dc3297a9e0097ee41f5e">ARM_FAULT_FAULT_INFO_VER_MAJOR</a>. </td></tr>
 </table>
 
 </div>
@@ -472,11 +471,47 @@ Fault information structure version: minor, see <a class="el" href="group__Fault
 <div class="textblock"></div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
+<a id="abe7da22b8270e94abfea92115d3b9e09" name="abe7da22b8270e94abfea92115d3b9e09"></a>uint16_t</td>
+<td class="fieldname">
+fault_regs_exist: 1</td>
+<td class="fielddoc">
+Fault registers: 0 - absent; 1 - available. </td></tr>
+<tr><td class="fieldtype">
 <a id="a3e2282a01ae701b1799d5ceeba0d9df1" name="a3e2282a01ae701b1799d5ceeba0d9df1"></a>uint16_t</td>
 <td class="fieldname">
 armv8x_m_main: 1</td>
 <td class="fielddoc">
 Armv8/8.1-M Mainline information: 0 - absent; 1 - available. </td></tr>
+<tr><td class="fieldtype">
+<a id="aa4e096cc0141aae8bf3d2933160012e0" name="aa4e096cc0141aae8bf3d2933160012e0"></a>uint16_t</td>
+<td class="fieldname">
+tz_enabled: 1</td>
+<td class="fielddoc">
+TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled. </td></tr>
+<tr><td class="fieldtype">
+<a id="ad6178aec9b1fd8a2212fc87c9db68ca4" name="ad6178aec9b1fd8a2212fc87c9db68ca4"></a>uint16_t</td>
+<td class="fieldname">
+tz_save_mode: 1</td>
+<td class="fielddoc">
+Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="aa32fa2478d16d03202d24bf8410054ac" name="aa32fa2478d16d03202d24bf8410054ac"></a>uint16_t</td>
+<td class="fieldname">
+tz_fault_mode: 1</td>
+<td class="fielddoc">
+Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="ab4ccde3b9a92cdff55dd8c38df00d08e" name="ab4ccde3b9a92cdff55dd8c38df00d08e"></a>uint16_t</td>
+<td class="fieldname">
+state_context: 1</td>
+<td class="fielddoc">
+State Context: 0 - was not saved; 1 - was saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="a2453a9764d85670260f845e5529cf8b2" name="a2453a9764d85670260f845e5529cf8b2"></a>uint16_t</td>
+<td class="fieldname">
+limit_regs: 1</td>
+<td class="fielddoc">
+MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved. </td></tr>
 <tr><td class="fieldtype">
 <a id="ada60f4dec912ed64ef4483ef7f6978ac" name="ada60f4dec912ed64ef4483ef7f6978ac"></a>uint16_t</td>
 <td class="fieldname">
@@ -484,17 +519,11 @@ fault_regs: 1</td>
 <td class="fielddoc">
 Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
 <tr><td class="fieldtype">
-<a id="abe7da22b8270e94abfea92115d3b9e09" name="abe7da22b8270e94abfea92115d3b9e09"></a>uint16_t</td>
+<a id="aba549a313935295d5c3c369c98797ca7" name="aba549a313935295d5c3c369c98797ca7"></a>uint16_t</td>
 <td class="fieldname">
-fault_regs_exist: 1</td>
+secure_fault_regs: 1</td>
 <td class="fielddoc">
-Fault registers: 0 - absent; 1 - available. </td></tr>
-<tr><td class="fieldtype">
-<a id="a2453a9764d85670260f845e5529cf8b2" name="a2453a9764d85670260f845e5529cf8b2"></a>uint16_t</td>
-<td class="fieldname">
-limit_regs: 1</td>
-<td class="fielddoc">
-MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved. </td></tr>
+Secure Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
 <tr><td class="fieldtype">
 <a id="a8df986901996973b209ee61f613b64eb" name="a8df986901996973b209ee61f613b64eb"></a>uint16_t</td>
 <td class="fieldname">
@@ -507,36 +536,6 @@ RAS Fault register: 0 - was not saved; 1 - was saved. </td></tr>
 reserved: 6</td>
 <td class="fielddoc">
 Reserved (0) </td></tr>
-<tr><td class="fieldtype">
-<a id="aba549a313935295d5c3c369c98797ca7" name="aba549a313935295d5c3c369c98797ca7"></a>uint16_t</td>
-<td class="fieldname">
-secure_fault_regs: 1</td>
-<td class="fielddoc">
-Secure Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="ab4ccde3b9a92cdff55dd8c38df00d08e" name="ab4ccde3b9a92cdff55dd8c38df00d08e"></a>uint16_t</td>
-<td class="fieldname">
-state_context: 1</td>
-<td class="fielddoc">
-State Context: 0 - was not saved; 1 - was saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="aa4e096cc0141aae8bf3d2933160012e0" name="aa4e096cc0141aae8bf3d2933160012e0"></a>uint16_t</td>
-<td class="fieldname">
-tz_enabled: 1</td>
-<td class="fielddoc">
-TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled. </td></tr>
-<tr><td class="fieldtype">
-<a id="aa32fa2478d16d03202d24bf8410054ac" name="aa32fa2478d16d03202d24bf8410054ac"></a>uint16_t</td>
-<td class="fieldname">
-tz_fault_mode: 1</td>
-<td class="fielddoc">
-Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
-<tr><td class="fieldtype">
-<a id="ad6178aec9b1fd8a2212fc87c9db68ca4" name="ad6178aec9b1fd8a2212fc87c9db68ca4"></a>uint16_t</td>
-<td class="fieldname">
-tz_save_mode: 1</td>
-<td class="fielddoc">
-Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
 </table>
 
 </div>
@@ -563,27 +562,6 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
 
 </div>
 </div>
-<a id="gad813a8434754f3a2e4bdbd82a11f2292" name="gad813a8434754f3a2e4bdbd82a11f2292"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad813a8434754f3a2e4bdbd82a11f2292">&#9670;&nbsp;</a></span>ARM_FaultExit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ARM_FaultExit </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Callback function called after fault information was saved. </p>
-<p >Callback function called after saving the fault information (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>). The default implementation will do a system reset. If a system reset is not desired, you need to provide a custom implementation of this function. </p>
-
-</div>
-</div>
 <a id="ga46ed1c1d7ede7bea91130d1e93ab4fe1" name="ga46ed1c1d7ede7bea91130d1e93ab4fe1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga46ed1c1d7ede7bea91130d1e93ab4fe1">&#9670;&nbsp;</a></span>ARM_FaultOccurred()</h2>
 
@@ -599,29 +577,10 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Check if the fault occurred and if the fault information was saved properly. </p><dl class="section return"><dt>Returns</dt><dd>status (1 = fault occurred and valid fault information exists, 0 = no fault information saved yet or fault information is invalid)</dd></dl>
+
+<p>Check if the fault occurred and if the fault information was saved properly. </p>
+<dl class="section return"><dt>Returns</dt><dd>status (1 = fault occurred and valid fault information exists, 0 = no fault information saved yet or fault information is invalid)</dd></dl>
 <p>Call during startup to check if a fault occurred that can be sent, for example using <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> or <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a>. Consider calling <a class="el" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346">ARM_FaultClear</a> after sending the fault buffer to prevent resending. </p>
-
-</div>
-</div>
-<a id="ga139ab9a8507bbbc389d518a9886f0691" name="ga139ab9a8507bbbc389d518a9886f0691"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga139ab9a8507bbbc389d518a9886f0691">&#9670;&nbsp;</a></span>ARM_FaultPrint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ARM_FaultPrint </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Output decoded fault information via STDIO. </p>
-<p >Decode stored fault information from the fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a>, add the ARM_FaultPrint template implementation to the project. </p>
 
 </div>
 </div>
@@ -646,23 +605,49 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="ga775536834c48e2014db1157224f0cdac" name="ga775536834c48e2014db1157224f0cdac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga775536834c48e2014db1157224f0cdac">&#9670;&nbsp;</a></span>ARM_FaultInfo</h2>
+<a id="gad813a8434754f3a2e4bdbd82a11f2292" name="gad813a8434754f3a2e4bdbd82a11f2292"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad813a8434754f3a2e4bdbd82a11f2292">&#9670;&nbsp;</a></span>ARM_FaultExit()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t">ARM_FaultInfo_t</a> ARM_FaultInfo</td>
+          <td class="memname">ARM_FaultExit </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fault Information. </p>
+<p>Callback function called after fault information was saved. </p>
+<p >Callback function called after saving the fault information (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>). The default implementation will do a system reset. If a system reset is not desired, you need to provide a custom implementation of this function. </p>
 
 </div>
 </div>
+<a id="ga139ab9a8507bbbc389d518a9886f0691" name="ga139ab9a8507bbbc389d518a9886f0691"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga139ab9a8507bbbc389d518a9886f0691">&#9670;&nbsp;</a></span>ARM_FaultPrint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ARM_FaultPrint </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Output decoded fault information via STDIO. </p>
+<p >Decode stored fault information from the fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a>, add the ARM_FaultPrint template implementation to the project. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
 <a id="gad20ff5240efa780c2875426157710aee" name="gad20ff5240efa780c2875426157710aee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gad20ff5240efa780c2875426157710aee">&#9670;&nbsp;</a></span>ARM_FaultVersion</h2>
 
@@ -676,6 +661,22 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
 </div><div class="memdoc">
 
 <p>Fault component version information. </p>
+
+</div>
+</div>
+<a id="ga775536834c48e2014db1157224f0cdac" name="ga775536834c48e2014db1157224f0cdac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga775536834c48e2014db1157224f0cdac">&#9670;&nbsp;</a></span>ARM_FaultInfo</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t">ARM_FaultInfo_t</a> ARM_FaultInfo</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fault Information. </p>
 
 </div>
 </div>

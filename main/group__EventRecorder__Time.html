@@ -130,14 +130,14 @@ Functions</h2></td></tr>
 <p >The source file <b>EventRecorder.c</b> implements <code>__WEAK</code> functions for <a class="el" href="group__EventRecorder__Time.html#ga3000832080ba37770bc3df0822b7a754">EventRecorderTimerSetup</a>, <a class="el" href="group__EventRecorder__Time.html#gacca6d72472c548fc787aa6f4fc98289f">EventRecorderTimerGetFreq</a> and <a class="el" href="group__EventRecorder__Time.html#ga4ae18fb119e52e1372870b32d3fb4729">EventRecorderTimerGetCount</a>. This allows to overwrite the functions by a user application.</p>
 <dl class="section note"><dt>Note</dt><dd>ARM Cortex-M3/M4/M7/M33 processors provide a debug timer (DWT CYCCNT) that can be used during debug. Refer to <a href="http://infocenter.arm.com/help/topic/com.arm.doc.100165_0201_00_en/ric1417175941906.html">DWT Programmers' model</a> for more information.</dd></dl>
 <p><b>Code</b> <b>Example</b> </p><div class="fragment"></div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
-<a id="ga560a1e7ee682be19357c1cb72d6d081b" name="ga560a1e7ee682be19357c1cb72d6d081b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga560a1e7ee682be19357c1cb72d6d081b">&#9670;&nbsp;</a></span>EventRecorderClockUpdate()</h2>
+<a id="ga3000832080ba37770bc3df0822b7a754" name="ga3000832080ba37770bc3df0822b7a754"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3000832080ba37770bc3df0822b7a754">&#9670;&nbsp;</a></span>EventRecorderTimerSetup()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t EventRecorderClockUpdate </td>
+          <td class="memname">uint32_t EventRecorderTimerSetup </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -145,33 +145,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Update Event Recorder timestamp clock </p><dl class="section return"><dt>Returns</dt><dd>status (1=Success, 0=Failure)</dd></dl>
-<p>Call this function when a clock change of the Event Recorder timer source has occurred. Typically, this happens when a clock source is switched (i.e. from XTAL to low-power clock).</p>
-<dl class="section note"><dt>Note</dt><dd><ul>
-<li>When using <a class="el" href="er_theory.html#er_config">CMSIS-RTOS2 System Timer</a> as the clock source for Event Recorder, call this function in the first thread that is running after <b>osKernelStart</b>.</li>
-<li>Updating the clock frequency of the Event Recorder will lead to a recalculation of previously received packets and thus to wrong display of earlier data in the µVision debugger. </li>
-</ul>
-</dd></dl>
-
-</div>
-</div>
-<a id="ga4ae18fb119e52e1372870b32d3fb4729" name="ga4ae18fb119e52e1372870b32d3fb4729"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4ae18fb119e52e1372870b32d3fb4729">&#9670;&nbsp;</a></span>EventRecorderTimerGetCount()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t EventRecorderTimerGetCount </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >Get timer count. </p><dl class="section return"><dt>Returns</dt><dd>timer count (32-bit)</dd></dl>
-<p>This function should return a 32-bit timer value that is used to generate time stamp information for the Event Recorder. </p>
+<p >Setup timer hardware. </p><dl class="section return"><dt>Returns</dt><dd>status (1=Success, 0=Failure)</dd></dl>
+<p>This function is called by <a class="el" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> to initialize the timer that is used by the Event Recorder. For time stamp source <a class="el" href="er_theory.html#TimeStampSource">User Timer (Power-On Reset)</a> this function is only called for the first call to <a class="el" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a>. </p>
 
 </div>
 </div>
@@ -196,14 +171,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga3000832080ba37770bc3df0822b7a754" name="ga3000832080ba37770bc3df0822b7a754"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3000832080ba37770bc3df0822b7a754">&#9670;&nbsp;</a></span>EventRecorderTimerSetup()</h2>
+<a id="ga4ae18fb119e52e1372870b32d3fb4729" name="ga4ae18fb119e52e1372870b32d3fb4729"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4ae18fb119e52e1372870b32d3fb4729">&#9670;&nbsp;</a></span>EventRecorderTimerGetCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t EventRecorderTimerSetup </td>
+          <td class="memname">uint32_t EventRecorderTimerGetCount </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -211,8 +186,33 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Setup timer hardware. </p><dl class="section return"><dt>Returns</dt><dd>status (1=Success, 0=Failure)</dd></dl>
-<p>This function is called by <a class="el" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> to initialize the timer that is used by the Event Recorder. For time stamp source <a class="el" href="er_theory.html#TimeStampSource">User Timer (Power-On Reset)</a> this function is only called for the first call to <a class="el" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a>. </p>
+<p >Get timer count. </p><dl class="section return"><dt>Returns</dt><dd>timer count (32-bit)</dd></dl>
+<p>This function should return a 32-bit timer value that is used to generate time stamp information for the Event Recorder. </p>
+
+</div>
+</div>
+<a id="ga560a1e7ee682be19357c1cb72d6d081b" name="ga560a1e7ee682be19357c1cb72d6d081b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga560a1e7ee682be19357c1cb72d6d081b">&#9670;&nbsp;</a></span>EventRecorderClockUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t EventRecorderClockUpdate </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Update Event Recorder timestamp clock </p><dl class="section return"><dt>Returns</dt><dd>status (1=Success, 0=Failure)</dd></dl>
+<p>Call this function when a clock change of the Event Recorder timer source has occurred. Typically, this happens when a clock source is switched (i.e. from XTAL to low-power clock).</p>
+<dl class="section note"><dt>Note</dt><dd><ul>
+<li>When using <a class="el" href="er_theory.html#er_config">CMSIS-RTOS2 System Timer</a> as the clock source for Event Recorder, call this function in the first thread that is running after <b>osKernelStart</b>.</li>
+<li>Updating the clock frequency of the Event Recorder will lead to a recalculation of previously received packets and thus to wrong display of earlier data in the µVision debugger. </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
