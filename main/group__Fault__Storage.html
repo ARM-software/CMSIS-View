@@ -163,7 +163,7 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <p >Functions that store the Cortex-M Exception Fault information into memory. </p>
-<p >This section contains the functions that of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in memory. </p>
+<p >This section contains the functions of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in memory. </p>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structARM__FaultInfo__t" id="structARM__FaultInfo__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t">&#9670;&nbsp;</a></span>ARM_FaultInfo_t</h2>
@@ -580,7 +580,7 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
 </div><div class="memdoc">
 
 <p>Callback function called after fault information was saved. </p>
-<p >Callback function called after saving the fault information (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>). The default implementation will do a System Reset. If System Reset is not desired please provide a custom implementation of this function. </p>
+<p >Callback function called after saving the fault information (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>). The default implementation will do a system reset. If a system reset is not desired, you need to provide a custom implementation of this function. </p>
 
 </div>
 </div>
@@ -600,7 +600,7 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
       </table>
 </div><div class="memdoc">
 <p >Check if the fault occurred and if the fault information was saved properly. </p><dl class="section return"><dt>Returns</dt><dd>status (1 = fault occurred and valid fault information exists, 0 = no fault information saved yet or fault information is invalid)</dd></dl>
-<p>Call during startup to check if a fault occurred that can be sent, e.g. using <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> or <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a>. Consider calling <a class="el" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346">ARM_FaultClear</a> after sending the fault buffer to prevent resending. </p>
+<p>Call during startup to check if a fault occurred that can be sent, for example using <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> or <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a>. Consider calling <a class="el" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346">ARM_FaultClear</a> after sending the fault buffer to prevent resending. </p>
 
 </div>
 </div>
@@ -621,7 +621,7 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
 </div><div class="memdoc">
 
 <p>Output decoded fault information via STDIO. </p>
-<p >Decode stored fault information from fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> one needs to add the ARM_FaultPrint template implementation to the project. </p>
+<p >Decode stored fault information from the fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a>, add the ARM_FaultPrint template implementation to the project. </p>
 
 </div>
 </div>
@@ -642,7 +642,7 @@ Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - s
 </div><div class="memdoc">
 
 <p>Save the fault information. </p>
-<p >Call from a fault handler to save current fault information into fault buffer. </p>
+<p >Call from a fault handler to save current fault information into the fault buffer. </p>
 
 </div>
 </div>

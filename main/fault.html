@@ -110,7 +110,9 @@ $(document).ready(function(){initNavTree('fault.html',''); initResizable(); });
 <div class="textblock"><p ><a class="anchor" id="md_src_Fault"></a> </p>
 <h1><a class="anchor" id="about_fault"></a>
 Overview</h1>
-<p >The software components under <b>CMSIS-View:Fault</b> provide infrastructure and <a href="modules.html">API (function calls)</a> to store, record, and analyze the Cortex-M Exception Fault information. The Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, division by zero. With the component <b>CMSIS-View:Fault:Storage</b> an exception fault can be saved for later analysis. The component <b>CMSIS-View:Fault:Record</b> decodes an saved exception fault and records this information using the <b>Event Recorder</b>.</p>
+<p >The software components under <b>CMSIS-View:Fault</b> provide infrastructure and <a href="modules.html">API (function calls)</a> to store, record, and analyze the Cortex-M Exception Fault information. Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, or division by zero.</p>
+<p >The component <b>CMSIS-View:Fault:Storage</b> can be used to save an exception fault for later analysis.</p>
+<p >The component <b>CMSIS-View:Fault:Record</b> decodes a saved exception fault and records this information using the <b>Event Recorder</b>.</p>
 <p >A typical execution flow is shown in the diagram below.</p>
 <p ><img src="ArmFault.png" alt="" class="inline" title="Exception Fault Analysis"/></p>
 <h1><a class="anchor" id="autotoc_md2"></a>
