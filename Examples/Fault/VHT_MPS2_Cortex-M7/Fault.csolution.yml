@@ -3,9 +3,9 @@
 solution:
 
   packs:
-    - pack: ARM::CMSIS-View@>=1.2.0
     - pack: ARM::CMSIS@5.9.0
-    - pack: Keil::ARM_Compiler@1.7.2
+    - pack: ARM::CMSIS-View@>=1.2.0
+    - pack: ARM::CMSIS-Compiler@>=1.0.0
     - pack: Keil::V2M-MPS2_CMx_BSP@1.8.0
 
   target-types:

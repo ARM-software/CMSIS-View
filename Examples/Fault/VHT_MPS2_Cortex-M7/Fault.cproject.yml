@@ -15,12 +15,13 @@ project:
   components:
     - component: ARM::CMSIS:CORE
     - component: ARM::CMSIS:RTOS2:Keil RTX5&Source
-    - component: ARM::CMSIS-View:Event Recorder&Semihosting
     - component: ARM::CMSIS-View:Fault:Record
     - component: ARM::CMSIS-View:Fault:Storage
-    - component: Keil::Compiler&ARM Compiler:I/O:STDERR&User
-    - component: Keil::Compiler&ARM Compiler:I/O:STDOUT&User
-    - component: Keil::Compiler&ARM Compiler:I/O:STDIN&User
+    - component: ARM::CMSIS-View:Event Recorder&Semihosting
+    - component: ARM::CMSIS-Compiler:OS Interface:CMSIS-RTOS2
+    - component: ARM::CMSIS-Compiler:I/O:STDERR&User
+    - component: ARM::CMSIS-Compiler:I/O:STDOUT&User
+    - component: ARM::CMSIS-Compiler:I/O:STDIN&User
     - component: Keil::Device:Startup&C Startup
     - component: Keil::CMSIS Driver:USART
     - component: Keil::Board Support&V2M-MPS2:Common
