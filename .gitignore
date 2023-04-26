@@ -15,15 +15,16 @@ Documentation/html
 /Doxygen/src/history.txt
 /Doxygen/view.dxy
 /PACK.xsd
-/output/ARM.CMSIS-View.1.1.2-dev4+ge8d94f5.pack
 /output
 /build
 /Examples/EventStatistic/*.cbuild.yml
 /Examples/EventStatistic/*.cprj
 /Examples/EventStatistic/RTE/*/RTE_Components.h
-/Examples/EventStatistic/RTE/Device/*/*@*
 /Examples/EventStatistic/.clangd
-/Examples/EventStatistic/EventStatistic.cbuild-idx.yml
+/Examples/EventStatistic/*.cbuild-idx.yml
+/Examples/EventStatistic/out
+/Examples/EventStatistic/tmp
+
 
 # Test binary, built with `go test -c`
 *.test
