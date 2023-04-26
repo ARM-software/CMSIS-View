@@ -11,10 +11,6 @@ solution:
   target-types:
     - type: VHT_MPS2_Cortex-M7
       device: ARM::CMSDK_CM7_SP_VHT
-      define:
-        - RTE_Compiler_EventRecorder
-        - RTE_Compiler_EventRecorder_DAP
-        - RTE_Compiler_EventRecorder_Semihosting
 
   build-types:
     - type: Debug
