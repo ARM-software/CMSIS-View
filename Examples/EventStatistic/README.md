@@ -1,10 +1,12 @@
 # Event Statistic Example
 
 This project shows how to use start/stop events with the Event Recorder that allow to measure execution times with:
--  different slots (0 - 15)
--  different groups (A - D)
+
+- different slots (0 - 15)
+- different groups (A - D)
 
 The following API calls control this time recording:
+
 - `EventStart` starts a timer slot.
 - `EventStop` stops the related timer.
 - `EventStop` with slot 15 stops the timers of all slots for the specified group.
@@ -21,7 +23,7 @@ This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 mode
 
 Tools:
 
-- [**CMSIS-Toolbox 1.5.0 or higher**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox)
+- [**CMSIS-Toolbox 1.6.0 or higher**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox)
 - [**Keil MDK 5.38 or higher**](https://www.keil.com/mdk5)
   - Arm Compiler 6 (part of MDK)
   - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
@@ -34,7 +36,7 @@ As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https:
 The following commands convert and build the project with build type `Debug` and target type `AVH`:
 
 ```sh
-EventStatistic $ cbuild .\EventStatistic.csolution.yml --configuration .Debug+AVH
+EventStatistic $ cbuild EventStatistic.csolution.yml --update-rte -p --configuration .Debug+AVH
 ```
 
 ## Execute
@@ -42,7 +44,7 @@ EventStatistic $ cbuild .\EventStatistic.csolution.yml --configuration .Debug+AV
 The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
 
 ```sh
-EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 ./out/EventStatistic/Debug/AVH/Debug+AVH.axf
+EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 out/EventStatistic/AVH/Debug/EventStatistic.axf
 ```
 
 ## Analyze Events
@@ -57,15 +59,15 @@ EventStatistic $ eventlist -s EventRecorder.log
 
 Event count      total       min         max         average     first       last
 ----- -----      -----       ---         ---         -------     -----       ----
-A(0)  10000    31.44509s    1.69997ms   3.80041ms   3.14451ms   3.29962ms   3.59964ms
+A(0)   1000    31.44509s    1.69997ms   3.80041ms   3.14451ms   3.29962ms   3.59964ms
       Min: Start: 31.94980000 val1=0x000001f5, val2=0x00000000 Stop: 31.95149997 val1=0x10004d43, val2=0x0000003c
       Max: Start: 84.70757283 val1=0x000003a5, val2=0x00000000 Stop: 84.71137324 val1=0x10004d43, val2=0x00000038
 
-A(15) 10000   169.75100s    2.49964ms  42.78648s   16.97510ms   3.99995ms   4.30004ms
+A(15)  1000   169.75100s    2.49964ms  42.78648s   16.97510ms   3.99995ms   4.30004ms
       Min: Start: 81.87697318 val1=0x000001f8, val2=0x00000000 Stop: 81.87947282 val1=0x10004d43, val2=0x0000003c
       Max: Start: 37.41299154 val1=0x0000032f, val2=0x00000000 Stop: 80.19947314 val1=0x10004d43, val2=0x0000003c
 
-B(0)  10000    10.83677s    0.00000s  169.29161ms   1.08368ms   1.60016ms   1.00010ms
+B(0)   1000    10.83677s    0.00000s  169.29161ms   1.08368ms   1.60016ms   1.00010ms
       Min: Start: 1.76679986 val1=0x10004d43, val2=0x0000005c Stop: 1.76679986 val1=0x0000018e, val2=0x00000047
       Max: Start: 37.24369993 val1=0x10004d43, val2=0x0000005c Stop: 37.41299154 val1=0x000066bf, val2=0x00000487
 
@@ -77,7 +79,7 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
 
 ```sh
-EventStatistic $ eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
+EventStatistic $ eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 
   :
 
@@ -93,15 +95,15 @@ EventStatistic $ eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I $C
 
 Event count      total       min         max         average     first       last
 ----- -----      -----       ---         ---         -------     -----       ----
-A(0)  10000    31.44509s    1.69997ms   3.80041ms   3.14451ms   3.29962ms   3.59964ms
+A(0)   1000    31.44509s    1.69997ms   3.80041ms   3.14451ms   3.29962ms   3.59964ms
       Min: Start: 31.94980000 v1=501 v2=0 Stop: 31.95149997 File=./EventStatistic/main.c(60)
       Max: Start: 84.70757283 v1=933 v2=0 Stop: 84.71137324 File=./EventStatistic/main.c(56)
 
-A(15) 10000   169.75100s    2.49964ms  42.78648s   16.97510ms   3.99995ms   4.30004ms
+A(15)  1000   169.75100s    2.49964ms  42.78648s   16.97510ms   3.99995ms   4.30004ms
       Min: Start: 81.87697318 v1=504 v2=0 Stop: 81.87947282 File=./EventStatistic/main.c(60)
       Max: Start: 37.41299154 v1=815 v2=0 Stop: 80.19947314 File=./EventStatistic/main.c(60)
 
-B(0)  10000    10.83677s    0.00000s  169.29161ms   1.08368ms   1.60016ms   1.00010ms
+B(0)   1000    10.83677s    0.00000s  169.29161ms   1.08368ms   1.60016ms   1.00010ms
       Min: Start: 1.76679986 File=./EventStatistic/main.c(92) Stop: 1.76679986 v1=398 v2=71
       Max: Start: 37.24369993 File=./EventStatistic/main.c(92) Stop: 37.41299154 v1=26303 v2=1159
 
@@ -109,3 +111,5 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Min: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
       Max: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
 ```
+
+>Note: When using Windows Command Prompt the command above needs to be adopted to `-I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd`.

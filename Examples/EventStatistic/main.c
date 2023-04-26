@@ -99,7 +99,7 @@ int main (void) {
     }
   }
 
-  printf ("Finished     \n");
+  printf ("Finished       \n");
   EventStopC(0);                                // stop measurement event group C, slot 0
   return 0;
 }
