@@ -13,8 +13,8 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ## Prerequisites
 
 ### Software:
- - [**CMSIS-Toolbox v1.5.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/tag/1.5.0) or newer
- - [**Keil MDK v5.37**](https://www.keil.com/mdk5) or newer containing:
+ - [**CMSIS-Toolbox v1.6.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/tag/1.6.0) or newer
+ - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
    - Arm Compiler 6 (part of the MDK)
    - Arm Virtual Hardware (AVH) for MPS2 platform with Cortex-M7 (part of the MDK-Professional)
  - [**eventlist v1.1.0**](https://github.com/ARM-software/CMSIS-View/releases/tag/tools%2Feventlist%2F1.1.0) or newer
@@ -22,8 +22,8 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ### CMSIS Packs:
  - Required packs:
     - ARM::CMSIS-View v1.2.0 or newer
+    - ARM::CMSIS-Compiler v1.0.0 or newer
     - ARM::CMSIS v5.9.0
-    - Keil::ARM_Compiler v1.7.2
     - Keil::V2M-MPS2_CMx_BSP v1.8.0
 
    Missing packs can be installed by executing the following `csolution` and `cpackget` commands:
@@ -49,7 +49,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 Execute the following steps:
  - run the AVH model from the command line by executing the following command:
    ```
-   VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Debug+VHT_MPS2_Cortex-M7.axf
+   VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf
    ```
    >Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the 
           `VHT_MPS2_Cortex-M7.exe` (e.g. c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7) has to be provided instead of `VHT_MPS2_Cortex-M7`.
