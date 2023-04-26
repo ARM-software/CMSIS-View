@@ -1,11 +1,9 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/0.9.4/tools/projmgr/schemas/csolution.schema.json
-
 solution:
   packs:
     - pack: ARM::CMSIS
-    - pack: Keil::ARM_Compiler
-
+    - pack: ARM::CMSIS-View
     - pack: ARM::V2M_MPS3_SSE_300_BSP@1.2.0
+
   target-types:
     - type: AVH
       device: ARM::SSE-300-MPS3
@@ -13,9 +11,15 @@ solution:
         endian: little
         fpu: "off"
         trustzone: off
-      misc:
-        - Link:
-          - '--diag_suppress 6314,6848'
+
+  build-types:
+    - type: Release
+      optimize: size
+      debug: off
+
+    - type: Debug
+      optimize: none
+      debug: on
 
   projects:
     - project: ./EventStatistic.cproject.yml

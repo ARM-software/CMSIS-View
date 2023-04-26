@@ -1,0 +1,14 @@
+default:
+  compiler: AC6
+
+  misc:
+    - compiler: AC6
+      C*:
+        - -Wno-macro-redefined
+        - -Wno-pragma-pack
+        - -Wno-parentheses-equality
+      C:
+        - -std=c99
+      Link:
+        - --entry=Reset_Handler
+        - --diag_suppress 6314,6848
