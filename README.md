@@ -2,13 +2,14 @@
 
 The [**Keil MDK Event Recorder**](https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Event-Recorder) is now available as open source component along with tooling.
 This repository contains the source code of:
-  - [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the event recorder software component.
-  - [**EventList**](./tools/eventlist) command line utility that allows to dump the events on command line.
-  - [**Example Projects**](./Examples) that show the usage of the Event Recorder.
+
+- [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the event recorder software component.
+- [**EventList**](./tools/eventlist) command line utility that allows to dump the events on command line.
+- [**Example Projects**](./Examples) that show the usage of the Event Recorder.
 
 ## Repository toplevel structure
 
-```
+```txt
     📦
     ┣ 📂 .github          GitHub Action workflow and configuration
     ┣ 📂 Documentation    Target directory for generated documentation
@@ -28,26 +29,28 @@ Some helper scripts are provided to generate the release artifacts from this rep
 
 Generating the HTML-formatted documentation from its Doxygen-based source is done via
 
-```bash
+```sh
 CMSIS-View $ ./Doxygen/gen_doc.sh
-``` 
+```
 
 Prerequisites for this script to succeed are:
- - Doxygen 1.9.2
+
+- Doxygen 1.9.2
 
 ### CMSIS-Pack Bundle
 
 The CMSIS-Pack bundle can be generated with
 
-```bash
+```sh
 CMSIS-View $ ./gen_pack.sh
-``` 
+```
 
 Prerequisites for this script to succeed are:
- - Generated documentation (see above)
- - 7z
- - packchk
- - xmllint (optional)
+
+- Generated documentation (see above)
+- 7z/GNU Zip
+- packchk (e.g., via CMSIS-Toolbox)
+- xmllint (optional)
 
 ### Version and Changelog Inference
 
@@ -55,11 +58,61 @@ The version and changelog embedded into the documentation and pack are inferred 
 local Git history. In order to get the full changelog one needs to have a full clone (not
 a shallow one) including all release tags.
 
-The version numbers are taken from the available tags. The shown release dates and
-changelogs are one of:
+The version numbers and change logs are taken from the available annotated tags.
 
-1. For annotated tags the tagger date and the associated message is used.
-2. For simple tags the committer date and message of the pointed-to commit is used.
+### Release Pack
+
+A release is simply done via the GitHub Web UI. The newly created tag needs to have
+the pattern `pack/<version>` where `<version>` shall be the SemVer `<major>.<minor>.<patch>`
+version string for the release. The release description is used as the change log
+message for the release.
+
+When using an auto-generated tag (via Web UI) the release description is used as the
+annotation message for the generated tag. Alternatively, one can prepare the release
+tag in the local clone and add the annotation message independently from creating the
+release.
+
+Once the release is published via the GitHub Web UI the release workflow generates the
+documentation and the pack (see above) and attaches the resulting pack archive as an
+additional asset to the release.
+
+## EventList Utility
+
+The command line utility to decode EventRecorder log files written in Go.
+
+### Compile and Test
+
+To build and EventList run `make.sh` script.
+
+```sh
+CMSIS-View/tools/eventlist $ ./make.sh build
+GOOS=windows GOARCH=amd64 go build -v -ldflags '-X "..."' -o ./eventlist.exe ./cmd/eventlist
+
+build finished successfully!
+
+CMSIS-View/tools/eventlist $ ./make.sh test
+go test ./...
+?       eventlist/cmd/make      [no test files]
+ok      eventlist/cmd/eventlist 7.584s
+ok      eventlist/pkg/elf       6.802s
+ok      eventlist/pkg/eval      7.458s
+ok      eventlist/pkg/event     7.471s
+ok      eventlist/pkg/output    7.645s
+ok      eventlist/pkg/xml/scvd  6.808s
+```
+
+One can run cross-builds for other than the own host platform by specifying `-arch <arch>`
+and/or `-os <os>` on the `make.sh` command line, see `--help` for details.
+
+### Release
+
+A release for EventList utility is done independently from the CMSIS-View pack via
+the GitHub Web UI. The release tag must match the pattern `tools/eventlist/<version>`
+where `<version>` is a SemVer string.
+
+The GitHub Action release workflow is triggered once a release is published. The
+workflow builds release bundles for all supported target platforms and attaches
+them as assets to the release.
 
 ## License
 
