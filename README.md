@@ -114,9 +114,25 @@ The GitHub Action release workflow is triggered once a release is published. The
 workflow builds release bundles for all supported target platforms and attaches
 them as assets to the release.
 
-## License
+## License Terms
 
-CMSIS-View is licensed under Apache 2.0.
+CMSIS-View is licensed under [Apache License 2.0.](LICENSE).
+
+### Note
+
+Individual files contain the following tag instead of the full license text.
+
+SPDX-License-Identifier: Apache-2.0
+
+This enables machine processing of license information based on the SPDX License Identifiers that are here available: http://spdx.org/licenses/
+
+### External Dependencies
+
+The components listed below are not redistributed with the project but are used internally for building, development, or testing purposes.
+
+| Component | Version | License | Origin | Usage |
+| --------- | ------- | ------- | ------ | ----- |
+|goversioninfo|n/a|[MIT](https://opensource.org/licenses/MIT)|https://github.com/josephspurrier/goversioninfo| Used in [eventlist](./tools/eventlist) to generate MS Windows version info |
 
 ## Contributions and Pull Requests
 
