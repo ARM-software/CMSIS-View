@@ -19,13 +19,12 @@
 #include <stdint.h>
 
 // Fault IDs for fault triggering
-#define ARM_FAULT_ID_HARD_ESCALATED                    (1U)
+#define ARM_FAULT_ID_MEM_DATA                          (1U)
 #define ARM_FAULT_ID_BUS_DATA_PRECISE                  (2U)
 #define ARM_FAULT_ID_BUS_DATA_IMPRECISE                (3U)
 #define ARM_FAULT_ID_BUS_INSTRUCTION                   (4U)
-#define ARM_FAULT_ID_USG_NO_COPROCESSOR                (5U)
-#define ARM_FAULT_ID_USG_UNDEFINED_INSTRUCTION         (6U)
-#define ARM_FAULT_ID_USG_DIV_0                         (7U)
+#define ARM_FAULT_ID_USG_UNDEFINED_INSTRUCTION         (5U)
+#define ARM_FAULT_ID_USG_DIV_0                         (6U)
 
 // ARM_FaultTrigger function ---------------------------------------------------
 

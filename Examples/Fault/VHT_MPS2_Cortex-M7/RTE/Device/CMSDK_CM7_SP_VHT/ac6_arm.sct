@@ -58,7 +58,7 @@
 #define __RO_SIZE           __ROM_SIZE
 
 #define __RW_BASE           __RAM_BASE
-#define __RW_SIZE          (__RAM_SIZE - __STACK_SIZE - __HEAP_SIZE - __NOINIT_SIZE)
+#define __RW_SIZE          (__RAM_SIZE - 0x100 - __STACK_SIZE - __HEAP_SIZE - __NOINIT_SIZE)
 #define __RW_NOINIT_BASE   (__RAM_BASE + __RW_SIZE)
 
 
@@ -70,7 +70,10 @@ LR_ROM __RO_BASE __RO_SIZE  {                       ; load region size_region
    .ANY (+XO)
   }
 
-  RW_RAM __RW_BASE __RW_SIZE  {                     ; RW data
+  RW_RAM_PRIV __RW_BASE EMPTY 0x100 {               ; RAM only accessible by privileged code (MPU)
+  }
+
+  RW_RAM (__RW_BASE + 0x100) __RW_SIZE  {           ; RW data
    .ANY (+RW +ZI)
   }
 
