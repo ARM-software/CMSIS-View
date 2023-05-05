@@ -51,7 +51,7 @@ Execute the following steps:
    ```
    VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf
    ```
-   >Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the 
+   >Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the
           `VHT_MPS2_Cortex-M7.exe` (e.g. c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7) has to be provided instead of `VHT_MPS2_Cortex-M7`.
 
    The generated file `EventRecorder.log` contains the events that were generated during the example execution.
@@ -62,13 +62,12 @@ Execute the following steps:
 The fault triggering is done by entering a number via simulator console (see possible values below).
 
   - 0: terminate the example
-  - 1: trigger the escalated hard fault
-  - 2: trigger the data access (precise) bus fault
-  - 3: trigger the data access (imprecise) bus fault
-  - 4: trigger the instruction execution bus fault
-  - 5: trigger the no coprocessor usage fault
-  - 6: trigger the undefined instruction usage fault
-  - 7: trigger the divide by 0 usage fault
+  - 1: trigger the data access (precise) Memory Management fault
+  - 2: trigger the data access (precise) Bus fault
+  - 3: trigger the data access (imprecise) Bus fault
+  - 4: trigger the instruction execution Bus fault
+  - 5: trigger the undefined instruction Usage fault
+  - 6: trigger the divide by 0 Usage fault
 
 ### Running the example in the uVision
 

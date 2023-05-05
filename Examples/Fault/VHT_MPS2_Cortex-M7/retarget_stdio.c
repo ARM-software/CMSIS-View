@@ -32,25 +32,25 @@ extern int stdin_getchar  (void);
 
 #define _USART_Driver_(n)  Driver_USART##n
 #define  USART_Driver_(n) _USART_Driver_(n)
- 
+
 extern ARM_DRIVER_USART  USART_Driver_(USART_DRV_NUM);
 #define ptrUSART       (&USART_Driver_(USART_DRV_NUM))
 
 /**
   Initialize stdio
- 
+
   \return          0 on success, or -1 on error.
 */
 int stdio_init (void) {
- 
+
   if (ptrUSART->Initialize(NULL) != ARM_DRIVER_OK) {
     return -1;
   }
- 
+
   if (ptrUSART->PowerControl(ARM_POWER_FULL) != ARM_DRIVER_OK) {
     return -1;
   }
- 
+
   if (ptrUSART->Control(ARM_USART_MODE_ASYNCHRONOUS |
                         ARM_USART_DATA_BITS_8       |
                         ARM_USART_PARITY_NONE       |
@@ -59,23 +59,23 @@ int stdio_init (void) {
                         USART_BAUDRATE) != ARM_DRIVER_OK) {
     return -1;
   }
- 
+
   if (ptrUSART->Control(ARM_USART_CONTROL_RX, 1U) != ARM_DRIVER_OK) {
     return -1;
   }
- 
+
   return 0;
 }
 
 /**
   Put a character to the stderr
- 
+
   \param[in]   ch  Character to output
   \return          The character written, or -1 on error.
 */
 int stderr_putchar (int ch) {
   uint8_t buf[1];
- 
+
   buf[0] = (uint8_t)ch;
 
   if (ptrUSART->Send(buf, 1U) != ARM_DRIVER_OK) {
@@ -95,7 +95,7 @@ int stderr_putchar (int ch) {
 */
 int stdout_putchar (int ch) {
   uint8_t buf[1];
- 
+
   buf[0] = (uint8_t)ch;
 
   if (ptrUSART->Send(buf, 1U) != ARM_DRIVER_OK) {
@@ -109,12 +109,12 @@ int stdout_putchar (int ch) {
 
 /**
   Get a character from the stdio
- 
+
   \return     The next character from the input, or -1 on error.
 */
 int stdin_getchar (void) {
   uint8_t buf[1];
- 
+
   if (ptrUSART->Receive(buf, 1U) != ARM_DRIVER_OK) {
     return -1;
   }
