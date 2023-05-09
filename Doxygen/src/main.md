@@ -15,7 +15,7 @@ Key elements of CMSIS-View are:
 - \ref er_use "Event Recorder" - is an embedded software component that provides an [API (function calls)](modules.html) for event annotations in the code.
 - \ref SCVD_Format "SCVD file specification" defines the content that is displayed.
 - \ref evntlst, a command line tool for processing Event Recorder log files.
-- \ref fault analysis with infrastructure and functions to store, record, and analyze exception fault information.
+- \ref fault with infrastructure and functions to store, record, and analyze exception fault information.
 
 # Content {#content}
 

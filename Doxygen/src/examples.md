@@ -1,10 +1,25 @@
 # Examples {#ExampleProjects}
 
-This repository and its CMSIS-Pack contain an example project that shows how to utilize Event Recorder in an application. It is based on an Arm Cortex-M processor, uses the CMSIS-Toolbox for project build, and runs on Arm Virtual Hardware.
+These examples show the usage of the \subpage er_examples and \subpage flt_examples.
 
-Example Project                                        | Description
-:------------------------------------------------------|:-----------------------------------------
-\subpage scvd_evt_stat "SCVD Event Statistics"         | Shows the usage of start/stop events for statistical code profiling.
+\page er_examples Event Recorder
+
+This example shows you how to utilize Event Recorder in own application software.
+This example project is based on an Arm Cortex-M processor and uses the [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox) for project build, and runs on [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+
+Example Project                                | Description
+:----------------------------------------------|:-----------------------------------------
+\subpage scvd_evt_stat "SCVD Event Statistics" | Shows the usage of start/stop events for statistical code profiling.
+
+\page flt_examples Fault component
+
+These examples show you how to utilize Fault component in own application software. 
+
+Example Project                                | Description
+:----------------------------------------------|:-----------------------------------------
+\subpage flt_example_CM7 "VHT_MPS2_Cortex-M7"  | Shows the usage of Fault component on an Cortex-M7. This example runs on [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+\subpage flt_example_CM33 "B-U585I-IOT02A"     | Shows the usage of Fault component on an Cortex-M33 with TrustZone. This example runs on STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
+
 
 \page scvd_evt_stat SCVD Event Statistics
 
@@ -102,4 +117,44 @@ int main (void) {
 
 This example project does not require an IDE and can be built using the <a href="https://github.com/Open-CMSIS-Pack/cmsis-toolbox" target="_blank">CMSIS-Toolbox</a>.
 
-Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the `README.md` file to build and run the project. Use the \ref evntlst application to anaylze the outcomes.
+Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the `README.md` file to build and run the project. Use the \ref evntlst application to analyze the outcomes.
+
+
+\page flt_example_CM7 VHT_MPS2_Cortex-M7 (Cortex-M7)
+
+This example project shows **Exception Fault Analysis** using **Arm Cortex-M7** simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
+
+**Build and run**
+
+This example project does not require an IDE and can be built using the [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox).
+
+Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM7_readme file to build and run the project.
+
+**Screenshots**
+
+User Interface \image html Fault_CM7_UI.png
+
+**EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility \image html Fault_CM7_eventlist_MemManage.png
+
+
+\page flt_example_CM33 B-U585I-IOT02A (Cortex-M33)
+
+This example project shows **Exception Fault Analysis** using **Arm Cortex-M33** running on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
+
+**Build and run**
+
+This example project requires the [**Keil MDK**](https://www.keil.com/mdk5).
+
+Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM33_readme file to build and run the project.
+
+**Screenshots**
+
+User Interface \image html Fault_CM33_UI.png
+
+**Component View** when no fault was saved yet \image html Fault_CM33_CV_NoFault.png
+
+**Component View** when Memory Management fault has occurred \image html Fault_CM33_CV_MemManage.png
+
+**Event Recorder** messages when Memory Management fault was decoded and output to Event Recorder \image html Fault_CM33_EvR_MemManage.png
+
+**Serial Terminal** output when Memory Management fault was decoded and output to STDIO \image html Fault_CM33_STDIO_MemManage.png

@@ -2,6 +2,8 @@
 \defgroup Fault Fault
 \brief Store, record, and analyze Cortex-M Exception Fault information.
 \details
+For an overview see \ref fault "Exception Fault Analysis".
+
 This section contains the functions of the component CMSIS-View:Fault that store, record, and analyze the Cortex-M Exception Fault information.
 
 @{
@@ -9,9 +11,12 @@ This section contains the functions of the component CMSIS-View:Fault that store
 
 /**
 \defgroup Fault_Storage Fault Storage
-\brief Functions that store the Cortex-M Exception Fault information into memory.
+\brief Function that stores the Cortex-M Exception Fault information into uninitialized RAM memory and auxiliary functions.
 \details
-This section contains the functions of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in memory.
+For an overview see \ref fault "Exception Fault Analysis".
+
+This section contains the functions of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in uninitialized RAM memory
+and auxiliary functions for clearing fault information and checking if valid fault information exists.
 
 @{
 */
@@ -23,10 +28,10 @@ This section contains the functions of the component CMSIS-View:Fault:Storage th
 */
 
 /** ARM Fault major version used in \ref ARM_FaultInfo_t.info.version major */
-#define ARM_FAULT_FAULT_INFO_VER_MAJOR (0U)
+#define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)
 
 /** ARM Fault minor version used in \ref ARM_FaultInfo_t.info.version minor */
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (2U)
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)
 
 /** @} Fault_Storage_Macros */
 
@@ -35,26 +40,140 @@ typedef struct {} ARM_FaultInfo_t;
 const char ARM_FaultVersion[];
 ARM_FaultInfo_t ARM_FaultInfo;
 
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
 /**
 
 \fn ARM_FaultClear
-Clear the fault buffer.
+\details
+
+\b Code \b Example
+\code
+#include "ARM_Fault.h"
+
+int main (void) {
+
+  ARM_FaultClear();                             // Clear fault information
+
+  // ...
+}
+\endcode
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
 
 \fn ARM_FaultOccurred
-Call during startup to check if a fault occurred that can be sent, for example using \ref ARM_FaultPrint or \ref ARM_FaultRecord.
-Consider calling \ref ARM_FaultClear after sending the fault buffer to prevent resending.
+\details
+Call during startup to check if a fault occurred and if fault information is available, for example decode the fault information using \ref ARM_FaultPrint or \ref ARM_FaultRecord functions.
+
+\b Code \b Example
+\code
+#include "EventRecorder.h"
+#include "ARM_Fault.h"
+
+int main() {
+
+  EventRecorderInitialize (EventRecordAll, 1U); // Initialize and start Event Recorder
+
+  if (ARM_FaultOccurred() != 0U) {              // If fault information exists
+    ARM_FaultPrint();                           // Output decoded fault information via STDIO
+    ARM_FaultRecord();                          // Output decoded fault information via Event Recorder
+    EventRecorderStop();                        // Stop Event Recorder
+  }
+
+  // ...
+}
+\endcode
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
 
 \fn ARM_FaultSave
-Call from a fault handler to save current fault information into the fault buffer.
+\details
+Call from a fault handler to save current fault information into uninitialized RAM memory.
+
+Make sure that function is called without changing the Stack Pointer (SP) and Link Register (LR) registers.
+This is usually done by branching directly to this function from the fault handler.
+
+This function does not use stack or heap memories.
+
+\b Code \b Example
+\code
+#include "ARM_Fault.h"
+
+__attribute__((naked)) void HardFault_Handler (void) {
+  __ASM volatile (
+    "b  ARM_FaultSave\n"
+  );
+}
+
+__attribute__((naked)) void MemManage_Handler (void) {
+  __ASM volatile (
+    "b  ARM_FaultSave\n"
+  );
+}
+
+__attribute__((naked)) void BusFault_Handler (void) {
+  __ASM volatile (
+    "b  ARM_FaultSave\n"
+  );
+}
+
+__attribute__((naked)) void UsageFault_Handler (void) {
+  __ASM volatile (
+    "b  ARM_FaultSave\n"
+  );
+}
+\endcode
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
 
 \fn ARM_FaultExit
-Callback function called after saving the fault information (see \ref ARM_FaultSave).
+\details
 The default implementation will do a system reset.
-If a system reset is not desired, you need to provide a custom implementation of this function.
+
+If a system reset is not desired, you need to provide a custom implementation of this function with the desired functionality.
+
+\b Code \b Example of overriding \ref ARM_FaultExit function not to reset the system but to loop endlessly 
+\code
+#include "ARM_Fault.h"
+
+__attribute__((naked)) void ARM_FaultExit (void) {
+  __ASM volatile (
+    "b  .\n"
+  );
+}
+\endcode
+
+*/
+
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
+/**
 
 \fn ARM_FaultPrint
-Decode stored fault information from the fault buffer to standard out via a custom routine. To use \ref ARM_FaultPrint, add
-the ARM_FaultPrint template implementation to the project.
+\details
+To use \ref ARM_FaultPrint, add the ARM_FaultPrint template implementation to the project.
+
+\b Code \b Example
+\code
+#include <stdio.h>
+#include "ARM_Fault.h"
+
+int main() {
+
+  if (ARM_FaultOccurred() != 0U) {              // If fault information exists
+    ARM_FaultPrint();                           // Output decoded fault information via STDIO
+  }
+
+  // ...
+}
+\endcode
 
 */
 
@@ -64,14 +183,38 @@ the ARM_FaultPrint template implementation to the project.
 \defgroup Fault_Record Fault Record
 \brief Decode and record the Cortex-M Exception Fault information via \ref evr "Event Recorder".
 \details
-This section contains the functions of the component CMSIS-View:Fault:Record that decode and record the Cortex-M Exception Fault information using the \ref evr "Event Recorder".
+For an overview see \ref fault "Exception Fault Analysis".
+
+This section contains the function of the component CMSIS-View:Fault:Record that decodes and records the Cortex-M Exception Fault information using the \ref evr "Event Recorder".
 
 @{
 */
 
+/*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
 /**
+
 \fn ARM_FaultRecord
-Decode stored fault information from the fault buffer and send information using \ref evr "Event Recorder" events.
+\details
+Decode stored fault information and send information using \ref evr "Event Recorder" events.
+
+\b Code \b Example
+\code
+#include "EventRecorder.h"
+#include "ARM_Fault.h"
+
+int main() {
+
+  EventRecorderInitialize (EventRecordAll, 1U); // Initialize and start Event Recorder
+
+  if (ARM_FaultOccurred() != 0U) {              // If fault information exists
+    ARM_FaultRecord();                          // Output decoded fault information via Event Recorder
+    EventRecorderStop();                        // Stop Event Recorder
+  }
+
+  // ...
+}
+\endcode
+
 */
 
 /** @} Fault_Record */

@@ -1,4 +1,4 @@
-# Fault example (Cortex-M7)
+# README.md {#flt_example_CM7_readme}
 
 This project is a simple **Fault** component example running on **Arm Cortex-M7** microcontroller
 simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
@@ -8,7 +8,7 @@ When system restarts the fault information is output via the **Event Recorder**.
 
 The fault information can also be inspected with **Component Viewer** in a debug session.
 
->Note: This example runs on the **Arm Virtual Hardware** simulator and does not require any hardware.
+\note This example runs on the **Arm Virtual Hardware** simulator and does not require any hardware.
 
 ## Prerequisites
 
@@ -51,8 +51,8 @@ Execute the following steps:
    ```
    VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf
    ```
-   >Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the
-          `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
+   \note The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the
+         `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
 
    The generated file `EventRecorder.log` contains the events that were generated during the example execution.
    This file is the input for the `eventlist` utility which can be used for further analysis.
