@@ -347,6 +347,10 @@ jobs:
 
       - name: Zip folders
         run: |
+          # Ensure executable eventlist due to this limitation
+          # https://github.com/actions/upload-artifact#permission-loss
+          chmod +x */eventlist*
+
           zip -r eventlist-windows-amd64.zip eventlist-windows-amd64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
           zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-arm64/docs eventlist-windows-arm64/LICENSE
           tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE
