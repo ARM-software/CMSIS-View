@@ -899,7 +899,9 @@ INPUT                  = src/main.md \
                          src/scvd_format.txt \
                          ../EventRecorder/Include/EventRecorder.h \
                          ../EventRecorder/Config/EventRecorderConf.h \
-                         ../Fault/Include/ARM_Fault.h
+                         ../Fault/Include/ARM_Fault.h \
+                         src/Fault_example_readme_CM7.md \
+                         src/Fault_example_readme_CM33.md
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

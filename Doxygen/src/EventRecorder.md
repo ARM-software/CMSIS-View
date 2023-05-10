@@ -65,7 +65,8 @@ The *component number* specifies the software component that the event message b
 |---------------------------|----------------------------------------------------
 | 0x0  .. 0x3F (0 .. 63)    | software components of the user application
 | 0x40 .. 0x7F (64 .. 127)  | third party middleware components
-| 0x80 .. 0xEE (128 .. 238) | MDK-Middleware components
+| 0x80 .. 0xED (128 .. 237) | MDK-Middleware components
+| 0xEE (238)                | Fault component
 | 0xEF (239)                | Start/Stop events for Event Statistic information
 | 0xF0 .. 0xFC (240 .. 253) | RTOS kernel
 | 0xFD (253)                | Inter-process communication layer (multiprocessor systems)

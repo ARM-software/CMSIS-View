@@ -204,7 +204,7 @@ extern void ARM_FaultPrint (void);
 
 // ARM Fault Record function ---------------------------------------------------
 
-/// \brief Output decoded fault information via EventRecorder.
+/// \brief Output decoded fault information via Event Recorder.
 extern void ARM_FaultRecord (void);
 
 #ifdef __cplusplus

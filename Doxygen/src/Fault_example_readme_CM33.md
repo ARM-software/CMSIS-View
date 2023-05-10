@@ -1,4 +1,4 @@
-# Fault example (Cortex-M33)
+# README.md {#flt_example_CM33_readme}
 
 ## STMicroelectronics B-U585I-IOT02A board
 
