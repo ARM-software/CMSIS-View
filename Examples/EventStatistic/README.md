@@ -36,7 +36,7 @@ As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https:
 The following commands convert and build the project with build type `Debug` and target type `AVH`:
 
 ```sh
-EventStatistic $ cbuild EventStatistic.csolution.yml --update-rte -p --configuration .Debug+AVH
+cbuild EventStatistic.csolution.yml --update-rte -p --configuration .Debug+AVH
 ```
 
 ## Execute
@@ -44,7 +44,7 @@ EventStatistic $ cbuild EventStatistic.csolution.yml --update-rte -p --configura
 The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
 
 ```sh
-EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 out/EventStatistic/AVH/Debug/EventStatistic.axf
+VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 out/EventStatistic/AVH/Debug/EventStatistic.axf
 ```
 
 ## Analyze Events
@@ -52,7 +52,7 @@ EventStatistic $ VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 out/E
 This file can be analyzed using the `eventlist` utility with the following command:
 
 ```sh
-EventStatistic $ eventlist -s EventRecorder.log
+eventlist -s EventRecorder.log
 
    Start/Stop event statistic
    --------------------------
@@ -79,7 +79,7 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
 
 ```sh
-EventStatistic $ eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
+eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 
   :
 
@@ -112,4 +112,7 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
       Max: Start: 0.00001219 File=./EventStatistic/main.c(87) Stop: 5.17925291 File=./EventStatistic/main.c(103)
 ```
 
->Note: When using Windows Command Prompt the command above needs to be adopted to `-I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd`.
+When using Windows Command Prompt use the following command: 
+```sh
+eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
+```
