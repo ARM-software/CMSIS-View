@@ -3,7 +3,7 @@ var searchData=
   ['event_20data_20recording_0',['Event Data Recording',['../group__EventRecorder__Data.html',1,'']]],
   ['event_20execution_20statistics_1',['Event Execution Statistics',['../group__Event__Execution__Statistic.html',1,'']]],
   ['event_20level_2',['Event level',['../group__EventRecorder__leveldefs.html',1,'']]],
-  ['event_20recorder_3',['Event Recorder',['../evr.html',1,'index']]],
+  ['event_20recorder_3',['Event Recorder',['../er_examples.html',1,'ExampleProjects'],['../evr.html',1,'index']]],
   ['event_20recorder_20_2d_20timer_4',['Event Recorder - Timer',['../group__EventRecorder__Time.html',1,'']]],
   ['event_20recorder_20setup_5',['Event Recorder Setup',['../group__EventRecorder__Setup.html',1,'']]],
   ['event_20statistics_6',['Event Statistics',['../ev_stat.html',1,'index']]],

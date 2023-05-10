@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CMSIS-View: Macros</title>
+<title>CMSIS-View: Fault component</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,7 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('group__Fault__Storage__Macros.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('flt_examples.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -103,57 +103,21 @@ $(document).ready(function(){initNavTree('group__Fault__Storage__Macros.html',''
 </iframe>
 </div>
 
-<div class="header">
-  <div class="summary">
-<a href="#define-members">Macros</a>  </div>
-  <div class="headertitle"><div class="title">Macros<div class="ingroups"><a class="el" href="group__Fault.html">Fault</a> &raquo; <a class="el" href="group__Fault__Storage.html">Fault Storage</a></div></div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Fault component </div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>Fault Storage macro definitions.  
-<a href="#details">More...</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gad806d6d81404dc3297a9e0097ee41f5e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage__Macros.html#gad806d6d81404dc3297a9e0097ee41f5e">ARM_FAULT_FAULT_INFO_VER_MAJOR</a>&#160;&#160;&#160;(1U)</td></tr>
-<tr class="separator:gad806d6d81404dc3297a9e0097ee41f5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa7f6c005137393af25375ed25a3d90d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage__Macros.html#gafa7f6c005137393af25375ed25a3d90d">ARM_FAULT_FAULT_INFO_VER_MINOR</a>&#160;&#160;&#160;(0U)</td></tr>
-<tr class="separator:gafa7f6c005137393af25375ed25a3d90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<div class="textblock"><p >These examples show you how to utilize Fault component in own application software.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Example Project   </th><th class="markdownTableHeadLeft">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><a class="el" href="flt_example_CM7.html">VHT_MPS2_Cortex-M7</a>   </td><td class="markdownTableBodyLeft">Shows the usage of Fault component on an Cortex-M7. This example runs on <a href="https://arm-software.github.io/AVH/main/overview/html/index.html"><b>Arm Virtual Hardware</b></a> processor simulation.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"><a class="el" href="flt_example_CM33.html">B-U585I-IOT02A</a>   </td><td class="markdownTableBodyLeft">Shows the usage of Fault component on an Cortex-M33 with TrustZone. This example runs on STMicroelectronics <a href="https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html"><b>B-U585I-IOT02A</b></a> evaluation board.   </td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<p >Fault Storage macro definitions. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gad806d6d81404dc3297a9e0097ee41f5e" name="gad806d6d81404dc3297a9e0097ee41f5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad806d6d81404dc3297a9e0097ee41f5e">&#9670;&nbsp;</a></span>ARM_FAULT_FAULT_INFO_VER_MAJOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ARM_FAULT_FAULT_INFO_VER_MAJOR&#160;&#160;&#160;(1U)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >ARM Fault major version used in <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t::info::version</a> major </p>
-
-</div>
-</div>
-<a id="gafa7f6c005137393af25375ed25a3d90d" name="gafa7f6c005137393af25375ed25a3d90d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafa7f6c005137393af25375ed25a3d90d">&#9670;&nbsp;</a></span>ARM_FAULT_FAULT_INFO_VER_MINOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ARM_FAULT_FAULT_INFO_VER_MINOR&#160;&#160;&#160;(0U)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p >ARM Fault minor version used in <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t::info::version</a> minor </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

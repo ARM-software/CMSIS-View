@@ -113,7 +113,7 @@ $(document).ready(function(){initNavTree('group__Fault__Storage.html',''); initR
 </div><!--header-->
 <div class="contents">
 
-<p>Functions that store the Cortex-M Exception Fault information into memory.  
+<p>Function that stores the Cortex-M Exception Fault information into uninitialized RAM memory and auxiliary functions.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
@@ -162,8 +162,9 @@ Variables</h2></td></tr>
 <tr class="separator:ga775536834c48e2014db1157224f0cdac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
-<p >Functions that store the Cortex-M Exception Fault information into memory. </p>
-<p >This section contains the functions of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in memory. </p>
+<p >Function that stores the Cortex-M Exception Fault information into uninitialized RAM memory and auxiliary functions. </p>
+<p >For an overview see <a class="el" href="fault.html">Exception Fault Analysis</a>.</p>
+<p >This section contains the functions of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in uninitialized RAM memory and auxiliary functions for clearing fault information and checking if valid fault information exists. </p>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structARM__FaultInfo__t" id="structARM__FaultInfo__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t">&#9670;&nbsp;</a></span>ARM_FaultInfo_t</h2>
@@ -558,8 +559,15 @@ Reserved (0) </td></tr>
 </div><div class="memdoc">
 
 <p>Clear the saved fault information. </p>
-<p >Clear the fault buffer. </p>
-
+<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;ARM_Fault.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main (<span class="keywordtype">void</span>) {</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_function" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346" title="Clear the saved fault information.">ARM_FaultClear</a>();                             <span class="comment">// Clear fault information</span></div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga46ed1c1d7ede7bea91130d1e93ab4fe1" name="ga46ed1c1d7ede7bea91130d1e93ab4fe1"></a>
@@ -580,8 +588,23 @@ Reserved (0) </td></tr>
 
 <p>Check if the fault occurred and if the fault information was saved properly. </p>
 <dl class="section return"><dt>Returns</dt><dd>status (1 = fault occurred and valid fault information exists, 0 = no fault information saved yet or fault information is invalid)</dd></dl>
-<p>Call during startup to check if a fault occurred that can be sent, for example using <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> or <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a>. Consider calling <a class="el" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346">ARM_FaultClear</a> after sending the fault buffer to prevent resending. </p>
-
+<p>Call during startup to check if a fault occurred and if fault information is available, for example decode the fault information using <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> or <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a> functions.</p>
+<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;EventRecorder.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;ARM_Fault.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1U); <span class="comment">// Initialize and start Event Recorder</span></div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">if</span> (<a class="code hl_function" href="group__Fault__Storage.html#ga46ed1c1d7ede7bea91130d1e93ab4fe1" title="Check if the fault occurred and if the fault information was saved properly.">ARM_FaultOccurred</a>() != 0U) {              <span class="comment">// If fault information exists</span></div>
+<div class="line">    <a class="code hl_function" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691" title="Output decoded fault information via STDIO.">ARM_FaultPrint</a>();                           <span class="comment">// Output decoded fault information via STDIO</span></div>
+<div class="line">    <a class="code hl_function" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558" title="Output decoded fault information via Event Recorder.">ARM_FaultRecord</a>();                          <span class="comment">// Output decoded fault information via Event Recorder</span></div>
+<div class="line">    <a class="code hl_function" href="group__EventRecorder__Setup.html#gadfb4f7a90a67608538242a21479b0919">EventRecorderStop</a>();                        <span class="comment">// Stop Event Recorder</span></div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga4a614184dca42fb415d0a01ba03163e3" name="ga4a614184dca42fb415d0a01ba03163e3"></a>
@@ -601,8 +624,35 @@ Reserved (0) </td></tr>
 </div><div class="memdoc">
 
 <p>Save the fault information. </p>
-<p >Call from a fault handler to save current fault information into the fault buffer. </p>
-
+<p >Call from a fault handler to save current fault information into uninitialized RAM memory.</p>
+<p >Make sure that function is called without changing the Stack Pointer (SP) and Link Register (LR) registers. This is usually done by branching directly to this function from the fault handler.</p>
+<p >This function does not use stack or heap memories.</p>
+<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;ARM_Fault.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line">__attribute__((naked)) <span class="keywordtype">void</span> HardFault_Handler (<span class="keywordtype">void</span>) {</div>
+<div class="line">  __ASM <span class="keyword">volatile</span> (</div>
+<div class="line">    <span class="stringliteral">&quot;b  ARM_FaultSave\n&quot;</span></div>
+<div class="line">  );</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">__attribute__((naked)) <span class="keywordtype">void</span> MemManage_Handler (<span class="keywordtype">void</span>) {</div>
+<div class="line">  __ASM <span class="keyword">volatile</span> (</div>
+<div class="line">    <span class="stringliteral">&quot;b  ARM_FaultSave\n&quot;</span></div>
+<div class="line">  );</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">__attribute__((naked)) <span class="keywordtype">void</span> BusFault_Handler (<span class="keywordtype">void</span>) {</div>
+<div class="line">  __ASM <span class="keyword">volatile</span> (</div>
+<div class="line">    <span class="stringliteral">&quot;b  ARM_FaultSave\n&quot;</span></div>
+<div class="line">  );</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">__attribute__((naked)) <span class="keywordtype">void</span> UsageFault_Handler (<span class="keywordtype">void</span>) {</div>
+<div class="line">  __ASM <span class="keyword">volatile</span> (</div>
+<div class="line">    <span class="stringliteral">&quot;b  ARM_FaultSave\n&quot;</span></div>
+<div class="line">  );</div>
+<div class="line">}</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="gad813a8434754f3a2e4bdbd82a11f2292" name="gad813a8434754f3a2e4bdbd82a11f2292"></a>
@@ -622,8 +672,16 @@ Reserved (0) </td></tr>
 </div><div class="memdoc">
 
 <p>Callback function called after fault information was saved. </p>
-<p >Callback function called after saving the fault information (see <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a>). The default implementation will do a system reset. If a system reset is not desired, you need to provide a custom implementation of this function. </p>
-
+<p >The default implementation will do a system reset.</p>
+<p >If a system reset is not desired, you need to provide a custom implementation of this function with the desired functionality.</p>
+<p ><b>Code</b> <b>Example</b> of overriding <a class="el" href="group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292">ARM_FaultExit</a> function not to reset the system but to loop endlessly </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;ARM_Fault.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line">__attribute__((naked)) <span class="keywordtype">void</span> <a class="code hl_function" href="group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292" title="Callback function called after fault information was saved.">ARM_FaultExit</a> (<span class="keywordtype">void</span>) {</div>
+<div class="line">  __ASM <span class="keyword">volatile</span> (</div>
+<div class="line">    <span class="stringliteral">&quot;b  .\n&quot;</span></div>
+<div class="line">  );</div>
+<div class="line">}</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga139ab9a8507bbbc389d518a9886f0691" name="ga139ab9a8507bbbc389d518a9886f0691"></a>
@@ -643,8 +701,19 @@ Reserved (0) </td></tr>
 </div><div class="memdoc">
 
 <p>Output decoded fault information via STDIO. </p>
-<p >Decode stored fault information from the fault buffer to standard out via a custom routine. To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a>, add the ARM_FaultPrint template implementation to the project. </p>
-
+<p >To use <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a>, add the ARM_FaultPrint template implementation to the project.</p>
+<p ><b>Code</b> <b>Example</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;ARM_Fault.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">if</span> (<a class="code hl_function" href="group__Fault__Storage.html#ga46ed1c1d7ede7bea91130d1e93ab4fe1" title="Check if the fault occurred and if the fault information was saved properly.">ARM_FaultOccurred</a>() != 0U) {              <span class="comment">// If fault information exists</span></div>
+<div class="line">    <a class="code hl_function" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691" title="Output decoded fault information via STDIO.">ARM_FaultPrint</a>();                           <span class="comment">// Output decoded fault information via STDIO</span></div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>

@@ -1,4 +1,5 @@
 var ExampleProjects =
 [
-    [ "SCVD Event Statistics", "scvd_evt_stat.html", null ]
+    [ "Event Recorder", "er_examples.html", "er_examples" ],
+    [ "Fault component", "flt_examples.html", "flt_examples" ]
 ];

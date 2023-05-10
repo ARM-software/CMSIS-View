@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['event_20recorder_0',['Event Recorder',['../evr.html',1,'index']]],
+  ['event_20recorder_0',['Event Recorder',['../er_examples.html',1,'ExampleProjects'],['../evr.html',1,'index']]],
   ['event_20statistics_1',['Event Statistics',['../ev_stat.html',1,'index']]],
   ['eventlist_2',['eventlist',['../evntlst.html',1,'index']]],
   ['examples_3',['Examples',['../ExampleProjects.html',1,'index']]],
