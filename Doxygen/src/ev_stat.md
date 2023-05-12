@@ -23,6 +23,6 @@ For more information, refer to the \ref scvd_evt_stat example.
 
 Using a ULINKplus debug adapter, you can also record and analyze the
 energy that has been consumed in each execution slot. Using the above example on a hardware target with a ULINKplus, you get the
-following displays in the \estatistics window (the \erecorder window does not change):
+following display in the \estatistics window of µVision (the \erecorder window does not change):
 
 \image html es_start_stop_w_energy.png "Event Statistics displaying the energy consumption"

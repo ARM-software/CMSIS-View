@@ -4,19 +4,19 @@
 \details
 For an overview see \ref fault "Exception Fault Analysis".
 
-This section contains the functions of the component CMSIS-View:Fault that store, record, and analyze the Cortex-M Exception Fault information.
+This section contains the functions of the component <b>CMSIS-View:Fault</b> that store, record, and analyze the Cortex-M Exception Fault information.
 
 @{
 */
 
 /**
 \defgroup Fault_Storage Fault Storage
-\brief Function that stores the Cortex-M Exception Fault information into uninitialized RAM memory and auxiliary functions.
+\brief Functions that store the Cortex-M Exception Fault information into memory.
 \details
 For an overview see \ref fault "Exception Fault Analysis".
 
-This section contains the functions of the component CMSIS-View:Fault:Storage that store the Cortex-M Exception Fault information in uninitialized RAM memory
-and auxiliary functions for clearing fault information and checking if valid fault information exists.
+This section contains the functions of the component <b>CMSIS-View:Fault:Storage</b> that store the Cortex-M Exception Fault information in uninitialized RAM memory
+and auxiliary functions.
 
 @{
 */

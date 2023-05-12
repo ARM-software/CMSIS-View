@@ -10,7 +10,7 @@ of the debugger.
 
 During program execution, the debugger reads the content of the **event buffer** using a standard debug unit that is connected via JTAG or SWD to the CoreSight Debug Access Port (DAP). The **Event Recorder** requires no trace hardware and can be therefore used on any Cortex-M processor.
 
-![Event Recorder](./images/EventRecorderOverview.png "Event Recorder")
+![Event Recorder](./images/EventRecorderOverview.png "Event Recorder block diagram with exemplary output in an IDE")
 
 - \subpage er_theory explains in details how the Event Recorder collects event data, generates time stamps, and transfers this information via a debug unit to a host computer.
 - \subpage er_use provides instructions on how to enable Event Recorder in a project.
@@ -80,10 +80,13 @@ The following sections describe:
 
 ## Configuration {#er_config}
 
-Selecting the software component **CMSIS-View:Event Recorder** to a project will add the file *EventRecorderConf.h* that is used to define the configuration parameters of the **Event Recorder**. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:
+Adding the software component **CMSIS-View:Event Recorder** to a project will copy the file *EventRecorderConf.h* into the project that is used to define the configuration parameters of the **Event Recorder**. It uses [Configuration Wizard Annotations](https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html).
+
+For example, IDEs can show a graphical representation of the settings:
 
 ![EventRecorderConf.h in Configuration Wizard View](./images/config_wizard.png "EventRecorderConf.h in Configuration Wizard View")
-<br/>
+&nbsp;
+
 
 |Option                              |\#define                 |Description
 |------------------------------------|-------------------------|-----------
@@ -153,28 +156,29 @@ DWT_CYCCNT()
 
 ## Resource requirements{#er_req}
 
-**Technical data of Event Recorder firmware**
+### Technical data of Event Recorder firmware
 
 Target: Cortex-M3 using DWT cycle counter as timer
 
-|Parameter                         | ARMCC V5.06  | ARMCC V5.06  | ARMCC V6.13.1 | ARMCC V6.13.1
-|:---------------------------------|--------------|--------------|---------------|--------------
-|Compiler options                  | -O3          | -O3 -Otime   | -Os           | -O3
-|ROM size                          | < 1.5k bytes | < 2.0k bytes | < 1.7k bytes  | < 3.4k bytes
-|RAM size @8 records (min)         | 292 bytes    | 292 bytes    | 292 bytes     | 292 bytes
-|RAM size @64 records (default)    | 1188 bytes   | 1188 bytes   | 1188 bytes    | 1188 bytes
-|\ref EventRecord2 (id+8bytes)     | 256 cycles   | 238 cycles   | 197 cycles    | 184 cycles
-|\ref EventRecord4 (id+16bytes)    | 448 cycles   | 429 cycles   | 343 cycles    | 319 cycles
-|\ref EventRecordData (id+8bytes)  | 346 cycles   | 307 cycles   | 276 cycles    | 252 cycles
-|\ref EventRecordData (id+16bytes) | 540 cycles   | 507 cycles   | 425 cycles    | 397 cycles
-|\ref EventRecordData (id+24bytes) | 714 cycles   | 683 cycles   | 554 cycles    | 519 cycles
-|\ref EventRecordData (id+32bytes) | 888 cycles   | 862 cycles   | 685 cycles    | 643 cycles
+|Parameter                         | ARMCC V6.13.1 | ARMCC V6.13.1
+|:---------------------------------|---------------|--------------
+|Compiler options                  | -Os           | -O3
+|ROM size                          | < 1.7k bytes  | < 3.4k bytes
+|RAM size @8 records (min)         | 292 bytes     | 292 bytes
+|RAM size @64 records (default)    | 1188 bytes    | 1188 bytes
+|\ref EventRecord2 (id+8bytes)     | 197 cycles    | 184 cycles
+|\ref EventRecord4 (id+16bytes)    | 343 cycles    | 319 cycles
+|\ref EventRecordData (id+8bytes)  | 276 cycles    | 252 cycles
+|\ref EventRecordData (id+16bytes) | 425 cycles    | 397 cycles
+|\ref EventRecordData (id+24bytes) | 554 cycles    | 519 cycles
+|\ref EventRecordData (id+32bytes) | 685 cycles    | 643 cycles
 
-\note ROM size is specified for image with all Event Recorder functions being used.
-\note RAM size can be calculated as `164 + 16 * <Number of Records> (defined by EVENT_RECORD_COUNT in EventRecorderConf.h)`.
-\note Timing measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered.
+\note
+- ROM size is specified for image with all Event Recorder functions being used.
+- RAM size can be calculated as `164 + 16 * <Number of Records> (defined by EVENT_RECORD_COUNT in EventRecorderConf.h)`.
+- Timing was measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered.
 
-**Usage of records by Event Recorder functions**
+### Usage of records by Event Recorder functions
 
 |Function                          | Number of Records used
 |:---------------------------------|-----------------------------
@@ -182,9 +186,10 @@ Target: Cortex-M3 using DWT cycle counter as timer
 |\ref EventRecord4                 | 2
 |\ref EventRecordData              | (event data length + 7) / 8
 
+
 \page er_use Using Event Recorder
 
-The following steps explain how to enable views for static information \a and dynamic events in the µVision debugger. Other tools might use different ways to accomplish this.
+\note The following steps explain how to enable views for static information \a and dynamic events in the µVision debugger. Other tools might use different ways to accomplish this.
 
 **For User Code:**
   -# \ref Add_Event_Recorder.
@@ -209,7 +214,7 @@ To use the Event Recorder in an application, you need to:
     \note Usually, you select the **DAP** variant. If you are using a simulation model (FastModel or Arm Virtual Hardware),
     you can select \ref er_semihosting to write the Event Recorder data into a file on the PC.
   - Include the EventRecorder.h header file and add the event recorder initialization function to the source code:
-  ```
+  ```C
     :
   #include "EventRecorder.h"                        // ARM::CMSIS-View:Event Recorder
     :
@@ -327,7 +332,7 @@ To to stream dynamic event information, insert calls to the \ref EventRecorder_D
 These \ref EventRecorder_Data functions receive as first parameter an *id* event identifier used for filtering and displaying. The macro \ref EventID may be used to compose *id* values to include *level* and *component* numbers.
 
 **Example:**
-```
+```C
 #include "EventRecorder.h"                       // ARM::CMSIS-View:Event Recorder
 
 int some_error = 0;                              // error flag
@@ -364,7 +369,7 @@ You may create an \ref SCVD_Format "*.SCVD (Software Component View Description)
 matches the application. The event output is created using the \ref elem_events.
 
 **SCVD file example**
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 
 <component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
@@ -434,19 +439,16 @@ a host computer that is running a debugger.
 Examples of these facilities include keyboard input, screen output, and disk I/O. For example, you can use this mechanism to
 enable functions in the C library, such as `printf` and `scanf`, to use the screen and keyboard of the host instead of having a screen and keyboard on the target system.
 
-With the Event Recorder, you can use semihosting with models to write the events into a file on your PC. This works with Arm
-FastModels, Arm Fixed Virtual Platforms, and Arm Virtual Hardware alike.
+With the Event Recorder, you can use semihosting with models to write the events into a file on your PC. This works with [Arm
+Fast Models](https://developer.arm.com/Tools%20and%20Software/Fast%20Models), [Arm Fixed Virtual Platforms](https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms), and [Arm Virtual Hardware](https://www.arm.com/products/development-tools/simulation/virtual-hardware) alike.
 
-The file that is written is called *EventRecorder.log* and is a binary file that is available in the root directory of the µVision project. Use \ref evntlst to read and decode the binary data.
-
-While the file is written to the hard drive of your PC, you can still use the Event Recorder window in µVision to see the
-events coming in.
+The file that is written is called *EventRecorder.log* and is a binary file that is available in the root directory of your project. Use \ref evntlst to read and decode the binary data.
 
 \note
-- The semihosting variant will not work with real target hardware. Instead, program execution will hit a breakpoint and stop
-  there.
 - Your model needs to be configured for semihosting (refer to the documentation of your modeling technology on how to do
   that).
 - You can specify a different name for the log file by specifying a define called `EVENT_LOG_FILENAME`.
-- Once you start a new debug session, the log file will be overwritten. While in debug, new messages will be appended to the
+- In µVision, once you start a new debug session, the log file will be overwritten. While in debug, new messages will be appended to the
   currently open log file.
+- In µVision, the semihosting variant will not work with real target hardware. Instead, program execution will hit a breakpoint and stop there.
+- In µVision, you can still use the Event Recorder window in µVision to see the events coming in while the file is written to the hard drive of your PC.

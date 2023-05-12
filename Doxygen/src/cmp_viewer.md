@@ -30,7 +30,7 @@ The following steps enable views for static information of software components i
 
 **For Pre-annotated software components:**
 
-The software packs for MDK-Middleware, CMSIS, CMSIS-FreeRTOS already contain the relevant *.SCVD files.
+The software packs for MDK-Middleware, CMSIS, and CMSIS-FreeRTOS already contain the relevant *.SCVD files.
 
  - Add the SCVD file of the desired software component to µVision as described in \manscvd.
  - Use the µVision debugger windows as described in \cviewer.
@@ -43,14 +43,14 @@ The \ref SCVD_Format "*.SCVD file" can be used to format static information of t
 
 Example code that is stored in the file **MyTest.c** (the file name is important for static variables).
 
-```
+```C
 static int some_error = 1;
 char string[10] = "MyTest";
 ```
 
 The following **MyTest.scvd** file reads static program information from the variables in the above code snippet:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 
 <component_viewer schemaVersion="0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
@@ -70,7 +70,9 @@ The following **MyTest.scvd** file reads static program information from the var
 </component_viewer>
 ```
 
-In the µVision Debugger this \ref SCVD_Format "*.SCVD file" is specified in the dialog **Options for Target -> Debug ->
+**Adding the file in the µVision debugger**
+
+In the µVision debugger, this \ref SCVD_Format "*.SCVD file" is specified in the dialog **Options for Target -> Debug ->
 Manage Component Viewer Description Files**. Click on **Add Component Viewer Description File** and add the related *.SCVD file.
 
 ![Manage *.SCVD files](./images/Manage_MyTest_SCVD.png "Manage *.SCVD files")

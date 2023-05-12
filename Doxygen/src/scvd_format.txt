@@ -1,6 +1,6 @@
 /* ========================================================================================================================== */
 /** 
-\page SCVD_Format SCVD File Format
+\page SCVD_Format SCVD file format
 
 The SCVD (Software Component View Description) files are formatted in XML and based on the schema file 
 <a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
@@ -13,19 +13,19 @@ The SCVD file format is described in the following sections:
  - \subpage builtin_function : lists built-in functions that can be used for  calculating stack memory usage, accessing CPU registers or application program symbols. 
  - \subpage value_output : shows how to format output data for display in the \cviewer or \erecorder.
 
-\section scvd_validate SCVD File Validation
+\section scvd_validate SCVD file validation
 
 The schema file 
 <a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
 specifies the XML format. Use this schema file together with XML tools for validating an *.scvd file. 
 
-\section scvd_in_debug Using SCVD Files in a Debugger
+\section scvd_in_debug Using SCVD files in a debugger
 
 The following steps explain how to use an *.SCVD file in the µVision Debugger. Other tools might require different steps:
  - Add the SCVD file to µVision as described in <a href="https://developer.arm.com/documentation/101407/0538/Creating-Applications/Tips-and-Tricks/Manage-Component-Viewer-Description-Files" target="_blank"><b>Manage Component Viewer Description Files</b></a>.
  - Use the debug windows as described in \cviewer.
 
-\section scvd_in_packs SCVD Files in Software Packs
+\section scvd_in_packs SCVD files in software packs
 
 Software components which are part of Software Packs may add related *.SCVD files directly in the Package Description file (*.pdsc) using the \<file\> element category \token{other}.
 In the *.pdsc file example below \token{Network.scvd} is added to the debugger when the component \token{:Network:Core} is selected. For details, refer to
@@ -45,7 +45,7 @@ In the *.pdsc file example below \token{Network.scvd} is added to the debugger w
 
 /* ========================================================================================================================== */
 /** 
-\page xml_elements XML Elements
+\page xml_elements XML elements
 
 The top level elements of an SCVD file are:
  - \subpage elem_component_viewer "<component_viewer>" &mdash; the root element enclosing all other elements
@@ -2265,7 +2265,7 @@ The SCVD interpreter has the following ways to define local variables that can b
   
   
 
-\section predefined_variable Predefined Variables
+\section predefined_variable Predefined variables
 
 Predefined variables can be used without a declaration or definition.
 
@@ -2341,7 +2341,7 @@ C Code:
 \endcode
 
  
-\page builtin_function Built-in Functions
+\page builtin_function Built-in functions
 
 The SCVD interpreter has the following built-in functions for calculation of stack memory usage, access to CPU registers and application program symbols. 
 
@@ -2695,7 +2695,7 @@ The following statements in the SCVD file output the number of elements of each 
 
 /* ========================================================================================================================== */
 /** 
-\page value_output Value Output
+\page value_output Value output
 
 The elements \refelem{event} and \refelem{item} use the attributes \b property and \b value to output information
 in the \cviewer or \erecorder. The string data of these attributes may contain \ref format_specifiers "format specifiers" to output 
