@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component_viewer schemaVersion="1.2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
-<component name="Fault" version="0.6.0"/>
+<component name="Fault" version="1.0.0"/>
 
   <typedefs>
     <!-- VersionString_t -->

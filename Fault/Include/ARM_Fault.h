@@ -90,11 +90,11 @@
 #endif
 
 // Fault component version
-#define ARM_FAULT_VERSION              "0.6.0"
+#define ARM_FAULT_VERSION              "1.0.0"
 
 // Fault Information structure type version
-#define ARM_FAULT_FAULT_INFO_VER_MAJOR (0U)             // ARM_FaultInfo type version.major
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (3U)             // ARM_FaultInfo type version.minor
+#define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)             // ARM_FaultInfo type version.major
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)             // ARM_FaultInfo type version.minor
 
 #ifdef __cplusplus
 extern "C" {
