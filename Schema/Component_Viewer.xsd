@@ -18,13 +18,16 @@
 
   3. This notice may not be removed or altered from any source distribution.
 
-  $Date:        12. Mar 2018
-  $Revision:    1.2.0
+  $Date:        15. May 2023
+  $Revision:    1.2.1
 
   $Project: Schema File for Component Viewer Description File Format Specification
 
   File naming convention <component_name>.scvd
-  SchemaVersion=1.2.0
+  SchemaVersion=1.2.1
+
+  15. May 2023
+  - updated attribute bold to xs:string to support expression evalution resolving to boolean as documented.
 
   12. Mar 2018
   - added definition of up to 8 states to a components.
@@ -269,8 +272,8 @@
     <xs:attribute name="cond"     type="xs:string" use="required"/>
     <xs:attribute name="property" type="xs:string" use="required"/>
     <xs:attribute name="value"    type="xs:string" use="required"/>
-    <xs:attribute name="alert"    type="xs:string"               />    <!-- restriction: expression resolving to boolean -->
-    <xs:attribute name="bold"     type="xs:string"               />    <!-- restriction: expression resolving to boolean -->
+    <xs:attribute name="alert"    type="xs:string"               />    <!-- restriction: expression resolves to boolean -->
+    <xs:attribute name="bold"     type="xs:string"               />    <!-- restriction: expression resolves to boolean -->
   </xs:complexType>
 
   <xs:complexType name="ItemType">
@@ -284,8 +287,8 @@
     <xs:attribute name="value"    type="xs:string" />
     <xs:attribute name="info"     type="xs:string" />
     <xs:attribute name="cond"     type="xs:string" />
-    <xs:attribute name="alert"    type="xs:string" />    <!-- expression resolving to boolean -->
-    <xs:attribute name="bold"     type="xs:boolean"/>
+    <xs:attribute name="alert"    type="xs:string" />    <!-- restriction: expression resolves to boolean -->
+    <xs:attribute name="bold"     type="xs:string" />    <!-- restriction: expression resolves to boolean -->
   </xs:complexType>
 
   <xs:complexType name="ListType">
@@ -299,8 +302,8 @@
     <xs:attribute name="limit" type="xs:string"               />
     <xs:attribute name="while" type="xs:string"               />
     <xs:attribute name="cond"  type="xs:string"               />
-    <xs:attribute name="alert" type="xs:string"               /> <!-- expression resolving to boolean -->
-    <xs:attribute name="bold"  type="xs:boolean"              />
+    <xs:attribute name="alert" type="xs:string"               />   <!-- restriction: expression resolves to boolean -->
+    <xs:attribute name="bold"  type="xs:string"               />   <!-- restriction: expression resolves to boolean -->
   </xs:complexType>
 
   <xs:complexType name="OutType">
@@ -313,8 +316,8 @@
     <xs:attribute name="value" type="xs:string"  />
     <xs:attribute name="type"  type="xs:string"  />
     <xs:attribute name="cond"  type="xs:string"  />
-    <xs:attribute name="alert" type="xs:string"  />       <!-- expression resolving to boolean -->
-    <xs:attribute name="bold"  type="xs:boolean" />
+    <xs:attribute name="alert" type="xs:string"  />       <!-- restriction: expression resolves to boolean -->
+    <xs:attribute name="bold"  type="xs:string"  />       <!-- restriction: expression resolves to boolean -->
   </xs:complexType>
 
   <xs:simpleType name="LevelEnumType">
@@ -343,8 +346,8 @@
     <xs:attribute name="property" type="xs:string"                   />
     <xs:attribute name="info"     type="xs:string"                   />
     <xs:attribute name="doc"      type="xs:string"                   />
-    <xs:attribute name="alert"    type="xs:string"                   />   <!-- expression resolving to boolean -->
-    <xs:attribute name="bold"     type="xs:boolean"                  />
+    <xs:attribute name="alert"    type="xs:string"                   />   <!-- restriction: expression resolves to boolean -->
+    <xs:attribute name="bold"     type="xs:string"                   />   <!-- restriction: expression resolves to boolean -->
     <xs:attribute name="state"    type="xs:string"                   />   <!-- if state is set the handle attribute is required -->
     <xs:attribute name="handle"   type="xs:string"                   />
     <xs:attribute name="hname"    type="xs:string"                   />
