@@ -269,8 +269,8 @@
     <xs:attribute name="cond"     type="xs:string" use="required"/>
     <xs:attribute name="property" type="xs:string" use="required"/>
     <xs:attribute name="value"    type="xs:string" use="required"/>
-    <xs:attribute name="alert"    type="xs:string"               />    <!-- expression resolving to boolean -->
-    <xs:attribute name="bold"     type="xs:boolean"              />
+    <xs:attribute name="alert"    type="xs:string"               />    <!-- restriction: expression resolving to boolean -->
+    <xs:attribute name="bold"     type="xs:string"               />    <!-- restriction: expression resolving to boolean -->
   </xs:complexType>
 
   <xs:complexType name="ItemType">
