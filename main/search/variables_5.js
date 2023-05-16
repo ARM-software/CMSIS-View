@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hfsr_0',['HFSR',['../group__Fault__Storage.html#a7b5519d571d58cc389ee2862629f325f',1,'ARM_FaultInfo_t']]]
+  ['registers_0',['Registers',['../group__Fault__Storage.html#a35916cdff844aed0702832d2b2fdd63b',1,'ARM_FaultInfo_t']]]
 ];

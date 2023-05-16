@@ -127,12 +127,16 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structARM__FaultInfo__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t">ARM_FaultInfo_t</a></td></tr>
 <tr class="memdesc:structARM__FaultInfo__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault information structure type definition.  <a href="group__Fault__Storage.html#structARM__FaultInfo__t">More...</a><br /></td></tr>
 <tr class="separator:structARM__FaultInfo__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structARM__FaultInfo__t_8info"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td></tr>
-<tr class="separator:structARM__FaultInfo__t_8info"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structARM__FaultInfo__t_8info_8version"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td></tr>
-<tr class="separator:structARM__FaultInfo__t_8info_8version"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structARM__FaultInfo__t_8info_8content"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content">ARM_FaultInfo_t.info.content</a></td></tr>
-<tr class="separator:structARM__FaultInfo__t_8info_8content"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8Version"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8Version">ARM_FaultInfo_t.Version</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8Version"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8Content"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8Content">ARM_FaultInfo_t.Content</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8Content"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8Registers"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8Registers">ARM_FaultInfo_t.Registers</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8Registers"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8ExceptionState"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8ExceptionState">ARM_FaultInfo_t.ExceptionState</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8ExceptionState"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structARM__FaultInfo__t_8FaultRegisters"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8FaultRegisters">ARM_FaultInfo_t.FaultRegisters</a></td></tr>
+<tr class="separator:structARM__FaultInfo__t_8FaultRegisters"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -181,362 +185,408 @@ Variables</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a45eaf7e07ea0226c1328ee7d4a5f7948" name="a45eaf7e07ea0226c1328ee7d4a5f7948"></a>uint32_t</td>
+<a id="ac2d9a2b3478db6dc43ad665d6a6eda8c" name="ac2d9a2b3478db6dc43ad665d6a6eda8c"></a>uint32_t</td>
 <td class="fieldname">
-magic_number</td>
+MagicNumber</td>
 <td class="fielddoc">
 Magic number (ASCII "FltR") </td></tr>
 <tr><td class="fieldtype">
-<a id="a7ba6d986496f16e7c9bb92ea0265914d" name="a7ba6d986496f16e7c9bb92ea0265914d"></a>uint32_t</td>
+<a id="af3387a02ca594eaccf12871dcd771c59" name="af3387a02ca594eaccf12871dcd771c59"></a>uint32_t</td>
 <td class="fieldname">
-crc32</td>
+CRC32</td>
 <td class="fielddoc">
-CRC32 of the structure content (excluding magic_number and crc32 fields) </td></tr>
+CRC32 of the structure content (excluding MagicNumber and CRC32 fields) </td></tr>
 <tr><td class="fieldtype">
-<a id="a86988a65e0d3ece7990c032c159786d6" name="a86988a65e0d3ece7990c032c159786d6"></a>uint32_t</td>
+<a id="ad3fa7da84ce75c8b58d9251838377e8f" name="ad3fa7da84ce75c8b58d9251838377e8f"></a>uint32_t</td>
 <td class="fieldname">
-count</td>
+Count</td>
 <td class="fielddoc">
 Saved faults counter. </td></tr>
 <tr><td class="fieldtype">
-<a id="ab04b9b327f38315ae6b99791570cfde9" name="ab04b9b327f38315ae6b99791570cfde9"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info">ARM_FaultInfo_t.info</a></td>
+<a id="ad0d4da7ba1547022215b35809c42a53b" name="ad0d4da7ba1547022215b35809c42a53b"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8Version">ARM_FaultInfo_t.Version</a></td>
 <td class="fieldname">
-info</td>
+Version</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a2396b29a5d3434f4ed3c248523270330" name="a2396b29a5d3434f4ed3c248523270330"></a>uint32_t</td>
+<a id="ae8be184994d76ddba8448ae13b023ab0" name="ae8be184994d76ddba8448ae13b023ab0"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8Content">ARM_FaultInfo_t.Content</a></td>
+<td class="fieldname">
+Content</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a35916cdff844aed0702832d2b2fdd63b" name="a35916cdff844aed0702832d2b2fdd63b"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8Registers">ARM_FaultInfo_t.Registers</a></td>
+<td class="fieldname">
+Registers</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a0a8f212fe7d2a2d21811ec3d54c00040" name="a0a8f212fe7d2a2d21811ec3d54c00040"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8ExceptionState">ARM_FaultInfo_t.ExceptionState</a></td>
+<td class="fieldname">
+ExceptionState</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a5e69b516a93cb63d750ad70e64a3d3a5" name="a5e69b516a93cb63d750ad70e64a3d3a5"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8FaultRegisters">ARM_FaultInfo_t.FaultRegisters</a></td>
+<td class="fieldname">
+FaultRegisters</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structARM__FaultInfo__t_8Version" id="structARM__FaultInfo__t_8Version"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8Version">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.Version</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ARM_FaultInfo_t.Version</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a6fed0c378a4b4e8c1e7dc5c16dabb388" name="a6fed0c378a4b4e8c1e7dc5c16dabb388"></a>uint8_t</td>
+<td class="fieldname">
+Minor</td>
+<td class="fielddoc">
+Fault information structure version: Minor, see <a class="el" href="group__Fault__Storage__Macros.html#gafa7f6c005137393af25375ed25a3d90d">ARM_FAULT_FAULT_INFO_VER_MINOR</a>. </td></tr>
+<tr><td class="fieldtype">
+<a id="a3b329734e45b57e60f3df64c2cf412a9" name="a3b329734e45b57e60f3df64c2cf412a9"></a>uint8_t</td>
+<td class="fieldname">
+Major</td>
+<td class="fielddoc">
+Fault information structure version: Major, see <a class="el" href="group__Fault__Storage__Macros.html#gad806d6d81404dc3297a9e0097ee41f5e">ARM_FAULT_FAULT_INFO_VER_MAJOR</a>. </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structARM__FaultInfo__t_8Content" id="structARM__FaultInfo__t_8Content"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8Content">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.Content</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ARM_FaultInfo_t.Content</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a08704d7d7d1646c9425f7e447ab48531" name="a08704d7d7d1646c9425f7e447ab48531"></a>uint16_t</td>
+<td class="fieldname">
+FaultRegsExist: 1</td>
+<td class="fielddoc">
+Fault registers: 0 - absent; 1 - available. </td></tr>
+<tr><td class="fieldtype">
+<a id="a8fa526e28e297af56b0e30d1c9ae8ac4" name="a8fa526e28e297af56b0e30d1c9ae8ac4"></a>uint16_t</td>
+<td class="fieldname">
+Armv8xM_Main: 1</td>
+<td class="fielddoc">
+Armv8/8.1-M Mainline information: 0 - absent; 1 - available. </td></tr>
+<tr><td class="fieldtype">
+<a id="a016c2cf111bea200eed44e0762accae2" name="a016c2cf111bea200eed44e0762accae2"></a>uint16_t</td>
+<td class="fieldname">
+TZ_Enabled: 1</td>
+<td class="fielddoc">
+TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled. </td></tr>
+<tr><td class="fieldtype">
+<a id="a999013afa0b366c3fc6b2b03339c8664" name="a999013afa0b366c3fc6b2b03339c8664"></a>uint16_t</td>
+<td class="fieldname">
+TZ_SaveMode: 1</td>
+<td class="fielddoc">
+Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="a6f1bd956c67f4e7fc2f30ac0a3f16da9" name="a6f1bd956c67f4e7fc2f30ac0a3f16da9"></a>uint16_t</td>
+<td class="fieldname">
+TZ_FaultMode: 1</td>
+<td class="fielddoc">
+Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
+<tr><td class="fieldtype">
+<a id="a5a0acace654b1e24f10f1a08f87b0b83" name="a5a0acace654b1e24f10f1a08f87b0b83"></a>uint16_t</td>
+<td class="fieldname">
+StateContext: 1</td>
+<td class="fielddoc">
+State Context: 0 - was not saved; 1 - was saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7ab19399a9bb23888b544711d7466572" name="a7ab19399a9bb23888b544711d7466572"></a>uint16_t</td>
+<td class="fieldname">
+AdditionalContext: 1</td>
+<td class="fielddoc">
+Additional State Context: 0 - was not saved; 1 - was saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="aad113ca05f3c81ec8286524eef110dbe" name="aad113ca05f3c81ec8286524eef110dbe"></a>uint16_t</td>
+<td class="fieldname">
+LimitRegs: 1</td>
+<td class="fielddoc">
+MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="ae23d5adae7dc98e75f3e321c8bcbe85b" name="ae23d5adae7dc98e75f3e321c8bcbe85b"></a>uint16_t</td>
+<td class="fieldname">
+FaultRegs: 1</td>
+<td class="fielddoc">
+Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="aa7d03b7909dc73f9eb1d77346fd1ac6d" name="aa7d03b7909dc73f9eb1d77346fd1ac6d"></a>uint16_t</td>
+<td class="fieldname">
+SecureFaultRegs: 1</td>
+<td class="fielddoc">
+Secure Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="a60dff9205a6898412f713550aeb3dfcd" name="a60dff9205a6898412f713550aeb3dfcd"></a>uint16_t</td>
+<td class="fieldname">
+RAS_FaultReg: 1</td>
+<td class="fielddoc">
+RAS Fault register: 0 - was not saved; 1 - was saved. </td></tr>
+<tr><td class="fieldtype">
+<a id="a942d4e37dd5607ab68e54755540d4a47" name="a942d4e37dd5607ab68e54755540d4a47"></a>uint16_t</td>
+<td class="fieldname">
+Reserved: 5</td>
+<td class="fielddoc">
+Reserved (0) </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structARM__FaultInfo__t_8Registers" id="structARM__FaultInfo__t_8Registers"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8Registers">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.Registers</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ARM_FaultInfo_t.Registers</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a298ae558fe1a3bb5aab7fab0bad18e42" name="a298ae558fe1a3bb5aab7fab0bad18e42"></a>uint32_t</td>
 <td class="fieldname">
 R0</td>
 <td class="fielddoc">
 R0 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a2b71b52e6a327eb84881526b454a0a21" name="a2b71b52e6a327eb84881526b454a0a21"></a>uint32_t</td>
+<a id="acda522d4353b166cc2dee84673307b4e" name="acda522d4353b166cc2dee84673307b4e"></a>uint32_t</td>
 <td class="fieldname">
 R1</td>
 <td class="fielddoc">
 R1 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a5d193f7a0912b76f2101cc5388c7b71b" name="a5d193f7a0912b76f2101cc5388c7b71b"></a>uint32_t</td>
+<a id="a8c6d22ff6f63fc6711cfa315cb80b314" name="a8c6d22ff6f63fc6711cfa315cb80b314"></a>uint32_t</td>
 <td class="fieldname">
 R2</td>
 <td class="fielddoc">
 R2 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a02984de000cdc74dd423966935993ec5" name="a02984de000cdc74dd423966935993ec5"></a>uint32_t</td>
+<a id="a5c108ce0fe89d0632cfce75f650b36c2" name="a5c108ce0fe89d0632cfce75f650b36c2"></a>uint32_t</td>
 <td class="fieldname">
 R3</td>
 <td class="fielddoc">
 R3 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="aaff5644c1fc6e32c5f83d35326fb6fd0" name="aaff5644c1fc6e32c5f83d35326fb6fd0"></a>uint32_t</td>
+<a id="a8717ce4dfdc86a4b576d9e983ab9fb29" name="a8717ce4dfdc86a4b576d9e983ab9fb29"></a>uint32_t</td>
 <td class="fieldname">
 R4</td>
 <td class="fielddoc">
 R4 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a71d3e97764f882c9adaa4ff51981d2fe" name="a71d3e97764f882c9adaa4ff51981d2fe"></a>uint32_t</td>
+<a id="ae1b8054c9cdd622c9eeecfe71f26054a" name="ae1b8054c9cdd622c9eeecfe71f26054a"></a>uint32_t</td>
 <td class="fieldname">
 R5</td>
 <td class="fielddoc">
 R5 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="ad187aa37e5ebebc9054239173d06cdd6" name="ad187aa37e5ebebc9054239173d06cdd6"></a>uint32_t</td>
+<a id="af38ee76ce06ccd13940482aced1c7391" name="af38ee76ce06ccd13940482aced1c7391"></a>uint32_t</td>
 <td class="fieldname">
 R6</td>
 <td class="fielddoc">
 R6 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a9929d303935cc338da211aaa33e65da2" name="a9929d303935cc338da211aaa33e65da2"></a>uint32_t</td>
+<a id="ab9d7e51eba2c6d155e7fd3013338c38e" name="ab9d7e51eba2c6d155e7fd3013338c38e"></a>uint32_t</td>
 <td class="fieldname">
 R7</td>
 <td class="fielddoc">
 R7 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a7982db8ebbe623de80374009f7650e76" name="a7982db8ebbe623de80374009f7650e76"></a>uint32_t</td>
+<a id="acfff813d86d447fa2a9c858650ebbb90" name="acfff813d86d447fa2a9c858650ebbb90"></a>uint32_t</td>
 <td class="fieldname">
 R8</td>
 <td class="fielddoc">
 R8 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a0df18fdea4760a9f71b31f1a12e66958" name="a0df18fdea4760a9f71b31f1a12e66958"></a>uint32_t</td>
+<a id="a8d28dad91e1ffada38203b9e5f9af86d" name="a8d28dad91e1ffada38203b9e5f9af86d"></a>uint32_t</td>
 <td class="fieldname">
 R9</td>
 <td class="fielddoc">
 R9 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="add1ccfa070e769fa0997305a16890c25" name="add1ccfa070e769fa0997305a16890c25"></a>uint32_t</td>
+<a id="a33df7d5541bc0941336b1513815da7a5" name="a33df7d5541bc0941336b1513815da7a5"></a>uint32_t</td>
 <td class="fieldname">
 R10</td>
 <td class="fielddoc">
 R10 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="aa7856f89a3a397c558c6649be8e66dc8" name="aa7856f89a3a397c558c6649be8e66dc8"></a>uint32_t</td>
+<a id="a7f6711cf763cf8d5648cb4fd0c3790df" name="a7f6711cf763cf8d5648cb4fd0c3790df"></a>uint32_t</td>
 <td class="fieldname">
 R11</td>
 <td class="fielddoc">
 R11 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a91258eb79edc2231a6c7dbc2ff14c13a" name="a91258eb79edc2231a6c7dbc2ff14c13a"></a>uint32_t</td>
+<a id="a1688316d15ac9218146e0f4ba5fc8d4f" name="a1688316d15ac9218146e0f4ba5fc8d4f"></a>uint32_t</td>
 <td class="fieldname">
 R12</td>
 <td class="fielddoc">
 R12 Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a3314de2ca1fccad1fe0411e61b2d282d" name="a3314de2ca1fccad1fe0411e61b2d282d"></a>uint32_t</td>
+<a id="a90a7c45eaffbd575ca6fb361e6d170a4" name="a90a7c45eaffbd575ca6fb361e6d170a4"></a>uint32_t</td>
 <td class="fieldname">
 LR</td>
 <td class="fielddoc">
 Link Register (R14) value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a79d90bf04aa3b096b74d8f270b00000f" name="a79d90bf04aa3b096b74d8f270b00000f"></a>uint32_t</td>
+<a id="a878c9409a37580cd543995d8dbfb985f" name="a878c9409a37580cd543995d8dbfb985f"></a>uint32_t</td>
 <td class="fieldname">
 ReturnAddress</td>
 <td class="fielddoc">
 Return address from exception. </td></tr>
 <tr><td class="fieldtype">
-<a id="a1d6c6767a3d4bb9e9bf57f8cb4bc0613" name="a1d6c6767a3d4bb9e9bf57f8cb4bc0613"></a>uint32_t</td>
+<a id="acb6baff416053fc1aa6456b50b01f48c" name="acb6baff416053fc1aa6456b50b01f48c"></a>uint32_t</td>
 <td class="fieldname">
 xPSR</td>
 <td class="fielddoc">
 Program Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a972b05b20154d3b04b487468986fd6f0" name="a972b05b20154d3b04b487468986fd6f0"></a>uint32_t</td>
-<td class="fieldname">
-IntegritySignature</td>
-<td class="fielddoc">
-Integrity Signature (only for Armv8/8.1-M arch) </td></tr>
-<tr><td class="fieldtype">
-<a id="a0215dc879780a0d6a79258b82956df4a" name="a0215dc879780a0d6a79258b82956df4a"></a>uint32_t</td>
-<td class="fieldname">
-EXC_xPSR</td>
-<td class="fielddoc">
-Program Status Register value, in exception handler. </td></tr>
-<tr><td class="fieldtype">
-<a id="ac699e8a2ada09ddf3f7df240c8032a53" name="ac699e8a2ada09ddf3f7df240c8032a53"></a>uint32_t</td>
-<td class="fieldname">
-EXC_RETURN</td>
-<td class="fielddoc">
-Exception Return code (LR), in exception handler. </td></tr>
-<tr><td class="fieldtype">
-<a id="a44133716bf1f8c1f60fc73a4a5799dd9" name="a44133716bf1f8c1f60fc73a4a5799dd9"></a>uint32_t</td>
+<a id="a4b6544406098f683478fca26b2589e6d" name="a4b6544406098f683478fca26b2589e6d"></a>uint32_t</td>
 <td class="fieldname">
 MSP</td>
 <td class="fielddoc">
 Main Stack Pointer value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a4465a910abcbdf89240e5e808246ba0c" name="a4465a910abcbdf89240e5e808246ba0c"></a>uint32_t</td>
+<a id="a0e9c9bb3639ba35c67b2492f04a34d99" name="a0e9c9bb3639ba35c67b2492f04a34d99"></a>uint32_t</td>
 <td class="fieldname">
 PSP</td>
 <td class="fielddoc">
 Process Stack Pointer value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a455c50d286e3afa2c14dc6712f95f376" name="a455c50d286e3afa2c14dc6712f95f376"></a>uint32_t</td>
+<a id="a993534eba17b45ead06a0cbe109092a2" name="a993534eba17b45ead06a0cbe109092a2"></a>uint32_t</td>
 <td class="fieldname">
 MSPLIM</td>
 <td class="fielddoc">
 Main Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
 <tr><td class="fieldtype">
-<a id="ae09bc7991f56b5e12f03fcbc149537b6" name="ae09bc7991f56b5e12f03fcbc149537b6"></a>uint32_t</td>
+<a id="a2c5bd1a0238c11927ce2da061b9a8d6d" name="a2c5bd1a0238c11927ce2da061b9a8d6d"></a>uint32_t</td>
 <td class="fieldname">
 PSPLIM</td>
 <td class="fielddoc">
 Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch) </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structARM__FaultInfo__t_8ExceptionState" id="structARM__FaultInfo__t_8ExceptionState"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8ExceptionState">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.ExceptionState</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ARM_FaultInfo_t.ExceptionState</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a07fa982352a7382850ac29ad3e181b2d" name="a07fa982352a7382850ac29ad3e181b2d"></a>uint32_t</td>
+<a id="acb6baff416053fc1aa6456b50b01f48c" name="acb6baff416053fc1aa6456b50b01f48c"></a>uint32_t</td>
+<td class="fieldname">
+xPSR</td>
+<td class="fielddoc">
+Program Status Register value, in exception handler. </td></tr>
+<tr><td class="fieldtype">
+<a id="ae3d037e7ad954ad87083532ef0b209fc" name="ae3d037e7ad954ad87083532ef0b209fc"></a>uint32_t</td>
+<td class="fieldname">
+EXC_RETURN</td>
+<td class="fielddoc">
+Exception Return code (LR), in exception handler. </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structARM__FaultInfo__t_8FaultRegisters" id="structARM__FaultInfo__t_8FaultRegisters"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8FaultRegisters">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.FaultRegisters</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct ARM_FaultInfo_t.FaultRegisters</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a7b890ad589aefd514069459c6b8db05b" name="a7b890ad589aefd514069459c6b8db05b"></a>uint32_t</td>
 <td class="fieldname">
 CFSR</td>
 <td class="fielddoc">
 System Control Block - Configurable Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a7b5519d571d58cc389ee2862629f325f" name="a7b5519d571d58cc389ee2862629f325f"></a>uint32_t</td>
+<a id="aa247d56436811a648d3abf803414de12" name="aa247d56436811a648d3abf803414de12"></a>uint32_t</td>
 <td class="fieldname">
 HFSR</td>
 <td class="fielddoc">
 System Control Block - HardFault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="ae8d2d700d6a9735423a52a48a62b50b6" name="ae8d2d700d6a9735423a52a48a62b50b6"></a>uint32_t</td>
+<a id="a875e33d495b9aa388a59472e522a07d6" name="a875e33d495b9aa388a59472e522a07d6"></a>uint32_t</td>
 <td class="fieldname">
 DFSR</td>
 <td class="fielddoc">
 System Control Block - Debug Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a5cbdc7968b441ac9bc3be938b9faa98d" name="a5cbdc7968b441ac9bc3be938b9faa98d"></a>uint32_t</td>
+<a id="a059c8988a6fe98923b2c0f2475d8409c" name="a059c8988a6fe98923b2c0f2475d8409c"></a>uint32_t</td>
 <td class="fieldname">
 MMFAR</td>
 <td class="fielddoc">
 System Control Block - MemManage Fault Address Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="aee8ac8e55f00f609eea87a02c05b62dd" name="aee8ac8e55f00f609eea87a02c05b62dd"></a>uint32_t</td>
+<a id="abf39de1bc2e8e89f56d9d1981ac408cb" name="abf39de1bc2e8e89f56d9d1981ac408cb"></a>uint32_t</td>
 <td class="fieldname">
 BFAR</td>
 <td class="fielddoc">
 System Control Block - BusFault Address Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="ad2ab4153b2a2a2ae20d920d8c8e2a73b" name="ad2ab4153b2a2a2ae20d920d8c8e2a73b"></a>uint32_t</td>
+<a id="a2b6b6f9b5ec535b4bf23ec587ac23e13" name="a2b6b6f9b5ec535b4bf23ec587ac23e13"></a>uint32_t</td>
 <td class="fieldname">
 AFSR</td>
 <td class="fielddoc">
 System Control Block - Auxiliary Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a7c07458db9cae1be1afcb3ce8b4562fe" name="a7c07458db9cae1be1afcb3ce8b4562fe"></a>uint32_t</td>
+<a id="a37c4714795c50e7eb4060adaab51663f" name="a37c4714795c50e7eb4060adaab51663f"></a>uint32_t</td>
 <td class="fieldname">
 SFSR</td>
 <td class="fielddoc">
 System Control Block - Secure Fault Status Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="aedff16ec4aa66d768cafb2d665ea7902" name="aedff16ec4aa66d768cafb2d665ea7902"></a>uint32_t</td>
+<a id="ae957c2edce8feab441ee2a5ce9afc2d8" name="ae957c2edce8feab441ee2a5ce9afc2d8"></a>uint32_t</td>
 <td class="fieldname">
 SFAR</td>
 <td class="fielddoc">
 System Control Block - Secure Fault Address Register value. </td></tr>
 <tr><td class="fieldtype">
-<a id="a57d628f50f288a4c1bea4e591b928b63" name="a57d628f50f288a4c1bea4e591b928b63"></a>uint32_t</td>
+<a id="a1ac3d19b7470cd5d3296a1c42fd72386" name="a1ac3d19b7470cd5d3296a1c42fd72386"></a>uint32_t</td>
 <td class="fieldname">
 RFSR</td>
 <td class="fielddoc">
 System Control Block - RAS Fault Status Register value. </td></tr>
-</table>
-
-</div>
-</div>
-<a name="structARM__FaultInfo__t_8info" id="structARM__FaultInfo__t_8info"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8info">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.info</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct ARM_FaultInfo_t.info</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"></div><table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="a2af72f100c356273d46284f6fd1dfc08" name="a2af72f100c356273d46284f6fd1dfc08"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8version">ARM_FaultInfo_t.info.version</a></td>
-<td class="fieldname">
-version</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a9a0364b9e99bb480dd25e1f0284c8555" name="a9a0364b9e99bb480dd25e1f0284c8555"></a>struct <a class="el" href="group__Fault__Storage.html#structARM__FaultInfo__t_8info_8content">ARM_FaultInfo_t.info.content</a></td>
-<td class="fieldname">
-content</td>
-<td class="fielddoc">
-</td></tr>
-</table>
-
-</div>
-</div>
-<a name="structARM__FaultInfo__t_8info_8version" id="structARM__FaultInfo__t_8info_8version"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8info_8version">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.info.version</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct ARM_FaultInfo_t.info.version</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"></div><table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="aab846c0e3717a3e7d14af45cab70b44a" name="aab846c0e3717a3e7d14af45cab70b44a"></a>uint8_t</td>
-<td class="fieldname">
-minor</td>
-<td class="fielddoc">
-Fault information structure version: minor, see <a class="el" href="group__Fault__Storage__Macros.html#gafa7f6c005137393af25375ed25a3d90d">ARM_FAULT_FAULT_INFO_VER_MINOR</a>. </td></tr>
-<tr><td class="fieldtype">
-<a id="af1425da40a9f2d21ab702a1c7feae026" name="af1425da40a9f2d21ab702a1c7feae026"></a>uint8_t</td>
-<td class="fieldname">
-major</td>
-<td class="fielddoc">
-Fault information structure version: major, see <a class="el" href="group__Fault__Storage__Macros.html#gad806d6d81404dc3297a9e0097ee41f5e">ARM_FAULT_FAULT_INFO_VER_MAJOR</a>. </td></tr>
-</table>
-
-</div>
-</div>
-<a name="structARM__FaultInfo__t_8info_8content" id="structARM__FaultInfo__t_8info_8content"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structARM__FaultInfo__t_8info_8content">&#9670;&nbsp;</a></span>ARM_FaultInfo_t.info.content</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct ARM_FaultInfo_t.info.content</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"></div><table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="abe7da22b8270e94abfea92115d3b9e09" name="abe7da22b8270e94abfea92115d3b9e09"></a>uint16_t</td>
-<td class="fieldname">
-fault_regs_exist: 1</td>
-<td class="fielddoc">
-Fault registers: 0 - absent; 1 - available. </td></tr>
-<tr><td class="fieldtype">
-<a id="a3e2282a01ae701b1799d5ceeba0d9df1" name="a3e2282a01ae701b1799d5ceeba0d9df1"></a>uint16_t</td>
-<td class="fieldname">
-armv8x_m_main: 1</td>
-<td class="fielddoc">
-Armv8/8.1-M Mainline information: 0 - absent; 1 - available. </td></tr>
-<tr><td class="fieldtype">
-<a id="aa4e096cc0141aae8bf3d2933160012e0" name="aa4e096cc0141aae8bf3d2933160012e0"></a>uint16_t</td>
-<td class="fieldname">
-tz_enabled: 1</td>
-<td class="fielddoc">
-TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled. </td></tr>
-<tr><td class="fieldtype">
-<a id="ad6178aec9b1fd8a2212fc87c9db68ca4" name="ad6178aec9b1fd8a2212fc87c9db68ca4"></a>uint16_t</td>
-<td class="fieldname">
-tz_save_mode: 1</td>
-<td class="fielddoc">
-Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
-<tr><td class="fieldtype">
-<a id="aa32fa2478d16d03202d24bf8410054ac" name="aa32fa2478d16d03202d24bf8410054ac"></a>uint16_t</td>
-<td class="fieldname">
-tz_fault_mode: 1</td>
-<td class="fielddoc">
-Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode. </td></tr>
-<tr><td class="fieldtype">
-<a id="ab4ccde3b9a92cdff55dd8c38df00d08e" name="ab4ccde3b9a92cdff55dd8c38df00d08e"></a>uint16_t</td>
-<td class="fieldname">
-state_context: 1</td>
-<td class="fielddoc">
-State Context: 0 - was not saved; 1 - was saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="a2453a9764d85670260f845e5529cf8b2" name="a2453a9764d85670260f845e5529cf8b2"></a>uint16_t</td>
-<td class="fieldname">
-limit_regs: 1</td>
-<td class="fielddoc">
-MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="ada60f4dec912ed64ef4483ef7f6978ac" name="ada60f4dec912ed64ef4483ef7f6978ac"></a>uint16_t</td>
-<td class="fieldname">
-fault_regs: 1</td>
-<td class="fielddoc">
-Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="aba549a313935295d5c3c369c98797ca7" name="aba549a313935295d5c3c369c98797ca7"></a>uint16_t</td>
-<td class="fieldname">
-secure_fault_regs: 1</td>
-<td class="fielddoc">
-Secure Fault registers: 0 - were not saved; 1 - were saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="a8df986901996973b209ee61f613b64eb" name="a8df986901996973b209ee61f613b64eb"></a>uint16_t</td>
-<td class="fieldname">
-ras_fault_reg: 1</td>
-<td class="fielddoc">
-RAS Fault register: 0 - was not saved; 1 - was saved. </td></tr>
-<tr><td class="fieldtype">
-<a id="a7f005c3fa691e77c52d3297cc2699072" name="a7f005c3fa691e77c52d3297cc2699072"></a>uint16_t</td>
-<td class="fieldname">
-reserved: 6</td>
-<td class="fielddoc">
-Reserved (0) </td></tr>
 </table>
 
 </div>

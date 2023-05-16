@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dfsr_0',['DFSR',['../group__Fault__Storage.html#ae8d2d700d6a9735423a52a48a62b50b6',1,'ARM_FaultInfo_t']]]
+  ['faultregisters_0',['FaultRegisters',['../group__Fault__Storage.html#a5e69b516a93cb63d750ad70e64a3d3a5',1,'ARM_FaultInfo_t']]]
 ];
