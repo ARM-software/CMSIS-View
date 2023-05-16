@@ -27,10 +27,10 @@ and auxiliary functions.
 @{
 */
 
-/** ARM Fault major version used in \ref ARM_FaultInfo_t.info.version major */
+/** ARM Fault major version used in \ref ARM_FaultInfo_t.Version major */
 #define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)
 
-/** ARM Fault minor version used in \ref ARM_FaultInfo_t.info.version minor */
+/** ARM Fault minor version used in \ref ARM_FaultInfo_t.Version minor */
 #define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)
 
 /** @} Fault_Storage_Macros */
