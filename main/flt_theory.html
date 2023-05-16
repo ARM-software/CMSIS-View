@@ -108,32 +108,38 @@ $(document).ready(function(){initNavTree('flt_theory.html',''); initResizable();
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p >This section describes how the <b>Fault</b> component operates and how the fault information can be analyzed.</p>
-<p >The <b>Fault</b> component is implemented in the target application using the software component <b>CMSIS-View:Fault:Storage</b> which adds the source file <em>ARM_FaultStorage.c</em> to the application. This source file provides an <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> function which is used to save the fault information into an uninitialized RAM memory which can then be analyzed on-chip, or on a host computer with usage of a debugger or semihosting if simulator is used, or sent to the Cloud or other remote location for post-processing.</p>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Fault information storage</h2>
-<p >Fault information is stored in an <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure, residing in the uninitialized RAM memory, when <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> function is executed from exception handler.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Fault information analysis</h2>
-<p >To see and analyze the details of a fault, there are a few options:</p><ul>
-<li>Fault information can be decoded and written to the Event Recorder by calling the function <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a> (Event Recorder has to be operational)<br  />
+<p >The <b>Fault</b> component is implemented in the target application using the software component <b>CMSIS-View:Fault:Storage</b> which adds the source file <em>ARM_FaultStorage.c</em> to the application. This source file provides an <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> function which is used to save the fault information into an uninitialized part of the RAM which can then be analyzed on-chip, or on a host computer using a debugger. When using semihosting, cloud storage, or another remote location for storing the log file, you can do post-processing using <a class="el" href="evntlst.html">eventlist</a>.</p>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Fault information storage</h1>
+<p >Fault information is stored in an <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure, residing in uninitialized RAM memory, when the <a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> function is executed from an exception handler.</p>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Fault information analysis</h1>
+<p >To see and analyze the details of a fault, there are the following options:</p><ul>
+<li>Fault information can be decoded and written to the Event Recorder by calling the function <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a> (Event Recorder has to be operational). This is an exemplary output in µVision: <br  />
  <img src="Fault_CM33_EvR_MemManage.png" alt="" class="inline" title="Fault information with Event Recorder"/></li>
-<li>Fault information can be decoded and written to the Standard Output by calling the function <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> (this function is implemented in an user template and can be changed by the user)<br  />
+<li>Fault information can be decoded and written to the standard output by calling the function <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> (this function is implemented in a user template and can be changed by the user): <br  />
  <img src="Fault_STDIO_MemManage.png" alt="" class="inline" title="Fault information with STDIO"/></li>
-<li>Fault information can be inspected in a debug session by viewing it in the Component Viewer<br  />
+<li>Fault information can be inspected in a debug session by viewing it in the Component Viewer (screenshot showing µVision): <br  />
  <img src="Fault_CM33_CV_MemManage.png" alt="" class="inline" title="Fault information with Component Viewer"/></li>
 </ul>
 <h1><a class="anchor" id="flt_req"></a>
 Resource requirements</h1>
-<p ><b>Technical data of Fault component firmware</b></p>
-<p ><b>RAM requirement</b></p>
-<p >The Fault component uses <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure to save information when the fault occurs.</p>
-<p ><a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> size depends on Arm Core for which the code was compiled.</p>
-<p >If the Arm Core contains Fault Registers (e.g. Cortex-M33) then <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure requires <b>144 bytes</b> of uninitialized RAM memory.</p>
-<p >If the Arm Core does not contain Fault Registers (e.g. Cortex-M0) <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure requires 108 bytes of uninitialized RAM memory.</p>
-<p ><b>ROM requirement</b></p>
-<p ><a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> function requires up to <b>0.5 KB</b> of ROM memory.</p>
-<p ><a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a> function requires approximately up to <b>1.5 KB</b> of ROM memory.</p>
-<p ><a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> function requires approximately up to <b>2.5 KB</b> of ROM memory. </p>
+<p >This section contains the the technical data of the Fault component firmware.</p>
+<h2><a class="anchor" id="autotoc_md6"></a>
+RAM</h2>
+<p >The Fault component uses the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure to save information when the fault occurs. The size depends on the Arm Cortex-M core for which the code was compiled:</p>
+<ul>
+<li>If the Arm Cortex-M core contains Fault Registers (e.g. Cortex-M33), the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure requires <b>144 bytes</b> of uninitialized RAM memory.</li>
+<li>If the Arm Cortex-M core does not contain Fault Registers (e.g. Cortex-M0), the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure requires <b>108 bytes</b> of uninitialized RAM memory.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md7"></a>
+ROM</h2>
+<p >The functions of the Fault component require the following amounts of ROM memory:</p>
+<ul>
+<li>The<a class="el" href="group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3">ARM_FaultSave</a> function requires up to <b>0.5 KB</b> of ROM memory.</li>
+<li>The <a class="el" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558">ARM_FaultRecord</a> function requires approximately up to <b>1.5 KB</b> of ROM memory.</li>
+<li>The <a class="el" href="group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691">ARM_FaultPrint</a> function requires approximately up to <b>2.5 KB</b> of ROM memory. </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

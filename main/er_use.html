@@ -107,8 +107,8 @@ $(document).ready(function(){initNavTree('er_use.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Using Event Recorder </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >The following steps explain how to enable views for static information <em>and</em> dynamic events in the µVision debugger. Other tools might use different ways to accomplish this.</p>
-<p ><b>For User Code:</b></p><ol type="1">
+<div class="textblock"><dl class="section note"><dt>Note</dt><dd>The following steps explain how to enable views for static information <em>and</em> dynamic events in the µVision debugger. Other tools might use different ways to accomplish this.</dd></dl>
+<p><b>For User Code:</b></p><ol type="1">
 <li><a class="el" href="er_use.html#Add_Event_Recorder">Add Event Recorder Component</a>.</li>
 <li>[Optional] <a class="el" href="er_use.html#place_uninit_memory">Locate the Event Recorder data to uninitialized memory</a> to avoid overwriting the entries on program reset.</li>
 <li>[Optional] Set the correct <a class="el" href="er_use.html#initial_timestamp">initial time stamp</a>.</li>
@@ -129,16 +129,16 @@ Add Event Recorder Component</h1>
  <img src="SelEventRecorder.png" alt="" class="inline" title="Select Event Recorder"/> <dl class="section note"><dt>Note</dt><dd>Usually, you select the <b>DAP</b> variant. If you are using a simulation model (FastModel or Arm Virtual Hardware), you can select <a class="el" href="er_use.html#er_semihosting">Semihosting</a> to write the Event Recorder data into a file on the PC.</dd></dl>
 </li>
 <li>Include the EventRecorder.h header file and add the event recorder initialization function to the source code: <div class="fragment"><div class="line">  :</div>
-<div class="line">#include &quot;EventRecorder.h&quot;                        // ARM::CMSIS-View:Event Recorder</div>
+<div class="line"><span class="preprocessor">#include &quot;EventRecorder.h&quot;</span>                        <span class="comment">// ARM::CMSIS-View:Event Recorder</span></div>
 <div class="line">  :</div>
-<div class="line">int main (void) {</div>
+<div class="line"><span class="keywordtype">int</span> main (<span class="keywordtype">void</span>) {</div>
 <div class="line">  :</div>
-<div class="line">  HAL_Init();                                     // configure hardware abstraction layer</div>
-<div class="line">  SystemClock_Config();                           // configure system clock</div>
-<div class="line">  MemoryBus_Config();                             // configure external memory bus</div>
-<div class="line">  EventRecorderInitialize (EventRecordAll, 1);    // initialize and start Event Recorder</div>
+<div class="line">  HAL_Init();                                     <span class="comment">// configure hardware abstraction layer</span></div>
+<div class="line">  SystemClock_Config();                           <span class="comment">// configure system clock</span></div>
+<div class="line">  MemoryBus_Config();                             <span class="comment">// configure external memory bus</span></div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1);    <span class="comment">// initialize and start Event Recorder</span></div>
 <div class="line">  :</div>
-<div class="line">  // other application code</div>
+<div class="line">  <span class="comment">// other application code</span></div>
 <div class="line">}</div>
 </div><!-- fragment --></li>
 </ul>
@@ -212,27 +212,27 @@ Event Annotations</h1>
 <li><a class="el" href="group__EventRecorder__Data.html#ga1807e8d9b62b51f862a3d3fe36e611f8">EventRecord4</a> to record up to four 32-bit integer values.</li>
 </ul>
 <p >These <a class="el" href="group__EventRecorder__Data.html">Event Data Recording</a> functions receive as first parameter an <em>id</em> event identifier used for filtering and displaying. The macro <a class="el" href="group__EventRecorder__Data.html#ga44fa52e2007e535753fd4ba59b84d55d">EventID</a> may be used to compose <em>id</em> values to include <em>level</em> and <em>component</em> numbers.</p>
-<p ><b>Example:</b> </p><div class="fragment"><div class="line">#include &quot;EventRecorder.h&quot;                       // ARM::CMSIS-View:Event Recorder</div>
+<p ><b>Example:</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;EventRecorder.h&quot;</span>                       <span class="comment">// ARM::CMSIS-View:Event Recorder</span></div>
 <div class="line"> </div>
-<div class="line">int some_error = 0;                              // error flag</div>
-<div class="line">char string[10] = &quot;MyTest&quot;;                      // some test string</div>
+<div class="line"><span class="keywordtype">int</span> some_error = 0;                              <span class="comment">// error flag</span></div>
+<div class="line"><span class="keywordtype">char</span> <span class="keywordtype">string</span>[10] = <span class="stringliteral">&quot;MyTest&quot;</span>;                      <span class="comment">// some test string</span></div>
 <div class="line"> </div>
-<div class="line">void MyFunction (int parameter) {</div>
-<div class="line">  EventRecord2 (1+EventLevelAPI, parameter, 0);              // Event at Start</div>
+<div class="line"><span class="keywordtype">void</span> MyFunction (<span class="keywordtype">int</span> parameter) {</div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (1+<a class="code hl_define" href="group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06" title="API function call.">EventLevelAPI</a>, parameter, 0);              <span class="comment">// Event at Start</span></div>
 <div class="line">    ;</div>
-<div class="line">  if (some_error)  {</div>
-<div class="line">    EventRecord2 (2+EventLevelError, 0, 0);                  // Event at Error</div>
-<div class="line">    return;</div>
+<div class="line">  <span class="keywordflow">if</span> (some_error)  {</div>
+<div class="line">    <a class="code hl_function" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (2+<a class="code hl_define" href="group__EventRecorder__leveldefs.html#ga09458e6018228f12b87671342e77545c" title="Run-time error in the component.">EventLevelError</a>, 0, 0);                  <span class="comment">// Event at Error</span></div>
+<div class="line">    <span class="keywordflow">return</span>;</div>
 <div class="line">  }</div>
-<div class="line">  EventRecordData (3+EventLevelOp, string, sizeof(string));  // Event at Finish</div>
-<div class="line">  return;</div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (3+<a class="code hl_define" href="group__EventRecorder__leveldefs.html#ga45955a55988126e124b2c6595812c9f4" title="Internal operation.">EventLevelOp</a>, <span class="keywordtype">string</span>, <span class="keyword">sizeof</span>(<span class="keywordtype">string</span>));  <span class="comment">// Event at Finish</span></div>
+<div class="line">  <span class="keywordflow">return</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">int main (void) {</div>
-<div class="line">  EventRecorderInitialize (EventRecordAll, 1);  // initialize and start Event Recorder</div>
+<div class="line"><span class="keywordtype">int</span> main (<span class="keywordtype">void</span>) {</div>
+<div class="line">  <a class="code hl_function" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23">EventRecorderInitialize</a> (<a class="code hl_define" href="group__EventRecorder__recdefs.html#ga974d33703cba889a6597cb7e6f7a1a49" title="Record events with any level.">EventRecordAll</a>, 1);  <span class="comment">// initialize and start Event Recorder</span></div>
 <div class="line"> </div>
 <div class="line">  MyFunction (0x10);</div>
-<div class="line">  some_error = 1;                               // set error flag</div>
+<div class="line">  some_error = 1;                               <span class="comment">// set error flag</span></div>
 <div class="line">  MyFunction (0x60);</div>
 <div class="line">}</div>
 </div><!-- fragment --><p >When executing this example in the µVision debugger, use the menu command <b>View - Analysis Windows - Event Recorder</b> to open the Event Recorder window. This should show the following output:</p>
@@ -240,22 +240,22 @@ Event Annotations</h1>
 <h1><a class="anchor" id="Format_Event_Information"></a>
 Format Event Information</h1>
 <p >You may create an <a class="el" href="SCVD_Format.html">*.SCVD (Software Component View Description) file</a> to format the event output so that matches the application. The event output is created using the <a class="el" href="elem_events.html">/component_viewer/events</a>.</p>
-<p ><b>SCVD file example</b> </p><div class="fragment"><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div>
+<p ><b>SCVD file example</b> </p><div class="fragment"><div class="line">&lt;?<span class="keyword">xml</span> <span class="keyword">version</span>=<span class="stringliteral">&quot;1.0&quot;</span> <span class="keyword">encoding</span>=<span class="stringliteral">&quot;utf-8&quot;</span>?&gt;</div>
 <div class="line"> </div>
-<div class="line">&lt;component_viewer schemaVersion=&quot;0.1&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xs:noNamespaceSchemaLocation=&quot;Component_Viewer.xsd&quot;&gt;</div>
-<div class="line">  &lt;component name=&quot;MyExample&quot; version=&quot;1.0.0&quot;/&gt;    &lt;!-- name and version of the component  --&gt;</div>
+<div class="line">&lt;<span class="keywordtype">component_viewer</span> <span class="keyword">schemaVersion</span>=<span class="stringliteral">&quot;0.1&quot;</span> <span class="keyword">xmlns:xs</span>=<span class="stringliteral">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="keyword">xs:noNamespaceSchemaLocation</span>=<span class="stringliteral">&quot;Component_Viewer.xsd&quot;</span>&gt;</div>
+<div class="line">  &lt;<span class="keywordtype">component</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;MyExample&quot;</span> <span class="keyword">version</span>=<span class="stringliteral">&quot;1.0.0&quot;</span>/&gt;    <span class="comment">&lt;!-- name and version of the component  --&gt;</span></div>
 <div class="line"> </div>
-<div class="line">    &lt;events&gt;</div>
-<div class="line">      &lt;group name=&quot;My Events Group&quot;&gt;</div>
-<div class="line">         &lt;component name=&quot;MyApp&quot;      brief=&quot;My Application&quot;    no=&quot;0x00&quot; prefix=&quot;EvrNetMM_&quot;    info=&quot;Network - System - Dynamic Memory Management&quot;/&gt;</div>
-<div class="line">      &lt;/group&gt;</div>
+<div class="line">    &lt;<span class="keywordtype">events</span>&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">group</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;My Events Group&quot;</span>&gt;</div>
+<div class="line">         &lt;<span class="keywordtype">component</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;MyApp&quot;</span>      <span class="keyword">brief</span>=<span class="stringliteral">&quot;My Application&quot;</span>    <span class="keyword">no</span>=<span class="stringliteral">&quot;0x00&quot;</span> <span class="keyword">prefix</span>=<span class="stringliteral">&quot;EvrNetMM_&quot;</span>    <span class="keyword">info</span>=<span class="stringliteral">&quot;Network - System - Dynamic Memory Management&quot;</span>/&gt;</div>
+<div class="line">      &lt;/<span class="keywordtype">group</span>&gt;</div>
 <div class="line"> </div>
-<div class="line">      &lt;event id=&quot;1&quot; level=&quot;API&quot;   property=&quot;MyFunction&quot;        value=&quot;parameter=%x[val1]&quot;     info=&quot;Event on start of MyFunction&quot;  /&gt;</div>
-<div class="line">      &lt;event id=&quot;2&quot; level=&quot;Error&quot; property=&quot;MyFunctionError&quot;                                  info=&quot;Event on error in MyFunction&quot; /&gt;</div>
-<div class="line">      &lt;event id=&quot;3&quot; level=&quot;Op&quot;    property=&quot;MyFunctionProcess&quot; value=&quot;string=%t[val1]&quot;        info=&quot;Event on operation in MyFunction&quot;  /&gt;</div>
-<div class="line">    &lt;/events&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">event</span> <span class="keyword">id</span>=<span class="stringliteral">&quot;1&quot;</span> <span class="keyword">level</span>=<span class="stringliteral">&quot;API&quot;</span>   <span class="keyword">property</span>=<span class="stringliteral">&quot;MyFunction&quot;</span>        <span class="keyword">value</span>=<span class="stringliteral">&quot;parameter=%x[val1]&quot;</span>     <span class="keyword">info</span>=<span class="stringliteral">&quot;Event on start of MyFunction&quot;</span>  /&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">event</span> <span class="keyword">id</span>=<span class="stringliteral">&quot;2&quot;</span> <span class="keyword">level</span>=<span class="stringliteral">&quot;Error&quot;</span> <span class="keyword">property</span>=<span class="stringliteral">&quot;MyFunctionError&quot;</span>                                  <span class="keyword">info</span>=<span class="stringliteral">&quot;Event on error in MyFunction&quot;</span> /&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">event</span> <span class="keyword">id</span>=<span class="stringliteral">&quot;3&quot;</span> <span class="keyword">level</span>=<span class="stringliteral">&quot;Op&quot;</span>    <span class="keyword">property</span>=<span class="stringliteral">&quot;MyFunctionProcess&quot;</span> <span class="keyword">value</span>=<span class="stringliteral">&quot;string=%t[val1]&quot;</span>        <span class="keyword">info</span>=<span class="stringliteral">&quot;Event on operation in MyFunction&quot;</span>  /&gt;</div>
+<div class="line">    &lt;/<span class="keywordtype">events</span>&gt;</div>
 <div class="line"> </div>
-<div class="line">&lt;/component_viewer&gt;</div>
+<div class="line">&lt;/<span class="keywordtype">component_viewer</span>&gt;</div>
 </div><!-- fragment --><p >In the µVision debugger, this <a class="el" href="SCVD_Format.html">*.SCVD file</a> is specified in the dialog <b>Options for Target - Debug - Manage Component Viewer Description Files</b>. Click on <b>Add Component Viewer Description File</b> and add the related *.SCVD file.</p>
 <p ><img src="Manage_SCVD_Files.png" alt="" class="inline" title="Manage *.SCVD files"/></p>
 <p >The Event Recorder displays the events as shown below.</p>
@@ -287,14 +287,14 @@ Event filtering</h1>
 Semihosting</h1>
 <p >Semihosting is a mechanism that enables code running on an Arm target to communicate and use the input/output facilities on a host computer that is running a debugger.</p>
 <p >Examples of these facilities include keyboard input, screen output, and disk I/O. For example, you can use this mechanism to enable functions in the C library, such as <code>printf</code> and <code>scanf</code>, to use the screen and keyboard of the host instead of having a screen and keyboard on the target system.</p>
-<p >With the Event Recorder, you can use semihosting with models to write the events into a file on your PC. This works with Arm FastModels, Arm Fixed Virtual Platforms, and Arm Virtual Hardware alike.</p>
-<p >The file that is written is called <em>EventRecorder.log</em> and is a binary file that is available in the root directory of the µVision project. Use <a class="el" href="evntlst.html">eventlist</a> to read and decode the binary data.</p>
-<p >While the file is written to the hard drive of your PC, you can still use the Event Recorder window in µVision to see the events coming in.</p>
+<p >With the Event Recorder, you can use semihosting with models to write the events into a file on your PC. This works with <a href="https://developer.arm.com/Tools%20and%20Software/Fast%20Models">Arm Fast Models</a>, <a href="https://developer.arm.com/Tools%20and%20Software/Fixed%20Virtual%20Platforms">Arm Fixed Virtual Platforms</a>, and <a href="https://www.arm.com/products/development-tools/simulation/virtual-hardware">Arm Virtual Hardware</a> alike.</p>
+<p >The file that is written is called <em>EventRecorder.log</em> and is a binary file that is available in the root directory of your project. Use <a class="el" href="evntlst.html">eventlist</a> to read and decode the binary data.</p>
 <dl class="section note"><dt>Note</dt><dd><ul>
-<li>The semihosting variant will not work with real target hardware. Instead, program execution will hit a breakpoint and stop there.</li>
 <li>Your model needs to be configured for semihosting (refer to the documentation of your modeling technology on how to do that).</li>
 <li>You can specify a different name for the log file by specifying a define called <code>EVENT_LOG_FILENAME</code>.</li>
-<li>Once you start a new debug session, the log file will be overwritten. While in debug, new messages will be appended to the currently open log file. </li>
+<li>In µVision, once you start a new debug session, the log file will be overwritten. While in debug, new messages will be appended to the currently open log file.</li>
+<li>In µVision, the semihosting variant will not work with real target hardware. Instead, program execution will hit a breakpoint and stop there.</li>
+<li>In µVision, you can still use the Event Recorder window in µVision to see the events coming in while the file is written to the hard drive of your PC. </li>
 </ul>
 </dd></dl>
 </div></div><!-- contents -->

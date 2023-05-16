@@ -151,25 +151,13 @@ Add Fault Storage (and Record) Component</h1>
 <div class="line">}</div>
 </div><!-- fragment --><h1><a class="anchor" id="flt_place_uninit_memory"></a>
 Locate fault information in uninitialized memory</h1>
-<p >For preservation of the saved fault information over system reset, RAM for the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure should be placed to a memory region that is not cleared (or initialized) by a system restart (reset).</p>
+<p >For preservation of the saved fault information after system reset, RAM for the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure should be placed to a memory region that is not cleared (or initialized) by a system restart (reset).</p>
 <dl class="section note"><dt>Note</dt><dd>Make sure that you use normal, non-cacheable, and non-shareable memory for fault information data.</dd></dl>
 <h2><a class="anchor" id="flt_create_mem"></a>
 Create memory region</h2>
-<p >The <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure can be located in uninitialized RAM by using µVision or by using a <a class="el" href="flt_use.html#flt_linker_script">linker script</a>.</p>
-<h3><a class="anchor" id="autotoc_md4"></a>
-Using µVision</h3>
-<p >To setup this uninitialized RAM in the µVision, follow the steps below:</p>
-<ol type="1">
-<li>In the <b>Options for Target</b> dialog, define a Read/Write Memory Area that is not initialized, by splitting available internal RAM into 2 areas.<br  />
- For example, split IRAM1 into two regions. Reduce size of IRAM1 to 0x800 and create an IRAM2 area with remaining of the available RAM. Enable <b>NoInit</b> for the IRAM1 region.<br  />
- <img src="Fault_create_iram2.png" alt="" class="inline" title="Create RAM area"/></li>
-<li>In the <b>Options for Component Class 'CMSIS-View'</b> dialog (opens with right-click on <b>ARM_FaultStorage.c</b> in the <b>Project</b> window), on the <b>Memory</b> tab, assign <b>Zero Initialized Data</b> to the IRAM1 region.<br  />
- <img src="Fault_memory_location.png" alt="" class="inline" title="Create RAM area"/></li>
-<li>Build the application to place the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure to uninitialized RAM.</li>
-</ol>
+<p >The <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure can be located in uninitialized RAM by using a <a class="el" href="flt_use.html#flt_linker_script">linker script</a> file or the <a class="el" href="flt_use.html#flt_uv_gui">µVision GUI</a>.</p>
 <h3><a class="anchor" id="flt_linker_script"></a>
-Using Linker Script</h3>
-<p >Documentation about <a href="https://developer.arm.com/documentation/101754/latest/armlink-Reference/Scatter-loading-Features" target="_blank">linker script</a>.</p>
+Using a linker script</h3>
 <p >You can use a linker script with specifying location for <b>.bss.noinit</b> section as <b>UNINIT</b> section like below:</p>
 <div class="fragment"><div class="line">// Scatter file</div>
 <div class="line"> </div>
@@ -181,9 +169,21 @@ Using Linker Script</h3>
 <div class="line"> </div>
 <div class="line">// ...</div>
 </div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><ul>
-<li>If the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure is not located in uninitialized memory, then after system reset, any saved fault information will be cleared and thus saved fault information will be lost. </li>
+<li>If the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure is not located in uninitialized memory, then after system reset, any saved fault information will be cleared and thus saved fault information will be lost.</li>
+<li>For more information about Arm Compiler scatter files, consult the <a href="https://developer.arm.com/documentation/101754/latest/armlink-Reference/Scatter-loading-Features" target="_blank">documentation</a>.</li>
 </ul>
 </dd></dl>
+<h3><a class="anchor" id="flt_uv_gui"></a>
+Using the µVision GUI</h3>
+<p >To setup this uninitialized RAM in the µVision, follow the steps below:</p>
+<ol type="1">
+<li>In the <b>Options for Target</b> dialog, define a Read/Write Memory Area that is not initialized, by splitting available internal RAM into 2 areas.<br  />
+ For example, split IRAM1 into two regions. Reduce size of IRAM1 to 0x800 and create an IRAM2 area with remaining of the available RAM. Enable <b>NoInit</b> for the IRAM1 region.<br  />
+ <img src="Fault_create_iram2.png" alt="" class="inline" title="Create RAM area"/></li>
+<li>In the <b>Options for Component Class 'CMSIS-View'</b> dialog (opens with right-click on <b>ARM_FaultStorage.c</b> in the <b>Project</b> window), on the <b>Memory</b> tab, assign <b>Zero Initialized Data</b> to the IRAM1 region.<br  />
+ <img src="Fault_memory_location.png" alt="" class="inline" title="Create RAM area"/></li>
+<li>Build the application to place the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure to uninitialized RAM. </li>
+</ol>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

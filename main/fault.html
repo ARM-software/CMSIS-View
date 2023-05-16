@@ -110,11 +110,15 @@ $(document).ready(function(){initNavTree('fault.html',''); initResizable(); });
 <div class="textblock"><p ><a class="anchor" id="md_src_Fault"></a> </p>
 <h1><a class="anchor" id="about_fault"></a>
 Overview</h1>
-<p >The software components under <b>CMSIS-View:Fault</b> provide infrastructure and <a href="modules.html">API (function calls)</a> to store, record, and analyze the Cortex-M Exception Fault information. Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, or division by zero.</p>
-<p >The component <b>CMSIS-View:Fault:Storage</b> can be used to save an exception fault for later analysis.</p>
-<p >The component <b>CMSIS-View:Fault:Record</b> decodes saved exception fault information and records this information using the <b>Event Recorder</b>.</p>
+<p >The software components under <b>CMSIS-View:Fault</b> provide infrastructure and <a href="modules.html">API (function calls)</a> to store, record, and analyze the Cortex-M Exception Fault information. Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, or division by zero:</p>
+<ul>
+<li>The component <b>CMSIS-View:Fault:Storage</b> can be used to save an exception fault for later analysis.</li>
+<li>The component <b>CMSIS-View:Fault:Record</b> decodes a saved exception fault and records this information using the <b>Event Recorder</b>.</li>
+</ul>
 <p >A typical execution flow is shown in the diagram below.</p>
 <p ><img src="ArmFault.png" alt="" class="inline" title="Exception Fault Analysis"/></p>
+<h2><a class="anchor" id="content_fault"></a>
+Content</h2>
 <ul>
 <li><a class="el" href="flt_theory.html">Theory of operation</a> explains in details how the Fault component stores fault information and how it can be used for further analysis.</li>
 <li><a class="el" href="flt_use.html">Using Fault component</a> provides instructions on how to enable Fault component in a project. </li>

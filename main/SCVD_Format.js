@@ -1,9 +1,9 @@
 var SCVD_Format =
 [
-    [ "SCVD File Validation", "SCVD_Format.html#scvd_validate", null ],
-    [ "Using SCVD Files in a Debugger", "SCVD_Format.html#scvd_in_debug", null ],
-    [ "SCVD Files in Software Packs", "SCVD_Format.html#scvd_in_packs", null ],
-    [ "XML Elements", "xml_elements.html", "xml_elements" ],
+    [ "SCVD file validation", "SCVD_Format.html#scvd_validate", null ],
+    [ "Using SCVD files in a debugger", "SCVD_Format.html#scvd_in_debug", null ],
+    [ "SCVD files in software packs", "SCVD_Format.html#scvd_in_packs", null ],
+    [ "XML elements", "xml_elements.html", "xml_elements" ],
     [ "Symbol Access", "Symbol_Access.html", null ],
     [ "Data types", "data_type.html", [
       [ "Scalar Data Types", "data_type.html#scalar_data_type", null ],
@@ -14,9 +14,9 @@ var SCVD_Format =
       [ "Numeric Constants", "scvd_expression.html#numeric_constant", null ],
       [ "Enumerator Values", "scvd_expression.html#enumerator", null ],
       [ "Variables", "scvd_expression.html#expr_variable", null ],
-      [ "Predefined Variables", "scvd_expression.html#predefined_variable", null ]
+      [ "Predefined variables", "scvd_expression.html#predefined_variable", null ]
     ] ],
-    [ "Built-in Functions", "builtin_function.html", [
+    [ "Built-in functions", "builtin_function.html", [
       [ "__CalcMemUsed", "builtin_function.html#__CalcMemUsed", null ],
       [ "__FindSymbol", "builtin_function.html#__FindSymbol", null ],
       [ "__GetRegVal", "builtin_function.html#__GetRegVal", null ],
@@ -24,7 +24,7 @@ var SCVD_Format =
       [ "__Offset_of", "builtin_function.html#__Offset_of", null ],
       [ "__size_of", "builtin_function.html#__size_of", null ]
     ] ],
-    [ "Value Output", "value_output.html", [
+    [ "Value output", "value_output.html", [
       [ "Format Specifiers", "value_output.html#format_specifiers", null ],
       [ "Examples", "value_output.html#format_examples", [
         [ "%d, %x, %T format specifier", "value_output.html#d_spec", null ],

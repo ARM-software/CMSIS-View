@@ -34,8 +34,8 @@ var NAVTREE =
     ] ],
     [ "eventlist", "evntlst.html", [
       [ "Overview", "evntlst.html#about_evntlst", null ],
-      [ "Analyze Events", "evntlst.html#autotoc_md0", [
-        [ "Adding Context", "evntlst.html#autotoc_md1", null ]
+      [ "Analyze Events", "evntlst.html#autotoc_md2", [
+        [ "Adding Context", "evntlst.html#autotoc_md3", null ]
       ] ]
     ] ],
     [ "Component Viewer", "cmp_viewer.html", [
@@ -44,7 +44,7 @@ var NAVTREE =
         [ "Static Component Information", "cmp_viewer.html#cv_static_information", null ]
       ] ]
     ] ],
-    [ "SCVD File Format", "SCVD_Format.html", "SCVD_Format" ],
+    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ],
     [ "Exception Fault Analysis", "fault.html", "fault" ],
     [ "Examples", "ExampleProjects.html", "ExampleProjects" ],
     [ "API Reference", "modules.html", "modules" ]
@@ -53,7 +53,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"ExampleProjects.html"
+"ExampleProjects.html",
+"value_output.html#t_spec"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

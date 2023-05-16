@@ -8,7 +8,10 @@ var evr =
         [ "Configure for targets without DWT Cycle Counter", "er_theory.html#noDWT", null ],
         [ "DWT Cycle Counter with µVision simulator", "er_theory.html#simulation", null ]
       ] ],
-      [ "Resource requirements", "er_theory.html#er_req", null ]
+      [ "Resource requirements", "er_theory.html#er_req", [
+        [ "Technical data of Event Recorder firmware", "er_theory.html#autotoc_md0", null ],
+        [ "Usage of records by Event Recorder functions", "er_theory.html#autotoc_md1", null ]
+      ] ]
     ] ],
     [ "Using Event Recorder", "er_use.html", [
       [ "Add Event Recorder Component", "er_use.html#Add_Event_Recorder", null ],

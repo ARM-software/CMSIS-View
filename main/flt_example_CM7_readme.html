@@ -111,9 +111,9 @@ $(document).ready(function(){initNavTree('flt_example_CM7_readme.html',''); init
 <p >The application allows triggering of specific faults upon which the fault information is saved and system is reset. When system restarts the fault information is output via the <b>Event Recorder</b>.</p>
 <p >The fault information can also be inspected with <b>Component Viewer</b> in a debug session.</p>
 <dl class="section note"><dt>Note</dt><dd>This example runs on the <b>Arm Virtual Hardware</b> simulator and does not require any hardware.</dd></dl>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Prerequisites</h1>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Software:</h2>
 <ul>
 <li><a href="https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/tag/1.6.0"><b>CMSIS-Toolbox v1.6.0</b></a> or newer</li>
@@ -124,7 +124,7 @@ Software:</h2>
 </li>
 <li><a href="https://github.com/ARM-software/CMSIS-View/releases/tag/tools%2Feventlist%2F1.1.0"><b>eventlist v1.1.0</b></a> or newer</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md10"></a>
 CMSIS Packs:</h2>
 <ul>
 <li><p class="startli">Required packs:</p><ul>
@@ -137,7 +137,7 @@ CMSIS Packs:</h2>
 <div class="line">cpackget add -f missing_packs_list.txt</div>
 </div><!-- fragment --> </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 Build</h1>
 <ol type="1">
 <li>Use the <code>csolution</code> command to create <code>.cprj</code> project files: <div class="fragment"><div class="line">csolution convert -s Fault.csolution.yml</div>
@@ -145,9 +145,9 @@ Build</h1>
 <li>Use the <code>cbuild</code> command to create executable files: <div class="fragment"><div class="line">cbuild Fault.Debug+VHT_MPS2_Cortex-M7.cprj</div>
 </div><!-- fragment --> </li>
 </ol>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Run</h1>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 AVH Target</h2>
 <p >Execute the following steps:</p><ul>
 <li>run the AVH model from the command line by executing the following command: <div class="fragment"><div class="line">VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf</div>
@@ -165,7 +165,7 @@ The generated file <code>EventRecorder.log</code> contains the events that were 
 <li>5: trigger the undefined instruction Usage fault</li>
 <li>6: trigger the divide by 0 Usage fault</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Running the example in the uVision</h2>
 <ul>
 <li>open <code>Fault.Debug+VHT_MPS2_Cortex-M7.cprj</code> with the <b>uVision</b></li>
@@ -183,7 +183,7 @@ Running the example in the uVision</h2>
 <li>you can see the events recorded by opening <b>View</b> - <b>Analysis Windows</b> - <b>Event Recorder</b></li>
 <li>you can see the state of the recorded fault by opening <b>View</b> - <b>Watch Windows</b> - <b>Fault</b></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Analysis</h1>
 <p >To analyze the result <code>eventlist</code> utility is needed, copy the executable <code>eventlist</code> file to the same folder where <code>EventRecorder.log</code> is located.</p>
 <p >To process <code>EventRecorder.log</code> file with the <code>eventlist</code> utility in <b>Windows Command Prompt</b> (cmd.exe) execute the following command: </p><div class="fragment"><div class="line">eventlist -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.2.0\Fault\ARM_Fault.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.2.0\EventRecorder\EventRecorder.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS\5.9.0\CMSIS\RTOS2\RTX\RTX5.scvd EventRecorder.log</div>

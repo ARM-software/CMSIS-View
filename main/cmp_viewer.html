@@ -127,7 +127,7 @@ Component Viewer Usage Example</h1>
 <li>Use the µVision debugger windows as described in <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a>.</li>
 </ol>
 <p ><b>For Pre-annotated software components:</b></p>
-<p >The software packs for MDK-Middleware, CMSIS, CMSIS-FreeRTOS already contain the relevant *.SCVD files.</p>
+<p >The software packs for MDK-Middleware, CMSIS, and CMSIS-FreeRTOS already contain the relevant *.SCVD files.</p>
 <ul>
 <li>Add the SCVD file of the desired software component to µVision as described in <a href="https://www.keil.com/support/man/docs/uv4/uv4_ca_manage_scvd.htm" target="_blank"><b>Manage Component Viewer Description Files</b></a>.</li>
 <li>Use the µVision debugger windows as described in <a href="https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm" target="_blank"><b>Component Viewer</b></a>.</li>
@@ -137,27 +137,28 @@ Component Viewer Usage Example</h1>
 Static Component Information</h2>
 <p >The <a class="el" href="SCVD_Format.html">*.SCVD file</a> can be used to format static information of the application using the <a class="el" href="elem_objects.html">/component_viewer/objects</a>.</p>
 <p >Example code that is stored in the file <b>MyTest.c</b> (the file name is important for static variables).</p>
-<div class="fragment"><div class="line">static int some_error = 1;</div>
-<div class="line">char string[10] = &quot;MyTest&quot;;</div>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keywordtype">int</span> some_error = 1;</div>
+<div class="line"><span class="keywordtype">char</span> <span class="keywordtype">string</span>[10] = <span class="stringliteral">&quot;MyTest&quot;</span>;</div>
 </div><!-- fragment --><p >The following <b>MyTest.scvd</b> file reads static program information from the variables in the above code snippet:</p>
-<div class="fragment"><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div>
+<div class="fragment"><div class="line">&lt;?<span class="keyword">xml</span> <span class="keyword">version</span>=<span class="stringliteral">&quot;1.0&quot;</span> <span class="keyword">encoding</span>=<span class="stringliteral">&quot;utf-8&quot;</span>?&gt;</div>
 <div class="line"> </div>
-<div class="line">&lt;component_viewer schemaVersion=&quot;0.1&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xs:noNamespaceSchemaLocation=&quot;Component_Viewer.xsd&quot;&gt;</div>
-<div class="line">  &lt;component name=&quot;MyExample&quot; version=&quot;1.0.0&quot;/&gt;    &lt;!-- name and version of the component  --&gt;</div>
+<div class="line">&lt;<span class="keywordtype">component_viewer</span> <span class="keyword">schemaVersion</span>=<span class="stringliteral">&quot;0.1&quot;</span> <span class="keyword">xmlns:xs</span>=<span class="stringliteral">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="keyword">xs:noNamespaceSchemaLocation</span>=<span class="stringliteral">&quot;Component_Viewer.xsd&quot;</span>&gt;</div>
+<div class="line">  &lt;<span class="keywordtype">component</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;MyExample&quot;</span> <span class="keyword">version</span>=<span class="stringliteral">&quot;1.0.0&quot;</span>/&gt;    <span class="comment">&lt;!-- name and version of the component  --&gt;</span></div>
 <div class="line">  </div>
-<div class="line">  &lt;objects&gt;</div>
-<div class="line">    &lt;object name=&quot;MyProgram&quot;&gt;</div>
-<div class="line">      &lt;read name=&quot;error_val&quot;   type=&quot;int32_t&quot; symbol=&quot;MyTest.c/some_error&quot;   /&gt;</div>
-<div class="line">      &lt;read name=&quot;string_val&quot;  type=&quot;int8_t&quot;  symbol=&quot;string&quot;  size=&quot;10&quot;     /&gt;</div>
-<div class="line">      &lt;out name=&quot;MyProgram&quot;&gt;</div>
-<div class="line">        &lt;item property=&quot;some_error&quot; value=&quot;%d[error_val]&quot; /&gt; </div>
-<div class="line">        &lt;item property=&quot;string&quot;     value=&quot;%t[string_val]&quot; /&gt; </div>
-<div class="line">      &lt;/out&gt;</div>
-<div class="line">    &lt;/object&gt;</div>
-<div class="line">  &lt;/objects&gt;</div>
+<div class="line">  &lt;<span class="keywordtype">objects</span>&gt;</div>
+<div class="line">    &lt;<span class="keywordtype">object</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;MyProgram&quot;</span>&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">read</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;error_val&quot;</span>   <span class="keyword">type</span>=<span class="stringliteral">&quot;int32_t&quot;</span> <span class="keyword">symbol</span>=<span class="stringliteral">&quot;MyTest.c/some_error&quot;</span>   /&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">read</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;string_val&quot;</span>  <span class="keyword">type</span>=<span class="stringliteral">&quot;int8_t&quot;</span>  <span class="keyword">symbol</span>=<span class="stringliteral">&quot;string&quot;</span>  <span class="keyword">size</span>=<span class="stringliteral">&quot;10&quot;</span>     /&gt;</div>
+<div class="line">      &lt;<span class="keywordtype">out</span> <span class="keyword">name</span>=<span class="stringliteral">&quot;MyProgram&quot;</span>&gt;</div>
+<div class="line">        &lt;<span class="keywordtype">item</span> <span class="keyword">property</span>=<span class="stringliteral">&quot;some_error&quot;</span> <span class="keyword">value</span>=<span class="stringliteral">&quot;%d[error_val]&quot;</span> /&gt; </div>
+<div class="line">        &lt;<span class="keywordtype">item</span> <span class="keyword">property</span>=<span class="stringliteral">&quot;string&quot;</span>     <span class="keyword">value</span>=<span class="stringliteral">&quot;%t[string_val]&quot;</span> /&gt; </div>
+<div class="line">      &lt;/<span class="keywordtype">out</span>&gt;</div>
+<div class="line">    &lt;/<span class="keywordtype">object</span>&gt;</div>
+<div class="line">  &lt;/<span class="keywordtype">objects</span>&gt;</div>
 <div class="line">  </div>
-<div class="line">&lt;/component_viewer&gt;</div>
-</div><!-- fragment --><p >In the µVision Debugger this <a class="el" href="SCVD_Format.html">*.SCVD file</a> is specified in the dialog <b>Options for Target -&gt; Debug -&gt; Manage Component Viewer Description Files</b>. Click on <b>Add Component Viewer Description File</b> and add the related *.SCVD file.</p>
+<div class="line">&lt;/<span class="keywordtype">component_viewer</span>&gt;</div>
+</div><!-- fragment --><p ><b>Adding the file in the µVision debugger</b></p>
+<p >In the µVision debugger, this <a class="el" href="SCVD_Format.html">*.SCVD file</a> is specified in the dialog <b>Options for Target -&gt; Debug -&gt; Manage Component Viewer Description Files</b>. Click on <b>Add Component Viewer Description File</b> and add the related *.SCVD file.</p>
 <p ><img src="Manage_MyTest_SCVD.png" alt="" class="inline" title="Manage *.SCVD files"/></p>
 <p >Using the SCVD file, µVision debugger shows static information about the program. The related view opens with <b>View - Watch Windows - MyProgram</b>.</p>
 <p ><img src="StaticOutput.png" alt="" class="inline" title=""Event Recorder output formatted with *.SCVD file""/> </p>

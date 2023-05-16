@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('evntlst.html',''); initResizable(); })
 Overview</h1>
 <p >Eventlist is a command line tool for processing Event Recorder data stored to a log file.</p>
 <p >The utility is a Go application that is available for all major operating systems and is run from the command line. Refer to the <a href="https://github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist">source code</a> for more information including the invocation details.</p>
-<h1><a class="anchor" id="autotoc_md0"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Analyze Events</h1>
 <p >It is used in the example project <a class="el" href="scvd_evt_stat.html">SCVD Event Statistics</a>. Build and run the example. Then run <code>eventlist -s EventRecorder.log</code> in a terminal to create the human readable output:</p>
 <div class="fragment"><div class="line">   Start/Stop <span class="keyword">event</span> statistic</div>
@@ -135,7 +135,7 @@ Analyze Events</h1>
 <div class="line">C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67372s</div>
 <div class="line">      Min: Start: 0.00000000 val1=0x10004d43, val2=0x00000057 Stop: 180.67371888 val1=0x10004d43, val2=0x00000062</div>
 <div class="line">      Max: Start: 0.00000000 val1=0x10004d43, val2=0x00000057 Stop: 180.67371888 val1=0x10004d43, val2=0x00000062</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md1"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
 Adding Context</h2>
 <p >When adding the AXF file and the <a href="https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html">SCVD file</a> to the <code>eventlist</code> command, the context of the program is shown.</p>
 <p >Run <code>eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I ./EventRecorder.scvd ./EventRecorder.log</code> in a terminal window. The output should look like the following:</p>

@@ -168,9 +168,9 @@ Event id</h1>
 </ul>
 <h1><a class="anchor" id="er_config"></a>
 Configuration</h1>
-<p >Selecting the software component <b>CMSIS-View:Event Recorder</b> to a project will add the file <em>EventRecorderConf.h</em> that is used to define the configuration parameters of the <b>Event Recorder</b>. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html" target="_blank">Configuration Wizard Annotations</a>. For example, µVision shows a graphical representation of the settings:</p>
-<p ><img src="config_wizard.png" alt="" class="inline" title="EventRecorderConf.h in Configuration Wizard View"/> <br  />
-</p>
+<p >Adding the software component <b>CMSIS-View:Event Recorder</b> to a project will copy the file <em>EventRecorderConf.h</em> into the project that is used to define the configuration parameters of the <b>Event Recorder</b>. It uses <a href="https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/configWizard.html">Configuration Wizard Annotations</a>.</p>
+<p >For example, IDEs can show a graphical representation of the settings:</p>
+<p ><img src="config_wizard.png" alt="" class="inline" title="EventRecorderConf.h in Configuration Wizard View"/> &#160;</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Option   </th><th class="markdownTableHeadNone">#define   </th><th class="markdownTableHeadNone">Description    </th></tr>
@@ -227,38 +227,41 @@ DWT Cycle Counter with µVision simulator</h2>
 <div class="line">DWT_CYCCNT()</div>
 </div><!-- fragment --><h1><a class="anchor" id="er_req"></a>
 Resource requirements</h1>
-<p ><b>Technical data of Event Recorder firmware</b></p>
+<h2><a class="anchor" id="autotoc_md0"></a>
+Technical data of Event Recorder firmware</h2>
 <p >Target: Cortex-M3 using DWT cycle counter as timer</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadLeft">Parameter   </th><th class="markdownTableHeadNone">ARMCC V5.06   </th><th class="markdownTableHeadNone">ARMCC V5.06   </th><th class="markdownTableHeadNone">ARMCC V6.13.1   </th><th class="markdownTableHeadNone">ARMCC V6.13.1    </th></tr>
+<th class="markdownTableHeadLeft">Parameter   </th><th class="markdownTableHeadNone">ARMCC V6.13.1   </th><th class="markdownTableHeadNone">ARMCC V6.13.1    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft">Compiler options   </td><td class="markdownTableBodyNone">-O3   </td><td class="markdownTableBodyNone">-O3 -Otime   </td><td class="markdownTableBodyNone">-Os   </td><td class="markdownTableBodyNone">-O3    </td></tr>
+<td class="markdownTableBodyLeft">Compiler options   </td><td class="markdownTableBodyNone">-Os   </td><td class="markdownTableBodyNone">-O3    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft">ROM size   </td><td class="markdownTableBodyNone">&lt; 1.5k bytes   </td><td class="markdownTableBodyNone">&lt; 2.0k bytes   </td><td class="markdownTableBodyNone">&lt; 1.7k bytes   </td><td class="markdownTableBodyNone">&lt; 3.4k bytes    </td></tr>
+<td class="markdownTableBodyLeft">ROM size   </td><td class="markdownTableBodyNone">&lt; 1.7k bytes   </td><td class="markdownTableBodyNone">&lt; 3.4k bytes    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft">RAM size @8 records (min)   </td><td class="markdownTableBodyNone">292 bytes   </td><td class="markdownTableBodyNone">292 bytes   </td><td class="markdownTableBodyNone">292 bytes   </td><td class="markdownTableBodyNone">292 bytes    </td></tr>
+<td class="markdownTableBodyLeft">RAM size @8 records (min)   </td><td class="markdownTableBodyNone">292 bytes   </td><td class="markdownTableBodyNone">292 bytes    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft">RAM size @64 records (default)   </td><td class="markdownTableBodyNone">1188 bytes   </td><td class="markdownTableBodyNone">1188 bytes   </td><td class="markdownTableBodyNone">1188 bytes   </td><td class="markdownTableBodyNone">1188 bytes    </td></tr>
+<td class="markdownTableBodyLeft">RAM size @64 records (default)   </td><td class="markdownTableBodyNone">1188 bytes   </td><td class="markdownTableBodyNone">1188 bytes    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (id+8bytes)   </td><td class="markdownTableBodyNone">256 cycles   </td><td class="markdownTableBodyNone">238 cycles   </td><td class="markdownTableBodyNone">197 cycles   </td><td class="markdownTableBodyNone">184 cycles    </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#gab91eb760432ad0a10652a2c922db9566">EventRecord2</a> (id+8bytes)   </td><td class="markdownTableBodyNone">197 cycles   </td><td class="markdownTableBodyNone">184 cycles    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga1807e8d9b62b51f862a3d3fe36e611f8">EventRecord4</a> (id+16bytes)   </td><td class="markdownTableBodyNone">448 cycles   </td><td class="markdownTableBodyNone">429 cycles   </td><td class="markdownTableBodyNone">343 cycles   </td><td class="markdownTableBodyNone">319 cycles    </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga1807e8d9b62b51f862a3d3fe36e611f8">EventRecord4</a> (id+16bytes)   </td><td class="markdownTableBodyNone">343 cycles   </td><td class="markdownTableBodyNone">319 cycles    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+8bytes)   </td><td class="markdownTableBodyNone">346 cycles   </td><td class="markdownTableBodyNone">307 cycles   </td><td class="markdownTableBodyNone">276 cycles   </td><td class="markdownTableBodyNone">252 cycles    </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+8bytes)   </td><td class="markdownTableBodyNone">276 cycles   </td><td class="markdownTableBodyNone">252 cycles    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+16bytes)   </td><td class="markdownTableBodyNone">540 cycles   </td><td class="markdownTableBodyNone">507 cycles   </td><td class="markdownTableBodyNone">425 cycles   </td><td class="markdownTableBodyNone">397 cycles    </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+16bytes)   </td><td class="markdownTableBodyNone">425 cycles   </td><td class="markdownTableBodyNone">397 cycles    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+24bytes)   </td><td class="markdownTableBodyNone">714 cycles   </td><td class="markdownTableBodyNone">683 cycles   </td><td class="markdownTableBodyNone">554 cycles   </td><td class="markdownTableBodyNone">519 cycles    </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+24bytes)   </td><td class="markdownTableBodyNone">554 cycles   </td><td class="markdownTableBodyNone">519 cycles    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+32bytes)   </td><td class="markdownTableBodyNone">888 cycles   </td><td class="markdownTableBodyNone">862 cycles   </td><td class="markdownTableBodyNone">685 cycles   </td><td class="markdownTableBodyNone">643 cycles   </td></tr>
+<td class="markdownTableBodyLeft"><a class="el" href="group__EventRecorder__Data.html#ga48793c095f887522be941c7b8179dd0a">EventRecordData</a> (id+32bytes)   </td><td class="markdownTableBodyNone">685 cycles   </td><td class="markdownTableBodyNone">643 cycles   </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd>ROM size is specified for image with all Event Recorder functions being used. </dd>
-<dd>
-RAM size can be calculated as <code>164 + 16 * &lt;Number of Records&gt; (defined by EVENT_RECORD_COUNT in EventRecorderConf.h)</code>. </dd>
-<dd>
-Timing measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered.</dd></dl>
-<p><b>Usage of records by Event Recorder functions</b></p>
+<dl class="section note"><dt>Note</dt><dd><ul>
+<li>ROM size is specified for image with all Event Recorder functions being used.</li>
+<li>RAM size can be calculated as <code>164 + 16 * &lt;Number of Records&gt; (defined by EVENT_RECORD_COUNT in EventRecorderConf.h)</code>.</li>
+<li>Timing was measured in simulator (zero cycle memory, no interrupts). Function parameter in application is not considered.</li>
+</ul>
+</dd></dl>
+<h2><a class="anchor" id="autotoc_md1"></a>
+Usage of records by Event Recorder functions</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">Function   </th><th class="markdownTableHeadNone">Number of Records used    </th></tr>
