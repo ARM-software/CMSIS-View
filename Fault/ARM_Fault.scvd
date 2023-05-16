@@ -10,13 +10,13 @@
 
     <!-- ARM_FaultInfo_t -->
     <typedef  name="ARM_FaultInfo_t"    size="108">
-      <member name="magic_number"       type="uint32_t" offset="0"/>
-      <member name="crc32"              type="uint32_t" offset="4"/>
-      <member name="count"              type="uint32_t" offset="8"/>
-      <!-- Type -->
-      <member name="version_minor"      type="uint8_t"  offset="12"/>
-      <member name="version_major"      type="uint8_t"  offset="13"/>
-      <member name="content_flags"      type="uint16_t" offset="14"/>
+      <member name="MagicNumber"        type="uint32_t" offset="0"/>
+      <member name="CRC32"              type="uint32_t" offset="4"/>
+      <member name="Count"              type="uint32_t" offset="8"/>
+      <member name="VersionMinor"       type="uint8_t"  offset="12"/>
+      <member name="VersionMajor"       type="uint8_t"  offset="13"/>
+      <member name="Content"            type="uint16_t" offset="14"/>
+      <!-- Registers -->
       <member name="R0"                 type="uint32_t" offset="16"/>
       <member name="R1"                 type="uint32_t" offset="20"/>
       <member name="R2"                 type="uint32_t" offset="24"/>
@@ -33,26 +33,25 @@
       <member name="LR"                 type="uint32_t" offset="68"/>
       <member name="ReturnAddress"      type="uint32_t" offset="72"/>
       <member name="xPSR"               type="uint32_t" offset="76"/>
-      <member name="IntegritySignature" type="uint32_t" offset="80"/>
-      <member name="EXC_xPSR"           type="uint32_t" offset="84"/>
-      <member name="EXC_RETURN"         type="uint32_t" offset="88"/>
-      <member name="MSP"                type="uint32_t" offset="92"/>
-      <member name="PSP"                type="uint32_t" offset="96"/>
-      <member name="MSPLIM"             type="uint32_t" offset="100"/>
-      <member name="PSPLIM"             type="uint32_t" offset="104"/>
+      <member name="MSP"                type="uint32_t" offset="80"/>
+      <member name="PSP"                type="uint32_t" offset="84"/>
+      <member name="MSPLIM"             type="uint32_t" offset="88"/>
+      <member name="PSPLIM"             type="uint32_t" offset="92"/>
+      <member name="EXC_xPSR"           type="uint32_t" offset="96"/>
+      <member name="EXC_RETURN"         type="uint32_t" offset="100"/>
     </typedef>
 
-    <!-- ARM_FaultInfo: CFSR .. RFSR -->
-    <typedef  name="FaultRegs_t"        size="144">
-      <member name="CFSR"               type="uint32_t" offset="108"/>
-      <member name="HFSR"               type="uint32_t" offset="112"/>
-      <member name="DFSR"               type="uint32_t" offset="116"/>
-      <member name="MMFAR"              type="uint32_t" offset="120"/>
-      <member name="BFAR"               type="uint32_t" offset="124"/>
-      <member name="AFSR"               type="uint32_t" offset="128"/>
-      <member name="SFSR"               type="uint32_t" offset="132"/>
-      <member name="SFAR"               type="uint32_t" offset="136"/>
-      <member name="RFSR"               type="uint32_t" offset="140"/>
+    <!-- ARM_FaultInfo: FaultRegisters -->
+    <typedef  name="FaultRegisters_t"   size="140">
+      <member name="CFSR"               type="uint32_t" offset="104"/>
+      <member name="HFSR"               type="uint32_t" offset="108"/>
+      <member name="DFSR"               type="uint32_t" offset="112"/>
+      <member name="MMFAR"              type="uint32_t" offset="116"/>
+      <member name="BFAR"               type="uint32_t" offset="120"/>
+      <member name="AFSR"               type="uint32_t" offset="124"/>
+      <member name="SFSR"               type="uint32_t" offset="128"/>
+      <member name="SFAR"               type="uint32_t" offset="132"/>
+      <member name="RFSR"               type="uint32_t" offset="136"/>
     </typedef>
 
     <!-- Enumerated values -->
@@ -66,7 +65,7 @@
       </member>
     </typedef>
 
-    <typedef name="TZ_mode_t"           size="1">
+    <typedef name="TZ_Mode_t"           size="1">
       <member name="val"                type="uint8_t" offset="0">
         <enum name="Non-Secure"         value="0"/>
         <enum name="Secure"             value="1"/>
@@ -93,82 +92,84 @@
 
       <!-- Create variables used for conditions -->
       <var  name="fault_info_valid"                                     type="uint8_t"                     value="0"/>
-      <var  name="fault_regs_exist"                                     type="uint8_t"                     value="0"/>
-      <var  name="armv8x_m_main"                                        type="uint8_t"                     value="0"/>
-      <var  name="tz_enabled"                                           type="uint8_t"                     value="0"/>
-      <var  name="tz_save_mode"                                         type="uint8_t"                     value="0"/>
-      <var  name="tz_fault_mode"                                        type="uint8_t"                     value="0"/>
-      <var  name="state_context"                                        type="uint8_t"                     value="0"/>
-      <var  name="limit_regs"                                           type="uint8_t"                     value="0"/>
-      <var  name="fault_regs"                                           type="uint8_t"                     value="0"/>
-      <var  name="secure_fault_regs"                                    type="uint8_t"                     value="0"/>
-      <var  name="ras_fault_reg"                                        type="uint8_t"                     value="0"/>
+      <var  name="FaultRegsExist"                                       type="uint8_t"                     value="0"/>
+      <var  name="Armv8xM_Main"                                         type="uint8_t"                     value="0"/>
+      <var  name="TZ_Enabled"                                           type="uint8_t"                     value="0"/>
+      <var  name="TZ_SaveMode"                                          type="uint8_t"                     value="0"/>
+      <var  name="TZ_FaultMode"                                         type="uint8_t"                     value="0"/>
+      <var  name="StateContext"                                         type="uint8_t"                     value="0"/>
+      <var  name="AdditionalContext"                                    type="uint8_t"                     value="0"/>
+      <var  name="LimitRegs"                                            type="uint8_t"                     value="0"/>
+      <var  name="FaultRegs"                                            type="uint8_t"                     value="0"/>
+      <var  name="SecureFaultRegs"                                      type="uint8_t"                     value="0"/>
+      <var  name="RAS_FaultReg"                                         type="uint8_t"                     value="0"/>
 
       <!-- Calculate values of variables used for conditions -->
-      <calc>fault_info_valid  = (ARM_FaultInfo.magic_number == 0x52746C46);</calc>
-      <calc>fault_regs_exist  = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;   1);</calc>
-      <calc>armv8x_m_main     = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;   2) &gt;&gt; 1;</calc>
-      <calc>tz_enabled        = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;   4) &gt;&gt; 2;</calc>
-      <calc>tz_save_mode      = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;   8) &gt;&gt; 3;</calc>
-      <calc>tz_fault_mode     = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  16) &gt;&gt; 4;</calc>
-      <calc>state_context     = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  32) &gt;&gt; 5;</calc>
-      <calc>limit_regs        = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp;  64) &gt;&gt; 6;</calc>
-      <calc>fault_regs        = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp; 128) &gt;&gt; 7;</calc>
-      <calc>secure_fault_regs = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp; 256) &gt;&gt; 8;</calc>
-      <calc>ras_fault_reg     = fault_info_valid &amp;&amp; (ARM_FaultInfo.content_flags &amp; 512) &gt;&gt; 9;</calc>
+      <calc>fault_info_valid  = (ARM_FaultInfo.MagicNumber == 0x52746C46);</calc>
+      <calc>FaultRegsExist    = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;    1);</calc>
+      <calc>Armv8xM_Main      = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;    2) &gt;&gt;  1;</calc>
+      <calc>TZ_Enabled        = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;    4) &gt;&gt;  2;</calc>
+      <calc>TZ_SaveMode       = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;    8) &gt;&gt;  3;</calc>
+      <calc>TZ_FaultMode      = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;   16) &gt;&gt;  4;</calc>
+      <calc>StateContext      = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;   32) &gt;&gt;  5;</calc>
+      <calc>AdditionalContext = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;   64) &gt;&gt;  6;</calc>
+      <calc>LimitRegs         = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;  128) &gt;&gt;  7;</calc>
+      <calc>FaultRegs         = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;  256) &gt;&gt;  8;</calc>
+      <calc>SecureFaultRegs   = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp;  512) &gt;&gt;  9;</calc>
+      <calc>RAS_FaultReg      = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp; 1024) &gt;&gt; 10;</calc>
 
       <!-- Read content of Fault Registers if it exists -->
-      <read name="FaultRegs"                    cond="fault_regs"       type="FaultRegs_t"                 symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
+      <read name="FaultRegisters"                cond="FaultRegs"       type="FaultRegisters_t"            symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
 
       <!-- Create variables used for display -->
-      <var  name="exc_return"                                           type="uint32_t"                    value="0"/>
-      <var  name="xpsr_exc_enum"                                        type="Exception_t"                 value="0"/>
-      <var  name="exc_xpsr_exc_enum"                                    type="Exception_t"                 value="0"/>
-      <var  name="tz_save_mode_enum"                                    type="TZ_mode_t"                   value="0"/>
-      <var  name="tz_fault_mode_enum"                                   type="TZ_mode_t"                   value="0"/>
-      <var  name="cfsr"                                                 type="uint32_t"                    value="0"/>
-      <var  name="ufsr"                                                 type="uint16_t"                    value="0"/>
-      <var  name="bfsr"                                                 type="uint8_t"                     value="0"/>
-      <var  name="mmfsr"                                                type="uint8_t"                     value="0"/>
-      <var  name="hfsr"                                                 type="uint32_t"                    value="0"/>
-      <var  name="dfsr"                                                 type="uint32_t"                    value="0"/>
-      <var  name="sfsr"                                                 type="uint32_t"                    value="0"/>
-      <var  name="rfsr"                                                 type="uint32_t"                    value="0"/>
-      <var  name="rfsr_uet_enum"                                        type="RFSR_UET_t"                  value="0"/>
+      <var  name="EXC_RETURN"                                           type="uint32_t"                    value="0"/>
+      <var  name="xPSR_EXC_enum"                                        type="Exception_t"                 value="0"/>
+      <var  name="EXC_xPSR_EXC_enum"                                    type="Exception_t"                 value="0"/>
+      <var  name="TZ_SaveMode_enum"                                     type="TZ_Mode_t"                   value="0"/>
+      <var  name="TZ_FaultMode_enum"                                    type="TZ_Mode_t"                   value="0"/>
+      <var  name="CFSR"                                                 type="uint32_t"                    value="0"/>
+      <var  name="UFSR"                                                 type="uint16_t"                    value="0"/>
+      <var  name="BFSR"                                                 type="uint8_t"                     value="0"/>
+      <var  name="MMFSR"                                                type="uint8_t"                     value="0"/>
+      <var  name="HFSR"                                                 type="uint32_t"                    value="0"/>
+      <var  name="DFSR"                                                 type="uint32_t"                    value="0"/>
+      <var  name="SFSR"                                                 type="uint32_t"                    value="0"/>
+      <var  name="RFSR"                                                 type="uint32_t"                    value="0"/>
+      <var  name="RFSR_UET_enum"                                        type="RFSR_UET_t"                  value="0"/>
 
       <!-- Calculate values of variables used for display -->
-      <calc cond="fault_info_valid" >exc_return            = (ARM_FaultInfo.EXC_RETURN);</calc>
-      <calc cond="fault_info_valid" >xpsr_exc_enum.val     = (ARM_FaultInfo.xPSR     &amp; 0x000001FF);</calc>
-      <calc cond="fault_info_valid" >exc_xpsr_exc_enum.val = (ARM_FaultInfo.EXC_xPSR &amp; 0x000001FF);</calc>
-      <calc cond="fault_info_valid" >tz_save_mode_enum.val = (tz_save_mode);</calc>
-      <calc cond="fault_info_valid" >tz_fault_mode_enum.val= (tz_fault_mode);</calc>
-      <calc cond="fault_regs"       >cfsr                  = (FaultRegs.CFSR);</calc>
-      <calc cond="fault_regs"       >ufsr                  =  cfsr               &gt;&gt; 16;</calc>
-      <calc cond="fault_regs"       >bfsr                  = (cfsr &amp; 0xFF00) &gt;&gt; 8;</calc>
-      <calc cond="fault_regs"       >mmfsr                 = (cfsr &amp; 0xFF);</calc>
-      <calc cond="fault_regs"       >hfsr                  = (FaultRegs.HFSR);</calc>
-      <calc cond="fault_regs"       >dfsr                  = (FaultRegs.DFSR);</calc>
-      <calc cond="secure_fault_regs">sfsr                  = (FaultRegs.SFSR);</calc>
-      <calc cond="ras_fault_reg"    >rfsr                  = (FaultRegs.RFSR);</calc>
-      <calc cond="ras_fault_reg"    >rfsr_uet.val          = (FaultRegs.RFSR &amp; 3);</calc>
+      <calc cond="fault_info_valid" >EXC_RETURN            = (ARM_FaultInfo.EXC_RETURN);</calc>
+      <calc cond="fault_info_valid" >xPSR_EXC_enum.val     = (ARM_FaultInfo.xPSR     &amp; 0x000001FF);</calc>
+      <calc cond="fault_info_valid" >EXC_xPSR_EXC_enum.val = (ARM_FaultInfo.EXC_xPSR &amp; 0x000001FF);</calc>
+      <calc cond="fault_info_valid" >TZ_SaveMode_enum.val  = (TZ_SaveMode);</calc>
+      <calc cond="fault_info_valid" >TZ_FaultMode_enum.val = (TZ_FaultMode);</calc>
+      <calc cond="FaultRegs"        >CFSR                  = (FaultRegisters.CFSR);</calc>
+      <calc cond="FaultRegs"        >UFSR                  =  CFSR               &gt;&gt; 16;</calc>
+      <calc cond="FaultRegs"        >BFSR                  = (CFSR &amp; 0xFF00) &gt;&gt; 8;</calc>
+      <calc cond="FaultRegs"        >MMFSR                 = (CFSR &amp; 0xFF);</calc>
+      <calc cond="FaultRegs"        >HFSR                  = (FaultRegisters.HFSR);</calc>
+      <calc cond="FaultRegs"        >DFSR                  = (FaultRegisters.DFSR);</calc>
+      <calc cond="SecureFaultRegs"  >SFSR                  = (FaultRegisters.SFSR);</calc>
+      <calc cond="RAS_FaultReg"     >RFSR                  = (FaultRegisters.RFSR);</calc>
+      <calc cond="RAS_FaultReg"     >RFSR_UET.val          = (FaultRegisters.RFSR &amp; 3);</calc>
 
       <out  name="Fault">
         <item property="Version"                                         value="%t[Version]"/>
         <item property="Info"                   cond="fault_info_valid==0" value="No fault saved yet or fault information is invalid!" bold="1"/>
-        <item property="Fault count"            cond="fault_info_valid"  value="%d[ARM_FaultInfo.count]"/>
-        <item property="TrustZone"              cond="tz_enabled"        value="">
-          <item property="Fault happened in"                             value="%E[tz_fault_mode_enum.val]"/>
-          <item property="Fault saved in"                                value="%E[tz_save_mode_enum.val]"/>
+        <item property="Fault count"            cond="fault_info_valid"  value="%d[ARM_FaultInfo.Count]"/>
+        <item property="TrustZone"              cond="TZ_Enabled"        value="">
+          <item property="Fault happened in"                             value="%E[TZ_FaultMode_enum.val]"/>
+          <item property="Fault saved in"                                value="%E[TZ_SaveMode_enum.val]"/>
         </item>
         <item property="Registers"              cond="fault_info_valid"  value="">
-          <item property="R0"                   cond="state_context"     value="%x[ARM_FaultInfo.R0]"/>
-          <item property="R0"                   cond="!state_context"    value="unknown (was not stacked)"/>
-          <item property="R1"                   cond="state_context"     value="%x[ARM_FaultInfo.R1]"/>
-          <item property="R1"                   cond="!state_context"    value="unknown (was not stacked)"/>
-          <item property="R2"                   cond="state_context"     value="%x[ARM_FaultInfo.R2]"/>
-          <item property="R2"                   cond="!state_context"    value="unknown (was not stacked)"/>
-          <item property="R3"                   cond="state_context"     value="%x[ARM_FaultInfo.R3]"/>
-          <item property="R3"                   cond="!state_context"    value="unknown (was not stacked)"/>
+          <item property="R0"                   cond="StateContext"      value="%x[ARM_FaultInfo.R0]"/>
+          <item property="R0"                   cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="R1"                   cond="StateContext"      value="%x[ARM_FaultInfo.R1]"/>
+          <item property="R1"                   cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="R2"                   cond="StateContext"      value="%x[ARM_FaultInfo.R2]"/>
+          <item property="R2"                   cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="R3"                   cond="StateContext"      value="%x[ARM_FaultInfo.R3]"/>
+          <item property="R3"                   cond="!StateContext"     value="unknown (was not stacked)"/>
           <item property="R4"                                            value="%x[ARM_FaultInfo.R4]"/>
           <item property="R5"                                            value="%x[ARM_FaultInfo.R5]"/>
           <item property="R6"                                            value="%x[ARM_FaultInfo.R6]"/>
@@ -177,87 +178,87 @@
           <item property="R9"                                            value="%x[ARM_FaultInfo.R9]"/>
           <item property="R10"                                           value="%x[ARM_FaultInfo.R10]"/>
           <item property="R11"                                           value="%x[ARM_FaultInfo.R11]"/>
-          <item property="R12"                  cond="state_context"     value="%x[ARM_FaultInfo.R12]"/>
-          <item property="R12"                  cond="!state_context"    value="unknown (was not stacked)"/>
-          <item property="Link Register"        cond="state_context"     value="%x[ARM_FaultInfo.LR]"/>
-          <item property="Link Register"        cond="!state_context"    value="unknown (was not stacked)"/>
-          <item property="Return Address (PC)"  cond="state_context"     value="%x[ARM_FaultInfo.ReturnAddress]"/>
-          <item property="Return Address (PC)"  cond="!state_context"    value="unknown (was not stacked)"/>
-          <item property="xPSR"                 cond="state_context"     value="%x[ARM_FaultInfo.xPSR]">
-            <item property="Exception"          cond="fault_info_valid"  value="%E[xpsr_exc_enum.val]"/>
+          <item property="R12"                  cond="StateContext"      value="%x[ARM_FaultInfo.R12]"/>
+          <item property="R12"                  cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="Link Register"        cond="StateContext"      value="%x[ARM_FaultInfo.LR]"/>
+          <item property="Link Register"        cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="Return Address (PC)"  cond="StateContext"      value="%x[ARM_FaultInfo.ReturnAddress]"/>
+          <item property="Return Address (PC)"  cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="xPSR"                 cond="StateContext"      value="%x[ARM_FaultInfo.xPSR]">
+            <item property="Exception"          cond="fault_info_valid"  value="%E[xPSR_EXC_enum.val]"/>
           </item>
-          <item property="xPSR"                 cond="!state_context"    value="unknown (was not stacked)"/>
+          <item property="xPSR"                 cond="!StateContext"     value="unknown (was not stacked)"/>
+          <item property="MSP"                  cond="fault_info_valid"  value="%x[ARM_FaultInfo.MSP]"/>
+          <item property="MSPLIM"               cond="LimitRegs"         value="%x[ARM_FaultInfo.MSPLIM]"/>
+          <item property="PSP"                  cond="fault_info_valid"  value="%x[ARM_FaultInfo.PSP]"/>
+          <item property="PSPLIM"               cond="LimitRegs"         value="%x[ARM_FaultInfo.PSPLIM]"/>
         </item>
         <item property="Exception State"        cond="fault_info_valid"  value="">
           <item property="xPSR"                 cond="fault_info_valid"  value="%x[ARM_FaultInfo.EXC_xPSR]">
-            <item property="Exception"                                   value="%E[exc_xpsr_exc_enum.val]"/>
+            <item property="Exception"                                   value="%E[EXC_xPSR_EXC_enum.val]"/>
           </item>
           <item property="Exception Return"     cond="fault_info_valid"  value="%x[ARM_FaultInfo.EXC_RETURN]"/>
-          <item property="MSP"                  cond="fault_info_valid"  value="%x[ARM_FaultInfo.MSP]"/>
-          <item property="MSPLIM"               cond="limit_regs"        value="%x[ARM_FaultInfo.MSPLIM]"/>
-          <item property="PSP"                  cond="fault_info_valid"  value="%x[ARM_FaultInfo.PSP]"/>
-          <item property="PSPLIM"               cond="limit_regs"        value="%x[ARM_FaultInfo.PSPLIM]"/>
         </item>
-        <item property="Fault Registers"        cond="fault_regs"        value=""                                        alert="(ufsr) || (bfsr) || (mmfsr) || (hfsr) || (dfsr) || (sfsr)">
-          <item property="CFSR"                                          value="%x[(FaultRegs.CFSR)]"                          alert="(FaultRegs.CFSR)">
-            <item property="UFSR"                                        value="%x[(ufsr)]"                              alert="(ufsr)">
-              <item property="DIVBYZERO"                                 value="%d[(ufsr &amp; 0x0200) &gt;&gt; 9]"      alert="(ufsr &amp; 0x0200) &gt;&gt; 9"/>
-              <item property="UNALIGNED"                                 value="%d[(ufsr &amp; 0x0100) &gt;&gt; 8]"      alert="(ufsr &amp; 0x0100) &gt;&gt; 8"/>
-              <item property="STKOF"            cond="armv8x_m_main"     value="%d[(ufsr &amp; 0x0010) &gt;&gt; 4]"      alert="(ufsr &amp; 0x0010) &gt;&gt; 4"/>
-              <item property="NOCP"                                      value="%d[(ufsr &amp; 0x0008) &gt;&gt; 3]"      alert="(ufsr &amp; 0x0008) &gt;&gt; 3"/>
-              <item property="INVPC"                                     value="%d[(ufsr &amp; 0x0004) &gt;&gt; 2]"      alert="(ufsr &amp; 0x0004) &gt;&gt; 2"/>
-              <item property="INVSTATE"                                  value="%d[(ufsr &amp; 0x0002) &gt;&gt; 1]"      alert="(ufsr &amp; 0x0002) &gt;&gt; 1"/>
-              <item property="UNDEFINSTR"                                value="%d[(ufsr &amp; 0x0001)]"                 alert="(ufsr &amp; 0x0001)"/>
+        <item property="Fault Registers"        cond="FaultRegs"         value=""                                        alert="(UFSR) || (BFSR) || (MMFSR) || (HFSR) || (DFSR) || (SFSR)">
+          <item property="CFSR"                                          value="%x[(FaultRegisters.CFSR)]"               alert="(FaultRegisters.CFSR)">
+            <item property="UFSR"                                        value="%x[(UFSR)]"                              alert="(UFSR)">
+              <item property="DIVBYZERO"                                 value="%d[(UFSR &amp; 0x0200) &gt;&gt; 9]"      alert="(UFSR &amp; 0x0200) &gt;&gt; 9"/>
+              <item property="UNALIGNED"                                 value="%d[(UFSR &amp; 0x0100) &gt;&gt; 8]"      alert="(UFSR &amp; 0x0100) &gt;&gt; 8"/>
+              <item property="STKOF"            cond="Armv8xM_Main"      value="%d[(UFSR &amp; 0x0010) &gt;&gt; 4]"      alert="(UFSR &amp; 0x0010) &gt;&gt; 4"/>
+              <item property="NOCP"                                      value="%d[(UFSR &amp; 0x0008) &gt;&gt; 3]"      alert="(UFSR &amp; 0x0008) &gt;&gt; 3"/>
+              <item property="INVPC"                                     value="%d[(UFSR &amp; 0x0004) &gt;&gt; 2]"      alert="(UFSR &amp; 0x0004) &gt;&gt; 2"/>
+              <item property="INVSTATE"                                  value="%d[(UFSR &amp; 0x0002) &gt;&gt; 1]"      alert="(UFSR &amp; 0x0002) &gt;&gt; 1"/>
+              <item property="UNDEFINSTR"                                value="%d[(UFSR &amp; 0x0001)]"                 alert="(UFSR &amp; 0x0001)"/>
             </item>
-            <item property="BFSR"                                        value="%x[(bfsr)]"                              alert="(bfsr)">
-              <item property="BFARVALID"                                 value="%d[(bfsr &amp; 0x80) &gt;&gt; 7]"        alert="(bfsr &amp; 0x80) &gt;&gt; 7"/>
-              <item property="LSPERR"                                    value="%d[(bfsr &amp; 0x20) &gt;&gt; 5]"        alert="(bfsr &amp; 0x20) &gt;&gt; 5"/>
-              <item property="STKERR"                                    value="%d[(bfsr &amp; 0x10) &gt;&gt; 4]"        alert="(bfsr &amp; 0x10) &gt;&gt; 4"/>
-              <item property="UNSTKERR"                                  value="%d[(bfsr &amp; 0x08) &gt;&gt; 3]"        alert="(bfsr &amp; 0x08) &gt;&gt; 3"/>
-              <item property="IMPRECISERR"                               value="%d[(bfsr &amp; 0x04) &gt;&gt; 2]"        alert="(bfsr &amp; 0x04) &gt;&gt; 2"/>
-              <item property="PRECISERR"                                 value="%d[(bfsr &amp; 0x02) &gt;&gt; 1]"        alert="(bfsr &amp; 0x02) &gt;&gt; 1"/>
-              <item property="IBUSERR"                                   value="%d[(bfsr &amp; 0x01)]"                   alert="(bfsr &amp; 0x01)"/>
+            <item property="BFSR"                                        value="%x[(BFSR)]"                              alert="(BFSR)">
+              <item property="BFARVALID"                                 value="%d[(BFSR &amp; 0x80) &gt;&gt; 7]"        alert="(BFSR &amp; 0x80) &gt;&gt; 7"/>
+              <item property="LSPERR"                                    value="%d[(BFSR &amp; 0x20) &gt;&gt; 5]"        alert="(BFSR &amp; 0x20) &gt;&gt; 5"/>
+              <item property="STKERR"                                    value="%d[(BFSR &amp; 0x10) &gt;&gt; 4]"        alert="(BFSR &amp; 0x10) &gt;&gt; 4"/>
+              <item property="UNSTKERR"                                  value="%d[(BFSR &amp; 0x08) &gt;&gt; 3]"        alert="(BFSR &amp; 0x08) &gt;&gt; 3"/>
+              <item property="IMPRECISERR"                               value="%d[(BFSR &amp; 0x04) &gt;&gt; 2]"        alert="(BFSR &amp; 0x04) &gt;&gt; 2"/>
+              <item property="PRECISERR"                                 value="%d[(BFSR &amp; 0x02) &gt;&gt; 1]"        alert="(BFSR &amp; 0x02) &gt;&gt; 1"/>
+              <item property="IBUSERR"                                   value="%d[(BFSR &amp; 0x01)]"                   alert="(BFSR &amp; 0x01)"/>
             </item>
-            <item property="MMFSR"                                       value="%x[(mmfsr)]"                             alert="(mmfsr)">
-              <item property="MMARVALID"                                 value="%d[(mmfsr &amp; 0x80) &gt;&gt; 7]"       alert="(mmfsr &amp; 0x80) &gt;&gt; 7"/>
-              <item property="MLSPERR"                                   value="%d[(mmfsr &amp; 0x20) &gt;&gt; 5]"       alert="(mmfsr &amp; 0x20) &gt;&gt; 5"/>
-              <item property="MSTKERR"                                   value="%d[(mmfsr &amp; 0x10) &gt;&gt; 4]"       alert="(mmfsr &amp; 0x10) &gt;&gt; 4"/>
-              <item property="MUNSTKERR"                                 value="%d[(mmfsr &amp; 0x08) &gt;&gt; 3]"       alert="(mmfsr &amp; 0x08) &gt;&gt; 3"/>
-              <item property="DACCVIOL"                                  value="%d[(mmfsr &amp; 0x02) &gt;&gt; 1]"       alert="(mmfsr &amp; 0x02) &gt;&gt; 1"/>
-              <item property="IACCVIOL"                                  value="%d[(mmfsr &amp; 0x01)]"                  alert="(mmfsr &amp; 0x01)"/>
+            <item property="MMFSR"                                       value="%x[(MMFSR)]"                             alert="(MMFSR)">
+              <item property="MMARVALID"                                 value="%d[(MMFSR &amp; 0x80) &gt;&gt; 7]"       alert="(MMFSR &amp; 0x80) &gt;&gt; 7"/>
+              <item property="MLSPERR"                                   value="%d[(MMFSR &amp; 0x20) &gt;&gt; 5]"       alert="(MMFSR &amp; 0x20) &gt;&gt; 5"/>
+              <item property="MSTKERR"                                   value="%d[(MMFSR &amp; 0x10) &gt;&gt; 4]"       alert="(MMFSR &amp; 0x10) &gt;&gt; 4"/>
+              <item property="MUNSTKERR"                                 value="%d[(MMFSR &amp; 0x08) &gt;&gt; 3]"       alert="(MMFSR &amp; 0x08) &gt;&gt; 3"/>
+              <item property="DACCVIOL"                                  value="%d[(MMFSR &amp; 0x02) &gt;&gt; 1]"       alert="(MMFSR &amp; 0x02) &gt;&gt; 1"/>
+              <item property="IACCVIOL"                                  value="%d[(MMFSR &amp; 0x01)]"                  alert="(MMFSR &amp; 0x01)"/>
             </item>
           </item>
-          <item property="HFSR"                                          value="%x[(hfsr)]"                              alert="(hfsr)">
-            <item property="DEBUGEVT"                                    value="%d[(hfsr &amp; 0x80000000) &gt;&gt; 31]" alert="(hfsr &amp; 0x80000000) &gt;&gt; 31"/>
-            <item property="FORCED"                                      value="%d[(hfsr &amp; 0x40000000) &gt;&gt; 30]" alert="(hfsr &amp; 0x40000000) &gt;&gt; 30"/>
-            <item property="VECTTBL"                                     value="%d[(hfsr &amp; 0x00000002) &gt;&gt;  1]" alert="(hfsr &amp; 0x00000002) &gt;&gt;  1"/>
+          <item property="HFSR"                                          value="%x[(HFSR)]"                              alert="(HFSR)">
+            <item property="DEBUGEVT"                                    value="%d[(HFSR &amp; 0x80000000) &gt;&gt; 31]" alert="(HFSR &amp; 0x80000000) &gt;&gt; 31"/>
+            <item property="FORCED"                                      value="%d[(HFSR &amp; 0x40000000) &gt;&gt; 30]" alert="(HFSR &amp; 0x40000000) &gt;&gt; 30"/>
+            <item property="VECTTBL"                                     value="%d[(HFSR &amp; 0x00000002) &gt;&gt;  1]" alert="(HFSR &amp; 0x00000002) &gt;&gt;  1"/>
           </item>
-          <item property="DFSR"                                          value="%x[(dfsr)]">
-            <item property="PMU"                cond="armv8x_m_main"     value="%d[(dfsr &amp; 0x20) &gt;&gt;  5]"/>
-            <item property="EXTERNAL"                                    value="%d[(dfsr &amp; 0x10) &gt;&gt;  4]"/>
-            <item property="VCATCH"                                      value="%d[(dfsr &amp; 0x08) &gt;&gt;  3]"/>
-            <item property="DWTTRAP"                                     value="%d[(dfsr &amp; 0x04) &gt;&gt;  2]"/>
-            <item property="BKPT"                                        value="%d[(dfsr &amp; 0x02) &gt;&gt;  1]"/>
-            <item property="HALTED"                                      value="%d[(dfsr &amp; 0x01)]"/>
+          <item property="DFSR"                                          value="%x[(DFSR)]">
+            <item property="PMU"                cond="Armv8xM_Main"      value="%d[(DFSR &amp; 0x20) &gt;&gt;  5]"/>
+            <item property="EXTERNAL"                                    value="%d[(DFSR &amp; 0x10) &gt;&gt;  4]"/>
+            <item property="VCATCH"                                      value="%d[(DFSR &amp; 0x08) &gt;&gt;  3]"/>
+            <item property="DWTTRAP"                                     value="%d[(DFSR &amp; 0x04) &gt;&gt;  2]"/>
+            <item property="BKPT"                                        value="%d[(DFSR &amp; 0x02) &gt;&gt;  1]"/>
+            <item property="HALTED"                                      value="%d[(DFSR &amp; 0x01)]"/>
           </item>
-          <item property="MMFAR"                                         value="%x[(FaultRegs.MMFAR)]"/>
-          <item property="BFAR"                                          value="%x[(FaultRegs.BFAR)]"/>
-          <item property="AFSR"                                          value="%x[(FaultRegs.AFSR)]"/>
-          <item property="SFSR"                 cond="secure_fault_regs" value="%x[(sfsr)]"                              alert="(sfsr)">
-            <item property="LSERR"                                       value="%d[(sfsr &amp; 0x80) &gt;&gt; 7]"        alert="(sfsr &amp; 0x80) &gt;&gt; 7"/>
-            <item property="SFARVALID"                                   value="%d[(sfsr &amp; 0x40) &gt;&gt; 6]"        alert="(sfsr &amp; 0x40) &gt;&gt; 6"/>
-            <item property="LSPERR"                                      value="%d[(sfsr &amp; 0x20) &gt;&gt; 5]"        alert="(sfsr &amp; 0x20) &gt;&gt; 5"/>
-            <item property="INVTRAN"                                     value="%d[(sfsr &amp; 0x10) &gt;&gt; 4]"        alert="(sfsr &amp; 0x10) &gt;&gt; 4"/>
-            <item property="AUVIOL"                                      value="%d[(sfsr &amp; 0x08) &gt;&gt; 3]"        alert="(sfsr &amp; 0x08) &gt;&gt; 3"/>
-            <item property="INVER"                                       value="%d[(sfsr &amp; 0x04) &gt;&gt; 2]"        alert="(sfsr &amp; 0x04) &gt;&gt; 2"/>
-            <item property="INVIS"                                       value="%d[(sfsr &amp; 0x02) &gt;&gt; 1]"        alert="(sfsr &amp; 0x02) &gt;&gt; 1"/>
-            <item property="INVEP"                                       value="%d[(sfsr &amp; 0x01)]"                   alert="(sfsr &amp; 0x01)"/>
+          <item property="MMFAR"                                         value="%x[(FaultRegisters.MMFAR)]"/>
+          <item property="BFAR"                                          value="%x[(FaultRegisters.BFAR)]"/>
+          <item property="AFSR"                                          value="%x[(FaultRegisters.AFSR)]"/>
+          <item property="SFSR"                 cond="SecureFaultRegs"   value="%x[(SFSR)]"                              alert="(SFSR)">
+            <item property="LSERR"                                       value="%d[(SFSR &amp; 0x80) &gt;&gt; 7]"        alert="(SFSR &amp; 0x80) &gt;&gt; 7"/>
+            <item property="SFARVALID"                                   value="%d[(SFSR &amp; 0x40) &gt;&gt; 6]"        alert="(SFSR &amp; 0x40) &gt;&gt; 6"/>
+            <item property="LSPERR"                                      value="%d[(SFSR &amp; 0x20) &gt;&gt; 5]"        alert="(SFSR &amp; 0x20) &gt;&gt; 5"/>
+            <item property="INVTRAN"                                     value="%d[(SFSR &amp; 0x10) &gt;&gt; 4]"        alert="(SFSR &amp; 0x10) &gt;&gt; 4"/>
+            <item property="AUVIOL"                                      value="%d[(SFSR &amp; 0x08) &gt;&gt; 3]"        alert="(SFSR &amp; 0x08) &gt;&gt; 3"/>
+            <item property="INVER"                                       value="%d[(SFSR &amp; 0x04) &gt;&gt; 2]"        alert="(SFSR &amp; 0x04) &gt;&gt; 2"/>
+            <item property="INVIS"                                       value="%d[(SFSR &amp; 0x02) &gt;&gt; 1]"        alert="(SFSR &amp; 0x02) &gt;&gt; 1"/>
+            <item property="INVEP"                                       value="%d[(SFSR &amp; 0x01)]"                   alert="(SFSR &amp; 0x01)"/>
           </item>
-          <item property="SFAR"                 cond="secure_fault_regs" value="%x[(FaultRegs.SFAR)]"/>
-          <item property="RFSR"                 cond="ras_fault_reg"     value="%x[(rfsr)]">
-            <item property="V"                                           value="%d[(rfsr &amp; 0x80000000) &gt;&gt; 31]"/>
-            <item property="IS"                                          value="%x[(rfsr &amp; 0x7FFF0000) &gt;&gt; 16]"/>
-            <item property="UET"                                         value="%E[(rfsr_uet.val)]"/>
+          <item property="SFAR"                 cond="SecureFaultRegs"   value="%x[(FaultRegisters.SFAR)]"/>
+          <item property="RFSR"                 cond="RAS_FaultReg"      value="%x[(RFSR)]">
+            <item property="V"                                           value="%d[(RFSR &amp; 0x80000000) &gt;&gt; 31]"/>
+            <item property="IS"                                          value="%x[(RFSR &amp; 0x7FFF0000) &gt;&gt; 16]"/>
+            <item property="UET"                                         value="%E[(RFSR_uet.val)]"/>
           </item>
         </item>
       </out>
@@ -392,7 +393,7 @@
     <event id="0xEE5A" level="Error" property="RAS Fault"   value="RAS Fault Status Register value = %x[val2]"/>
     <event id="0xEE5B" level="Error" property="RAS Fault"   value="RAS Fault Status Register value = %x[val2] (PC=%x[val1])"/>
 
-    <event id="0xEE5C" level="Op"    property="TrustZone"   value="Fault happened in %E[val1, TZ_mode_t:val] mode and was saved in %E[val2, TZ_mode_t:val] mode"/>
+    <event id="0xEE5C" level="Op"    property="TrustZone"   value="Fault happened in %E[val1, TZ_Mode_t:val] mode and was saved in %E[val2, TZ_Mode_t:val] mode"/>
   </events>
 
 </component_viewer>

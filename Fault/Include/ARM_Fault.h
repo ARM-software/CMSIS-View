@@ -93,8 +93,8 @@
 #define ARM_FAULT_VERSION              "1.0.0"
 
 // Fault Information structure type version
-#define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)             // ARM_FaultInfo type version.major
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)             // ARM_FaultInfo type version.minor
+#define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)             // ARM_FaultInfo type Version.Major
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)             // ARM_FaultInfo type Version.Minor
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,74 +102,78 @@ extern "C" {
 
 /// Fault information structure type definition
 typedef struct {
-  uint32_t magic_number;                //!< Magic number (ASCII "FltR")
-  uint32_t crc32;                       //!< CRC32 of the structure content (excluding magic_number and crc32 fields)
-  uint32_t count;                       //!< Saved faults counter
+  uint32_t MagicNumber;                 //!< Magic number (ASCII "FltR")
+  uint32_t CRC32;                       //!< CRC32 of the structure content (excluding MagicNumber and CRC32 fields)
+  uint32_t Count;                       //!< Saved faults counter
 
-  struct {                              // Structure version and content information
-    struct {
-      uint8_t minor;                    //!< Fault information structure version: minor, see \ref ARM_FAULT_FAULT_INFO_VER_MINOR
-      uint8_t major;                    //!< Fault information structure version: major, see \ref ARM_FAULT_FAULT_INFO_VER_MAJOR
-    } version;
-    struct {
+  struct {                              // Version
+    uint8_t Minor;                      //!< Fault information structure version: Minor, see \ref ARM_FAULT_FAULT_INFO_VER_MINOR
+    uint8_t Major;                      //!< Fault information structure version: Major, see \ref ARM_FAULT_FAULT_INFO_VER_MAJOR
+  } Version;
+
+  struct {                              // Content
                                         // Compile-time information
-      uint16_t fault_regs_exist  :  1;  //!< Fault registers: 0 - absent; 1 - available
-      uint16_t armv8x_m_main     :  1;  //!< Armv8/8.1-M Mainline information: 0 - absent; 1 - available
-      uint16_t tz_enabled        :  1;  //!< TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled
-      uint16_t tz_save_mode      :  1;  //!< Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode
+    uint16_t FaultRegsExist    :  1;    //!< Fault registers: 0 - absent; 1 - available
+    uint16_t Armv8xM_Main      :  1;    //!< Armv8/8.1-M Mainline information: 0 - absent; 1 - available
+    uint16_t TZ_Enabled        :  1;    //!< TrustZone (Cortex-M security extensions): 0 - not enabled; 1 - enabled
+    uint16_t TZ_SaveMode       :  1;    //!< Fault information was saved in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode
 
                                         // Runtime-time information
-      uint16_t tz_fault_mode     :  1;  //!< Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode
-      uint16_t state_context     :  1;  //!< State Context: 0 - was not saved; 1 - was saved
-      uint16_t limit_regs        :  1;  //!< MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved
-      uint16_t fault_regs        :  1;  //!< Fault registers: 0 - were not saved; 1 - were saved
-      uint16_t secure_fault_regs :  1;  //!< Secure Fault registers: 0 - were not saved; 1 - were saved
-      uint16_t ras_fault_reg     :  1;  //!< RAS Fault register: 0 - was not saved; 1 - was saved
+    uint16_t TZ_FaultMode      :  1;    //!< Fault happened in: 0 - TrustZone-disabled or non-secure mode; 1 - secure mode
+    uint16_t StateContext      :  1;    //!< State Context: 0 - was not saved; 1 - was saved
+    uint16_t AdditionalContext :  1;    //!< Additional State Context: 0 - was not saved; 1 - was saved
+    uint16_t LimitRegs         :  1;    //!< MSPLIM and PSPLIM: 0 - were not saved; 1 - were saved
+    uint16_t FaultRegs         :  1;    //!< Fault registers: 0 - were not saved; 1 - were saved
+    uint16_t SecureFaultRegs   :  1;    //!< Secure Fault registers: 0 - were not saved; 1 - were saved
+    uint16_t RAS_FaultReg      :  1;    //!< RAS Fault register: 0 - was not saved; 1 - was saved
 
-      uint16_t reserved          :  6;  //!< Reserved (0)
-    } content;
-  } info;
+    uint16_t Reserved          :  5;    //!< Reserved (0)
+  } Content;
 
-  uint32_t R0;                          //!< R0  Register value
-  uint32_t R1;                          //!< R1  Register value
-  uint32_t R2;                          //!< R2  Register value
-  uint32_t R3;                          //!< R3  Register value
-  uint32_t R4;                          //!< R4  Register value
-  uint32_t R5;                          //!< R5  Register value
-  uint32_t R6;                          //!< R6  Register value
-  uint32_t R7;                          //!< R7  Register value
-  uint32_t R8;                          //!< R8  Register value
-  uint32_t R9;                          //!< R9  Register value
-  uint32_t R10;                         //!< R10 Register value
-  uint32_t R11;                         //!< R11 Register value
-  uint32_t R12;                         //!< R12 Register value
-  uint32_t LR;                          //!< Link Register (R14) value
-  uint32_t ReturnAddress;               //!< Return address from exception
-  uint32_t xPSR;                        //!< Program Status Register value
+  struct {                              // Registers
+    uint32_t R0;                        //!< R0  Register value
+    uint32_t R1;                        //!< R1  Register value
+    uint32_t R2;                        //!< R2  Register value
+    uint32_t R3;                        //!< R3  Register value
+    uint32_t R4;                        //!< R4  Register value
+    uint32_t R5;                        //!< R5  Register value
+    uint32_t R6;                        //!< R6  Register value
+    uint32_t R7;                        //!< R7  Register value
+    uint32_t R8;                        //!< R8  Register value
+    uint32_t R9;                        //!< R9  Register value
+    uint32_t R10;                       //!< R10 Register value
+    uint32_t R11;                       //!< R11 Register value
+    uint32_t R12;                       //!< R12 Register value
+    uint32_t LR;                        //!< Link Register (R14) value
+    uint32_t ReturnAddress;             //!< Return address from exception
+    uint32_t xPSR;                      //!< Program Status Register value
+    uint32_t MSP;                       //!< Main    Stack Pointer value
+    uint32_t PSP;                       //!< Process Stack Pointer value
+    uint32_t MSPLIM;                    //!< Main    Stack Pointer Limit Register value (only for Armv8/8.1-M arch)
+    uint32_t PSPLIM;                    //!< Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch)
+  } Registers;
 
-  uint32_t IntegritySignature;          //!< Integrity Signature (only for Armv8/8.1-M arch)
-
-  uint32_t EXC_xPSR;                    //!< Program Status Register value, in exception handler
-  uint32_t EXC_RETURN;                  //!< Exception Return code (LR), in exception handler
-  uint32_t MSP;                         //!< Main    Stack Pointer value
-  uint32_t PSP;                         //!< Process Stack Pointer value
-  uint32_t MSPLIM;                      //!< Main    Stack Pointer Limit Register value (only for Armv8/8.1-M arch)
-  uint32_t PSPLIM;                      //!< Process Stack Pointer Limit Register value (only for Armv8/8.1-M arch)
+  struct {                              // Exception State
+    uint32_t xPSR;                      //!< Program Status Register value, in exception handler
+    uint32_t EXC_RETURN;                //!< Exception Return code (LR), in exception handler
+  } ExceptionState;
 
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)
-  uint32_t CFSR;                        //!< System Control Block - Configurable Fault Status  Register value
-  uint32_t HFSR;                        //!< System Control Block - HardFault          Status  Register value
-  uint32_t DFSR;                        //!< System Control Block - Debug Fault        Status  Register value
-  uint32_t MMFAR;                       //!< System Control Block - MemManage Fault    Address Register value
-  uint32_t BFAR;                        //!< System Control Block - BusFault           Address Register value
-  uint32_t AFSR;                        //!< System Control Block - Auxiliary Fault    Status  Register value
+  struct {                              // Fault Registers
+    uint32_t CFSR;                      //!< System Control Block - Configurable Fault Status  Register value
+    uint32_t HFSR;                      //!< System Control Block - HardFault          Status  Register value
+    uint32_t DFSR;                      //!< System Control Block - Debug Fault        Status  Register value
+    uint32_t MMFAR;                     //!< System Control Block - MemManage Fault    Address Register value
+    uint32_t BFAR;                      //!< System Control Block - BusFault           Address Register value
+    uint32_t AFSR;                      //!< System Control Block - Auxiliary Fault    Status  Register value
 
-  // Additional Armv8/8.1-M Mainline arch specific fault registers
-  uint32_t SFSR;                        //!< System Control Block - Secure Fault       Status  Register value
-  uint32_t SFAR;                        //!< System Control Block - Secure Fault       Address Register value
+    // Additional Armv8/8.1-M Mainline arch specific fault registers
+    uint32_t SFSR;                      //!< System Control Block - Secure Fault       Status  Register value
+    uint32_t SFAR;                      //!< System Control Block - Secure Fault       Address Register value
 
-  // Additional Armv8.1-M Mainline arch specific fault register
-  uint32_t RFSR;                        //!< System Control Block - RAS Fault          Status  Register value
+    // Additional Armv8.1-M Mainline arch specific fault register
+    uint32_t RFSR;                      //!< System Control Block - RAS Fault          Status  Register value
+  } FaultRegisters;
 #endif
 } ARM_FaultInfo_t;
 

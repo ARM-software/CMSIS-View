@@ -5,8 +5,8 @@
 The software components under **CMSIS-View:Fault** provide infrastructure and [API (function calls)](modules.html) to store, record, and analyze the Cortex-M Exception Fault information.
 Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, or division by zero:
 
-- The component **CMSIS-View:Fault:Storage** can be used to save an exception fault for later analysis.
-- The component **CMSIS-View:Fault:Record** decodes a saved exception fault and records this information using the **Event Recorder**.
+- The component **CMSIS-View:Fault:Storage** can be used to save an exception fault information for later analysis.
+- The component **CMSIS-View:Fault:Record** decodes a saved exception fault information and records this information using the **Event Recorder**.
 
 A typical execution flow is shown in the diagram below.
 
@@ -47,8 +47,8 @@ This section contains the the technical data of the Fault component firmware.
 
 The Fault component uses the \ref ARM_FaultInfo structure to save information when the fault occurs. The size depends on the Arm Cortex-M core for which the code was compiled:
 
-- If the Arm Cortex-M core contains Fault Registers (e.g. Cortex-M33), the \ref ARM_FaultInfo structure requires **144 bytes** of uninitialized RAM memory.
-- If the Arm Cortex-M core does not contain Fault Registers (e.g. Cortex-M0), the \ref ARM_FaultInfo structure requires **108 bytes** of uninitialized RAM memory.
+- If the Arm Cortex-M core contains Fault Registers (e.g. Cortex-M33), the \ref ARM_FaultInfo structure requires **140 bytes** of uninitialized RAM memory.
+- If the Arm Cortex-M core does not contain Fault Registers (e.g. Cortex-M0), the \ref ARM_FaultInfo structure requires **104 bytes** of uninitialized RAM memory.
 
 ### ROM
 
