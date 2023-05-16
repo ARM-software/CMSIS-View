@@ -10,21 +10,23 @@
 .DS_Store
 
 # Generated Files
-Local_Release
 Documentation/html
 /Doxygen/src/history.txt
 /Doxygen/view.dxy
 /PACK.xsd
 /output
 /build
-/Examples/EventStatistic/*.cbuild.yml
-/Examples/EventStatistic/*.cprj
-/Examples/EventStatistic/RTE/*/RTE_Components.h
-/Examples/EventStatistic/.clangd
-/Examples/EventStatistic/*.cbuild-idx.yml
-/Examples/EventStatistic/out
-/Examples/EventStatistic/tmp
-
+/Examples/**/*.cbuild.yml
+/Examples/**/*.cprj
+/Examples/**/RTE/_**/*
+/Examples/**/.clangd
+/Examples/**/*.cbuild-idx.yml
+/Examples/**/*.uvgui*.*
+/Examples/**/DebugConfig/*.dbgconf
+/Examples/**/out
+/Examples/**/tmp
+/Examples/**/Listings
+/Examples/**/Objects
 
 # Test binary, built with `go test -c`
 *.test
