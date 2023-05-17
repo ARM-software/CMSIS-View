@@ -51,11 +51,6 @@
   #endif
 #endif
 
-// Armv8/8.1-M architecture related defines
-#if    (ARM_FAULT_ARCH_ARMV8x_M != 0)
-#define ARM_FAULT_ASC_INTEGRITY_SIG    (0xFEFA125AU)    // Additional State Context Integrity Signature
-#endif
-
 #if    (ARM_FAULT_FAULT_REGS_EXIST != 0)
 // Define CFSR mask for detecting state context stacking failure
 #ifndef SCB_CFSR_Stack_Err_Msk
