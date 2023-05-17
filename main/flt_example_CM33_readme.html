@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CMSIS-View: README.md</title>
+<title>CMSIS-View: Fault example (Cortex-M33)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -104,18 +104,18 @@ $(document).ready(function(){initNavTree('flt_example_CM33_readme.html',''); ini
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">README.md </div></div>
+  <div class="headertitle"><div class="title">Fault example (Cortex-M33) </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_src_Fault_example_readme_CM33"></a> </p>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<div class="textblock"><p ><a class="anchor" id="md__home_runner_work_CMSIS_View_CMSIS_View_Examples_Fault_B_U585I_IOT02A_README"></a> </p>
+<h1><a class="anchor" id="autotoc_md8"></a>
 STMicroelectronics B-U585I-IOT02A board</h1>
 <p >This project is a simple <b>Fault</b> component example running on <b>Arm Cortex-M33</b> microcontroller on a STMicroelectronics <a href="https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html"><b>B-U585I-IOT02A</b></a> evaluation board.</p>
 <p >The application allows triggering of specific faults upon which the fault information is saved and system is reset. When system restarts the fault information is output via the <b>Event Recorder</b> and via the <b>STDIO</b>.</p>
 <p >The fault information can also be inspected with <b>Component Viewer</b> in a debug session.</p>
-<h1><a class="anchor" id="autotoc_md17"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Prerequisites</h1>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md10"></a>
 Software:</h2>
 <ul>
 <li><a href="https://www.keil.com/mdk5"><b>Keil MDK v5.38</b></a> or newer containing:<ul>
@@ -128,7 +128,7 @@ Software:</h2>
 </li>
 <li><a href="https://www.st.com/en/development-tools/stm32cubeprog.html"><b>STM32CubeProgrammer</b></a> utility</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md19"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 CMSIS Packs:</h2>
 <ul>
 <li>Required packs:<ul>
@@ -140,7 +140,7 @@ CMSIS Packs:</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md20"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Hardware:</h2>
 <p >This board has to be properly configured with <b>TrustZone</b> enabled.</p>
 <p >Please follow the steps below carefully:</p>
@@ -175,7 +175,7 @@ Hardware:</h2>
 </ul>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Build and Run</h1>
 <p >To try the example do the following steps:</p><ol type="1">
 <li>Open the <code>Fault.uvmpw</code> in the uVision</li>
@@ -186,8 +186,10 @@ Build and Run</h1>
 <li>Press <b>RESET</b> button on the board</li>
 <li>Follow the instructions in the <b>Serial Terminal</b> and observe the results</li>
 </ol>
-<p >&gt;Note: In the debug session fault information can be inspected in the <b>Component View</b> and <b>Event Recorder</b> windows</p>
-<p >The fault triggering is done by entering a number via <b>Serial Terminal</b> application (see possible values below).</p>
+<blockquote class="doxtable">
+<p >Note: In the debug session fault information can be inspected in the <b>Component View</b> and <b>Event Recorder</b> windows </p>
+</blockquote>
+<p>The fault triggering is done by entering a number via <b>Serial Terminal</b> application (see possible values below).</p>
 <ul>
 <li>0: terminate the example</li>
 <li>1: trigger the Non-Secure fault, Non-Secure data access Memory Management fault</li>
@@ -198,7 +200,7 @@ Build and Run</h1>
 <li>6: trigger the Secure fault, Non-Secure instruction execution from Secure Flash memory</li>
 <li>7: trigger the Secure fault, Secure undefined instruction Usage fault</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md22"></a>
+<h1><a class="anchor" id="autotoc_md14"></a>
 Example details</h1>
 <p >Clock Settings:</p><ul>
 <li>XTAL = MSIS = 4 MHz</li>

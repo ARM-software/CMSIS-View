@@ -6,7 +6,7 @@ var searchData=
   ['event_20recorder_3',['Event Recorder',['../er_examples.html',1,'ExampleProjects'],['../evr.html',1,'index']]],
   ['event_20recorder_20_2d_20timer_4',['Event Recorder - Timer',['../group__EventRecorder__Time.html',1,'']]],
   ['event_20recorder_20setup_5',['Event Recorder Setup',['../group__EventRecorder__Setup.html',1,'']]],
-  ['event_20statistics_6',['Event Statistics',['../ev_stat.html',1,'index']]],
+  ['event_20statistics_6',['Event Statistics',['../ev_stat.html',1,'index'],['../scvd_evt_stat.html',1,'er_examples']]],
   ['eventid_7',['EventID',['../group__EventRecorder__Data.html#ga44fa52e2007e535753fd4ba59b84d55d',1,'EventRecorder.h']]],
   ['eventlevelapi_8',['EventLevelAPI',['../group__EventRecorder__leveldefs.html#ga804697e938a79b0ea388872951ed7b06',1,'EventRecorder.h']]],
   ['eventleveldetail_9',['EventLevelDetail',['../group__EventRecorder__leveldefs.html#gae594d8dae31ac1ffd04464f4af4a20ea',1,'EventRecorder.h']]],
