@@ -116,6 +116,7 @@ func main() {
 		infoOpt(commFlag, "s", "statistic", "")
 		infoOpt(commFlag, "V", "version", "")
 		infoOpt(commFlag, "f", "format", "<formatType>")
+		infoOpt(commFlag, "l", "level", "<Error|API|Op|Detail>")
 		usage = true
 	}
 	// parse command line
@@ -123,6 +124,7 @@ func main() {
 	outputFile := commFlag.String("o", "", "output file name")
 	elfFile := commFlag.String("a", "", "elf/axf file name")
 	formatType := commFlag.String("f", "", "format type: txt, json, xml")
+	level := commFlag.String("l", "", "level: Error|API|Op|Detail")
 	var statBegin bool
 	commFlag.BoolVar(&statBegin, "b", false, "show statistic at beginning")
 	commFlag.BoolVar(&statBegin, "begin", false, "show statistic at beginning")
@@ -171,7 +173,7 @@ func main() {
 		return
 	}
 
-	if err := output.Print(outputFile, formatType, &eventFile[0], evdefs, typedefs, statBegin, showStatistic); err != nil {
+	if err := output.Print(outputFile, formatType, level, &eventFile[0], evdefs, typedefs, statBegin, showStatistic); err != nil {
 		fmt.Print(Progname + ": ")
 		fmt.Println(err)
 	}

@@ -36,6 +36,7 @@ var errNoEvents = errors.New("cannot open event file")
 
 var TimeFactor *float64
 var FormatType = "txt"
+var Level = ""
 
 func TimeInSecs(time uint64) float64 {
 	if TimeFactor == nil {
@@ -72,6 +73,7 @@ type EventRecord struct {
 	Component     string  `json:"component" xml:"component"`
 	EventProperty string  `json:"eventProperty" xml:"eventProperty"`
 	Value         string  `json:"value" xml:"value"`
+	Level         string  `json:"level" xml:"level"`
 }
 
 type EventRecordStatistic struct {
@@ -491,26 +493,31 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 		}
 		var rep string
 		if evdef, ok := evdefs[ev.Info.ID]; ok {
-			eventRecord.Component = evdef.Brief
-			eventRecord.EventProperty = evdef.Property
-			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
-				s := escapeGen(string(*ev.Data))
-				eventRecord.Value = s
-				err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
-					eventRecord.Index, eventRecord.Time, -o.componentSize,
-					eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
-			} else {
-				rep, err = ev.EvalLine(evdef, typedefs)
-				if err == nil {
-					eventRecord.Value = rep
-					err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
+			// Filter events by level
+			if Level == "" || evdef.Level == Level {
+				eventRecord.Component = evdef.Brief
+				eventRecord.EventProperty = evdef.Property
+				eventRecord.Level = evdef.Level
+				if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
+					s := escapeGen(string(*ev.Data))
+					eventRecord.Value = s
+					err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
 						eventRecord.Index, eventRecord.Time, -o.componentSize,
 						eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
+				} else {
+					rep, err = ev.EvalLine(evdef, typedefs)
+					if err == nil {
+						eventRecord.Value = rep
+						err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
+							eventRecord.Index, eventRecord.Time, -o.componentSize,
+							eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
+					}
 				}
 			}
 		} else {
 			eventRecord.Component = fmt.Sprintf("0x%02X%*s", uint8(ev.Info.ID>>8), 0, "")
 			eventRecord.EventProperty = fmt.Sprintf("0x%04X%*s", ev.Info.ID, 0, "")
+			eventRecord.Level = ""
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
 				eventRecord.Value = s
@@ -611,7 +618,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 	return err
 }
 
-func Print(filename *string, formatType *string, eventFile *string, evdefs map[uint16]scvd.Event,
+func Print(filename *string, formatType *string, level *string, eventFile *string, evdefs map[uint16]scvd.Event,
 	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
 	var file *os.File
 	var err error
@@ -632,6 +639,9 @@ func Print(filename *string, formatType *string, eventFile *string, evdefs map[u
 		if *formatType == "xml" || *formatType == "json" {
 			FormatType = *formatType
 		}
+	}
+	if level != nil && *level != "" {
+		Level = *level
 	}
 
 	if filename != nil && len(*filename) != 0 {

@@ -1019,6 +1019,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "txt"
+	level := ""
 	tests := []struct {
 		name    string
 		args    args
@@ -1030,7 +1031,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1071,7 +1072,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
-		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF\",\"eventProperty\":\"0xFF03\",\"value\":\"val1=0x00000004, val2=0x00000002\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE\",\"eventProperty\":\"0xFE00\",\"value\":\"hello wo\"}],\"statistics\":[]}",
+		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF\",\"eventProperty\":\"0xFF03\",\"value\":\"val1=0x00000004, val2=0x00000002\",\"level\":\"\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE\",\"eventProperty\":\"0xFE00\",\"value\":\"hello wo\",\"level\":\"\"}],\"statistics\":[]}",
 	}
 
 	type args struct {
@@ -1083,18 +1084,19 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "json"
+	level := ""
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"test", args{filename: &o1, eventFile: &s10}, false},
+		{"test1", args{filename: &o1, eventFile: &s10}, false},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1131,7 +1133,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
-		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF</component><eventProperty>0xFF03</eventProperty><value>val1=0x00000004, val2=0x00000002</value></events><events><index>1</index><time>7.75</time><component>0xFE</component><eventProperty>0xFE00</eventProperty><value>hello wo</value></events></EventsTable>",
+		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF</component><eventProperty>0xFF03</eventProperty><value>val1=0x00000004, val2=0x00000002</value><level></level></events><events><index>1</index><time>7.75</time><component>0xFE</component><eventProperty>0xFE00</eventProperty><value>hello wo</value><level></level></events></EventsTable>",
 	}
 
 	type args struct {
@@ -1143,6 +1145,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "xml"
+	level := "level"
 	tests := []struct {
 		name    string
 		args    args
@@ -1154,7 +1157,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
