@@ -1,4 +1,4 @@
-# Fault example (Cortex-M33)
+# Fault example (Cortex-M33) {#flt_example_CM33_readme}
 
 ## STMicroelectronics B-U585I-IOT02A board
 
@@ -63,7 +63,7 @@ To try the example do the following steps:
  6. Press **RESET** button on the board
  7. Follow the instructions in the **Serial Terminal** and observe the results
 
->Note: In the debug session fault information can be inspected in the **Component View** and **Event Recorder** windows
+> Note: In the debug session fault information can be inspected in the **Component View** and **Event Recorder** windows
 
 The fault triggering is done by entering a number via **Serial Terminal** application (see possible values below).
 

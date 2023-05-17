@@ -900,8 +900,8 @@ INPUT                  = src/main.md \
                          ../EventRecorder/Include/EventRecorder.h \
                          ../EventRecorder/Config/EventRecorderConf.h \
                          ../Fault/Include/ARM_Fault.h \
-                         src/Fault_example_readme_CM7.md \
-                         src/Fault_example_readme_CM33.md
+                         ../Examples/Fault/B-U585I-IOT02A/README.md \
+                         ../Examples/Fault/VHT_MPS2_Cortex-M7/README.md
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

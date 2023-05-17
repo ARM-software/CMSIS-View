@@ -21,7 +21,7 @@ Example Project                                | Description
 \subpage flt_example_CM33 "B-U585I-IOT02A"     | Shows the usage of Fault component on an Cortex-M33 with TrustZone. This example runs on STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
 
 
-\page scvd_evt_stat SCVD Event Statistics
+\page scvd_evt_stat Event Statistics
 
 This example project shows how to use start/stop events with the Event Recorder.
 
@@ -120,7 +120,7 @@ This example project does not require an IDE and can be built using the <a href=
 Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the `README.md` file to build and run the project. Use the \ref evntlst application to analyze the outcomes.
 
 
-\page flt_example_CM7 VHT_MPS2_Cortex-M7 (Cortex-M7)
+\page flt_example_CM7 VHT_MPS2_Cortex-M7
 
 This example project shows **Exception Fault Analysis** using **Arm Cortex-M7** simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
 
@@ -128,7 +128,7 @@ This example project shows **Exception Fault Analysis** using **Arm Cortex-M7** 
 
 This example project does not require an IDE and can be built using the [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox).
 
-Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM7_readme file to build and run the project.
+Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM7_readme "README.md" file to build and run the project.
 
 **Screenshots**
 
@@ -137,7 +137,7 @@ User Interface \image html Fault_CM7_UI.png
 **EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility \image html Fault_CM7_eventlist_MemManage.png
 
 
-\page flt_example_CM33 B-U585I-IOT02A (Cortex-M33)
+\page flt_example_CM33 B-U585I-IOT02A
 
 This example project shows **Exception Fault Analysis** using **Arm Cortex-M33** running on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
 
@@ -145,7 +145,7 @@ This example project shows **Exception Fault Analysis** using **Arm Cortex-M33**
 
 This example project requires the [**Keil MDK**](https://www.keil.com/mdk5).
 
-Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM33_readme file to build and run the project.
+Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM33_readme "README.md" file to build and run the project.
 
 **Screenshots**
 
