@@ -111,11 +111,15 @@ $(document).ready(function(){initNavTree('rev_hist.html',''); initResizable(); }
 <tr>
 <th>Version </th><th>Description  </th></tr>
 <tr>
-<td>v1.1.1 </td><td>Added clock frequency to internal Event Recorder Initialization message.   </td></tr>
-<tr>
-<td>v1.1.0 </td><td>Added Event Recorder logging via Semihosting.   </td></tr>
-<tr>
-<td>v1.0.0 </td><td>Open Source Version of Event Recorder Version 1.4.0 under Apache 2.0.   </td></tr>
+<td>v1.0.0 </td><td>Initial release of EventRecorder and FaultRecorder components as replacement for Keil.ARM-Compiler pack.<ul>
+<li>Rename component class to CMSIS-View. For migration, deselect old Compiler::EventRecorder component and select new CMSIS-View::EventRecorder one.</li>
+<li>Fixes/additions for IAR Compiler</li>
+<li>Enhacements for documentation</li>
+<li>Optimize Record Lock/Unlock in Event Recorder (using C11 atomics except for Cortex-M0)</li>
+<li>Correct timestamp overflow handling in Event Recorder</li>
+<li>Add CMSIS-View::Fault component for recording system faults.   </li>
+</ul>
+</td></tr>
 </table>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
