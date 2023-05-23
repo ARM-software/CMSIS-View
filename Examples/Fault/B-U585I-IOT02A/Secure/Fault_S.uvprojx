@@ -688,7 +688,7 @@
     </apis>
     <components>
       <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cvendor="ARM" Cversion="1.0.0" condition="Cortex-M Device">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>

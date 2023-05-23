@@ -21,7 +21,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 
 ### CMSIS Packs:
  - Required packs:
-    - ARM::CMSIS-View v1.2.0 or newer
+    - ARM::CMSIS-View v1.0.0 or newer
     - ARM::CMSIS-Compiler v1.0.0 or newer
     - ARM::CMSIS v5.9.0 or newer
     - Keil::STM32U5xx_DFP v2.1.0 or newer

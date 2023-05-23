@@ -21,7 +21,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 
 ### CMSIS Packs:
  - Required packs:
-    - ARM::CMSIS-View v1.2.0 or newer
+    - ARM::CMSIS-View v1.0.0 or newer
     - ARM::CMSIS-Compiler v1.0.0 or newer
     - ARM::CMSIS v5.9.0
     - Keil::V2M-MPS2_CMx_BSP v1.8.0
@@ -90,5 +90,5 @@ To analyze the result `eventlist` utility is needed, copy the executable `eventl
 
 To process `EventRecorder.log` file with the `eventlist` utility in **Windows Command Prompt** (cmd.exe) execute the following command:
    ```
-   eventlist -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.2.0\Fault\ARM_Fault.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.2.0\EventRecorder\EventRecorder.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS\5.9.0\CMSIS\RTOS2\RTX\RTX5.scvd EventRecorder.log
+   eventlist -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\Fault\ARM_Fault.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\EventRecorder\EventRecorder.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS\5.9.0\CMSIS\RTOS2\RTX\RTX5.scvd EventRecorder.log
    ```

@@ -747,13 +747,13 @@
         </targetInfos>
       </component>
       <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="Cortex-M Device">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
       <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cvendor="ARM" Cversion="1.0.0" condition="FaultRecord">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>
@@ -763,7 +763,7 @@
         </targetInfos>
       </component>
       <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cvendor="ARM" Cversion="1.0.0" condition="Cortex-M Device">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>
@@ -853,7 +853,7 @@
       <file attr="config" category="header" name="EventRecorder\Config\EventRecorderConf.h" version="1.1.0">
         <instance index="0">RTE\CMSIS-View\EventRecorderConf.h</instance>
         <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="Cortex-M Device"/>
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
