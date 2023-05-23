@@ -79,7 +79,7 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
 
 ```sh
-eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
+eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 
   :
 
@@ -114,5 +114,5 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
 
 When using Windows Command Prompt use the following command: 
 ```sh
-eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
+eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 ```
