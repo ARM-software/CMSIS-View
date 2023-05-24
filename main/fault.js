@@ -1,8 +1,6 @@
 var fault =
 [
-    [ "Overview", "fault.html#about_fault", [
-      [ "Content", "fault.html#content_fault", null ]
-    ] ],
+    [ "Overview", "fault.html#about_fault", null ],
     [ "Theory of operation", "flt_theory.html", [
       [ "Fault information storage", "flt_theory.html#autotoc_md4", null ],
       [ "Fault information analysis", "flt_theory.html#autotoc_md5", null ],
