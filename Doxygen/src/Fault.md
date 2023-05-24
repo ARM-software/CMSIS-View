@@ -12,8 +12,6 @@ A typical execution flow is shown in the diagram below.
 
 ![Exception Fault Analysis](./images/ArmFault.png "Exception Fault Analysis")
 
-### Content {#content_fault}
-
 - \subpage flt_theory explains in details how the Fault component stores fault information and how it can be used for further analysis.
 - \subpage flt_use provides instructions on how to enable Fault component in a project.
 
