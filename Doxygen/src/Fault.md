@@ -15,6 +15,9 @@ A typical execution flow is shown in the diagram below.
 - \subpage flt_theory explains in details how the Fault component stores fault information and how it can be used for further analysis.
 - \subpage flt_use provides instructions on how to enable Fault component in a project.
 
+**Application Note**
+
+An application note is available that describes the Cortex-M fault exceptions from the programmers view and explains their usage during the software development cycle: [KAN209 - Using Cortex-M3/M4/M7 Fault Exceptions](https://developer.arm.com/documentation/kan209/latest).
 
 \page flt_theory Theory of operation
 
