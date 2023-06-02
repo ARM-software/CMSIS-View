@@ -73,7 +73,6 @@ type EventRecord struct {
 	Component     string  `json:"component" xml:"component"`
 	EventProperty string  `json:"eventProperty" xml:"eventProperty"`
 	Value         string  `json:"value" xml:"value"`
-	Level         string  `json:"level" xml:"level"`
 }
 
 type EventRecordStatistic struct {
@@ -497,7 +496,6 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 			if Level == "" || evdef.Level == Level {
 				eventRecord.Component = evdef.Brief
 				eventRecord.EventProperty = evdef.Property
-				eventRecord.Level = evdef.Level
 				if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 					s := escapeGen(string(*ev.Data))
 					eventRecord.Value = s
@@ -517,7 +515,6 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 		} else {
 			eventRecord.Component = fmt.Sprintf("0x%02X%*s", uint8(ev.Info.ID>>8), 0, "")
 			eventRecord.EventProperty = fmt.Sprintf("0x%04X%*s", ev.Info.ID, 0, "")
-			eventRecord.Level = ""
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
 				s := escapeGen(string(*ev.Data))
 				eventRecord.Value = s

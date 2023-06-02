@@ -1072,7 +1072,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
-		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF\",\"eventProperty\":\"0xFF03\",\"value\":\"val1=0x00000004, val2=0x00000002\",\"level\":\"\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE\",\"eventProperty\":\"0xFE00\",\"value\":\"hello wo\",\"level\":\"\"}],\"statistics\":[]}",
+		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF\",\"eventProperty\":\"0xFF03\",\"value\":\"val1=0x00000004, val2=0x00000002\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE\",\"eventProperty\":\"0xFE00\",\"value\":\"hello wo\"}],\"statistics\":[]}",
 	}
 
 	type args struct {
@@ -1133,7 +1133,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
-		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF</component><eventProperty>0xFF03</eventProperty><value>val1=0x00000004, val2=0x00000002</value><level></level></events><events><index>1</index><time>7.75</time><component>0xFE</component><eventProperty>0xFE00</eventProperty><value>hello wo</value><level></level></events></EventsTable>",
+		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF</component><eventProperty>0xFF03</eventProperty><value>val1=0x00000004, val2=0x00000002</value></events><events><index>1</index><time>7.75</time><component>0xFE</component><eventProperty>0xFE00</eventProperty><value>hello wo</value></events></EventsTable>",
 	}
 
 	type args struct {
@@ -1145,7 +1145,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "xml"
-	level := "level"
+	level := ""
 	tests := []struct {
 		name    string
 		args    args
