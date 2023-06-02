@@ -1,4 +1,4 @@
-# Event Recorder {#evr}
+﻿# Event Recorder {#evr}
 
 ## Overview {#about_evr}
 
@@ -239,8 +239,7 @@ To use the Event Recorder in an application, you need to:
 ## Locate Event Recorder in uninitialized memory{#place_uninit_memory}
 
 For uninterrupted recording of program resets, the RAM for the Event Recorder component should be placed to a memory
-region that is not cleared (or initialized) by a system restart (reset), and which differs from the RAM area that is used for
-Flash programming.
+region that is not cleared (or initialized) by a system restart (reset).
 
 \note Make sure that you use normal, non-cacheable, and non-shareable memory for Event Recorder data.
 
@@ -252,11 +251,48 @@ The memory required for the Event Recorder data is calculated with the formula:
 ```
 In this example we configure `0x800` bytes (as it is easier) which can hold more than 64 records.
 
-### Create memory region{#evr_create_mem}
+### Create memory region {#evr_create_mem}
 
-To setup this uninitialized RAM, use either a
-<a href="https://developer.arm.com/documentation/101754/latest/armlink-Reference/Scatter-loading-Features" target="_blank">linker script</a>
-or configure it in µVision following these steps:
+To setup this uninitialized RAM, use either \ref evr_create_mem_ls or \ref evr_create_mem_uv procedure.
+
+#### Create memory region using linker script {#evr_create_mem_ls}
+
+If the linker script does not contain provisions for uninitialized memory section then, for respective toolchain, add the necessary section like described below:
+
+##### Arm Compiler {#evr_create_mem_ls_ac}
+
+for the **Arm Compiler** toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):
+
+  ```
+  RW_NOINIT <start_address> UNINIT 0x800 {
+    * (.bss.noinit)
+  }
+  ```
+
+> Note: \<start_address\> is the physical address in RAM where the section will start
+
+> Note: 0x800 is the size of the section, adjust that as necessary
+   
+##### GCC {#evr_create_mem_ls_gcc}
+
+for the **GCC** toolchain add the following code snippet to the linker script (.ld file), in the part specifying RAM sections (usually before Heap section):
+
+  ```
+  .noinit (NOLOAD) :
+  {
+    . = ALIGN(4);
+    PROVIDE (__noinit_start = .);
+    *(.noinit)
+    . = ALIGN(4);
+    PROVIDE (__noinit_end = .);
+  } > RAM
+  ```
+
+> Note: this code snippet expects defined RAM memory region, if RAM region is not defined then adapt the script accordingly
+
+### Create memory region using µVision {#evr_create_mem_uv}
+
+To setup this uninitialized RAM in the µVision, follow the steps below:
 
 1. In the **Options for Target** dialog, on the **Utilities** tab, click on **Settings** for "Use Target Driver for Flash Programming". Note the "RAM for Algorithm" area:<br/>
    ![RAM for Algorithm"](./images/ram_for_algorithm_area.png)
