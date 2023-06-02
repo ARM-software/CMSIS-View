@@ -33,9 +33,13 @@ The fault information can also be inspected with **Component Viewer** in a debug
    ```
 ## Build
 
-1. Use the `csolution` command to create `.cprj` project files:
+1. Use the `csolution` command to create `.cprj` project files (for **Arm Compiler 6** toolchain):
    ```
    csolution convert -s Fault.csolution.yml
+   ```
+   or, for **GCC** toolchain use the following command:
+   ```
+   csolution convert -s Fault.csolution.yml -t GCC
    ```
 
 2. Use the `cbuild` command to create executable files:
@@ -47,12 +51,15 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ### AVH Target
 
 Execute the following steps:
- - run the AVH model from the command line by executing the following command:
+ - run the AVH model (with example built with **Arm Compiler 6** toolchain) from the command line by executing the following command:
    ```
    VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf
    ```
-   > Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the
-           `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
+   or, run the AVH model (with example built with **GCC** toolchain) from the command line by executing the following command:
+   ```
+   VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.elf
+   ```
+   > Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
 
    The generated file `EventRecorder.log` contains the events that were generated during the example execution.
    This file is the input for the `eventlist` utility which can be used for further analysis.
@@ -69,7 +76,7 @@ The fault triggering is done by entering a number via simulator console (see pos
   - 5: trigger the undefined instruction Usage fault
   - 6: trigger the divide by 0 Usage fault
 
-### Running the example in the uVision
+### Running the example in the uVision (using Arm Compiler 6 toolchain)
 
  - open `Fault.Debug+VHT_MPS2_Cortex-M7.cprj` with the **uVision**
  - open **Options for Target**
