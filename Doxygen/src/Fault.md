@@ -110,35 +110,53 @@ int main() {
 
 ## Locate fault information in uninitialized memory {#flt_place_uninit_memory}
 
-For preservation of the saved fault information after system reset, RAM for the \ref ARM_FaultInfo structure should be placed to a memory region that is not cleared (or initialized) by a system restart (reset).
+For preservation of the saved fault information after system reset, RAM for the \ref ARM_FaultInfo structure should be placed to a memory
+region that is not cleared (or initialized) by a system restart (reset).
 
 \note Make sure that you use normal, non-cacheable, and non-shareable memory for fault information data.
 
+For size of this memory section take a look at \ref flt_req. 
+
 ### Create memory region {#flt_create_mem}
 
-The \ref ARM_FaultInfo structure can be located in uninitialized RAM by using a \ref flt_linker_script "linker script" file or the \ref flt_uv_gui "µVision GUI".
+To setup this uninitialized RAM, use either \ref flt_create_mem_ls or \ref flt_create_mem_uv procedure.
 
-#### Using a linker script {#flt_linker_script}
+#### Create memory region using linker script {#flt_create_mem_ls}
 
-You can use a linker script with specifying location for <b>\.bss\.noinit</b> section as **UNINIT** section like below:
+If the linker script does not contain provisions for uninitialized memory section then, for respective toolchain, add the necessary section like described below:
 
-	```
-    // Scatter file
+##### Arm Compiler 6 {#flt_create_mem_ls_ac6}
 
-    // ...
+for the **Arm Compiler 6** toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):
 
-      RW_IRAM1 0x20040000 UNINIT 0x800  {
-        * (.bss.noinit)
-      }
+  ```
+  RW_NOINIT <start_address> UNINIT 0x800 {
+    * (.bss.noinit)
+  }
+  ```
 
-    // ...
-    ```
+> Note: \<start_address\> is the physical address in RAM where the section will start, usually before Heap section
 
-\note
-- If the \ref ARM_FaultInfo structure is not located in uninitialized memory, then after system reset, any saved fault information will be cleared and thus saved fault information will be lost.
-- For more information about Arm Compiler scatter files, consult the <a href="https://developer.arm.com/documentation/101754/latest/armlink-Reference/Scatter-loading-Features" target="_blank">documentation</a>.
+> Note: 0x800 is the size of the section covering also default Event Recorder data, adjust that as necessary
+   
+##### GCC {#flt_create_mem_ls_gcc}
 
-#### Using the µVision GUI {#flt_uv_gui}
+for the **GCC** toolchain add the following code snippet to the linker script (.ld file), in the part specifying RAM sections (usually before Heap section):
+
+  ```
+  .noinit (NOLOAD) :
+  {
+    . = ALIGN(4);
+    PROVIDE (__noinit_start = .);
+    *(.noinit)
+    . = ALIGN(4);
+    PROVIDE (__noinit_end = .);
+  } > RAM
+  ```
+
+> Note: this code snippet expects defined RAM memory region, if RAM region is not defined then adapt the script accordingly
+
+### Create memory region using µVision {#flt_create_mem_uv}
 
 To setup this uninitialized RAM in the µVision, follow the steps below:
 
