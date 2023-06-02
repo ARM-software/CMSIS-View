@@ -153,28 +153,43 @@ Add Fault Storage (and Record) Component</h1>
 Locate fault information in uninitialized memory</h1>
 <p >For preservation of the saved fault information after system reset, RAM for the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure should be placed to a memory region that is not cleared (or initialized) by a system restart (reset).</p>
 <dl class="section note"><dt>Note</dt><dd>Make sure that you use normal, non-cacheable, and non-shareable memory for fault information data.</dd></dl>
+<p>For size of this memory section take a look at <a class="el" href="flt_theory.html#flt_req">Resource requirements</a>.</p>
 <h2><a class="anchor" id="flt_create_mem"></a>
 Create memory region</h2>
-<p >The <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure can be located in uninitialized RAM by using a <a class="el" href="flt_use.html#flt_linker_script">linker script</a> file or the <a class="el" href="flt_use.html#flt_uv_gui">µVision GUI</a>.</p>
-<h3><a class="anchor" id="flt_linker_script"></a>
-Using a linker script</h3>
-<p >You can use a linker script with specifying location for <b>.bss.noinit</b> section as <b>UNINIT</b> section like below:</p>
-<div class="fragment"><div class="line">// Scatter file</div>
-<div class="line"> </div>
-<div class="line">// ...</div>
-<div class="line"> </div>
-<div class="line">  RW_IRAM1 0x20040000 UNINIT 0x800  {</div>
-<div class="line">    * (.bss.noinit)</div>
-<div class="line">  }</div>
-<div class="line"> </div>
-<div class="line">// ...</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd><ul>
-<li>If the <a class="el" href="group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac">ARM_FaultInfo</a> structure is not located in uninitialized memory, then after system reset, any saved fault information will be cleared and thus saved fault information will be lost.</li>
-<li>For more information about Arm Compiler scatter files, consult the <a href="https://developer.arm.com/documentation/101754/latest/armlink-Reference/Scatter-loading-Features" target="_blank">documentation</a>.</li>
-</ul>
-</dd></dl>
-<h3><a class="anchor" id="flt_uv_gui"></a>
-Using the µVision GUI</h3>
+<p >To setup this uninitialized RAM, use either <a class="el" href="flt_use.html#flt_create_mem_ls">Create memory region using linker script</a> or <a class="el" href="flt_use.html#flt_create_mem_uv">Create memory region using µVision</a> procedure.</p>
+<h3><a class="anchor" id="flt_create_mem_ls"></a>
+Create memory region using linker script</h3>
+<p >If the linker script does not contain provisions for uninitialized memory section then, for respective toolchain, add the necessary section like described below:</p>
+<h4><a class="anchor" id="flt_create_mem_ls_ac"></a>
+Arm Compiler</h4>
+<p >for the <b>Arm Compiler</b> toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):</p>
+<div class="fragment"><div class="line">RW_NOINIT &lt;start_address&gt; UNINIT 0x800 {</div>
+<div class="line">  * (.bss.noinit)</div>
+<div class="line">}</div>
+</div><!-- fragment --><blockquote class="doxtable">
+<p >Note: &lt;start_address&gt; is the physical address in RAM where the section will start </p>
+</blockquote>
+<blockquote class="doxtable">
+<p >Note: 0x800 is the size of the section covering also default Event Recorder data, adjust that as necessary </p>
+</blockquote>
+<p><br  />
+ </p>
+<h4><a class="anchor" id="flt_create_mem_ls_gcc"></a>
+GCC</h4>
+<p >for the <b>GCC</b> toolchain add the following code snippet to the linker script (.ld file), in the part specifying RAM sections (usually before Heap section):</p>
+<div class="fragment"><div class="line">.noinit (NOLOAD) :</div>
+<div class="line">{</div>
+<div class="line">  . = ALIGN(4);</div>
+<div class="line">  PROVIDE (__noinit_start = .);</div>
+<div class="line">  *(.noinit)</div>
+<div class="line">  . = ALIGN(4);</div>
+<div class="line">  PROVIDE (__noinit_end = .);</div>
+<div class="line">} &gt; RAM</div>
+</div><!-- fragment --><blockquote class="doxtable">
+<p >Note: this code snippet expects defined RAM memory region, if RAM region is not defined then adapt the script accordingly </p>
+</blockquote>
+<h2><a class="anchor" id="flt_create_mem_uv"></a>
+Create memory region using µVision</h2>
 <p >To setup this uninitialized RAM in the µVision, follow the steps below:</p>
 <ol type="1">
 <li>In the <b>Options for Target</b> dialog, define a Read/Write Memory Area that is not initialized, by splitting available internal RAM into 2 areas.<br  />

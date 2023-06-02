@@ -149,7 +149,7 @@ Add Event Recorder Component</h1>
 </dd></dl>
 <h1><a class="anchor" id="place_uninit_memory"></a>
 Locate Event Recorder in uninitialized memory</h1>
-<p >For uninterrupted recording of program resets, the RAM for the Event Recorder component should be placed to a memory region that is not cleared (or initialized) by a system restart (reset), and which differs from the RAM area that is used for Flash programming.</p>
+<p >For uninterrupted recording of program resets, the RAM for the Event Recorder component should be placed to a memory region that is not cleared (or initialized) by a system restart (reset).</p>
 <dl class="section note"><dt>Note</dt><dd>Make sure that you use normal, non-cacheable, and non-shareable memory for Event Recorder data.</dd></dl>
 <h2><a class="anchor" id="evr_memory_calc"></a>
 Calculate memory requirements</h2>
@@ -157,7 +157,41 @@ Calculate memory requirements</h2>
 </div><!-- fragment --><p> In this example we configure <code>0x800</code> bytes (as it is easier) which can hold more than 64 records.</p>
 <h2><a class="anchor" id="evr_create_mem"></a>
 Create memory region</h2>
-<p >To setup this uninitialized RAM, use either a <a href="https://developer.arm.com/documentation/101754/latest/armlink-Reference/Scatter-loading-Features" target="_blank">linker script</a> or configure it in µVision following these steps:</p>
+<p >To setup this uninitialized RAM, use either <a class="el" href="er_use.html#evr_create_mem_ls">Create memory region using linker script</a> or <a class="el" href="er_use.html#evr_create_mem_uv">Create memory region using µVision</a> procedure.</p>
+<h3><a class="anchor" id="evr_create_mem_ls"></a>
+Create memory region using linker script</h3>
+<p >If the linker script does not contain provisions for uninitialized memory section then, for respective toolchain, add the necessary section like described below:</p>
+<h4><a class="anchor" id="evr_create_mem_ls_ac"></a>
+Arm Compiler</h4>
+<p >for the <b>Arm Compiler</b> toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):</p>
+<div class="fragment"><div class="line">RW_NOINIT &lt;start_address&gt; UNINIT 0x800 {</div>
+<div class="line">  * (.bss.noinit)</div>
+<div class="line">}</div>
+</div><!-- fragment --><blockquote class="doxtable">
+<p >Note: &lt;start_address&gt; is the physical address in RAM where the section will start </p>
+</blockquote>
+<blockquote class="doxtable">
+<p >Note: 0x800 is the size of the section, adjust that as necessary </p>
+</blockquote>
+<p><br  />
+ </p>
+<h4><a class="anchor" id="evr_create_mem_ls_gcc"></a>
+GCC</h4>
+<p >for the <b>GCC</b> toolchain add the following code snippet to the linker script (.ld file), in the part specifying RAM sections (usually before Heap section):</p>
+<div class="fragment"><div class="line">.noinit (NOLOAD) :</div>
+<div class="line">{</div>
+<div class="line">  . = ALIGN(4);</div>
+<div class="line">  PROVIDE (__noinit_start = .);</div>
+<div class="line">  *(.noinit)</div>
+<div class="line">  . = ALIGN(4);</div>
+<div class="line">  PROVIDE (__noinit_end = .);</div>
+<div class="line">} &gt; RAM</div>
+</div><!-- fragment --><blockquote class="doxtable">
+<p >Note: this code snippet expects defined RAM memory region, if RAM region is not defined then adapt the script accordingly </p>
+</blockquote>
+<h2><a class="anchor" id="evr_create_mem_uv"></a>
+Create memory region using µVision</h2>
+<p >To setup this uninitialized RAM in the µVision, follow the steps below:</p>
 <ol type="1">
 <li>In the <b>Options for Target</b> dialog, on the <b>Utilities</b> tab, click on <b>Settings</b> for "Use Target Driver for Flash Programming". Note the "RAM for Algorithm" area:<br  />
  <img src="ram_for_algorithm_area.png" alt="" class="inline" title="RAM for Algorithm""/></li>

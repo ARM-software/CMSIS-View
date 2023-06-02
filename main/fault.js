@@ -13,9 +13,12 @@ var fault =
       [ "Add Fault Storage (and Record) Component", "flt_use.html#flt_add_component", null ],
       [ "Locate fault information in uninitialized memory", "flt_use.html#flt_place_uninit_memory", [
         [ "Create memory region", "flt_use.html#flt_create_mem", [
-          [ "Using a linker script", "flt_use.html#flt_linker_script", null ],
-          [ "Using the µVision GUI", "flt_use.html#flt_uv_gui", null ]
-        ] ]
+          [ "Create memory region using linker script", "flt_use.html#flt_create_mem_ls", [
+            [ "Arm Compiler", "flt_use.html#flt_create_mem_ls_ac", null ],
+            [ "GCC", "flt_use.html#flt_create_mem_ls_gcc", null ]
+          ] ]
+        ] ],
+        [ "Create memory region using µVision", "flt_use.html#flt_create_mem_uv", null ]
       ] ]
     ] ]
 ];

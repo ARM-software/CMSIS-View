@@ -17,7 +17,13 @@ var evr =
       [ "Add Event Recorder Component", "er_use.html#Add_Event_Recorder", null ],
       [ "Locate Event Recorder in uninitialized memory", "er_use.html#place_uninit_memory", [
         [ "Calculate memory requirements", "er_use.html#evr_memory_calc", null ],
-        [ "Create memory region", "er_use.html#evr_create_mem", null ]
+        [ "Create memory region", "er_use.html#evr_create_mem", [
+          [ "Create memory region using linker script", "er_use.html#evr_create_mem_ls", [
+            [ "Arm Compiler", "er_use.html#evr_create_mem_ls_ac", null ],
+            [ "GCC", "er_use.html#evr_create_mem_ls_gcc", null ]
+          ] ]
+        ] ],
+        [ "Create memory region using µVision", "er_use.html#evr_create_mem_uv", null ]
       ] ],
       [ "Time Stamp Settings", "er_use.html#initial_timestamp", null ],
       [ "Event Recorder heartbeat", "er_use.html#heartbeat", null ],
