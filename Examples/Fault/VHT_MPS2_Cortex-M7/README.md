@@ -76,7 +76,7 @@ The fault triggering is done by entering a number via simulator console (see pos
   - 5: trigger the undefined instruction Usage fault
   - 6: trigger the divide by 0 Usage fault
 
-### Running the example in the uVision (using Arm Compiler 6 toolchain)
+### Running the example in the uVision
 
  - open `Fault.Debug+VHT_MPS2_Cortex-M7.cprj` with the **uVision**
  - open **Options for Target**
