@@ -189,8 +189,6 @@ int main(void)
     ARM_FaultPrint();                           // Output decoded fault information via STDIO
     ARM_FaultRecord();                          // Output decoded fault information via Event Recorder
     EventRecorderStop();                        // Stop Event Recorder
-  } else {                                      // If fault information does not exist
-    ARM_FaultClear();                           // Clear (initialize) fault information
   }
 
   (void)osKernelInitialize();                   /* Initialize the CMSIS-RTOS2 */
