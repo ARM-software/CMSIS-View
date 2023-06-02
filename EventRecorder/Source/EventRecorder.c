@@ -439,7 +439,7 @@ __STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {
   register uint32_t __r1 __ASM("r1") = (uint32_t)args;
 
   __ASM volatile (
-    "bkpt 0xab" : "=r"(__r0) : "r"(__r0), "r"(__r1) :
+    "bkpt 0xab" : "=r"(__r0) : "r"(__r0), "r"(__r1) : "memory"
   );
 
   return (int32_t)__r0;
@@ -458,9 +458,6 @@ static FILEHANDLE sys_open (const char *name, uint32_t openmode) {
     uint32_t       openmode;
     size_t         len;
   } args = { name, openmode, strlen(name) };
-  (void)args.name;
-  (void)args.openmode;
-  (void)args.len;
   return semihosting_call(SYS_OPEN, &args);
 }
 
@@ -470,7 +467,6 @@ static int32_t sys_close (FILEHANDLE fh) {
   struct {
     FILEHANDLE     fh;
   } args = { fh };
-  (void)args.fh;
   return semihosting_call(SYS_CLOSE, &args);
 }
 */
@@ -482,9 +478,6 @@ static int32_t sys_write (FILEHANDLE fh, const uint8_t *buf, uint32_t len) {
     const uint8_t *buf;
     uint32_t       len;
   } args = { fh, buf, len };
-  (void)args.fh;
-  (void)args.buf;
-  (void)args.len;
   return semihosting_call(SYS_WRITE, &args);
 }
 
