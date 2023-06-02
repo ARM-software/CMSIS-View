@@ -130,9 +130,18 @@ __NAKED void ARM_FaultSave (void) {
     ".syntax unified\n"
 #endif
 
- /* --- Read current ARM_FaultInfo.Count value --- */
+ /* --- Handle ARM_FaultInfo.Count value --- */
+ /* If MagicNumber is valid then read the Count value, otherwise clear it */
+    "ldr   r0,  =%c[MagicNumber_addr]\n"    // Load MagicNumber address
+    "ldr   r0,  [r0]\n"                     // Load MagicNumber value
+    "ldr   r1,  =%c[MagicNumber_val]\n"     // Load MagicNumber valid value
+    "movs  r3,  #0\n"                       // R3 = 0
+    "cmp   r0,  r1\n"                       // Compare MagicNumber from memory to valid value
+    "bne   count_done\n"                    // If MagicNumber is different than valid value, reset Count value to 0
+                                            // Otherwise
     "ldr   r2,  =%c[Count_addr]\n"          // Load Count address
     "ldr   r3,  [r2]\n"                     // Load Count value
+  "count_done:\n"
 
  /* --- Clear ARM_FaultInfo structure --- */
     "movs  r0,  #0\n"                       // R0 = 0
@@ -388,6 +397,8 @@ __NAKED void ARM_FaultSave (void) {
  :  /* inputs */
     [ARM_FaultInfo_addr]                    "i" (&ARM_FaultInfo)
  ,  [ARM_FaultInfo_size]                    "i" (sizeof(ARM_FaultInfo)/4)
+ ,  [MagicNumber_addr]                      "i" (&ARM_FaultInfo.MagicNumber)
+ ,  [MagicNumber_val]                       "i" (ARM_FAULT_MAGIC_NUMBER)
  ,  [Count_addr]                            "i" (&ARM_FaultInfo.Count)
  ,  [Version_addr]                          "i" (&ARM_FaultInfo.Version)
  ,  [Version_val]                           "i" (ARM_FAULT_FAULT_INFO_VER_MINOR

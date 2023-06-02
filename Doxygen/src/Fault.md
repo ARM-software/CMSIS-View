@@ -96,8 +96,6 @@ int main() {
     if (ARM_FaultOccurred() != 0U) {              // If fault information exists
       ARM_FaultRecord();                          // Output decoded fault information via Event Recorder
       EventRecorderStop();                        // Stop Event Recorder
-    } else {                                      // If fault information does not exist
-      ARM_FaultClear();                           // Clear (initialize) fault information
     }
 
     // ...
