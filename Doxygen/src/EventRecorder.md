@@ -259,9 +259,9 @@ To setup this uninitialized RAM, use either \ref evr_create_mem_ls or \ref evr_c
 
 If the linker script does not contain provisions for uninitialized memory section then, for respective toolchain, add the necessary section like described below:
 
-##### Arm Compiler 6 {#evr_create_mem_ls_ac6}
+##### Arm Compiler {#evr_create_mem_ls_ac}
 
-for the **Arm Compiler 6** toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):
+for the **Arm Compiler** toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):
 
   ```
   RW_NOINIT <start_address> UNINIT 0x800 {
@@ -269,7 +269,7 @@ for the **Arm Compiler 6** toolchain add the following code snippet to the linke
   }
   ```
 
-> Note: \<start_address\> is the physical address in RAM where the section will start, usually before Heap section
+> Note: \<start_address\> is the physical address in RAM where the section will start
 
 > Note: 0x800 is the size of the section, adjust that as necessary
    
