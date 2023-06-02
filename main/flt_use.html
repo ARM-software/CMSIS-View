@@ -139,8 +139,6 @@ Add Fault Storage (and Record) Component</h1>
 <div class="line">    <span class="keywordflow">if</span> (<a class="code hl_function" href="group__Fault__Storage.html#ga46ed1c1d7ede7bea91130d1e93ab4fe1" title="Check if the fault occurred and if the fault information was saved properly.">ARM_FaultOccurred</a>() != 0U) {              <span class="comment">// If fault information exists</span></div>
 <div class="line">      <a class="code hl_function" href="group__Fault__Record.html#ga0cbe701756d156237511b5a526634558" title="Output decoded fault information via Event Recorder.">ARM_FaultRecord</a>();                          <span class="comment">// Output decoded fault information via Event Recorder</span></div>
 <div class="line">      <a class="code hl_function" href="group__EventRecorder__Setup.html#gadfb4f7a90a67608538242a21479b0919">EventRecorderStop</a>();                        <span class="comment">// Stop Event Recorder</span></div>
-<div class="line">    } <span class="keywordflow">else</span> {                                      <span class="comment">// If fault information does not exist</span></div>
-<div class="line">      <a class="code hl_function" href="group__Fault__Storage.html#ga798a3b6672c119384b761e5f1fa6d346" title="Clear the saved fault information.">ARM_FaultClear</a>();                           <span class="comment">// Clear (initialize) fault information</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// ...</span></div>
