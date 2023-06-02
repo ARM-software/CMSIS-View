@@ -62,11 +62,7 @@ static __NO_RETURN void FaultTriggerThread (void *argument) {
 
   for (;;) {
     ch = (char)getchar();                       // Read character from console (blocking)
-    if (ch == '0') {
-      putchar(0x04);                            // Shutdown the simulator
-    } else {
-      ARM_FaultTrigger((uint32_t)(ch - '0'));   // Trigger a fault
-    }
+    ARM_FaultTrigger((uint32_t)(ch - '0'));     // Trigger a fault
   }
 }
 
