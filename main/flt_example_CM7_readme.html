@@ -142,7 +142,8 @@ CMSIS Packs:</h2>
 <h1><a class="anchor" id="autotoc_md18"></a>
 Build</h1>
 <ol type="1">
-<li>Use the <code>csolution</code> command to create <code>.cprj</code> project files: <div class="fragment"><div class="line">csolution convert -s Fault.csolution.yml</div>
+<li>Use the <code>csolution</code> command to create <code>.cprj</code> project files (for <b>Arm Compiler 6</b> toolchain): <div class="fragment"><div class="line">csolution convert -s Fault.csolution.yml</div>
+</div><!-- fragment --> or, for <b>GCC</b> toolchain use the following command: <div class="fragment"><div class="line">csolution convert -s Fault.csolution.yml -t GCC</div>
 </div><!-- fragment --></li>
 <li>Use the <code>cbuild</code> command to create executable files: <div class="fragment"><div class="line">cbuild Fault.Debug+VHT_MPS2_Cortex-M7.cprj</div>
 </div><!-- fragment --> </li>
@@ -152,13 +153,12 @@ Run</h1>
 <h2><a class="anchor" id="autotoc_md20"></a>
 AVH Target</h2>
 <p >Execute the following steps:</p><ul>
-<li><p class="startli">run the AVH model from the command line by executing the following command: </p><div class="fragment"><div class="line">VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf</div>
+<li>run the AVH model (with example built with <b>Arm Compiler 6</b> toolchain) from the command line by executing the following command: <div class="fragment"><div class="line">VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.axf</div>
+</div><!-- fragment --> or, run the AVH model (with example built with <b>GCC</b> toolchain) from the command line by executing the following command: <div class="fragment"><div class="line">VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.elf</div>
 </div><!-- fragment --> <blockquote class="doxtable">
-<p >Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the </p>
+<p >Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the <code>VHT_MPS2_Cortex-M7.exe</code> (e.g. <code>c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7</code>) has to be provided instead of <code>VHT_MPS2_Cortex-M7</code>. </p>
 </blockquote>
-<p><code>VHT_MPS2_Cortex-M7.exe</code> (e.g. <code>c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7</code>) has to be provided instead of <code>VHT_MPS2_Cortex-M7</code>.</p>
-<p class="startli">The generated file <code>EventRecorder.log</code> contains the events that were generated during the example execution. This file is the input for the <code>eventlist</code> utility which can be used for further analysis.</p>
-</li>
+The generated file <code>EventRecorder.log</code> contains the events that were generated during the example execution. This file is the input for the <code>eventlist</code> utility which can be used for further analysis.</li>
 <li>follow the instructions in the simulator console</li>
 </ul>
 <p >The fault triggering is done by entering a number via simulator console (see possible values below).</p>
