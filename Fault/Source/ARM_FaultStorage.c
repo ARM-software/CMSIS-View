@@ -571,10 +571,11 @@ __NAKED void ARM_FaultSave (void) {
 
  /* If additional state information is available then clear the R4 .. R7 */
 #if (ARM_FAULT_ARCH_ARMV8x_M != 0)          // If arch is Armv8/8.1-M
-    "ldrh  r0,  [r4,%[Content_ofs]]\n"      // Load Content value
+    "ldr   r0,  =%c[Content_addr]\n"        // Load Content address
+    "ldrh  r0,  [r0]\n"                     // Load Content value
     "movs  r1,  %[AdditionalContext_bit]\n" // Load AdditionalContext bit
     "ands  r0,  r1\n"                       // AND Content with AdditionalContext bit to determine if additional state context was saved
-    "bne   restore_regs_done\n"             // If      additional state context was not saved, do not clear R4 .. R7 and exit section
+    "beq   restore_regs_done\n"             // If      additional state context was not saved, do not clear R4 .. R7 and exit section
     "movs  r4,  #0\n"                       // Else if additional state context was     saved, clear R4 .. R7
     "movs  r5,  #0\n"
     "movs  r6,  #0\n"
@@ -593,7 +594,7 @@ __NAKED void ARM_FaultSave (void) {
  ,  [MagicNumber_ofs]                       "i" (offsetof(ARM_FaultInfo_t, MagicNumber))
  ,  [MagicNumber_val]                       "i" (ARM_FAULT_MAGIC_NUMBER)
  ,  [CRC32_ofs]                             "i" (offsetof(ARM_FaultInfo_t, CRC32))
- ,  [Content_ofs]                           "i" (offsetof(ARM_FaultInfo_t, Content))
+ ,  [Content_addr]                          "i" (&ARM_FaultInfo.Content)
  ,  [AdditionalContext_bit]                 "i" (1U << 6)
  ,  [R4_addr]                               "i" (&ARM_FaultInfo.Registers.R4)
  ,  [crc_init_val]                          "i" (ARM_FAULT_CRC32_INIT_VAL)
