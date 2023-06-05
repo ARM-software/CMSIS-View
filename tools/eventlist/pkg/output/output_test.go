@@ -1019,6 +1019,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "txt"
+	level := ""
 	tests := []struct {
 		name    string
 		args    args
@@ -1030,7 +1031,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1083,18 +1084,19 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "json"
+	level := ""
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"test", args{filename: &o1, eventFile: &s10}, false},
+		{"test1", args{filename: &o1, eventFile: &s10}, false},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1143,6 +1145,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		showStatistic bool
 	}
 	formatType := "xml"
+	level := ""
 	tests := []struct {
 		name    string
 		args    args
@@ -1154,7 +1157,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
