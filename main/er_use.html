@@ -165,7 +165,7 @@ Create memory region using linker script</h3>
 Arm Compiler</h4>
 <p >for the <b>Arm Compiler</b> toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):</p>
 <div class="fragment"><div class="line">RW_NOINIT &lt;start_address&gt; UNINIT 0x800 {</div>
-<div class="line">  * (.bss.noinit)</div>
+<div class="line">  * (.bss.noinit*)</div>
 <div class="line">}</div>
 </div><!-- fragment --><blockquote class="doxtable">
 <p >Note: &lt;start_address&gt; is the physical address in RAM where the section will start </p>
@@ -182,7 +182,7 @@ GCC</h4>
 <div class="line">{</div>
 <div class="line">  . = ALIGN(4);</div>
 <div class="line">  PROVIDE (__noinit_start = .);</div>
-<div class="line">  *(.noinit)</div>
+<div class="line">  *(.noinit*)</div>
 <div class="line">  . = ALIGN(4);</div>
 <div class="line">  PROVIDE (__noinit_end = .);</div>
 <div class="line">} &gt; RAM</div>
