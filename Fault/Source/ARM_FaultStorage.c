@@ -38,13 +38,13 @@
 #if !defined(__NO_INIT)
   //lint -esym(9071, __NO_INIT) "Suppress: defined macro is reserved to the compiler"
   #if   defined (__CC_ARM)                                           /* ARM Compiler 4/5 */
-    #define __NO_INIT __attribute__ ((section (".bss.noinit"), zero_init))
+    #define __NO_INIT __attribute__ ((section (".bss.noinit.fault"), zero_init))
   #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)    /* ARM Compiler 6 */
-    #define __NO_INIT __attribute__ ((section (".bss.noinit")))
+    #define __NO_INIT __attribute__ ((section (".bss.noinit.fault")))
   #elif defined (__GNUC__)                                           /* GNU Compiler */
-    #define __NO_INIT __attribute__ ((section (".noinit")))
+    #define __NO_INIT __attribute__ ((section (".noinit.fault")))
   #elif defined (__ICCARM__)                                         /* IAR Compiler */
-    #define __NO_INIT __attribute__ ((section (".noinit")))
+    #define __NO_INIT __attribute__ ((section (".noinit.fault")))
   #else
     #warning "No compiler specific solution for __NO_INIT. __NO_INIT is ignored."
     #define __NO_INIT
@@ -425,7 +425,7 @@ __NAKED void ARM_FaultSave (void) {
 #endif
 #endif
  :  /* clobber list */
-    "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "cc", "memory");
+    "r0", "r1", "r2", "r3", "cc", "memory");
 
 #if (ARM_FAULT_FAULT_REGS_EXIST != 0)       // If fault registers exist
   __ASM volatile (
@@ -518,7 +518,7 @@ __NAKED void ARM_FaultSave (void) {
 #endif
 #endif
  :  /* clobber list */
-    "r0", "r1", "r2", "r3", "r5", "r6", "cc", "memory");
+    "r0", "r1", "r2", "r3", "cc", "memory");
 #endif
 
   __ASM volatile (
@@ -602,7 +602,7 @@ __NAKED void ARM_FaultSave (void) {
  ,  [crc_data_len]                          "i" (sizeof(ARM_FaultInfo) - (sizeof(ARM_FaultInfo.MagicNumber) + sizeof(ARM_FaultInfo.CRC32)))
  ,  [crc_polynom]                           "i" (ARM_FAULT_CRC32_POLYNOM)
  :  /* clobber list */
-    "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "cc", "memory");
+    "r0", "r1", "r2", "r3", "cc", "memory");
 }
 
 /**
