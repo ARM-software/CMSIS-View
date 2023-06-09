@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2023 Arm Limited. All rights reserved.
+
+  SPDX-License-Identifier: Apache-2.0
+ 
+  Licensed under the Apache License, Version 2.0 (the License); you may
+  not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+  www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
 <component_viewer schemaVersion="1.2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
-<component name="Fault" version="1.0.0"/>
+
+<component name="Fault" version="1.0.1"/>
 
   <typedefs>
     <!-- VersionString_t -->
@@ -119,7 +138,7 @@
       <calc>RAS_FaultReg      = fault_info_valid &amp;&amp; (ARM_FaultInfo.Content &amp; 1024) &gt;&gt; 10;</calc>
 
       <!-- Read content of Fault Registers if it exists -->
-      <read name="FaultRegisters"                cond="FaultRegs"       type="FaultRegisters_t"            symbol="ARM_FaultStorage.c/ARM_FaultInfo"/>
+      <read name="FaultRegisters"                cond="FaultRegs"       type="FaultRegisters_t"            symbol="ARM_FaultInfo"/>
 
       <!-- Create variables used for display -->
       <var  name="EXC_RETURN"                                           type="uint32_t"                    value="0"/>
