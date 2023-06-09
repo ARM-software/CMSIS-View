@@ -90,7 +90,7 @@
 #endif
 
 // Fault component version
-#define ARM_FAULT_VERSION              "1.0.0"
+#define ARM_FAULT_VERSION              "1.0.1"
 
 // Fault Information structure type version
 #define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)             // ARM_FaultInfo type Version.Major
