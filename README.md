@@ -116,7 +116,7 @@ them as assets to the release.
 
 ## License Terms
 
-CMSIS-View is licensed under [Apache License 2.0.](LICENSE).
+CMSIS-View is licensed under [Apache License 2.0](LICENSE).
 
 ### Note
 

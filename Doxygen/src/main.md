@@ -30,3 +30,7 @@ This user's guide contains the following chapters:
 - \subpage fault : infrastructure and functions to store, record, and analyze the Cortex-M Exception Fault information.
 - \subpage ExampleProjects are available demonstrating standard use cases.
 - **[API References](modules.html)** describes the API and the functions of the **Event Recorder** and **Fault components** in details.
+
+# License {#license}
+
+CMSIS-View is provided free of charge by Arm under the <a href="https://raw.githubusercontent.com/ARM-software/CMSIS-View/main/LICENSE">Apache 2.0 License</a>.
