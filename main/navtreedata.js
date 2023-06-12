@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "CMSIS-View", "index.html", [
     [ "Content", "index.html#content", null ],
+    [ "License", "index.html#license", null ],
     [ "Revision History", "rev_hist.html", null ],
     [ "Event Recorder", "evr.html", "evr" ],
     [ "Event Statistics", "ev_stat.html", [
@@ -54,7 +55,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ExampleProjects.html",
-"value_output.html#c_spec"
+"value_output.html#alert_bold"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
