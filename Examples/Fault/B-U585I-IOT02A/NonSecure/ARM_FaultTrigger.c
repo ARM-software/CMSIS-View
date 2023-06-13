@@ -34,7 +34,7 @@ void ARM_FaultTrigger (uint32_t fault_id) {
 
   switch (fault_id) {
     case ARM_FAULT_ID_MEM_DATA:                     // Trigger Non-Secure MemManage fault - data access
-      val = *((uint32_t *)0x20040100);              // Read from address not allowed by the MPU (non-privileged access not allowed)
+      val = *((uint32_t *)0x20040000);              // Read from address not allowed by the MPU (non-privileged access not allowed)
       break;
 
     case ARM_FAULT_ID_BUS_DATA:                     // Trigger Non-Secure BusFault - data access

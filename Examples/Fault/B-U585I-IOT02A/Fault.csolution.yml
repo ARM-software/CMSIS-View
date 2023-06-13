@@ -1,0 +1,24 @@
+solution:
+
+  created-for: CMSIS-Toolbox@2.0.0
+  cdefault:
+
+  packs:
+    - pack: Keil::STM32U5xx_DFP@2.1.0
+    - pack: Keil::B-U585I-IOT02A_BSP@1.0.0
+
+  target-types:
+    - type: HW
+      board: STMicroelectronics::B-U585I-IOT02A
+      device: STMicroelectronics::STM32U585AIIx
+
+  build-types:
+    - type: Debug
+      debug: on
+      optimize: none
+      define:
+        - DEBUG
+
+  projects:
+    - project: ./Secure/Fault_S.cproject.yml
+    - project: ./NonSecure/Fault_NS.cproject.yml

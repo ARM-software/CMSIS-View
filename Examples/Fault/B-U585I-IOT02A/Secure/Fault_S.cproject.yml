@@ -1,0 +1,43 @@
+project:
+
+  misc:
+    - for-compiler: GCC
+      Link:
+        - --specs=nosys.specs
+
+  processor:
+    trustzone: secure
+
+  packs:
+    - pack: ARM::CMSIS@5.9.0
+    - pack: ARM::CMSIS-View@1.0.1
+
+  groups:
+    - group: Interface
+      files:
+        - file: interface.c
+        - file: tz_context.c
+
+  components:
+    - component: ARM::CMSIS:CORE
+    - component: ARM::CMSIS-View:Fault:Storage
+
+    - component: Keil::Device:STM32Cube Framework:STM32CubeMX
+
+    - component: Keil::Device:STM32Cube HAL:Common
+    - component: Keil::Device:STM32Cube HAL:Cortex
+    - component: Keil::Device:STM32Cube HAL:DMA
+    - component: Keil::Device:STM32Cube HAL:Flash
+    - component: Keil::Device:STM32Cube HAL:GPIO
+    - component: Keil::Device:STM32Cube HAL:GTZC
+    - component: Keil::Device:STM32Cube HAL:ICACHE
+    - component: Keil::Device:STM32Cube HAL:PWR
+    - component: Keil::Device:STM32Cube HAL:RCC
+    - component: Keil::Device:STM32Cube HAL:UART
+    - component: Keil::Device:STM32Cube LL:Common
+    - component: Keil::Device:STM32Cube LL:GPIO
+    - component: Keil::Device:STM32Cube LL:PWR
+    - component: Keil::Device:STM32Cube LL:RCC
+    - component: Keil::Device:STM32Cube LL:UTILS
+
+    - component: Keil::Device:Startup&Source C
