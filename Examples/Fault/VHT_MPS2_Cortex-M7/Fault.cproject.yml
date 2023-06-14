@@ -1,6 +1,9 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.6.0/tools/projmgr/schemas/cproject.schema.json
-
 project:
+
+  packs:
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-Compiler
+    - pack: ARM::CMSIS-View
 
   define:
     - RTE_Compiler_EventRecorder
@@ -13,19 +16,24 @@ project:
         - file: ./README.md
     - group: Source Files
       files:
-        - file: ./Fault.c
-        - file: ./ARM_FaultTrigger.c
-        - file: ./retarget_stdio.c
+        - file: Fault.c
+        - file: ARM_FaultTrigger.c
+        - file: retarget_stdio.c
 
   components:
     - component: ARM::CMSIS:CORE
     - component: ARM::CMSIS:RTOS2:Keil RTX5&Source
-    - component: ARM::CMSIS-View:Fault:Record
-    - component: ARM::CMSIS-View:Fault:Storage
-    - component: ARM::CMSIS-View:Event Recorder&Semihosting
+
     - component: ARM::CMSIS-Compiler:I/O:STDERR&User
     - component: ARM::CMSIS-Compiler:I/O:STDOUT&User
     - component: ARM::CMSIS-Compiler:I/O:STDIN&User
-    - component: Keil::Device:Startup&C Startup
-    - component: Keil::CMSIS Driver:USART
+
+    - component: ARM::CMSIS-View:Event Recorder&Semihosting
+    - component: ARM::CMSIS-View:Fault:Record
+    - component: ARM::CMSIS-View:Fault:Storage
+
     - component: Keil::Board Support&V2M-MPS2:Common
+
+    - component: Keil::CMSIS Driver:USART
+
+    - component: Keil::Device:Startup&C Startup

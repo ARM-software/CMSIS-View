@@ -269,7 +269,7 @@ SECTIONS
   {
     . = ALIGN(4);
     PROVIDE (__noinit_start = .);
-    *(.noinit)
+    *(.noinit*)
     . = ALIGN(4);
     PROVIDE (__noinit_end = .);
   } > RAM
