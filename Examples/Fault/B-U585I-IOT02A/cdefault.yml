@@ -5,8 +5,6 @@ default:
   misc:
     - for-compiler: AC6
       C-CPP:
-        - -fshort-wchar
-        - -fshort-enums
         - -ffunction-sections
       C:
         - -std=gnu11
@@ -19,8 +17,8 @@ default:
     - for-compiler: GCC
       C-CPP:
         - -ffunction-sections
-        - -Wall
       C:
         - -std=gnu11
       Link:
+        - --specs=nosys.specs
         - -Wl,-Map=$elf()$.map

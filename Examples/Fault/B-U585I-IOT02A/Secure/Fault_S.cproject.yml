@@ -1,16 +1,11 @@
 project:
 
-  misc:
-    - for-compiler: GCC
-      Link:
-        - --specs=nosys.specs
-
   processor:
     trustzone: secure
 
   packs:
-    - pack: ARM::CMSIS@5.9.0
-    - pack: ARM::CMSIS-View@>=1.0.1
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-View
 
   groups:
     - group: Interface
