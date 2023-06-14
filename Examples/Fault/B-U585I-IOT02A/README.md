@@ -21,7 +21,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 
 ### CMSIS Packs:
  - Required packs:
-    - ARM::CMSIS-View v1.0.0 or newer
+    - ARM::CMSIS-View v1.0.1 or newer
     - ARM::CMSIS-Compiler v1.0.0 or newer
     - ARM::CMSIS v5.9.0 or newer
     - Keil::STM32U5xx_DFP v2.1.0 or newer
@@ -54,7 +54,9 @@ Configure the following **Option bytes** with **STM32CubeProgrammer** utility:
 
 ## Build and Run
 
-To try the example do the following steps:
+### Build and Run with uVision
+
+To try the example with uVision, do the following steps:
  1. Open the `Fault.uvmpw` in the uVision
  2. Build the `Project: Fault_S` project
  3. Build the `Project: Fault_NS` project
@@ -64,6 +66,34 @@ To try the example do the following steps:
  7. Follow the instructions in the **Serial Terminal** and observe the results
 
 > Note: In the debug session fault information can be inspected in the **Component View** and **Event Recorder** windows
+
+### Build with CMSIS-Toolbox
+
+Alternatively, this example can be built with [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox).
+
+To build the example with CMSIS-Toolbox do the following steps:
+
+ 1. Use the `csolution` command to create `.cprj` project files (for **Arm Compiler 6** toolchain):
+    ```
+    csolution convert -s Fault.csolution.yml
+    ```
+    or, for **GCC** toolchain use the following command:
+    ```
+    csolution convert -s Fault.csolution.yml -t GCC
+    ```
+ 2. Use the `cbuild` command to create executable files for Secure and Non-secure applications:
+    ```
+    cbuild ./Secure/Fault_S.Debug+HW.cprj
+    cbuild ./NonSecure/Fault_NS.Debug+HW.cprj
+    ```
+> Note: This procedure was tested with Arm GNU Toolchain version 10 2021.10
+
+> Note: To run and debug executables built with CMSIS-Toolbox with uVision, it is necessary to adapt uVision settings
+    relating to output file, and also adapt Debug.ini and Flash.ini scripts accordingly
+
+## User Interface
+
+This example uses **Serial Terminal** as User Interface.
 
 The fault triggering is done by entering a number via **Serial Terminal** application (see possible values below).
 

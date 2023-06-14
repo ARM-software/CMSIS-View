@@ -686,6 +686,36 @@
   </Targets>
 
   <RTE>
+    <packages>
+      <filter>
+        <targetInfos/>
+      </filter>
+      <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0">
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1">
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A"/>
+        </targetInfos>
+      </package>
+      <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0">
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A"/>
+        </targetInfos>
+      </package>
+      <package name="B-U585I-IOT02A_BSP" schemaVersion="1.7.2" url="https://github.com/MDK-Packs/Pack/raw/master/B-U585I-IOT02A_BSP/" vendor="Keil" version="1.0.0">
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0">
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+    </packages>
     <gpdscs>
       <gpdsc name="../Board/B-U585I-IOT02A/STM32CubeMX/NonSecure/FrameworkCubeMX.gpdsc">
         <targetInfos>
@@ -747,13 +777,13 @@
         </targetInfos>
       </component>
       <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="Cortex-M Device">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
       <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cvendor="ARM" Cversion="1.0.0" condition="FaultRecord">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>
@@ -762,8 +792,8 @@
           </targetInfo>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cvendor="ARM" Cversion="1.0.0" condition="Cortex-M Device">
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+      <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cvendor="ARM" Cversion="1.0.1" condition="Cortex-M Device">
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>
@@ -853,7 +883,7 @@
       <file attr="config" category="header" name="EventRecorder\Config\EventRecorderConf.h" version="1.1.0">
         <instance index="0">RTE\CMSIS-View\EventRecorderConf.h</instance>
         <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="Cortex-M Device"/>
-        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+        <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>

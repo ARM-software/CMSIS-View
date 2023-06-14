@@ -124,8 +124,8 @@ LR_APP __LR_BASE __LR_SIZE  {                                        /* load reg
   STACKSEAL +0 EMPTY __STACKSEAL_SIZE {                              /* empty region for stack seal immediately after stack */
   }
 
-  RW_NOINIT_FAULT 0x20040000 UNINIT 0x100 {                          /* no init data for ARM_FaultInfo structure */
-    arm_faultstorage.o (.bss.noinit)
+  RW_NS_NOINIT_FAULT 0x200B0000 UNINIT 0x100 {                       /* Uninitialized memory for Fault information (ARM_FaultInfo) */
+    *(.bss.noinit.fault)
   }
 }
 

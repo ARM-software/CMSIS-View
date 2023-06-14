@@ -79,7 +79,7 @@
 #define __LR_SIZE          ( __ROM_SIZE )
 
 #define __RW_BASE          ( __RAM_BASE )
-#define __RW_SIZE          ( __RAM_SIZE - 0x200 - __STACK_SIZE - __HEAP_SIZE - __NOINIT_SIZE )
+#define __RW_SIZE          ( __RAM_SIZE - __STACK_SIZE - __HEAP_SIZE - __NOINIT_SIZE - 0x200 )
 #define __RW_NOINIT_BASE   ( __RAM_BASE + __RW_SIZE )                /* starts after RW_RAM section */
 
 
@@ -91,15 +91,15 @@ LR_APP __LR_BASE __LR_SIZE  {                                        /* load reg
    .ANY (+XO)
   }
 
-  RW_NOINIT_FAULT __RW_BASE UNINIT 0x100 {                           /* no init data for ARM_FaultInfo structure */
-    arm_faultstorage.o (.bss.noinit)
+  RW_RAM_PRIV __RW_BASE EMPTY 0x100 {                                /* RAM allowing privileged access only (for showing MemManage fault) */
   }
 
-  RW_RAM_PRIV (__RW_BASE + 0x100) EMPTY 0x100 {                      /* RAM only accessible by privileged code (MPU) */
-  }
-
-  RW_RAM (__RW_BASE + 0x200) __RW_SIZE {                             /* RW, ZI data */
+  RW_RAM (__RW_BASE + 0x100) __RW_SIZE {                             /* RW, ZI data */
    .ANY (+RW +ZI)
+  }
+
+  RW_NOINIT_FAULT 0x200B0000 UNINIT 0x100 {                          /* Uninitialized memory for Fault information (ARM_FaultInfo) */
+    *(.bss.noinit.fault)
   }
 
 #if __NOINIT_SIZE > 0

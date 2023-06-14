@@ -1,0 +1,46 @@
+project:
+
+  processor:
+    trustzone: non-secure
+
+  packs:
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-Compiler
+    - pack: ARM::CMSIS-View
+
+  groups:
+    - group: Source Files
+      files:
+        - file: Fault.c
+        - file: ARM_FaultTrigger.c
+        - file: ARM_FaultPrint.c
+        - file: retarget_stdio.c
+    - group: CMSE_Library
+      files:
+        - file: $cmse-lib(Fault_S)$
+
+  components:
+    - component: ARM::CMSIS:CORE
+    - component: ARM::CMSIS:RTOS2:Keil RTX5&Source_NS
+
+    - component: ARM::CMSIS-Compiler:I/O:STDERR&User
+    - component: ARM::CMSIS-Compiler:I/O:STDOUT&User
+    - component: ARM::CMSIS-Compiler:I/O:STDIN&User
+
+    - component: ARM::CMSIS-View:Event Recorder&DAP
+    - component: ARM::CMSIS-View:Fault:Record
+    - component: ARM::CMSIS-View:Fault:Storage
+
+    - component: Keil::Device:STM32Cube Framework:STM32CubeMX
+
+    - component: Keil::Device:STM32Cube HAL:Common
+    - component: Keil::Device:STM32Cube HAL:Cortex
+    - component: Keil::Device:STM32Cube HAL:DMA
+    - component: Keil::Device:STM32Cube HAL:Flash
+    - component: Keil::Device:STM32Cube HAL:GPIO
+    - component: Keil::Device:STM32Cube HAL:GTZC
+    - component: Keil::Device:STM32Cube HAL:PWR
+    - component: Keil::Device:STM32Cube HAL:RCC
+    - component: Keil::Device:STM32Cube HAL:UART
+
+    - component: Keil::Device:Startup&Source C

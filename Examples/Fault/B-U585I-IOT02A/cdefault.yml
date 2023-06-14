@@ -1,0 +1,24 @@
+default:
+
+  compiler: AC6
+
+  misc:
+    - for-compiler: AC6
+      C-CPP:
+        - -ffunction-sections
+      C:
+        - -std=gnu11
+      ASM:
+        - -masm=auto
+      Link:
+        - --map
+        - --info summarysizes
+
+    - for-compiler: GCC
+      C-CPP:
+        - -ffunction-sections
+      C:
+        - -std=gnu11
+      Link:
+        - --specs=nosys.specs
+        - -Wl,-Map=$elf()$.map
