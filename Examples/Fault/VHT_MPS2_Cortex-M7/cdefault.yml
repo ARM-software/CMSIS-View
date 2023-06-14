@@ -5,22 +5,21 @@ default:
   misc:
     - for-compiler: AC6
       C-CPP:
-        - -fshort-wchar
-        - -fshort-enums
         - -ffunction-sections
       C:
         - -std=gnu11
       ASM:
         - -masm=auto
       Link:
+        - --entry=Reset_Handler
         - --map
         - --info summarysizes
 
     - for-compiler: GCC
       C-CPP:
         - -ffunction-sections
-        - -Wall
       C:
         - -std=gnu11
       Link:
+        - --entry=Reset_Handler
         - -Wl,-Map=$elf()$.map
