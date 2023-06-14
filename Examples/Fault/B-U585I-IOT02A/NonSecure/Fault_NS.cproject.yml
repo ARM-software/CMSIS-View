@@ -5,8 +5,8 @@ project:
 
   packs:
     - pack: ARM::CMSIS@5.9.0
-    - pack: ARM::CMSIS-Compiler@1.0.0
-    - pack: ARM::CMSIS-View@1.0.1
+    - pack: ARM::CMSIS-Compiler@>=1.0.0
+    - pack: ARM::CMSIS-View@>=1.0.1
 
   groups:
     - group: Source Files
