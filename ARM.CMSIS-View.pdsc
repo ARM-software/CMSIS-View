@@ -34,15 +34,21 @@
       <accept Dcore="SC000"/>
       <accept Dcore="SC300"/>
     </condition>
+    <condition id="EventRecorder">
+      <description>Conditions for Event Recorder</description>
+      <require condition="Cortex-M Device"/>
+      <deny Cclass="Compiler" Cgroup="Event Recorder"/>
+    </condition>
     <condition id="FaultRecord">
       <description>Conditions for Fault Record</description>
+      <require condition="Cortex-M Device"/>
       <require Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage"/>
       <require Cclass="CMSIS-View" Cgroup="Event Recorder"/>
     </condition>
   </conditions>
 
   <components>
-    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.2" condition="Cortex-M Device">
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.2" condition="EventRecorder">
       <description>Event Recording via Debug Access Port (DAP)</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_EventRecorder
@@ -56,7 +62,7 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.2" condition="Cortex-M Device">
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.2" condition="EventRecorder">
       <description>Event Recording via Debug Access Port (DAP) and Semihosting</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_EventRecorder
