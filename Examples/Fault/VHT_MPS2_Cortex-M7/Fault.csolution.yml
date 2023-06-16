@@ -14,8 +14,6 @@ solution:
     - type: Debug
       debug: on
       optimize: none
-      define:
-        - DEBUG
 
   projects:
     - project: ./Fault.cproject.yml

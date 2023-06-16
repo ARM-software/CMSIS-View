@@ -99,8 +99,8 @@ To analyze the result `eventlist` utility is needed, copy the executable `eventl
 
 To process `EventRecorder.log` file with the `eventlist` utility in **Windows Command Prompt** (cmd.exe) execute the following command:
    ```
-   eventlist -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\Fault\ARM_Fault.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\EventRecorder\EventRecorder.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS\5.9.0\CMSIS\RTOS2\RTX\RTX5.scvd EventRecorder.log
+   eventlist -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/ARM_Fault.scvd -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd -I %CMSIS_PACK_ROOT%/ARM\CMSIS/5.9.0/CMSIS/RTOS2/RTX/RTX5.scvd EventRecorder.log
    ```
 
 > Note: If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs
-        (for example replace "%CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\Fault\" with "%CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.1\Fault\")
+        (for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/")
