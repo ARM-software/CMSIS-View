@@ -20,6 +20,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
    - STM32Cube MCU Package for STM32U5 Series v1.2.0
  - [**STM32CubeProgrammer**](https://www.st.com/en/development-tools/stm32cubeprog.html) utility
  - [**Arm GNU Toolchain v12.2.MPACBTI-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+   (only necessary when building example with GCC)
 
 ### CMSIS Packs:
  - Required packs:
