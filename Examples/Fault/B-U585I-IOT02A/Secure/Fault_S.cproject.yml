@@ -5,6 +5,7 @@ project:
 
   packs:
     - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-Compiler
     - pack: ARM::CMSIS-View
 
   groups:
@@ -15,6 +16,11 @@ project:
 
   components:
     - component: ARM::CMSIS:CORE
+
+    - component: ARM::CMSIS-Compiler:I/O:STDERR&Breakpoint
+    - component: ARM::CMSIS-Compiler:I/O:STDOUT&Breakpoint
+    - component: ARM::CMSIS-Compiler:I/O:STDIN&Breakpoint
+
     - component: ARM::CMSIS-View:Fault:Storage
 
     - component: Keil::Device:STM32Cube Framework:STM32CubeMX

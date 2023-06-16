@@ -20,5 +20,5 @@ default:
       C:
         - -std=gnu11
       Link:
-        - --specs=nosys.specs
+        - --specs=nano.specs
         - -Wl,-Map=$elf()$.map
