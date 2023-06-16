@@ -1,21 +1,26 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/Open-CMSIS-Pack/devtools/schemas/projmgr/1.6.0/tools/projmgr/schemas/cproject.schema.json
-
 project:
-  components:
-    - component: CMSIS:CORE
-    - component: Device:Definition
-    - component: Device:Startup&Baremetal
-    - component: Native Driver:Timeout
-    - component: Native Driver:SysCounter
-    - component: Native Driver:SysTimer
-    - component: CMSIS-View:Event Recorder&Semihosting
+
+  packs:
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-View
 
   groups:
     - group: Documentation
       files:
-        - file: ./README.md
+        - file: README.md
 
-    - group: main
+    - group: Source Files
       files:
-        - file: ./main.c
+        - file: main.c
 
+  components:
+    - component: CMSIS:CORE
+
+    - component: CMSIS-View:Event Recorder&Semihosting
+
+    - component: Native Driver:Timeout
+    - component: Native Driver:SysCounter
+    - component: Native Driver:SysTimer
+
+    - component: Device:Definition
+    - component: Device:Startup&Baremetal

@@ -23,11 +23,11 @@ This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 mode
 
 Tools:
 
-- [**CMSIS-Toolbox 1.6.0 or higher**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox)
-- [**Keil MDK 5.38 or higher**](https://www.keil.com/mdk5)
-  - Arm Compiler 6 (part of MDK)
-  - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
-- [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
+ - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) or newer
+ - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
+   - Arm Compiler 6 (part of MDK)
+   - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
+ - [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
 
 As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware) available via the AWS Marketplace as this image contains all relevant tools.
 
@@ -116,3 +116,6 @@ When using Windows Command Prompt use the following command:
 ```sh
 eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 ```
+
+> Note: If CMSIS-View v1.0.0 pack is not installed, in the previous command replace corresponding path with the path of the latest installed pack
+        (for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/EventRecorder/")
