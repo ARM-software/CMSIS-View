@@ -118,21 +118,22 @@ Prerequisites</h1>
 <h2><a class="anchor" id="autotoc_md19"></a>
 Software:</h2>
 <ul>
-<li><a href="https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/tag/1.6.0"><b>CMSIS-Toolbox v1.6.0</b></a> or newer</li>
+<li><a href="https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases"><b>CMSIS-Toolbox v2.0.0</b></a> or newer</li>
 <li><a href="https://www.keil.com/mdk5"><b>Keil MDK v5.38</b></a> or newer containing:<ul>
 <li>Arm Compiler 6 (part of the MDK)</li>
 <li>Arm Virtual Hardware (AVH) for MPS2 platform with Cortex-M7 (part of the MDK-Professional)</li>
 </ul>
 </li>
 <li><a href="https://github.com/ARM-software/CMSIS-View/releases/tag/tools%2Feventlist%2F1.1.0"><b>eventlist v1.1.0</b></a> or newer</li>
+<li><a href="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads"><b>Arm GNU Toolchain v12.2.MPACBTI-Rel1</b></a> (only necessary when building example with GCC)</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md20"></a>
 CMSIS Packs:</h2>
 <ul>
 <li><p class="startli">Required packs:</p><ul>
-<li>ARM::CMSIS-View v1.0.0 or newer</li>
-<li>ARM::CMSIS-Compiler v1.0.0 or newer</li>
-<li>ARM::CMSIS v5.9.0</li>
+<li>ARM::CMSIS-View</li>
+<li>ARM::CMSIS-Compiler</li>
+<li>ARM::CMSIS</li>
 <li>Keil::V2M-MPS2_CMx_BSP v1.8.0</li>
 </ul>
 <p class="startli">Missing packs can be installed by executing the following <code>csolution</code> and <code>cpackget</code> commands: </p><div class="fragment"><div class="line">csolution list packs -s Fault.csolution.yml -m &gt;missing_packs_list.txt</div>
@@ -192,8 +193,12 @@ Running the example in the uVision</h2>
 <h1><a class="anchor" id="autotoc_md25"></a>
 Analysis</h1>
 <p >To analyze the result <code>eventlist</code> utility is needed, copy the executable <code>eventlist</code> file to the same folder where <code>EventRecorder.log</code> is located.</p>
-<p >To process <code>EventRecorder.log</code> file with the <code>eventlist</code> utility in <b>Windows Command Prompt</b> (cmd.exe) execute the following command: </p><div class="fragment"><div class="line">eventlist -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\Fault\ARM_Fault.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\EventRecorder\EventRecorder.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS\5.9.0\CMSIS\RTOS2\RTX\RTX5.scvd EventRecorder.log</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+<p >To process <code>EventRecorder.log</code> file with the <code>eventlist</code> utility in <b>Windows Command Prompt</b> (cmd.exe) execute the following command: </p><div class="fragment"><div class="line">eventlist -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/ARM_Fault.scvd -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd -I %CMSIS_PACK_ROOT%/ARM\CMSIS/5.9.0/CMSIS/RTOS2/RTX/RTX5.scvd EventRecorder.log</div>
+</div><!-- fragment --><blockquote class="doxtable">
+<p >Note: If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs </p>
+</blockquote>
+<p>(for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/") </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
