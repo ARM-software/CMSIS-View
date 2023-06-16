@@ -13,7 +13,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ## Prerequisites
 
 ### Software:
- - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/devtools/releases) or newer
+ - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) or newer
  - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
    - Arm Compiler 6 (part of the MDK)
    - Arm Virtual Hardware (AVH) for MPS2 platform with Cortex-M7 (part of the MDK-Professional)
