@@ -55,7 +55,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ExampleProjects.html",
-"value_output.html#alert_bold"
+"scvd_expression.html#numeric_constant"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
