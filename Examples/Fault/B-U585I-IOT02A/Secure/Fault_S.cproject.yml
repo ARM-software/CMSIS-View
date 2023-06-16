@@ -9,36 +9,40 @@ project:
     - pack: ARM::CMSIS-View
 
   groups:
+    - group: Documentation
+      files:
+        - file: ../README.md
+
     - group: Interface
       files:
         - file: interface.c
         - file: tz_context.c
 
   components:
-    - component: ARM::CMSIS:CORE
+    - component: CMSIS:CORE
 
-    - component: ARM::CMSIS-Compiler:I/O:STDERR&Breakpoint
-    - component: ARM::CMSIS-Compiler:I/O:STDOUT&Breakpoint
-    - component: ARM::CMSIS-Compiler:I/O:STDIN&Breakpoint
+    - component: CMSIS-Compiler:I/O:STDERR&Breakpoint
+    - component: CMSIS-Compiler:I/O:STDOUT&Breakpoint
+    - component: CMSIS-Compiler:I/O:STDIN&Breakpoint
 
-    - component: ARM::CMSIS-View:Fault:Storage
+    - component: CMSIS-View:Fault:Storage
 
-    - component: Keil::Device:STM32Cube Framework:STM32CubeMX
+    - component: Device:STM32Cube Framework:STM32CubeMX
 
-    - component: Keil::Device:STM32Cube HAL:Common
-    - component: Keil::Device:STM32Cube HAL:Cortex
-    - component: Keil::Device:STM32Cube HAL:DMA
-    - component: Keil::Device:STM32Cube HAL:Flash
-    - component: Keil::Device:STM32Cube HAL:GPIO
-    - component: Keil::Device:STM32Cube HAL:GTZC
-    - component: Keil::Device:STM32Cube HAL:ICACHE
-    - component: Keil::Device:STM32Cube HAL:PWR
-    - component: Keil::Device:STM32Cube HAL:RCC
-    - component: Keil::Device:STM32Cube HAL:UART
-    - component: Keil::Device:STM32Cube LL:Common
-    - component: Keil::Device:STM32Cube LL:GPIO
-    - component: Keil::Device:STM32Cube LL:PWR
-    - component: Keil::Device:STM32Cube LL:RCC
-    - component: Keil::Device:STM32Cube LL:UTILS
+    - component: Device:STM32Cube HAL:Common
+    - component: Device:STM32Cube HAL:Cortex
+    - component: Device:STM32Cube HAL:DMA
+    - component: Device:STM32Cube HAL:Flash
+    - component: Device:STM32Cube HAL:GPIO
+    - component: Device:STM32Cube HAL:GTZC
+    - component: Device:STM32Cube HAL:ICACHE
+    - component: Device:STM32Cube HAL:PWR
+    - component: Device:STM32Cube HAL:RCC
+    - component: Device:STM32Cube HAL:UART
+    - component: Device:STM32Cube LL:Common
+    - component: Device:STM32Cube LL:GPIO
+    - component: Device:STM32Cube LL:PWR
+    - component: Device:STM32Cube LL:RCC
+    - component: Device:STM32Cube LL:UTILS
 
-    - component: Keil::Device:Startup&Source C
+    - component: Device:Startup&Source C
