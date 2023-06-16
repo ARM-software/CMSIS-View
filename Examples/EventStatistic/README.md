@@ -23,7 +23,7 @@ This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 mode
 
 Tools:
 
- - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/devtools/releases) or newer
+ - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) or newer
  - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
    - Arm Compiler 6 (part of MDK)
    - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
