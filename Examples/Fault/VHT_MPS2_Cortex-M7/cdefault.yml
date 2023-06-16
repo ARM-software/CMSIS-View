@@ -22,4 +22,5 @@ default:
         - -std=gnu11
       Link:
         - --entry=Reset_Handler
+        - --specs=nano.specs
         - -Wl,-Map=$elf()$.map

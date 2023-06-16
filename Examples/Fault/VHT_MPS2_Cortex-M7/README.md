@@ -13,17 +13,19 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ## Prerequisites
 
 ### Software:
- - [**CMSIS-Toolbox v1.6.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/tag/1.6.0) or newer
+ - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/devtools/releases) or newer
  - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
    - Arm Compiler 6 (part of the MDK)
    - Arm Virtual Hardware (AVH) for MPS2 platform with Cortex-M7 (part of the MDK-Professional)
  - [**eventlist v1.1.0**](https://github.com/ARM-software/CMSIS-View/releases/tag/tools%2Feventlist%2F1.1.0) or newer
+ - [**Arm GNU Toolchain v12.2.MPACBTI-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+   (only necessary when building example with GCC)
 
 ### CMSIS Packs:
  - Required packs:
-    - ARM::CMSIS-View v1.0.0 or newer
-    - ARM::CMSIS-Compiler v1.0.0 or newer
-    - ARM::CMSIS v5.9.0
+    - ARM::CMSIS-View
+    - ARM::CMSIS-Compiler
+    - ARM::CMSIS
     - Keil::V2M-MPS2_CMx_BSP v1.8.0
 
    Missing packs can be installed by executing the following `csolution` and `cpackget` commands:
@@ -99,3 +101,6 @@ To process `EventRecorder.log` file with the `eventlist` utility in **Windows Co
    ```
    eventlist -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\Fault\ARM_Fault.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\EventRecorder\EventRecorder.scvd -I %CMSIS_PACK_ROOT%\ARM\CMSIS\5.9.0\CMSIS\RTOS2\RTX\RTX5.scvd EventRecorder.log
    ```
+
+> Note: If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs
+        (for example replace "%CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.0\Fault\" with "%CMSIS_PACK_ROOT%\ARM\CMSIS-View\1.0.1\Fault\")

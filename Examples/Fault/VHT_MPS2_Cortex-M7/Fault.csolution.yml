@@ -13,7 +13,9 @@ solution:
   build-types:
     - type: Debug
       debug: on
-      optimize: balanced
+      optimize: none
+      define:
+        - DEBUG
 
   projects:
     - project: ./Fault.cproject.yml
