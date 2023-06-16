@@ -752,31 +752,31 @@
       </api>
     </apis>
     <components>
-      <component Cclass="CMSIS-Compiler" Cgroup="I/O" Csub="STDERR" Cvariant="User" Cvendor="ARM" Cversion="1.0.0" condition="CortexDevice">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+      <component Cclass="CMSIS-Compiler" Cgroup="I/O" Csub="STDERR" Cvariant="User" Cvendor="ARM" Cversion="1.0.1" condition="ARMCC CortexDevice IO">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-Compiler" Cgroup="I/O" Csub="STDIN" Cvariant="User" Cvendor="ARM" Cversion="1.0.0" condition="CortexDevice">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+      <component Cclass="CMSIS-Compiler" Cgroup="I/O" Csub="STDIN" Cvariant="User" Cvendor="ARM" Cversion="1.0.1" condition="ARMCC CortexDevice IO">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="ARM" Cversion="1.0.0" condition="CortexDevice">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+      <component Cclass="CMSIS-Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="ARM" Cversion="1.0.1" condition="ARMCC CortexDevice IO">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="OS Interface" Csub="CMSIS-RTOS2" Cvendor="ARM" Cversion="1.0.0" condition="CortexDevice CMSIS-RTOS2">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+      <component Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="OS Interface" Csub="CMSIS-RTOS2" Cvendor="ARM" Cversion="1.0.0" condition="ARMCC CortexDevice CMSIS-RTOS2">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="Cortex-M Device">
+      <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="EventRecorder">
         <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
@@ -882,7 +882,7 @@
     <files>
       <file attr="config" category="header" name="EventRecorder\Config\EventRecorderConf.h" version="1.1.0">
         <instance index="0">RTE\CMSIS-View\EventRecorderConf.h</instance>
-        <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="Cortex-M Device"/>
+        <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.2" condition="EventRecorder"/>
         <package name="CMSIS-View" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>

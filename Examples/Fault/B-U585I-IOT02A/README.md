@@ -13,18 +13,20 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ## Prerequisites
 
 ### Software:
- - [**CMSIS-Toolbox 2.0.0**](https://github.com/Open-CMSIS-Pack/devtools/releases) or newer
+ - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/devtools/releases) or newer
  - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
    - Arm Compiler 6 (part of the MDK)
  - [**STM32CubeMX v6.8.1**](https://www.st.com/en/development-tools/stm32cubemx.html) or newer with:
    - STM32Cube MCU Package for STM32U5 Series v1.2.0
  - [**STM32CubeProgrammer**](https://www.st.com/en/development-tools/stm32cubeprog.html) utility
+ - [**Arm GNU Toolchain v12.2.MPACBTI-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+   (only necessary when building example with GCC)
 
 ### CMSIS Packs:
  - Required packs:
-    - ARM::CMSIS-View v1.0.1 or newer
-    - ARM::CMSIS-Compiler v1.0.0 or newer
-    - ARM::CMSIS v5.9.0 or newer
+    - ARM::CMSIS-View
+    - ARM::CMSIS-Compiler
+    - ARM::CMSIS
     - Keil::STM32U5xx_DFP v2.1.0
     - Keil::B-U585I-IOT02A_BSP v1.0.0
 
@@ -87,8 +89,6 @@ To build the example with CMSIS-Toolbox do the following steps:
     cbuild ./Secure/Fault_S.Debug+HW.cprj
     cbuild ./NonSecure/Fault_NS.Debug+HW.cprj
     ```
-> Note: This procedure was tested with Arm GNU Toolchain version 10 2021.10
-
 > Note: To run and debug executables built with CMSIS-Toolbox with uVision, it is necessary to adapt uVision settings
     relating to output file, and also adapt Debug.ini and Flash.ini scripts accordingly
 
