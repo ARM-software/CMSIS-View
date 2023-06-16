@@ -13,7 +13,7 @@ solution:
   build-types:
     - type: Debug
       debug: on
-      optimize: balanced
+      optimize: none
 
   projects:
     - project: ./Fault.cproject.yml
