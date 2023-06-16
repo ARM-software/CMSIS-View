@@ -16,8 +16,6 @@ solution:
     - type: Debug
       debug: on
       optimize: none
-      define:
-        - DEBUG
 
   projects:
     - project: ./Secure/Fault_S.cproject.yml
