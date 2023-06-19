@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+<package schemaVersion="1.7.25" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.25/schema/PACK.xsd">
   <vendor>ARM</vendor>
   <name>CMSIS-View</name>
   <description>Debugger visualization of software events and statistics</description>
@@ -110,5 +110,22 @@
       </files>
     </component>
   </components>
+
+  <examples>
+    <example name="Event Statistic example" folder="Examples/EventStatistic" doc="README.md">
+      <description>Example that shows the usage of start/stop events for statistical code profiling with the Event Statistics window.</description>
+      <board name="V2M-MPS3-SSE-300-FVP" vendor="ARM"/>
+      <project>
+        <environment name="cmsis" load="EventStatistic.csolution.yml"/>
+      </project>
+    </example>
+    <example name="Fault example" folder="Examples/Fault/B-U585I-IOT02A" doc="README.md">
+      <description>Example that shows the usage of Fault component on an Cortex-M33 with TrustZone.</description>
+      <board name="B-U585I-IOT02A" vendor="STMicroelectronics"/>
+      <project>
+        <environment name="cmsis" load="Fault.csolution.yml"/>
+      </project>
+    </example>
+  </examples>
 
 </package>
