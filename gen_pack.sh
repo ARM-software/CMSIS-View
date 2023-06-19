@@ -42,7 +42,10 @@ PACK_PATCH_FILES=""
 PACKCHK_ARGS=()
 
 # Specify additional dependencies for packchk
-PACKCHK_DEPS=""
+PACKCHK_DEPS="
+  ARM.V2M_MPS3_SSE_300_BSP.pdsc
+  Keil.B-U585I-IOT02A_BSP.pdsc
+"
 
 # Optional: restrict fallback modes for changelog generation
 # Default: full
