@@ -10,6 +10,13 @@
   <releases>
     <release version="0.0.0">
       Active development ...
+      Event Recorder:
+      - Update conditions to prevent simultaneous selection of CMSIS-View::Event Recorder and Compiler::Event Recorder components
+      - Update Event Statistic example to support CMSIS-Toolbox v2.0.0
+      Fault component:
+      - Extend section name for fault information, for easier absolute addressing via the linker script
+      - Update Fault example for Cortex-M33 (B-U585I-IOT02A) with improved GCC support and add support for building with CMSIS-Toolbox v2.0.0
+      - Update Fault example for AVH Cortex-M7 to support CMSIS-Toolbox v2.0.0
     </release>
   </releases>
 
