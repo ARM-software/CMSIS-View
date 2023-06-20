@@ -607,7 +607,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	eds := make(map[uint16]scvd.Event)
 	eds[0xEF00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
-	tds := make(map[string]map[string]map[int16]string)
+	tds := make(map[string]map[string]scvd.TdMember)
 
 	var s1 = "../../testdata/test1.binary"
 	var s3 = "../../testdata/test3.binary"
@@ -624,7 +624,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		file     string
 		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]scvd.TdMember
 	}
 	tests := []struct {
 		name   string
@@ -793,7 +793,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		out      *bufio.Writer
 		in       *bufio.Reader
 		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]map[int16]string
+		typedefs map[string]map[string]scvd.TdMember
 	}
 	tests := []struct {
 		name    string
@@ -944,7 +944,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 		out           *bufio.Writer
 		eventFile     *string
 		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		typedefs      map[string]map[string]scvd.TdMember
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1014,12 +1014,11 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		filename      *string
 		eventFile     *string
 		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		typedefs      map[string]map[string]scvd.TdMember
 		statBegin     bool
 		showStatistic bool
 	}
 	formatType := "txt"
-	level := ""
 	tests := []struct {
 		name    string
 		args    args
@@ -1031,7 +1030,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1079,24 +1078,23 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 		filename      *string
 		eventFile     *string
 		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		typedefs      map[string]map[string]scvd.TdMember
 		statBegin     bool
 		showStatistic bool
 	}
 	formatType := "json"
-	level := ""
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"test1", args{filename: &o1, eventFile: &s10}, false},
+		{"test", args{filename: &o1, eventFile: &s10}, false},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1140,12 +1138,11 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		filename      *string
 		eventFile     *string
 		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		typedefs      map[string]map[string]scvd.TdMember
 		statBegin     bool
 		showStatistic bool
 	}
 	formatType := "xml"
-	level := ""
 	tests := []struct {
 		name    string
 		args    args
@@ -1157,7 +1154,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, &level, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)

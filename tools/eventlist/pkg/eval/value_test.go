@@ -47,7 +47,7 @@ func TestValue_Compose(t *testing.T) {
 		args   args
 		want   Value
 	}{
-		{"test", fields{t: Integer, i: 123, f: 1.23, s: "abc"}, args{t: Floating, i: 789, f: 7.89, s: "xxx"}, Value{t: Floating, i: 789, f: 7.89, s: "xxx"}},
+		{"test", fields{t: I32, i: 123, f: 1.23, s: "abc"}, args{t: F32, i: 789, f: 7.89, s: "xxx"}, Value{t: F32, i: 789, f: 7.89, s: "xxx"}},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -71,12 +71,12 @@ func TestValue_Compose(t *testing.T) {
 }
 
 func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
-	vari := Variable{"v1_getValue", Value{t: Integer, i: 456}}
+	vari := Variable{"v1_getValue", Value{t: I32, i: 456}}
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -88,17 +88,17 @@ func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
 		want    Value
 		wantErr bool
 	}{
-		{"test_normal", fields{t: Integer, v: &vari}, false, Value{t: Integer, i: 789}, false},
+		{"test_normal", fields{t: I32, v: &vari}, false, Value{t: I32, i: 789}, false},
 		{"test_error", fields{}, true, Value{}, true},
-		{"test_error1", fields{t: Integer, v: &vari}, true, Value{}, true},
+		{"test_error1", fields{t: I32, v: &vari}, true, Value{}, true},
 	}
 
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -106,7 +106,7 @@ func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
 			if tt.clear {
 				ClearNames()
 			} else {
-				SetVar("v1_getValue", Value{t: Integer, i: 789})
+				SetVar("v1_getValue", Value{t: I32, i: 789})
 			}
 			got, err := v.getValue()
 			if (err != nil) != tt.wantErr {
@@ -121,13 +121,13 @@ func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
 }
 
 func TestValue_setValue(t *testing.T) { //nolint:golint,paralleltest
-	vari := Variable{"v1_setValue", Value{t: Integer, i: 456}}
-	val1 := Value{t: Integer, i: 123}
+	vari := Variable{"v1_setValue", Value{t: I32, i: 456}}
+	val1 := Value{t: I32, i: 123}
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -151,8 +151,8 @@ func TestValue_setValue(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -160,7 +160,7 @@ func TestValue_setValue(t *testing.T) { //nolint:golint,paralleltest
 			if tt.clear {
 				ClearNames()
 			} else {
-				SetVar("v1_setValue", Value{t: Integer, i: 789})
+				SetVar("v1_setValue", Value{t: I32, i: 789})
 			}
 			var err error
 			if err = v.setValue(tt.args.v1); (err != nil) != tt.wantErr {
@@ -182,7 +182,7 @@ func TestValue_setValue(t *testing.T) { //nolint:golint,paralleltest
 func TestValue_addList(t *testing.T) {
 	t.Parallel()
 
-	v1 := Value{t: Integer, i: 1}
+	v1 := Value{t: I32, i: 1}
 
 	type fields struct {
 		t Token
@@ -202,8 +202,8 @@ func TestValue_addList(t *testing.T) {
 		wantErr bool
 	}{
 		{"add1", fields{}, args{v1}, false},
-		{"add2", fields{t: List, l: []Value{{t: Integer, i: 1}}}, args{v1}, false},
-		{"err", fields{t: Integer}, args{v1}, true},
+		{"add2", fields{t: List, l: []Value{{t: I32, i: 1}}}, args{v1}, false},
+		{"err", fields{t: I32}, args{v1}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -225,13 +225,13 @@ func TestValue_addList(t *testing.T) {
 	}
 }
 
-func TestValue_GetInt(t *testing.T) {
+func TestValue_GetInt64(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -241,10 +241,10 @@ func TestValue_GetInt(t *testing.T) {
 		fields fields
 		want   int64
 	}{
-		{"test_int", fields{t: Integer, I: 123}, 123},
-		{"test_-int", fields{t: Integer, I: -123}, -123},
-		{"test_float", fields{t: Floating, F: 45.67}, 45},
-		{"test_-float", fields{t: Floating, F: -45.67}, -45},
+		{"test_int", fields{t: I32, i: 123}, 123},
+		{"test_-int", fields{t: I32, i: -123}, -123},
+		{"test_float", fields{t: F32, f: 45.67}, 45},
+		{"test_-float", fields{t: F32, f: -45.67}, -45},
 		{"test_nix", fields{t: String, s: "abc"}, 0},
 	}
 	for _, tt := range tests {
@@ -254,26 +254,26 @@ func TestValue_GetInt(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
 			}
-			if got := v.GetInt(); got != tt.want {
-				t.Errorf("Value.GetInt() %s = %v, want %v", tt.name, got, tt.want)
+			if got := v.GetInt64(); got != tt.want {
+				t.Errorf("Value.GetInt64() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
 }
 
-func TestValue_GetUInt(t *testing.T) {
+func TestValue_GetUInt64(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -283,8 +283,8 @@ func TestValue_GetUInt(t *testing.T) {
 		fields fields
 		want   uint64
 	}{
-		{"test_int", fields{t: Integer, I: 123}, 123},
-		{"test_float", fields{t: Floating, F: 45.67}, 45},
+		{"test_int", fields{t: I32, i: 123}, 123},
+		{"test_float", fields{t: F32, f: 45.67}, 45},
 		{"test_nix", fields{t: String, s: "abc"}, 0},
 	}
 	for _, tt := range tests {
@@ -294,26 +294,26 @@ func TestValue_GetUInt(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
 			}
-			if got := v.GetUInt(); got != tt.want {
-				t.Errorf("Value.GetUInt() %s = %v, want %v", tt.name, got, tt.want)
+			if got := v.GetUInt64(); got != tt.want {
+				t.Errorf("Value.GetUInt64() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
 }
 
-func TestValue_GetFloat(t *testing.T) {
+func TestValue_GetFloat64(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -323,8 +323,8 @@ func TestValue_GetFloat(t *testing.T) {
 		fields fields
 		want   float64
 	}{
-		{"test_int", fields{t: Integer, I: 123}, 123},
-		{"test_float", fields{t: Floating, F: 45.67}, 45.67},
+		{"test_int", fields{t: I32, i: 123}, 123},
+		{"test_float", fields{t: F32, f: 45.67}, 45.67},
 		{"test_nix", fields{t: String, s: "abc"}, 0},
 	}
 	for _, tt := range tests {
@@ -334,14 +334,14 @@ func TestValue_GetFloat(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
 			}
-			if got := v.GetFloat(); got != tt.want {
-				t.Errorf("Value.GetFloat() %s = %v, want %v", tt.name, got, tt.want)
+			if got := v.GetFloat64(); got != tt.want {
+				t.Errorf("Value.GetFloat64() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
@@ -350,7 +350,7 @@ func TestValue_GetFloat(t *testing.T) {
 func TestValue_GetList(t *testing.T) {
 	t.Parallel()
 
-	v1 := []Value{{t: Integer, i: 4711}}
+	v1 := []Value{{t: I32, i: 4711}}
 
 	type fields struct {
 		t Token
@@ -366,7 +366,7 @@ func TestValue_GetList(t *testing.T) {
 		want   []Value
 	}{
 		{"nil", fields{}, nil},
-		{"4711", fields{t: List, l: []Value{{t: Integer, i: 4711}}}, v1},
+		{"4711", fields{t: List, l: []Value{{t: I32, i: 4711}}}, v1},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -393,8 +393,8 @@ func TestValue_IsInteger(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -405,8 +405,8 @@ func TestValue_IsInteger(t *testing.T) {
 		want   bool
 	}{
 		{"N", fields{t: Nix}, false},
-		{"C", fields{t: Integer}, true},
-		{"F", fields{t: Floating}, false},
+		{"C", fields{t: I32}, true},
+		{"F", fields{t: F32}, false},
 		{"S", fields{t: String}, false},
 		{"L", fields{t: List}, false},
 	}
@@ -417,8 +417,8 @@ func TestValue_IsInteger(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -435,8 +435,8 @@ func TestValue_IsFloating(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -447,8 +447,8 @@ func TestValue_IsFloating(t *testing.T) {
 		want   bool
 	}{
 		{"N", fields{t: Nix}, false},
-		{"C", fields{t: Integer}, false},
-		{"F", fields{t: Floating}, true},
+		{"C", fields{t: I32}, false},
+		{"F", fields{t: F32}, true},
 		{"S", fields{t: String}, false},
 		{"L", fields{t: List}, false},
 	}
@@ -459,8 +459,8 @@ func TestValue_IsFloating(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -477,8 +477,8 @@ func TestValue_IsString(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -489,8 +489,8 @@ func TestValue_IsString(t *testing.T) {
 		want   bool
 	}{
 		{"N", fields{t: Nix}, false},
-		{"C", fields{t: Integer}, false},
-		{"F", fields{t: Floating}, false},
+		{"C", fields{t: I32}, false},
+		{"F", fields{t: F32}, false},
 		{"S", fields{t: String}, true},
 		{"L", fields{t: List}, false},
 	}
@@ -501,8 +501,8 @@ func TestValue_IsString(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -531,8 +531,8 @@ func TestValue_IsList(t *testing.T) {
 		want   bool
 	}{
 		{"N", fields{t: Nix}, false},
-		{"C", fields{t: Integer}, false},
-		{"F", fields{t: Floating}, false},
+		{"C", fields{t: I32}, false},
+		{"F", fields{t: F32}, false},
 		{"S", fields{t: String}, false},
 		{"L", fields{t: List}, true},
 	}
@@ -557,9 +557,10 @@ func TestValue_IsList(t *testing.T) {
 }
 
 func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
-	calcMemUsedArgs := Value{t: List, l: []Value{{t: Integer, i: 1}, {t: Integer, i: 2}, {t: Integer, i: 3}, {t: Integer, i: 4}}}
-	calcMemUsedArgs1 := Value{t: List, l: []Value{{t: String}, {t: Integer, i: 2}, {t: Integer, i: 3}, {t: Integer, i: 4}}}
+	calcMemUsedArgs := Value{t: List, l: []Value{{t: I32, i: 1}, {t: I32, i: 2}, {t: I32, i: 3}, {t: I32, i: 4}}}
+	calcMemUsedArgs1 := Value{t: List, l: []Value{{t: String}, {t: I32, i: 2}, {t: I32, i: 3}, {t: I32, i: 4}}}
 	getRegValArgs := Value{t: List, l: []Value{{t: String, s: "reg"}}}
+	getRegValArgs1 := Value{t: List, l: []Value{{t: I32, i: 1}}}
 	symbolExistsArgs := Value{t: List, l: []Value{{t: String, s: "LEDOn"}}}
 	symbolExistsArgs1 := Value{t: List, l: []Value{{t: String, s: "xxxx"}}}
 
@@ -583,22 +584,23 @@ func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
 		want    Value
 		wantErr bool
 	}{
-		{"CalcMemUsed", fields{t: Identifier, s: "__CalcMemUsed"}, args{&calcMemUsedArgs}, Value{t: Integer, i: 0}, false},
-		{"GetRegVal", fields{t: Identifier, s: "__GetRegVal"}, args{&getRegValArgs}, Value{t: Integer, i: 0}, false},
-		{"SymbolExist", fields{t: Identifier, s: "__Symbol_exists"}, args{&symbolExistsArgs}, Value{t: Integer, i: 1}, false},
-		{"SymbolExist1", fields{t: Identifier, s: "__Symbol_exists"}, args{&symbolExistsArgs1}, Value{t: Integer, i: 0}, false},
-		{"FindSymbol", fields{t: Identifier, s: "__FindSymbol"}, args{&symbolExistsArgs}, Value{t: Integer, i: 1}, false},
-		{"FindSymbol1", fields{t: Identifier, s: "__FindSymbol"}, args{&symbolExistsArgs1}, Value{t: Integer, i: 0}, false},
-		{"offsetOf", fields{t: Identifier, s: "__Offset_of"}, args{&symbolExistsArgs}, Value{t: Integer, i: 0x38000178}, false},
-		{"offsetOf1", fields{t: Identifier, s: "__Offset_of"}, args{&symbolExistsArgs1}, Value{t: Integer, i: 0}, false},
-		{"sizeOf", fields{t: Identifier, s: "__size_of"}, args{&symbolExistsArgs}, Value{t: Integer, i: 4}, false},
-		{"sizeOf1", fields{t: Identifier, s: "__size_of"}, args{&symbolExistsArgs1}, Value{t: Integer, i: 0}, false},
+		{"CalcMemUsed", fields{t: Identifier, s: "__CalcMemUsed"}, args{&calcMemUsedArgs}, Value{t: I32, i: 0}, false},
+		{"GetRegVal", fields{t: Identifier, s: "__GetRegVal"}, args{&getRegValArgs}, Value{t: I32, i: 0}, false},
+		{"SymbolExist", fields{t: Identifier, s: "__Symbol_exists"}, args{&symbolExistsArgs}, Value{t: U8, i: 1}, false},
+		{"SymbolExist1", fields{t: Identifier, s: "__Symbol_exists"}, args{&symbolExistsArgs1}, Value{t: U8, i: 0}, false},
+		{"FindSymbol", fields{t: Identifier, s: "__FindSymbol"}, args{&symbolExistsArgs}, Value{t: U8, i: 1}, false},
+		{"FindSymbol1", fields{t: Identifier, s: "__FindSymbol"}, args{&symbolExistsArgs1}, Value{t: U8, i: 0}, false},
+		{"offsetOf", fields{t: Identifier, s: "__Offset_of"}, args{&symbolExistsArgs}, Value{t: I64, i: 0x38000178}, false},
+		{"offsetOf1", fields{t: Identifier, s: "__Offset_of"}, args{&symbolExistsArgs1}, Value{t: I64, i: 0}, false},
+		{"sizeOf", fields{t: Identifier, s: "__size_of"}, args{&symbolExistsArgs}, Value{t: I64, i: 4}, false},
+		{"sizeOf1", fields{t: Identifier, s: "__size_of"}, args{&symbolExistsArgs1}, Value{t: I64, i: 0}, false},
 		{"NoId", fields{t: Nix}, args{&Value{}}, Value{}, true},
 		{"NoList", fields{t: Identifier, s: "abc"}, args{&Value{}}, Value{t: Identifier, s: "abc"}, true},
 		{"Nil", fields{t: Identifier, s: "abc"}, args{}, Value{t: Identifier, s: "abc"}, true},
 		{"NoFct", fields{t: Identifier, s: "abc"}, args{&calcMemUsedArgs}, Value{t: Identifier, s: "abc"}, true},
 		{"wrongCnt", fields{t: Identifier, s: "__CalcMemUsed"}, args{&getRegValArgs}, Value{t: Identifier, s: "__CalcMemUsed"}, true},
 		{"wrongType", fields{t: Identifier, s: "__CalcMemUsed"}, args{&calcMemUsedArgs1}, Value{t: Identifier, s: "__CalcMemUsed"}, true},
+		{"wrongType1", fields{t: Identifier, s: "__GetRegVal"}, args{&getRegValArgs1}, Value{t: Identifier, s: "__GetRegVal"}, true},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -625,8 +627,8 @@ func TestValue_Inc(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -637,8 +639,8 @@ func TestValue_Inc(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"Postincrement_I", fields{t: Integer, I: 0x12345}, Value{t: Integer, i: 0x12346}, false},
-		{"Postincrement_F", fields{t: Floating, F: 123.45}, Value{t: Floating, f: 124.45}, false},
+		{"Postincrement_I", fields{t: I32, i: 0x12345}, Value{t: I32, i: 0x12346}, false},
+		{"Postincrement_F", fields{t: F32, f: 123.45}, Value{t: F32, f: 124.45}, false},
 		{"Postincrement_fail", fields{t: Identifier}, Value{t: Identifier}, true},
 	}
 	for _, tt := range tests {
@@ -648,8 +650,8 @@ func TestValue_Inc(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -669,8 +671,8 @@ func TestValue_Dec(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -681,8 +683,8 @@ func TestValue_Dec(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"Postdecrement_I", fields{t: Integer, I: 0x12345}, Value{t: Integer, i: 0x12344}, false},
-		{"Postincrement_F", fields{t: Floating, F: 123.45}, Value{t: Floating, f: 122.45}, false},
+		{"Postdecrement_I", fields{t: I32, i: 0x12345}, Value{t: I32, i: 0x12344}, false},
+		{"Postincrement_F", fields{t: F32, f: 123.45}, Value{t: F32, f: 122.45}, false},
 		{"Postdecrement_fail", fields{t: Identifier}, Value{t: Identifier}, true},
 	}
 	for _, tt := range tests {
@@ -692,8 +694,8 @@ func TestValue_Dec(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -713,8 +715,8 @@ func TestValue_Plus(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -725,8 +727,8 @@ func TestValue_Plus(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"+IntExpr", fields{t: Integer, I: 0x12345}, Value{t: Integer, i: 0x12345}, false},
-		{"+FloatExpr", fields{t: Floating, F: 12.345}, Value{t: Floating, f: 12.345}, false},
+		{"+IntExpr", fields{t: I32, i: 0x12345}, Value{t: I32, i: 0x12345}, false},
+		{"+FloatExpr", fields{t: F32, f: 12.345}, Value{t: F32, f: 12.345}, false},
 		{"+err", fields{t: Add}, Value{t: Add}, true},
 	}
 	for _, tt := range tests {
@@ -736,8 +738,8 @@ func TestValue_Plus(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -757,8 +759,8 @@ func TestValue_Neg(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -769,8 +771,8 @@ func TestValue_Neg(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"-IntExpr", fields{t: Integer, I: 0x12345}, Value{t: Integer, i: -0x12345}, false},
-		{"-FloatExpr", fields{t: Floating, F: 12.345}, Value{t: Floating, f: -12.345}, false},
+		{"-IntExpr", fields{t: I32, i: 0x12345}, Value{t: I32, i: -0x12345}, false},
+		{"-FloatExpr", fields{t: F32, f: 12.345}, Value{t: F32, f: -12.345}, false},
 		{"-err", fields{t: Sub}, Value{t: Sub}, true},
 	}
 	for _, tt := range tests {
@@ -780,8 +782,8 @@ func TestValue_Neg(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -801,8 +803,8 @@ func TestValue_Compl(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -813,7 +815,7 @@ func TestValue_Compl(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"~IntExpr", fields{t: Integer, I: 0x12345}, Value{t: Integer, i: 0x12345 ^ -1}, false},
+		{"~IntExpr", fields{t: I32, i: 0x12345}, Value{t: I32, i: 0x12345 ^ -1}, false},
 		{"~err", fields{t: Compl}, Value{t: Compl}, true},
 	}
 	for _, tt := range tests {
@@ -823,8 +825,8 @@ func TestValue_Compl(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -844,8 +846,8 @@ func TestValue_Not(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -856,8 +858,8 @@ func TestValue_Not(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"!IntExpr1", fields{t: Integer, I: 1}, Value{t: Integer, i: 0}, false},
-		{"!IntExpr0", fields{t: Integer, I: 0}, Value{t: Integer, i: 1}, false},
+		{"!IntExpr1", fields{t: I32, i: 1}, Value{t: U8, i: 0}, false},
+		{"!IntExpr0", fields{t: I32, i: 0}, Value{t: U8, i: 1}, false},
 		{"!err", fields{t: Not}, Value{t: Not}, true},
 	}
 	for _, tt := range tests {
@@ -867,8 +869,8 @@ func TestValue_Not(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -888,14 +890,14 @@ func TestValue_Cast(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
 	}
 	type args struct {
-		ty Type
+		ty Token
 	}
 	tests := []struct {
 		name    string
@@ -904,34 +906,396 @@ func TestValue_Cast(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"(int8_t)0x12345", fields{t: Integer, I: 0x12345}, args{Int8}, Value{t: Integer, i: 0x45}, false},
-		{"(int16_t)0x12345", fields{t: Integer, I: 0x12345}, args{Int16}, Value{t: Integer, i: 0x2345}, false},
-		{"(int32_t)0x123456789", fields{t: Integer, I: 0x123456789}, args{Int32}, Value{t: Integer, i: 0x23456789}, false},
-		{"(int64_t)0x12345678901234", fields{t: Integer, I: 0x12345678901234}, args{Int64}, Value{t: Integer, i: 0x12345678901234}, false},
-		{"(uint8_t)-0x12345", fields{t: Integer, I: -0x12345}, args{Uint8}, Value{t: Integer, i: (-0x12345) & 0xFF}, false},
-		{"(uint16_t)-0x12345", fields{t: Integer, I: -0x12345}, args{Uint16}, Value{t: Integer, i: (-0x12345) & 0xFFFF}, false},
-		{"(uint32_t)-0x123456789", fields{t: Integer, I: -0x123456789}, args{Uint32}, Value{t: Integer, i: (-0x23456789) & 0xFFFFFFFF}, false},
-		{"(uint64_t)-0x12345678901234", fields{t: Integer, I: -0x12345678901234}, args{Uint64}, Value{t: Integer, i: -0x12345678901234}, false},
-		{"(int8_t)-483.12", fields{t: Floating, F: -483.12}, args{Int8}, Value{t: Integer, i: 0x1D}, false},
-		{"(int16_t)-483.12", fields{t: Floating, F: -483.12}, args{Int16}, Value{t: Integer, i: -483}, false},
-		{"(int32_t)-78483.12", fields{t: Floating, F: -78483.12}, args{Int32}, Value{t: Integer, i: -78483}, false},
-		{"(int64_t)-9278483.12", fields{t: Floating, F: -9278483.12}, args{Int64}, Value{t: Integer, i: -9278483}, false},
-		{"(uint8_t)483.12", fields{t: Floating, F: 483.12}, args{Uint8}, Value{t: Integer, i: 0xE3}, false},
-		{"(uint16_t)483.12", fields{t: Floating, F: 483.12}, args{Uint16}, Value{t: Integer, i: 0x1E3}, false},
-		{"(uint32_t)78483.12", fields{t: Floating, F: 78483.12}, args{Uint32}, Value{t: Integer, i: 78483}, false},
-		{"(uint64_t)-9278483.12", fields{t: Floating, F: 9278483.12}, args{Uint64}, Value{t: Integer, i: 9278483}, false},
-		{"(double)12345789", fields{t: Floating, F: 12345789}, args{Double}, Value{t: Floating, f: 12345789.0}, false},
-		{"(float)123456789", fields{t: Floating, F: 123456789}, args{Float}, Value{t: Floating, f: 123456792.0}, false},
-		{"(int8_t)err", fields{t: Nix}, args{Int8}, Value{t: Nix}, true},
-		{"(int16_t)err", fields{t: Nix}, args{Int16}, Value{t: Nix}, true},
-		{"(int32_t)err", fields{t: Nix}, args{Int32}, Value{t: Nix}, true},
-		{"(int64_t)err", fields{t: Nix}, args{Int64}, Value{t: Nix}, true},
-		{"(uint8_t)err", fields{t: Nix}, args{Uint8}, Value{t: Nix}, true},
-		{"(uint16_t)err", fields{t: Nix}, args{Uint16}, Value{t: Nix}, true},
-		{"(uint32_t)err", fields{t: Nix}, args{Uint32}, Value{t: Nix}, true},
-		{"(uint64_t)err", fields{t: Nix}, args{Uint64}, Value{t: Nix}, true},
-		{"(double)err", fields{t: Nix}, args{Double}, Value{t: Nix}, true},
-		{"(float)err", fields{t: Nix}, args{Float}, Value{t: Nix}, true},
+		// ... -> U8
+		{"U8->U8",      fields{t: U8,  i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"U8->U8 >",    fields{t: U8,  i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"U8->U8 -",    fields{t: U8,  i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"U16->U8",     fields{t: U16, i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"U16->U8 >",   fields{t: U16, i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"U16->U8 -",   fields{t: U16, i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"U32->U8",     fields{t: U32, i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"U32->U8 >",   fields{t: U32, i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"U32->U8 -",   fields{t: U32, i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"U64->U8",     fields{t: U64, i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"U64->U8 >",   fields{t: U64, i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"U64->U8 -",   fields{t: U64, i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"I8->U8",      fields{t: I8,  i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"I8->U8 >",    fields{t: I8,  i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"I8->U8 -",    fields{t: I8,  i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"I16->U8",     fields{t: I16, i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"I16->U8 >",   fields{t: I16, i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"I16->U8 -",   fields{t: I16, i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"I32->U8",     fields{t: I32, i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"I32->U8 >",   fields{t: I32, i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"I32->U8 -",   fields{t: I32, i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"I64->U8",     fields{t: I64, i: 123}, args{U8}, Value{t: U8, i: 123}, false},
+		{"I64->U8 >",   fields{t: I64, i: 234}, args{U8}, Value{t: U8, i: 234}, false},
+		{"I64->U8 -",   fields{t: I64, i: -123}, args{U8}, Value{t: U8, i: 133}, false},
+		{"F32->U8",     fields{t: F32, f: 123.0}, args{U8}, Value{t: U8, i: 123}, false},
+		{"F32->U8 >",   fields{t: F32, f: 234.0}, args{U8}, Value{t: U8, i: 234}, false},
+		{"F32->U8 -",   fields{t: F32, f: -123.0}, args{U8}, Value{t: U8, i: 133}, false},
+		{"F64->U8",     fields{t: F64, f: 123.0}, args{U8}, Value{t: U8, i: 123}, false},
+		{"F64->U8 >",   fields{t: F64, f: 234.0}, args{U8}, Value{t: U8, i: 234}, false},
+		{"F64->U8 -",   fields{t: F64, f: -123.0}, args{U8}, Value{t: U8, i: 133}, false},
+		{"String->U8",  fields{t: String, s: "abc"}, args{U8}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> I8
+		{"U8->I8",      fields{t: U8,  i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"U8->I8 >",    fields{t: U8,  i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"U8->I8 -",    fields{t: U8,  i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"U16->I8",     fields{t: U16, i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"U16->I8 >",   fields{t: U16, i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"U16->I8 -",   fields{t: U16, i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"U32->I8",     fields{t: U32, i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"U32->I8 >",   fields{t: U32, i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"U32->I8 -",   fields{t: U32, i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"U64->I8",     fields{t: U64, i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"U64->I8 >",   fields{t: U64, i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"U64->I8 -",   fields{t: U64, i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"I8->I8",      fields{t: I8,  i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"I8->I8 >",    fields{t: I8,  i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"I8->I8 -",    fields{t: I8,  i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"I16->I8",     fields{t: I16, i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"I16->I8 >",   fields{t: I16, i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"I16->I8 -",   fields{t: I16, i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"I32->I8",     fields{t: I32, i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"I32->I8 >",   fields{t: I32, i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"I32->I8 -",   fields{t: I32, i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"I64->I8",     fields{t: I64, i: 123}, args{I8}, Value{t: I8, i: 123}, false},
+		{"I64->I8 >",   fields{t: I64, i: 234}, args{I8}, Value{t: I8, i: -22}, false},
+		{"I64->I8 -",   fields{t: I64, i: -123}, args{I8}, Value{t: I8, i: -123}, false},
+		{"F32->I8",     fields{t: F32, f: 123.0}, args{I8}, Value{t: I8, i: 123}, false},
+		{"F32->I8 >",   fields{t: F32, f: 234.0}, args{I8}, Value{t: I8, i: -22}, false},
+		{"F32->I8 -",   fields{t: F32, f: -123.0}, args{I8}, Value{t: I8, i: -123}, false},
+		{"F64->I8",     fields{t: F64, f: 123.0}, args{I8}, Value{t: I8, i: 123}, false},
+		{"F64->I8 >",   fields{t: F64, f: 234.0}, args{I8}, Value{t: I8, i: -22}, false},
+		{"F64->I8 -",   fields{t: F64, f: -123.0}, args{I8}, Value{t: I8, i: -123}, false},
+		{"String->I8",  fields{t: String, s: "abc"}, args{I8}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> U16
+		{"U8->U16",     fields{t: U8,  i: 123}, args{U16}, Value{t: U16, i: 123}, false},
+		{"U8->U16 >",   fields{t: U8,  i: 234}, args{U16}, Value{t: U16, i: 234}, false},
+		{"U8->U16 -",   fields{t: U8,  i: -123}, args{U16}, Value{t: U16, i: 133}, false},
+		{"U16->U16",    fields{t: U16, i: 12345}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"U16->U16 >",  fields{t: U16, i: 54321}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"U16->U16 -",  fields{t: U16, i: -12345}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"U32->U16",    fields{t: U32, i: 12345}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"U32->U16 >",  fields{t: U32, i: 54321}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"U32->U16 -",  fields{t: U32, i: -12345}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"U64->U16",    fields{t: U64, i: 12345}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"U64->U16 >",  fields{t: U64, i: 54321}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"U64->U16 -",  fields{t: U64, i: -12345}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"I8->U16",     fields{t: I8,  i: 123}, args{U16}, Value{t: U16, i: 123}, false},
+		{"I8->U16 >",   fields{t: I8,  i: 234}, args{U16}, Value{t: U16, i: 65514}, false},
+		{"I8->U16 -",   fields{t: I8,  i: -123}, args{U16}, Value{t: U16, i: 65413}, false},
+		{"I16->U16",    fields{t: I16, i: 12345}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"I16->U16 >",  fields{t: I16, i: 54321}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"I16->U16 -",  fields{t: I16, i: -12345}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"I32->U16",    fields{t: I32, i: 12345}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"I32->U16 >",  fields{t: I32, i: 54321}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"I32->U16 -",  fields{t: I32, i: -12345}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"I64->U16",    fields{t: I64, i: 12345}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"I64->U16 >",  fields{t: I64, i: 54321}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"I64->U16 -",  fields{t: I64, i: -12345}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"F32->U16",    fields{t: F32, f: 12345.0}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"F32->U16 >",  fields{t: F32, f: 54321.0}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"F32->U16 -",  fields{t: F32, f: -12345.0}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"F64->U16",    fields{t: F64, f: 12345.0}, args{U16}, Value{t: U16, i: 12345}, false},
+		{"F64->U16 >",  fields{t: F64, f: 54321.0}, args{U16}, Value{t: U16, i: 54321}, false},
+		{"F64->U16 -",  fields{t: F64, f: -12345.0}, args{U16}, Value{t: U16, i: 53191}, false},
+		{"String->U16", fields{t: String, s: "abc"}, args{U16}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> I16
+		{"U8->I16",     fields{t: U8,  i: 123}, args{I16}, Value{t: I16, i: 123}, false},
+		{"U8->I16 >",   fields{t: U8,  i: 234}, args{I16}, Value{t: I16, i: 234}, false},
+		{"U8->I16 -",   fields{t: U8,  i: -123}, args{I16}, Value{t: I16, i: 133}, false},
+		{"U16->I16",    fields{t: U16, i: 12345}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"U16->I16 >",  fields{t: U16, i: 54321}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"U16->I16 -",  fields{t: U16, i: -12345}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"U32->I16",    fields{t: U32, i: 12345}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"U32->I16 >",  fields{t: U32, i: 54321}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"U32->I16 -",  fields{t: U32, i: -12345}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"U64->I16",    fields{t: U64, i: 12345}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"U64->I16 >",  fields{t: U64, i: 54321}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"U64->I16 -",  fields{t: U64, i: -12345}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"I8->I16",     fields{t: I8,  i: 123}, args{I16}, Value{t: I16, i: 123}, false},
+		{"I8->I16 >",   fields{t: I8,  i: 234}, args{I16}, Value{t: I16, i: -22}, false},
+		{"I8->I16 -",   fields{t: I8,  i: -123}, args{I16}, Value{t: I16, i: -123}, false},
+		{"I16->I16",    fields{t: I16, i: 12345}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"I16->I16 >",  fields{t: I16, i: 54321}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"I16->I16 -",  fields{t: I16, i: -12345}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"I32->I16",    fields{t: I32, i: 12345}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"I32->I16 >",  fields{t: I32, i: 54321}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"I32->I16 -",  fields{t: I32, i: -12345}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"I64->I16",    fields{t: I64, i: 12345}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"I64->I16 >",  fields{t: I64, i: 54321}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"I64->I16 -",  fields{t: I64, i: -12345}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"F32->I16",    fields{t: F32, f: 12345.0}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"F32->I16 >",  fields{t: F32, f: 54321.0}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"F32->I16 -",  fields{t: F32, f: -12345.0}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"F64->I16",    fields{t: F64, f: 12345.0}, args{I16}, Value{t: I16, i: 12345}, false},
+		{"F64->I16 >",  fields{t: F64, f: 54321.0}, args{I16}, Value{t: I16, i: -11215}, false},
+		{"F64->I16 -",  fields{t: F64, f: -12345.0}, args{I16}, Value{t: I16, i: -12345}, false},
+		{"String->I16", fields{t: String, s: "abc"}, args{I16}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> U32
+		{"U8->U32",     fields{t: U8,  i: 123}, args{U32}, Value{t: U32, i: 123}, false},
+		{"U8->U32 >",   fields{t: U8,  i: 234}, args{U32}, Value{t: U32, i: 234}, false},
+		{"U8->U32 -",   fields{t: U8,  i: -123}, args{U32}, Value{t: U32, i: 133}, false},
+		{"U16->U32",    fields{t: U16, i: 12345}, args{U32}, Value{t: U32, i: 12345}, false},
+		{"U16->U32 >",  fields{t: U16, i: 54321}, args{U32}, Value{t: U32, i: 54321}, false},
+		{"U16->U32 -",  fields{t: U16, i: -12345}, args{U32}, Value{t: U32, i: 53191}, false},
+		{"U32->U32",    fields{t: U32, i: 1234567890}, args{U32}, Value{t: U32, i: 1234567890}, false},
+		{"U32->U32 >",  fields{t: U32, i: 53191}, args{U32}, Value{t: U32, i: 53191}, false},
+		{"U32->U32 -",  fields{t: U32, i: -1234567890}, args{U32}, Value{t: U32, i: 3060399406}, false},
+		{"U64->U32",    fields{t: U64, i: 1234567890}, args{U32}, Value{t: U32, i: 1234567890}, false},
+		{"U64->U32 >",  fields{t: U64, i: 3210987654}, args{U32}, Value{t: U32, i: 3210987654}, false},
+		{"U64->U32 -",  fields{t: U64, i: -1234567890}, args{U32}, Value{t: U32, i: 3060399406}, false},
+		{"I8->U32",     fields{t: I8,  i: 123}, args{U32}, Value{t: U32, i: 123}, false},
+		{"I8->U32 >",   fields{t: I8,  i: 234}, args{U32}, Value{t: U32, i: 4294967274}, false},
+		{"I8->U32 -",   fields{t: I8,  i: -123}, args{U32}, Value{t: U32, i: 4294967173}, false},
+		{"I16->U32",    fields{t: I16, i: 12345}, args{U32}, Value{t: U32, i: 12345}, false},
+		{"I16->U32 >",  fields{t: I16, i: 54321}, args{U32}, Value{t: U32, i: 4294956081}, false},
+		{"I16->U32 -",  fields{t: I16, i: -12345}, args{U32}, Value{t: U32, i: 4294954951}, false},
+		{"I32->U32",    fields{t: I32, i: 1234567890}, args{U32}, Value{t: U32, i: 1234567890}, false},
+		{"I32->U32 >",  fields{t: I32, i: 3210987654}, args{U32}, Value{t: U32, i: 3210987654}, false},
+		{"I32->U32 -",  fields{t: I32, i: -1234567890}, args{U32}, Value{t: U32, i: 3060399406}, false},
+		{"I64->U32",    fields{t: I64, i: 1234567890}, args{U32}, Value{t: U32, i: 1234567890}, false},
+		{"I64->U32 >",  fields{t: I64, i: 3210987654}, args{U32}, Value{t: U32, i: 3210987654}, false},
+		{"I64->U32 -",  fields{t: I64, i: -1234567890}, args{U32}, Value{t: U32, i: 3060399406}, false},
+		{"F32->U32",    fields{t: F32, f: 1234567890.0}, args{U32}, Value{t: U32, i: 1234567936}, false},
+		{"F32->U32 >",  fields{t: F32, f: 3210987654.0}, args{U32}, Value{t: U32, i: 3210987776}, false},
+		{"F32->U32 -",  fields{t: F32, f: -1234567890.0}, args{U32}, Value{t: U32, i: 3060399360}, false},
+		{"F64->U32",    fields{t: F64, f: 1234567890.0}, args{U32}, Value{t: U32, i: 1234567890}, false},
+		{"F64->U32 >",  fields{t: F64, f: 3210987654.0}, args{U32}, Value{t: U32, i: 3210987654}, false},
+		{"F64->U32 -",  fields{t: F64, f: -1234567890.0}, args{U32}, Value{t: U32, i: 3060399406}, false},
+		{"String->U32", fields{t: String, s: "abc"}, args{U32}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> I32
+		{"U8->I32",     fields{t: U8,  i: 123}, args{I32}, Value{t: I32, i: 123}, false},
+		{"U8->I32 >",   fields{t: U8,  i: 234}, args{I32}, Value{t: I32, i: 234}, false},
+		{"U8->I32 -",   fields{t: U8,  i: -123}, args{I32}, Value{t: I32, i: 133}, false},
+		{"U16->I32",    fields{t: U16, i: 12345}, args{I32}, Value{t: I32, i: 12345}, false},
+		{"U16->I32 >",  fields{t: U16, i: 54321}, args{I32}, Value{t: I32, i: 54321}, false},
+		{"U16->I32 -",  fields{t: U16, i: -12345}, args{I32}, Value{t: I32, i: 53191}, false},
+		{"U32->I32",    fields{t: U32, i: 1234567890}, args{I32}, Value{t: I32, i: 1234567890}, false},
+		{"U32->I32 >",  fields{t: U32, i: 3210987654}, args{I32}, Value{t: I32, i: -1083979642}, false},
+		{"U32->I32 -",  fields{t: U32, i: -1234567890}, args{I32}, Value{t: I32, i: -1234567890}, false},
+		{"U64->I32",    fields{t: U64, i: 1234567890}, args{I32}, Value{t: I32, i: 1234567890}, false},
+		{"U64->I32 >",  fields{t: U64, i: 3210987654}, args{I32}, Value{t: I32, i: -1083979642}, false},
+		{"U64->I32 -",  fields{t: U64, i: -1234567890}, args{I32}, Value{t: I32, i: -1234567890}, false},
+		{"I8->I32",     fields{t: I8,  i: 123}, args{I32}, Value{t: I32, i: 123}, false},
+		{"I8->I32 >",   fields{t: I8,  i: 234}, args{I32}, Value{t: I32, i: -22}, false},
+		{"I8->I32 -",   fields{t: I8,  i: -123}, args{I32}, Value{t: I32, i: -123}, false},
+		{"I16->I32",    fields{t: I16, i: 12345}, args{I32}, Value{t: I32, i: 12345}, false},
+		{"I16->I32 >",  fields{t: I16, i: 54321}, args{I32}, Value{t: I32, i: -11215}, false},
+		{"I16->I32 -",  fields{t: I16, i: -12345}, args{I32}, Value{t: I32, i: -12345}, false},
+		{"I32->I32",    fields{t: I32, i: 1234567890}, args{I32}, Value{t: I32, i: 1234567890}, false},
+		{"I32->I32 >",  fields{t: I32, i: 3210987654}, args{I32}, Value{t: I32, i: -1083979642}, false},
+		{"I32->I32 -",  fields{t: I32, i: -1234567890}, args{I32}, Value{t: I32, i: -1234567890}, false},
+		{"I64->I32",    fields{t: I64, i: 1234567890}, args{I32}, Value{t: I32, i: 1234567890}, false},
+		{"I64->I32 >",  fields{t: I64, i: 3210987654}, args{I32}, Value{t: I32, i: -1083979642}, false},
+		{"I64->I32 -",  fields{t: I64, i: -1234567890}, args{I32}, Value{t: I32, i: -1234567890}, false},
+		{"F32->I32",    fields{t: F32, f: 1234567890.0}, args{I32}, Value{t: I32, i: 1234567936}, false},
+		{"F32->I32 >",  fields{t: F32, f: 3210987654.0}, args{I32}, Value{t: I32, i: -0x80000000}, false},
+		{"F32->I32 -",  fields{t: F32, f: -1234567890.0}, args{I32}, Value{t: I32, i: -1234567936}, false},
+		{"F64->I32",    fields{t: F64, f: 1234567890.0}, args{I32}, Value{t: I32, i: 1234567890}, false},
+		{"F64->I32 >",  fields{t: F64, f: 3210987654.0}, args{I32}, Value{t: I32, i: -1083979642}, false},
+		{"F64->I32 -",  fields{t: F64, f: -1234567890.0}, args{I32}, Value{t: I32, i: -1234567890}, false},
+		{"String->I32", fields{t: String, s: "abc"}, args{I32}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> U64
+		{"U8->U64",     fields{t: U8,  i: 123}, args{U64}, Value{t: U64, i: 123}, false},
+		{"U8->U64 >",   fields{t: U8,  i: 234}, args{U64}, Value{t: U64, i: 234}, false},
+		{"U8->U64 -",   fields{t: U8,  i: -123}, args{U64}, Value{t: U64, i: 133}, false},
+		{"U16->U64",    fields{t: U16, i: 12345}, args{U64}, Value{t: U64, i: 12345}, false},
+		{"U16->U64 >",  fields{t: U16, i: 54321}, args{U64}, Value{t: U64, i: 54321}, false},
+		{"U16->U64 -",  fields{t: U16, i: -12345}, args{U64}, Value{t: U64, i: 53191}, false},
+		{"U32->U64",    fields{t: U32, i: 1234567890}, args{U64}, Value{t: U64, i: 1234567890}, false},
+		{"U32->U64 >",  fields{t: U32, i: 53191}, args{U64}, Value{t: U64, i: 53191}, false},
+		{"U32->U64 -",  fields{t: U32, i: -1234567890}, args{U64}, Value{t: U64, i: 3060399406}, false},
+		{"U64->U64",    fields{t: U64, i: 1234567890}, args{U64}, Value{t: U64, i: 1234567890}, false},
+		{"U64->U64 >",  fields{t: U64, i: 3210987654}, args{U64}, Value{t: U64, i: 3210987654}, false},
+		{"U64->U64 -",  fields{t: U64, i: -1234567890}, args{U64}, Value{t: U64, i: -1234567890}, false},
+		{"I8->U64",     fields{t: I8,  i: 123}, args{U64}, Value{t: U64, i: 123}, false},
+		{"I8->U64 >",   fields{t: I8,  i: 234}, args{U64}, Value{t: U64, i: -22}, false},
+		{"I8->U64 -",   fields{t: I8,  i: -123}, args{U64}, Value{t: U64, i: -123}, false},
+		{"I16->U64",    fields{t: I16, i: 12345}, args{U64}, Value{t: U64, i: 12345}, false},
+		{"I16->U64 >",  fields{t: I16, i: 54321}, args{U64}, Value{t: U64, i: -11215}, false},
+		{"I16->U64 -",  fields{t: I16, i: -12345}, args{U64}, Value{t: U64, i: -12345}, false},
+		{"I32->U64",    fields{t: I32, i: 1234567890}, args{U64}, Value{t: U64, i: 1234567890}, false},
+		{"I32->U64 >",  fields{t: I32, i: 3210987654}, args{U64}, Value{t: U64, i: -1083979642}, false},
+		{"I32->U64 -",  fields{t: I32, i: -1234567890}, args{U64}, Value{t: U64, i: -1234567890}, false},
+		{"I64->U64",    fields{t: I64, i: 1234567890}, args{U64}, Value{t: U64, i: 1234567890}, false},
+		{"I64->U64 >",  fields{t: I64, i: 3210987654}, args{U64}, Value{t: U64, i: 3210987654}, false},
+		{"I64->U64 -",  fields{t: I64, i: -1234567890}, args{U64}, Value{t: U64, i: -1234567890}, false},
+		{"F32->U64",    fields{t: F32, f: 1234567890.0}, args{U64}, Value{t: U64, i: 1234567936}, false},
+		{"F32->U64 >",  fields{t: F32, f: 3210987654.0}, args{U64}, Value{t: U64, i: 3210987776}, false},
+		{"F32->U64 -",  fields{t: F32, f: -1234567890.0}, args{U64}, Value{t: U64, i: -1234567936}, false},
+		{"F64->U64",    fields{t: F64, f: 8765432109876543210.0}, args{U64}, Value{t: U64, i: 8765432109876543488}, false},
+		{"F64->U64 >",  fields{t: F64, f: 9876543210987654321.0}, args{U64}, Value{t: U64, i: -8570200862721896448}, false},
+		{"F64->U64 -",  fields{t: F64, f: -8765432109876543210.0}, args{U64}, Value{t: U64, i: -8765432109876543488}, false},
+		{"String->U64", fields{t: String, s: "abc"}, args{U64}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> I64
+		{"U8->I64",     fields{t: U8,  i: 123}, args{I64}, Value{t: I64, i: 123}, false},
+		{"U8->I64 >",   fields{t: U8,  i: 234}, args{I64}, Value{t: I64, i: 234}, false},
+		{"U8->I64 -",   fields{t: U8,  i: -123}, args{I64}, Value{t: I64, i: 133}, false},
+		{"U16->I64",    fields{t: U16, i: 12345}, args{I64}, Value{t: I64, i: 12345}, false},
+		{"U16->I64 >",  fields{t: U16, i: 54321}, args{I64}, Value{t: I64, i: 54321}, false},
+		{"U16->I64 -",  fields{t: U16, i: -12345}, args{I64}, Value{t: I64, i: 53191}, false},
+		{"U32->I64",    fields{t: U32, i: 1234567890}, args{I64}, Value{t: I64, i: 1234567890}, false},
+		{"U32->I64 >",  fields{t: U32, i: 3210987654}, args{I64}, Value{t: I64, i: 3210987654}, false},
+		{"U32->I64 -",  fields{t: U32, i: -1234567890}, args{I64}, Value{t: I64, i: 3060399406}, false},
+		{"U64->I64",    fields{t: U64, i: 1234567890}, args{I64}, Value{t: I64, i: 1234567890}, false},
+		{"U64->I64 >",  fields{t: U64, i: 3210987654}, args{I64}, Value{t: I64, i: 3210987654}, false},
+		{"U64->I64 -",  fields{t: U64, i: -1234567890}, args{I64}, Value{t: I64, i: -1234567890}, false},
+		{"I8->I64",     fields{t: I8,  i: 123}, args{I64}, Value{t: I64, i: 123}, false},
+		{"I8->I64 >",   fields{t: I8,  i: 234}, args{I64}, Value{t: I64, i: -22}, false},
+		{"I8->I64 -",   fields{t: I8,  i: -123}, args{I64}, Value{t: I64, i: -123}, false},
+		{"I16->I64",    fields{t: I16, i: 12345}, args{I64}, Value{t: I64, i: 12345}, false},
+		{"I16->I64 >",  fields{t: I16, i: 54321}, args{I64}, Value{t: I64, i: -11215}, false},
+		{"I16->I64 -",  fields{t: I16, i: -12345}, args{I64}, Value{t: I64, i: -12345}, false},
+		{"I32->I64",    fields{t: I32, i: 1234567890}, args{I64}, Value{t: I64, i: 1234567890}, false},
+		{"I32->I64 >",  fields{t: I32, i: 3210987654}, args{I64}, Value{t: I64, i: -1083979642}, false},
+		{"I32->I64 -",  fields{t: I32, i: -1234567890}, args{I64}, Value{t: I64, i: -1234567890}, false},
+		{"I64->I64",    fields{t: I64, i: 1234567890}, args{I64}, Value{t: I64, i: 1234567890}, false},
+		{"I64->I64 >",  fields{t: I64, i: 3210987654}, args{I64}, Value{t: I64, i: 3210987654}, false},
+		{"I64->I64 -",  fields{t: I64, i: -1234567890}, args{I64}, Value{t: I64, i: -1234567890}, false},
+		{"F32->I64",    fields{t: F32, f: 1234567890.0}, args{I64}, Value{t: I64, i: 1234567936}, false},
+		{"F32->I64 >",  fields{t: F32, f: 9876543210987654321.0}, args{I64}, Value{t: I64, i: -9223372036854775808}, false},
+		{"F32->I64 -",  fields{t: F32, f: -1234567890.0}, args{I64}, Value{t: I64, i: -1234567936}, false},
+		{"F64->I64",    fields{t: F64, f: 8765432109876543210.0}, args{I64}, Value{t: I64, i: 8765432109876543488}, false},
+		{"F64->I64 >",  fields{t: F64, f: 9876543210987654321.0}, args{I64}, Value{t: I64, i: -8570200862721896448}, false},
+		{"F64->I64 -",  fields{t: F64, f: -8765432109876543210.0}, args{I64}, Value{t: I64, i: -8765432109876543488}, false},
+		{"String->I64", fields{t: String, s: "abc"}, args{I64}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> F32
+		{"U8->F32",     fields{t: U8,  i: 123}, args{F32}, Value{t: F32, f: 123}, false},
+		{"U8->F32 >",   fields{t: U8,  i: 234}, args{F32}, Value{t: F32, f: 234}, false},
+		{"U8->F32 -",   fields{t: U8,  i: -123}, args{F32}, Value{t: F32, f: 133}, false},
+		{"U16->F32",    fields{t: U16, i: 12345}, args{F32}, Value{t: F32, f: 12345}, false},
+		{"U16->F32 >",  fields{t: U16, i: 54321}, args{F32}, Value{t: F32, f: 54321}, false},
+		{"U16->F32 -",  fields{t: U16, i: -12345}, args{F32}, Value{t: F32, f: 53191}, false},
+		{"U32->F32",    fields{t: U32, i: 1234567890}, args{F32}, Value{t: F32, f: 1.234567936e+09}, false},
+		{"U32->F32 >",  fields{t: U32, i: 3210987654}, args{F32}, Value{t: F32, f: 3.210987776e+09}, false},
+		{"U32->F32 -",  fields{t: U32, i: -1234567890}, args{F32}, Value{t: F32, f: 3060399360}, false},
+		{"U64->F32",    fields{t: U64, i: 1234567890}, args{F32}, Value{t: F32, f: 1.234567936e+09}, false},
+		{"U64->F32 >",  fields{t: U64, i: 3210987654}, args{F32}, Value{t: F32, f: 3.210987776e+09}, false},
+		{"U64->F32 -",  fields{t: U64, i: -1234567890}, args{F32}, Value{t: F32, f: 1.8446744073709552e+19}, false},
+		{"I8->F32",     fields{t: I8,  i: 123}, args{F32}, Value{t: F32, f: 123}, false},
+		{"I8->F32 >",   fields{t: I8,  i: 234}, args{F32}, Value{t: F32, f: -22}, false},
+		{"I8->F32 -",   fields{t: I8,  i: -123}, args{F32}, Value{t: F32, f: -123}, false},
+		{"I16->F32",    fields{t: I16, i: 12345}, args{F32}, Value{t: F32, f: 12345}, false},
+		{"I16->F32 >",  fields{t: I16, i: 54321}, args{F32}, Value{t: F32, f: -11215}, false},
+		{"I16->F32 -",  fields{t: I16, i: -12345}, args{F32}, Value{t: F32, f: -12345}, false},
+		{"I32->F32",    fields{t: I32, i: 1234567890}, args{F32}, Value{t: F32, f: 1.234567936e+09}, false},
+		{"I32->F32 >",  fields{t: I32, i: 3210987654}, args{F32}, Value{t: F32, f: -1.083979648e+09}, false},
+		{"I32->F32 -",  fields{t: I32, i: -1234567890}, args{F32}, Value{t: F32, f: -1.234567936e+09}, false},
+		{"I64->F32",    fields{t: I64, i: 1234567890}, args{F32}, Value{t: F32, f: 1.234567936e+09}, false},
+		{"I64->F32 >",  fields{t: I64, i: 3210987654}, args{F32}, Value{t: F32, f: 3.210987776e+09}, false},
+		{"I64->F32 -",  fields{t: I64, i: -1234567890}, args{F32}, Value{t: F32, f: -1.234567936e+09}, false},
+		{"F32->F32",    fields{t: F32, f: 1234567890.0}, args{F32}, Value{t: F32, f: 1.234567936e+09}, false},
+		{"F32->F32 >",  fields{t: F32, f: 3210987654.0}, args{F32}, Value{t: F32, f: 3.210987776e+09}, false},
+		{"F32->F32 -",  fields{t: F32, f: -1234567890.0}, args{F32}, Value{t: F32, f: -1.234567936e+09}, false},
+		{"F64->F32",    fields{t: F64, f: 1234567890.0}, args{F32}, Value{t: F32, f: 1.234567936e+09}, false},
+		{"F64->F32 >",  fields{t: F64, f: 3210987654.0}, args{F32}, Value{t: F32, f: 3.210987776e+09}, false},
+		{"F64->F32 -",  fields{t: F64, f: -1234567890.0}, args{F32}, Value{t: F32, f: -1.234567936e+09}, false},
+		{"String->F32", fields{t: String, s: "abc"}, args{F32}, Value{t: String, s: "abc"}, true},
+	
+		// ... -> F64
+		{"U8->F64",     fields{t: U8,  i: 123}, args{F64}, Value{t: F64, f: 123}, false},
+		{"U8->F64 >",   fields{t: U8,  i: 234}, args{F64}, Value{t: F64, f: 234}, false},
+		{"U8->F64 -",   fields{t: U8,  i: -123}, args{F64}, Value{t: F64, f: 133}, false},
+		{"U16->F64",    fields{t: U16, i: 12345}, args{F64}, Value{t: F64, f: 12345}, false},
+		{"U16->F64 >",  fields{t: U16, i: 54321}, args{F64}, Value{t: F64, f: 54321}, false},
+		{"U16->F64 -",  fields{t: U16, i: -12345}, args{F64}, Value{t: F64, f: 53191}, false},
+		{"U32->F64",    fields{t: U32, i: 1234567890}, args{F64}, Value{t: F64, f: 1234567890}, false},
+		{"U32->F64 >",  fields{t: U32, i: 3210987654}, args{F64}, Value{t: F64, f: 3210987654}, false},
+		{"U32->F64 -",  fields{t: U32, i: -1234567890}, args{F64}, Value{t: F64, f: 3060399406}, false},
+		{"U64->F64",    fields{t: U64, i: 1234567890}, args{F64}, Value{t: F64, f: 1234567890}, false},
+		{"U64->F64 >",  fields{t: U64, i: 3210987654}, args{F64}, Value{t: F64, f: 3210987654}, false},
+		{"U64->F64 -",  fields{t: U64, i: -1234567890}, args{F64}, Value{t: F64, f: 1.8446744072474984e+19}, false},
+		{"I8->F64",     fields{t: I8,  i: 123}, args{F64}, Value{t: F64, f: 123}, false},
+		{"I8->F64 >",   fields{t: I8,  i: 234}, args{F64}, Value{t: F64, f: -22}, false},
+		{"I8->F64 -",   fields{t: I8,  i: -123}, args{F64}, Value{t: F64, f: -123}, false},
+		{"I16->F64",    fields{t: I16, i: 12345}, args{F64}, Value{t: F64, f: 12345}, false},
+		{"I16->F64 >",  fields{t: I16, i: 54321}, args{F64}, Value{t: F64, f: -11215}, false},
+		{"I16->F64 -",  fields{t: I16, i: -12345}, args{F64}, Value{t: F64, f: -12345}, false},
+		{"I32->F64",    fields{t: I32, i: 1234567890}, args{F64}, Value{t: F64, f: 1234567890}, false},
+		{"I32->F64 >",  fields{t: I32, i: 3210987654}, args{F64}, Value{t: F64, f: -1083979642}, false},
+		{"I32->F64 -",  fields{t: I32, i: -1234567890}, args{F64}, Value{t: F64, f: -1234567890}, false},
+		{"I64->F64",    fields{t: I64, i: 1234567890}, args{F64}, Value{t: F64, f: 1234567890}, false},
+		{"I64->F64 >",  fields{t: I64, i: 3210987654}, args{F64}, Value{t: F64, f: 3210987654}, false},
+		{"I64->F64 -",  fields{t: I64, i: -1234567890}, args{F64}, Value{t: F64, f: -1234567890}, false},
+		{"F32->F64",    fields{t: F32, f: 1234567890.0}, args{F64}, Value{t: F64, f: 1.234567936e+09}, false},
+		{"F32->F64 >",  fields{t: F32, f: 9876543210987654321.0}, args{F64}, Value{t: F64, f: 9.876543516404875e+18}, false},
+		{"F32->F64 -",  fields{t: F32, f: -1234567890.0}, args{F64}, Value{t: F64, f: -1234567936}, false},
+		{"F64->F64",    fields{t: F64, f: 8765432109876543210.0}, args{F64}, Value{t: F64, f: 8765432109876543210}, false},
+		{"F64->F64 >",  fields{t: F64, f: 9876543210987654321.0}, args{F64}, Value{t: F64, f: 9876543210987654321.0}, false},
+		{"F64->F64 -",  fields{t: F64, f: -8765432109876543210.0}, args{F64}, Value{t: F64, f: -8765432109876543210.0}, false},
+		{"String->F64", fields{t: String, s: "abc"}, args{F64}, Value{t: String, s: "abc"}, true},
+
+		// old tests but need also to be error free
+		{"(int8_t)0x12345", fields{t: I32, i: 0x12345}, args{I8}, Value{t: I8, i: 0x45}, false},
+		{"(int16_t)0x12345", fields{t: I32, i: 0x12345}, args{I16}, Value{t: I16, i: 0x2345}, false},
+		{"(int32_t)0x123456789", fields{t: I32, i: 0x123456789}, args{I32}, Value{t: I32, i: 0x23456789}, false},
+		{"(int64_t)0x12345678901234", fields{t: I32, i: 0x12345678901234}, args{I64}, Value{t: I64, i: 0x78901234}, false},
+		{"(uint8_t)-0x12345", fields{t: I32, i: -0x12345}, args{U8}, Value{t: U8, i: (-0x12345) & 0xFF}, false},
+		{"(uint16_t)-0x12345", fields{t: I32, i: -0x12345}, args{U16}, Value{t: U16, i: (-0x12345) & 0xFFFF}, false},
+		{"(uint32_t)-0x123456789", fields{t: I32, i: -0x123456789}, args{U32}, Value{t: U32, i: (-0x23456789) & 0xFFFFFFFF}, false},
+		{"(uint64_t)-0x12345678901234", fields{t: I32, i: -0x12345678901234}, args{U64}, Value{t: U64, i: -0x78901234}, false},
+		{"(int8_t)-483.12", fields{t: F32, f: -483.12}, args{I8}, Value{t: I8, i: 0x1D}, false},
+		{"(int16_t)-483.12", fields{t: F32, f: -483.12}, args{I16}, Value{t: I16, i: -483}, false},
+		{"(int32_t)-78483.12", fields{t: F32, f: -78483.12}, args{I32}, Value{t: I32, i: -78483}, false},
+		{"(int64_t)-9278483.12", fields{t: F32, f: -9278483.12}, args{I64}, Value{t: I64, i: -9278483}, false},
+		{"(uint8_t)483.12", fields{t: F32, f: 483.12}, args{U8}, Value{t: U8, i: 0xE3}, false},
+		{"(uint16_t)483.12", fields{t: F32, f: 483.12}, args{U16}, Value{t: U16, i: 0x1E3}, false},
+		{"(uint32_t)78483.12", fields{t: F32, f: 78483.12}, args{U32}, Value{t: U32, i: 78483}, false},
+		{"(uint64_t)-9278483.12", fields{t: F32, f: 9278483.12}, args{U64}, Value{t: U64, i: 9278483}, false},
+		{"(int8_t)(double)-483.12", fields{t: F64, f: -483.12}, args{I8}, Value{t: I8, i: 0x1D}, false},
+		{"(int16_t)(double)-483.12", fields{t: F64, f: -483.12}, args{I16}, Value{t: I16, i: -483}, false},
+		{"(int32_t)(double)-78483.12", fields{t: F64, f: -78483.12}, args{I32}, Value{t: I32, i: -78483}, false},
+		{"(int64_t)(double)-9278483.12", fields{t: F64, f: -9278483.12}, args{I64}, Value{t: I64, i: -9278483}, false},
+		{"(uint8_t)(double)483.12", fields{t: F64, f: 483.12}, args{U8}, Value{t: U8, i: 0xE3}, false},
+		{"(uint16_t)(double)483.12", fields{t: F64, f: 483.12}, args{U16}, Value{t: U16, i: 0x1E3}, false},
+		{"(uint32_t)(double)78483.12", fields{t: F64, f: 78483.12}, args{U32}, Value{t: U32, i: 78483}, false},
+		{"(uint64_t)(double)-9278483.12", fields{t: F64, f: 9278483.12}, args{U64}, Value{t: U64, i: 9278483}, false},
+		{"(uint8_t)483.12", fields{t: F32, f: 483.12}, args{U8}, Value{t: U8, i: 0xE3}, false},
+		{"(uint16_t)483.12", fields{t: F32, f: 483.12}, args{U16}, Value{t: U16, i: 0x1E3}, false},
+		{"(uint32_t)78483.12", fields{t: F32, f: 78483.12}, args{U32}, Value{t: U32, i: 78483}, false},
+		{"(uint64_t)-9278483.12", fields{t: F32, f: 9278483.12}, args{U64}, Value{t: U64, i: 9278483}, false},
+		{"(float)(int64_t)123456789", fields{t: I64, i: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(uint64_t)123456789", fields{t: U64, i: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(int32_t)123456789", fields{t: I32, i: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(uint32_t)123456789", fields{t: U32, i: 123456789}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(int16_t)12345", fields{t: I16, i: 12345}, args{F32}, Value{t: F32, f: 12345.0}, false},
+		{"(float)(uint16_t)12345", fields{t: U16, i: 12345}, args{F32}, Value{t: F32, f: 12345.0}, false},
+		{"(float)(int8_t)123", fields{t: I8, i: 123}, args{F32}, Value{t: F32, f: 123.0}, false},
+		{"(float)(uint8_t)123", fields{t: U8, i: 123}, args{F32}, Value{t: F32, f: 123.0}, false},
+		{"(float)123456789.0", fields{t: F32, f: 123456789.0}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(float)(double)123456789.0", fields{t: F64, f: 123456789.0}, args{F32}, Value{t: F32, f: 123456792.0}, false},
+		{"(double)(int64_t)123456789", fields{t: I64, i: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(uint64_t)123456789", fields{t: U64, i: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(int32_t)123456789", fields{t: I32, i: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(uint32_t)123456789", fields{t: U32, i: 123456789}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(double)(int16_t)12345", fields{t: I16, i: 12345}, args{F64}, Value{t: F64, f: 12345.0}, false},
+		{"(double)(uint16_t)12345", fields{t: U16, i: 12345}, args{F64}, Value{t: F64, f: 12345.0}, false},
+		{"(double)(int8_t)123", fields{t: I8, i: 123}, args{F64}, Value{t: F64, f: 123.0}, false},
+		{"(double)(uint8_t)123", fields{t: U8, i: 123}, args{F64}, Value{t: F64, f: 123.0}, false},
+		{"(double)123456789.0", fields{t: F32, f: 123456789.0}, args{F64}, Value{t: F64, f: 123456792.0}, false},
+		{"(double)(double)123456789.0", fields{t: F64, f: 123456789.0}, args{F64}, Value{t: F64, f: 123456789.0}, false},
+		{"(int8_t)err", fields{t: Nix}, args{I8}, Value{t: Nix}, true},
+		{"(int16_t)err", fields{t: Nix}, args{I16}, Value{t: Nix}, true},
+		{"(int32_t)err", fields{t: Nix}, args{I32}, Value{t: Nix}, true},
+		{"(int64_t)err", fields{t: Nix}, args{I64}, Value{t: Nix}, true},
+		{"(uint8_t)err", fields{t: Nix}, args{U8}, Value{t: Nix}, true},
+		{"(uint16_t)err", fields{t: Nix}, args{U16}, Value{t: Nix}, true},
+		{"(uint32_t)err", fields{t: Nix}, args{U32}, Value{t: Nix}, true},
+		{"(uint64_t)err", fields{t: Nix}, args{U64}, Value{t: Nix}, true},
+		{"(double)err", fields{t: Nix}, args{F64}, Value{t: Nix}, true},
+		{"(float)err", fields{t: Nix}, args{F32}, Value{t: Nix}, true},
+		{"(string)err", fields{t: Nix}, args{String}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -940,8 +1304,8 @@ func TestValue_Cast(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -961,8 +1325,8 @@ func TestValue_Mul(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -977,13 +1341,13 @@ func TestValue_Mul(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"I*I", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 678}}, Value{t: Integer, i: 233910}, false},
-		{"I*F", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 6.78}}, Value{t: Floating, f: 2339.1}, false},
-		{"F*I", fields{t: Floating, F: 3.4}, args{&Value{t: Integer, i: 678}}, Value{t: Floating, f: 2305.2}, false},
-		{"F*F", fields{t: Floating, F: 3.4}, args{&Value{t: Floating, f: 6.78}}, Value{t: Floating, f: 23.052}, false},
-		{"I*X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F*X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X*F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"I*I", fields{t: I32, i: 345}, args{&Value{t: I32, i: 678}}, Value{t: I32, i: 233910}, false},
+		{"I*F", fields{t: I32, i: 345}, args{&Value{t: F32, f: 4.5}}, Value{t: F32, f: 1552.5}, false},
+		{"F*I", fields{t: F32, f: 3.375}, args{&Value{t: I32, i: 678}}, Value{t: F32, f: 2288.25}, false},
+		{"F*F", fields{t: F32, f: 3.375}, args{&Value{t: F32, f: 4.5}}, Value{t: F32, f: 15.1875}, false},
+		{"I*X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F*X", fields{t: F32, f: 3.375}, args{&Value{t: Nix}}, Value{t: F32, f: 3.375}, true},
+		{"X*F", fields{t: Nix}, args{&Value{t: F32, f: 3.375}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -992,8 +1356,8 @@ func TestValue_Mul(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1013,8 +1377,8 @@ func TestValue_Div(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1029,17 +1393,17 @@ func TestValue_Div(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"I/I", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 15}}, Value{t: Integer, i: 23}, false},
-		{"I/F", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 1.2}}, Value{t: Floating, f: 287.5}, false},
-		{"F/I", fields{t: Floating, F: 3.45}, args{&Value{t: Integer, i: 15}}, Value{t: Floating, f: 0.23}, false},
-		{"F/F", fields{t: Floating, F: 3.6}, args{&Value{t: Floating, f: 1.2}}, Value{t: Floating, f: 3}, false},
-		{"I/0", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 345}, true},
-		{"F/0", fields{t: Floating, F: 3.4}, args{&Value{t: Integer, i: 0}}, Value{t: Floating, f: 3.4}, true},
-		{"I/0.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 0.0}}, Value{t: Integer, i: 345}, true},
-		{"F/0.0", fields{t: Floating, F: 3.4}, args{&Value{t: Floating, f: 0.0}}, Value{t: Floating, f: 3.4}, true},
-		{"I/X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F/X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X/F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"I/I", fields{t: I32, i: 345}, args{&Value{t: I32, i: 15}}, Value{t: I32, i: 23}, false},
+		{"I/F", fields{t: I32, i: 345}, args{&Value{t: F32, f: 1.25}}, Value{t: F32, f: 276.0}, false},
+		{"F/I", fields{t: F32, f: 3.375}, args{&Value{t: I32, i: 15}}, Value{t: F32, f: 0.225}, false},
+		{"F/F", fields{t: F32, f: 3.375}, args{&Value{t: F32, f: 1.25}}, Value{t: F32, f: 2.7}, false},
+		{"I/0", fields{t: I32, i: 345}, args{&Value{t: I32, i: 0}}, Value{t: I32, i: 345}, true},
+		{"F/0", fields{t: F32, f: 3.375}, args{&Value{t: I32, i: 0}}, Value{t: F32, f: 3.375}, true},
+		{"I/0.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 0.0}}, Value{t: F32, f: 345}, true},
+		{"F/0.0", fields{t: F32, f: 3.375}, args{&Value{t: F32, f: 0.0}}, Value{t: F32, f: 3.375}, true},
+		{"I/X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F/X", fields{t: F32, f: 3.375}, args{&Value{t: Nix}}, Value{t: F32, f: 3.375}, true},
+		{"X/F", fields{t: Nix}, args{&Value{t: F32, f: 3.375}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1048,8 +1412,8 @@ func TestValue_Div(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1069,8 +1433,8 @@ func TestValue_Mod(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1085,12 +1449,12 @@ func TestValue_Mod(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"I%I", fields{t: Integer, I: 347}, args{&Value{t: Integer, i: 15}}, Value{t: Integer, i: 2}, false},
-		{"I%0", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 345}, true},
-		{"I%F", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 1.2}}, Value{t: Integer, i: 345}, true},
-		{"F%I", fields{t: Floating, F: 3.45}, args{&Value{t: Integer, i: 15}}, Value{t: Floating, f: 3.45}, true},
-		{"I%X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"X%I", fields{t: Nix}, args{&Value{t: Integer, i: 15}}, Value{t: Nix}, true},
+		{"I%I", fields{t: I32, i: 347}, args{&Value{t: I32, i: 15}}, Value{t: I32, i: 2}, false},
+		{"I%0", fields{t: I32, i: 345}, args{&Value{t: I32, i: 0}}, Value{t: I32, i: 345}, true},
+		{"I%F", fields{t: I32, i: 345}, args{&Value{t: F32, f: 1.25}}, Value{t: F32, f: 345}, true},
+		{"F%I", fields{t: F32, f: 3.375}, args{&Value{t: I32, i: 15}}, Value{t: F32, f: 3.375}, true},
+		{"I%X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"X%I", fields{t: Nix}, args{&Value{t: I32, i: 15}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1099,8 +1463,8 @@ func TestValue_Mod(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1120,8 +1484,8 @@ func TestValue_Add(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1136,13 +1500,13 @@ func TestValue_Add(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"I+I", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 678}}, Value{t: Integer, i: 1023}, false},
-		{"I+F", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 6.78}}, Value{t: Floating, f: 351.78}, false},
-		{"F+I", fields{t: Floating, F: 3.4}, args{&Value{t: Integer, i: 678}}, Value{t: Floating, f: 681.4}, false},
-		{"F+F", fields{t: Floating, F: 3.4}, args{&Value{t: Floating, f: 6.78}}, Value{t: Floating, f: 10.18}, false},
-		{"I+X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F+X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X+F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"I+I", fields{t: I32, i: 345}, args{&Value{t: I32, i: 678}}, Value{t: I32, i: 1023}, false},
+		{"I+F", fields{t: I32, i: 345}, args{&Value{t: F32, f: 4.5}}, Value{t: F32, f: 349.5}, false},
+		{"F+I", fields{t: F32, f: 3.375}, args{&Value{t: I32, i: 678}}, Value{t: F32, f: 681.375}, false},
+		{"F+F", fields{t: F32, f: 3.375}, args{&Value{t: F32, f: 4.5}}, Value{t: F32, f: 7.875}, false},
+		{"I+X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F+X", fields{t: F32, f: 3.375}, args{&Value{t: Nix}}, Value{t: F32, f: 3.375}, true},
+		{"X+F", fields{t: Nix}, args{&Value{t: F32, f: 3.375}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1151,8 +1515,8 @@ func TestValue_Add(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1172,8 +1536,8 @@ func TestValue_Sub(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1188,13 +1552,13 @@ func TestValue_Sub(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"I-I", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 15}}, Value{t: Integer, i: 330}, false},
-		{"I-F", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 1.2}}, Value{t: Floating, f: 343.8}, false},
-		{"F-I", fields{t: Floating, F: 3.45}, args{&Value{t: Integer, i: 15}}, Value{t: Floating, f: -11.55}, false},
-		{"F-F", fields{t: Floating, F: 3.4}, args{&Value{t: Floating, f: 1.2}}, Value{t: Floating, f: 2.2}, false},
-		{"I-X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F-X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X-F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"I-I", fields{t: I32, i: 345}, args{&Value{t: I32, i: 15}}, Value{t: I32, i: 330}, false},
+		{"I-F", fields{t: I32, i: 345}, args{&Value{t: F32, f: 1.25}}, Value{t: F32, f: 343.75}, false},
+		{"F-I", fields{t: F32, f: 3.375}, args{&Value{t: I32, i: 15}}, Value{t: F32, f: -11.625}, false},
+		{"F-F", fields{t: F32, f: 3.375}, args{&Value{t: F32, f: 1.25}}, Value{t: F32, f: 2.125}, false},
+		{"I-X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F-X", fields{t: F32, f: 3.375}, args{&Value{t: Nix}}, Value{t: F32, f: 3.375}, true},
+		{"X-F", fields{t: Nix}, args{&Value{t: F32, f: 3.375}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1203,8 +1567,8 @@ func TestValue_Sub(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1224,8 +1588,8 @@ func TestValue_Shl(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1240,9 +1604,9 @@ func TestValue_Shl(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345<<7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 44160}, false},
-		{"X<<7", fields{t: Nix}, args{&Value{t: Integer, i: 7}}, Value{t: Nix}, true},
-		{"345<<X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
+		{"345<<7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: I32, i: 44160}, false},
+		{"X<<7", fields{t: Nix}, args{&Value{t: I32, i: 7}}, Value{t: Nix}, true},
+		{"345<<X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1251,8 +1615,8 @@ func TestValue_Shl(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1272,8 +1636,8 @@ func TestValue_Shr(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1288,9 +1652,9 @@ func TestValue_Shr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345>>1", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 172}, false},
-		{"X>>1", fields{t: Nix}, args{&Value{t: Integer, i: 1}}, Value{t: Nix}, true},
-		{"345>>X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
+		{"345>>1", fields{t: I32, i: 345}, args{&Value{t: I32, i: 1}}, Value{t: I32, i: 172}, false},
+		{"X>>1", fields{t: Nix}, args{&Value{t: I32, i: 1}}, Value{t: Nix}, true},
+		{"345>>X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1299,8 +1663,8 @@ func TestValue_Shr(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1320,8 +1684,8 @@ func TestValue_Less(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1336,21 +1700,21 @@ func TestValue_Less(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345<7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 0}, false},
-		{"345<789", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 1}, false},
-		{"345<345", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345<7.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 0}, false},
-		{"345<789.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 1}, false},
-		{"345<345.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0<7", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 0}, false},
-		{"345.0<789", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 1}, false},
-		{"345.0<345", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345.0<7.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 0}, false},
-		{"345.0<789.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 1}, false},
-		{"345.0<345.0", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"I<X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F<X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X<F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"345<7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 0}, false},
+		{"345<789", fields{t: I32, i: 345}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 1}, false},
+		{"345<345", fields{t: I32, i: 345}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345<7.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 0}, false},
+		{"345<789.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 1}, false},
+		{"345<345.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0<7", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 0}, false},
+		{"345.0<789", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 1}, false},
+		{"345.0<345", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345.0<7.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 0}, false},
+		{"345.0<789.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 1}, false},
+		{"345.0<345.0", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"I<X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F<X", fields{t: F32, f: 3.4}, args{&Value{t: Nix}}, Value{t: F32, f: 3.4}, true},
+		{"X<F", fields{t: Nix}, args{&Value{t: F32, f: 3.4}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1359,8 +1723,8 @@ func TestValue_Less(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1380,8 +1744,8 @@ func TestValue_LessEqual(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1396,21 +1760,21 @@ func TestValue_LessEqual(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345<=7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 0}, false},
-		{"345<=789", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 1}, false},
-		{"345<=345", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345<=7.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 0}, false},
-		{"345<=789.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 1}, false},
-		{"345<=345.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0<=7", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 0}, false},
-		{"345.0<=789", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 1}, false},
-		{"345.0<=345", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345.0<=7.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 0}, false},
-		{"345.0<=789.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 1}, false},
-		{"345.0<=345.0", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"I<=X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F<=X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X<=F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"345<=7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 0}, false},
+		{"345<=789", fields{t: I32, i: 345}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 1}, false},
+		{"345<=345", fields{t: I32, i: 345}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345<=7.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 0}, false},
+		{"345<=789.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 1}, false},
+		{"345<=345.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0<=7", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 0}, false},
+		{"345.0<=789", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 1}, false},
+		{"345.0<=345", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345.0<=7.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 0}, false},
+		{"345.0<=789.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 1}, false},
+		{"345.0<=345.0", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"I<=X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F<=X", fields{t: F32, f: 3.4}, args{&Value{t: Nix}}, Value{t: F32, f: 3.4}, true},
+		{"X<=F", fields{t: Nix}, args{&Value{t: F32, f: 3.4}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1419,8 +1783,8 @@ func TestValue_LessEqual(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1440,8 +1804,8 @@ func TestValue_Greater(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1456,21 +1820,21 @@ func TestValue_Greater(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345>7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 1}, false},
-		{"345>789", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 0}, false},
-		{"345>345", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345>7.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 1}, false},
-		{"345>789.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 0}, false},
-		{"345>345.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0>7", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 1}, false},
-		{"345.0>789", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 0}, false},
-		{"345.0>345", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345.0>7.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 1}, false},
-		{"345.0>789.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 0}, false},
-		{"345.0>345.0", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"I>X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F>X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X>F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"345>7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 1}, false},
+		{"345>789", fields{t: I32, i: 345}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 0}, false},
+		{"345>345", fields{t: I32, i: 345}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345>7.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 1}, false},
+		{"345>789.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 0}, false},
+		{"345>345.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0>7", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 1}, false},
+		{"345.0>789", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 0}, false},
+		{"345.0>345", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345.0>7.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 1}, false},
+		{"345.0>789.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 0}, false},
+		{"345.0>345.0", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"I>X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F>X", fields{t: F32, f: 3.4}, args{&Value{t: Nix}}, Value{t: F32, f: 3.4}, true},
+		{"X>F", fields{t: Nix}, args{&Value{t: F32, f: 3.4}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1479,8 +1843,8 @@ func TestValue_Greater(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1500,8 +1864,8 @@ func TestValue_GreaterEqual(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1516,21 +1880,21 @@ func TestValue_GreaterEqual(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345>=7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 1}, false},
-		{"345>=789", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 0}, false},
-		{"345>=345", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345>=7.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 1}, false},
-		{"345>=789.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 0}, false},
-		{"345>=345.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0>=7", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 1}, false},
-		{"345.0>=789", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 0}, false},
-		{"345.0>=345", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345.0>=7.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 1}, false},
-		{"345.0>=789.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 0}, false},
-		{"345.0>=345.0", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"I>=X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F>=X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X>=F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"345>=7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 1}, false},
+		{"345>=789", fields{t: I32, i: 345}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 0}, false},
+		{"345>=345", fields{t: I32, i: 345}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345>=7.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 1}, false},
+		{"345>=789.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 0}, false},
+		{"345>=345.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0>=7", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 1}, false},
+		{"345.0>=789", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 0}, false},
+		{"345.0>=345", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345.0>=7.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 1}, false},
+		{"345.0>=789.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 0}, false},
+		{"345.0>=345.0", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"I>=X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F>=X", fields{t: F32, f: 3.4}, args{&Value{t: Nix}}, Value{t: F32, f: 3.4}, true},
+		{"X>=F", fields{t: Nix}, args{&Value{t: F32, f: 3.4}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1539,8 +1903,8 @@ func TestValue_GreaterEqual(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1560,8 +1924,8 @@ func TestValue_Equal(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1576,21 +1940,21 @@ func TestValue_Equal(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345==7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 0}, false},
-		{"345==789", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 0}, false},
-		{"345==345", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345==7.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 0}, false},
-		{"345==789.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 0}, false},
-		{"345==345.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"345.0==7", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 0}, false},
-		{"345.0==789", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 0}, false},
-		{"345.0==345", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 1}, false},
-		{"345.0==7.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 0}, false},
-		{"345.0==789.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 0}, false},
-		{"345.0==345.0", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 1}, false},
-		{"I==X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F==X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X==F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"345==7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 0}, false},
+		{"345==789", fields{t: I32, i: 345}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 0}, false},
+		{"345==345", fields{t: I32, i: 345}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345==7.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 0}, false},
+		{"345==789.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 0}, false},
+		{"345==345.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"345.0==7", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 0}, false},
+		{"345.0==789", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 0}, false},
+		{"345.0==345", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 1}, false},
+		{"345.0==7.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 0}, false},
+		{"345.0==789.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 0}, false},
+		{"345.0==345.0", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 1}, false},
+		{"I==X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F==X", fields{t: F32, f: 3.4}, args{&Value{t: Nix}}, Value{t: F32, f: 3.4}, true},
+		{"X==F", fields{t: Nix}, args{&Value{t: F32, f: 3.4}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1599,8 +1963,8 @@ func TestValue_Equal(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1620,8 +1984,8 @@ func TestValue_NotEqual(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1636,21 +2000,21 @@ func TestValue_NotEqual(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"345!=7", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 1}, false},
-		{"345!=789", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 1}, false},
-		{"345!=345", fields{t: Integer, I: 345}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345!=7.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 1}, false},
-		{"345!=789.1", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 1}, false},
-		{"345!=345.0", fields{t: Integer, I: 345}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"345.0!=7", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 7}}, Value{t: Integer, i: 1}, false},
-		{"345.0!=789", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 789}}, Value{t: Integer, i: 1}, false},
-		{"345.0!=345", fields{t: Floating, F: 345.0}, args{&Value{t: Integer, i: 345}}, Value{t: Integer, i: 0}, false},
-		{"345.0!=7.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 7.1}}, Value{t: Integer, i: 1}, false},
-		{"345.0!=789.1", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 789.1}}, Value{t: Integer, i: 1}, false},
-		{"345.0!=345.0", fields{t: Floating, F: 345.0}, args{&Value{t: Floating, f: 345.0}}, Value{t: Integer, i: 0}, false},
-		{"I!=X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
-		{"F!=X", fields{t: Floating, F: 3.4}, args{&Value{t: Nix}}, Value{t: Floating, f: 3.4}, true},
-		{"X!=F", fields{t: Nix}, args{&Value{t: Floating, f: 3.4}}, Value{t: Nix}, true},
+		{"345!=7", fields{t: I32, i: 345}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 1}, false},
+		{"345!=789", fields{t: I32, i: 345}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 1}, false},
+		{"345!=345", fields{t: I32, i: 345}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345!=7.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 1}, false},
+		{"345!=789.1", fields{t: I32, i: 345}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 1}, false},
+		{"345!=345.0", fields{t: I32, i: 345}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"345.0!=7", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 7}}, Value{t: U8, i: 1}, false},
+		{"345.0!=789", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 789}}, Value{t: U8, i: 1}, false},
+		{"345.0!=345", fields{t: F32, f: 345.0}, args{&Value{t: I32, i: 345}}, Value{t: U8, i: 0}, false},
+		{"345.0!=7.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 7.1}}, Value{t: U8, i: 1}, false},
+		{"345.0!=789.1", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 789.1}}, Value{t: U8, i: 1}, false},
+		{"345.0!=345.0", fields{t: F32, f: 345.0}, args{&Value{t: F32, f: 345.0}}, Value{t: U8, i: 0}, false},
+		{"I!=X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
+		{"F!=X", fields{t: F32, f: 3.4}, args{&Value{t: Nix}}, Value{t: F32, f: 3.4}, true},
+		{"X!=F", fields{t: Nix}, args{&Value{t: F32, f: 3.4}}, Value{t: Nix}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1659,8 +2023,8 @@ func TestValue_NotEqual(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1680,8 +2044,8 @@ func TestValue_And(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1696,9 +2060,9 @@ func TestValue_And(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0x55aa00ff&0xaf5f0ff0", fields{t: Integer, I: 0x55aa00ff}, args{&Value{t: Integer, i: 0xaf5f0ff0}}, Value{t: Integer, i: 0x050A00F0}, false},
-		{"X&7", fields{t: Nix}, args{&Value{t: Integer, i: 7}}, Value{t: Nix}, true},
-		{"345&X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
+		{"0x55aa00ff&0xaf5f0ff0", fields{t: I32, i: 0x55aa00ff}, args{&Value{t: I32, i: 0xaf5f0ff0}}, Value{t: I32, i: 0x050A00F0}, false},
+		{"X&7", fields{t: Nix}, args{&Value{t: I32, i: 7}}, Value{t: Nix}, true},
+		{"345&X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1707,8 +2071,8 @@ func TestValue_And(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1728,8 +2092,8 @@ func TestValue_Xor(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1744,9 +2108,9 @@ func TestValue_Xor(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0x55aa00ff^0xaf5f0ff0", fields{t: Integer, I: 0x55aa00ff}, args{&Value{t: Integer, i: 0xaf5f0ff0}}, Value{t: Integer, i: 0xFAF50F0F}, false},
-		{"X^7", fields{t: Nix}, args{&Value{t: Integer, i: 7}}, Value{t: Nix}, true},
-		{"345^X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
+		{"0x55aa00ff^0xaf5f0ff0", fields{t: I32, i: 0x55aa00ff}, args{&Value{t: I32, i: 0xaf5f0ff0}}, Value{t: I32, i: 0xFAF50F0F}, false},
+		{"X^7", fields{t: Nix}, args{&Value{t: I32, i: 7}}, Value{t: Nix}, true},
+		{"345^X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1755,8 +2119,8 @@ func TestValue_Xor(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1776,8 +2140,8 @@ func TestValue_Or(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1792,9 +2156,9 @@ func TestValue_Or(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0x55aa00ff|&0xaf5f0ff0", fields{t: Integer, I: 0x55aa00ff}, args{&Value{t: Integer, i: 0xaf5f0ff0}}, Value{t: Integer, i: 0xFFFF0FFF}, false},
-		{"X|7", fields{t: Nix}, args{&Value{t: Integer, i: 7}}, Value{t: Nix}, true},
-		{"345|X", fields{t: Integer, I: 345}, args{&Value{t: Nix}}, Value{t: Integer, i: 345}, true},
+		{"0x55aa00ff|&0xaf5f0ff0", fields{t: I32, i: 0x55aa00ff}, args{&Value{t: I32, i: 0xaf5f0ff0}}, Value{t: I32, i: 0xFFFF0FFF}, false},
+		{"X|7", fields{t: Nix}, args{&Value{t: I32, i: 7}}, Value{t: Nix}, true},
+		{"345|X", fields{t: I32, i: 345}, args{&Value{t: Nix}}, Value{t: I32, i: 345}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1803,8 +2167,8 @@ func TestValue_Or(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1824,8 +2188,8 @@ func TestValue_LogAnd(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1840,22 +2204,22 @@ func TestValue_LogAnd(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0&&0", fields{t: Integer, I: 0}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"0&&1", fields{t: Integer, I: 0}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 0}, false},
-		{"1&&0", fields{t: Integer, I: 1}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"1&&1", fields{t: Integer, I: 1}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"0&&0.0", fields{t: Integer, I: 0}, args{&Value{t: Floating, f: 0.0}}, Value{t: Integer, i: 0}, false},
-		{"0&&1.0", fields{t: Integer, I: 0}, args{&Value{t: Floating, f: 1.0}}, Value{t: Integer, i: 0}, false},
-		{"1&&0.0", fields{t: Integer, I: 1}, args{&Value{t: Floating, f: 0.0}}, Value{t: Integer, i: 0}, false},
-		{"1&&1.0", fields{t: Integer, I: 1}, args{&Value{t: Floating, f: 1.0}}, Value{t: Integer, i: 1}, false},
-		{"0.0&&0.0", fields{t: Floating, F: 0.0}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"0.0&&1.0", fields{t: Floating, F: 1.0}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"1.0&&0.0", fields{t: Floating, F: 0.0}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 0}, false},
-		{"1.0&&1.0", fields{t: Floating, F: 1.0}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"X&&1", fields{t: Nix}, args{&Value{t: Integer, i: 1}}, Value{t: Nix}, true},
-		{"1&&X", fields{t: Integer, I: 1}, args{&Value{t: Nix}}, Value{t: Integer, i: 1}, true},
-		{"X&&1.0", fields{t: Nix}, args{&Value{t: Floating, f: 1.0}}, Value{t: Nix}, true},
-		{"1.0&&X", fields{t: Floating, F: 1.0}, args{&Value{t: Nix}}, Value{t: Floating, f: 1.0}, true},
+		{"0&&0", fields{t: I32, i: 0}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"0&&1", fields{t: I32, i: 0}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 0}, false},
+		{"1&&0", fields{t: I32, i: 1}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"1&&1", fields{t: I32, i: 1}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"0&&0.0", fields{t: I32, i: 0}, args{&Value{t: F32, f: 0.0}}, Value{t: U8, i: 0}, false},
+		{"0&&1.0", fields{t: I32, i: 0}, args{&Value{t: F32, f: 1.0}}, Value{t: U8, i: 0}, false},
+		{"1&&0.0", fields{t: I32, i: 1}, args{&Value{t: F32, f: 0.0}}, Value{t: U8, i: 0}, false},
+		{"1&&1.0", fields{t: I32, i: 1}, args{&Value{t: F32, f: 1.0}}, Value{t: U8, i: 1}, false},
+		{"0.0&&0.0", fields{t: F32, f: 0.0}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"0.0&&1.0", fields{t: F32, f: 1.0}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"1.0&&0.0", fields{t: F32, f: 0.0}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 0}, false},
+		{"1.0&&1.0", fields{t: F32, f: 1.0}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"X&&1", fields{t: Nix}, args{&Value{t: I32, i: 1}}, Value{t: Nix}, true},
+		{"1&&X", fields{t: I32, i: 1}, args{&Value{t: Nix}}, Value{t: I32, i: 1}, true},
+		{"X&&1.0", fields{t: Nix}, args{&Value{t: F32, f: 1.0}}, Value{t: Nix}, true},
+		{"1.0&&X", fields{t: F32, f: 1.0}, args{&Value{t: Nix}}, Value{t: F32, f: 1.0}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1864,8 +2228,8 @@ func TestValue_LogAnd(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,
@@ -1885,8 +2249,8 @@ func TestValue_LogOr(t *testing.T) {
 
 	type fields struct {
 		t Token
-		I int64
-		F float64
+		i int64
+		f float64
 		s string
 		v *Variable
 		l []Value
@@ -1901,22 +2265,22 @@ func TestValue_LogOr(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"0||0", fields{t: Integer, I: 0}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"0||1", fields{t: Integer, I: 0}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"1||0", fields{t: Integer, I: 1}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 1}, false},
-		{"1||1", fields{t: Integer, I: 1}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"0||0.0", fields{t: Integer, I: 0}, args{&Value{t: Floating, f: 0.0}}, Value{t: Integer, i: 0}, false},
-		{"0||1.0", fields{t: Integer, I: 0}, args{&Value{t: Floating, f: 1.0}}, Value{t: Integer, i: 1}, false},
-		{"1||0.0", fields{t: Integer, I: 1}, args{&Value{t: Floating, f: 0.0}}, Value{t: Integer, i: 1}, false},
-		{"1||1.0", fields{t: Integer, I: 1}, args{&Value{t: Floating, f: 1.0}}, Value{t: Integer, i: 1}, false},
-		{"0.0||0.0", fields{t: Floating, F: 0.0}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 0}, false},
-		{"0.0||1.0", fields{t: Floating, F: 1.0}, args{&Value{t: Integer, i: 0}}, Value{t: Integer, i: 1}, false},
-		{"1.0||0.0", fields{t: Floating, F: 0.0}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"1.0||1.0", fields{t: Floating, F: 1.0}, args{&Value{t: Integer, i: 1}}, Value{t: Integer, i: 1}, false},
-		{"X||1", fields{t: Nix}, args{&Value{t: Integer, i: 1}}, Value{t: Nix}, true},
-		{"1||X", fields{t: Integer, I: 1}, args{&Value{t: Nix}}, Value{t: Integer, i: 1}, true},
-		{"X||1.0", fields{t: Nix}, args{&Value{t: Floating, f: 1.0}}, Value{t: Nix}, true},
-		{"1.0||X", fields{t: Floating, F: 1.0}, args{&Value{t: Nix}}, Value{t: Floating, f: 1.0}, true},
+		{"0||0", fields{t: I32, i: 0}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"0||1", fields{t: I32, i: 0}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"1||0", fields{t: I32, i: 1}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 1}, false},
+		{"1||1", fields{t: I32, i: 1}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"0||0.0", fields{t: I32, i: 0}, args{&Value{t: F32, f: 0.0}}, Value{t: U8, i: 0}, false},
+		{"0||1.0", fields{t: I32, i: 0}, args{&Value{t: F32, f: 1.0}}, Value{t: U8, i: 1}, false},
+		{"1||0.0", fields{t: I32, i: 1}, args{&Value{t: F32, f: 0.0}}, Value{t: U8, i: 1}, false},
+		{"1||1.0", fields{t: I32, i: 1}, args{&Value{t: F32, f: 1.0}}, Value{t: U8, i: 1}, false},
+		{"0.0||0.0", fields{t: F32, f: 0.0}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 0}, false},
+		{"0.0||1.0", fields{t: F32, f: 1.0}, args{&Value{t: I32, i: 0}}, Value{t: U8, i: 1}, false},
+		{"1.0||0.0", fields{t: F32, f: 0.0}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"1.0||1.0", fields{t: F32, f: 1.0}, args{&Value{t: I32, i: 1}}, Value{t: U8, i: 1}, false},
+		{"X||1", fields{t: Nix}, args{&Value{t: I32, i: 1}}, Value{t: Nix}, true},
+		{"1||X", fields{t: I32, i: 1}, args{&Value{t: Nix}}, Value{t: I32, i: 1}, true},
+		{"X||1.0", fields{t: Nix}, args{&Value{t: F32, f: 1.0}}, Value{t: Nix}, true},
+		{"1.0||X", fields{t: F32, f: 1.0}, args{&Value{t: Nix}}, Value{t: F32, f: 1.0}, true},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -1925,8 +2289,8 @@ func TestValue_LogOr(t *testing.T) {
 
 			v := &Value{
 				t: tt.fields.t,
-				i: tt.fields.I,
-				f: tt.fields.F,
+				i: tt.fields.i,
+				f: tt.fields.f,
 				s: tt.fields.s,
 				v: tt.fields.v,
 				l: tt.fields.l,

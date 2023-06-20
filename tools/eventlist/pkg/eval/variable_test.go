@@ -32,10 +32,10 @@ func TestClearNames(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			SetVar("v1_ClearNames", Value{t: Integer, i: 789})
+			SetVar("v1", Value{t: I16, i: 789})
 			ClearNames()
 			if CountNames() != 0 {
-				t.Errorf("ClearNames() = %v, want %v", CountNames(), 0)
+				t.Errorf("ClearNames() %s = %v, want %v", tt.name, CountNames(), 0)
 			}
 		})
 	}
@@ -55,10 +55,10 @@ func TestCountNames(t *testing.T) {
 			if tt.clear {
 				ClearNames()
 			} else {
-				SetVar("v1_CountNames", Value{t: Integer, i: 789})
+				SetVar("v1_CountNames", Value{t: I16, i: 789})
 			}
 			if got := CountNames(); got != tt.want {
-				t.Errorf("CountNames() = %v, want %v", got, tt.want)
+				t.Errorf("CountNames() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}
@@ -76,8 +76,8 @@ func TestGetVar(t *testing.T) {
 		want    *Variable
 		wantErr bool
 	}{
-		{"GetVar_empty", true, args{"v1_GetVar"}, nil, true},
-		{"GetVar_ok", false, args{"v1_GetVar"}, nil, false},
+		{"empty", true, args{"v1_GetVar"}, nil, true},
+		{"ok", false, args{"v1_GetVar"}, nil, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -88,46 +88,46 @@ func TestGetVar(t *testing.T) {
 			}
 			got, err := GetVar(tt.args.n)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetVar() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetVar() error %s = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetVar() = %v, want %v", got, tt.want)
+				t.Errorf("GetVar() %s = %v, want %v", tt.name, got, tt.want)
 			}
-			vari = SetVar(tt.args.n, Value{t: Integer, i: 345})
+			vari = SetVar(tt.args.n, Value{t: I16, i: 345})
 		})
 	}
 }
 
-func TestSetVarI(t *testing.T) {
+func TestSetVarI32(t *testing.T) {
 	type args struct {
 		n string
-		i int64
+		i int32
 	}
 	tests := []struct {
 		name  string
 		clear bool
 		args  args
 	}{
-		{"SetVarI_empty", true, args{"v1_SetVarI", 345}},
-		{"SetVarI_over", false, args{"v1_SetVarI", 123}},
-		{"SetVarI_new", false, args{"v1_SetVarI1", 159}},
+		{"empty", true, args{"v1_SetVarI", 345}},
+		{"over", false, args{"v1_SetVarI", 123}},
+		{"new", false, args{"v1_SetVarI1", 159}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.clear {
 				ClearNames()
 			}
-			SetVarI(tt.args.n, tt.args.i)
+			SetVarI32(tt.args.n, tt.args.i)
 			v := Variable{tt.args.n, Value{}}
-			vari := Value{t: Integer, i: tt.args.i}
+			vari := Value{t: I32, i: int64(tt.args.i)}
 			got, err := v.getValue()
 			if err != nil {
-				t.Errorf("SetVarI() = %v", err)
+				t.Errorf("SetVarI32() %s = %v", tt.name, err)
 			} else if !reflect.DeepEqual(got, vari) {
-				t.Errorf("SetVarI() = %v, want %v", got, vari)
+				t.Errorf("SetVarI32() %s = %v, want %v", tt.name, got, vari)
 			}
-			SetVar("v1_SetVarI", Value{t: Integer, i: 789})
+			SetVar("v1_SetVarI32", Value{t: I32, i: 789})
 		})
 	}
 }
@@ -141,9 +141,9 @@ func TestSetVar(t *testing.T) {
 		name string
 		args args
 	}{
-		{"SetVar_empty", args{"v1_SetVar", Value{t: Integer, i: 345}}},
-		{"SetVar_over", args{"v1_SetVar", Value{t: Integer, i: 123}}},
-		{"SetVar_new", args{"v1_SetVar1", Value{t: Integer, i: 159}}},
+		{"empty", args{"v1_SetVar", Value{t: I16, i: 345}}},
+		{"over", args{"v1_SetVar", Value{t: I16, i: 123}}},
+		{"new", args{"v1_SetVar1", Value{t: I16, i: 159}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -151,11 +151,11 @@ func TestSetVar(t *testing.T) {
 			v := Variable{tt.args.n, Value{}}
 			got, err := v.getValue()
 			if err != nil {
-				t.Errorf("SetVar() = %v", err)
+				t.Errorf("SetVar() %s = %v", tt.name, err)
 			} else if !reflect.DeepEqual(got, tt.args.val) {
-				t.Errorf("SetVar() = %v, want %v", got, tt.args.val)
+				t.Errorf("SetVar() %s = %v, want %v", tt.name, got, tt.args.val)
 			}
-			SetVar("v1_SetVar", Value{t: Integer, i: 789})
+			SetVar("v1_SetVar", Value{t: I16, i: 789})
 		})
 	}
 }
@@ -174,8 +174,8 @@ func TestVariable_setValue(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{"setValue_ok", fields{"v1_setValue", Value{t: Integer, i: 123}}, args{Value{t: Integer, i: 345}}, false},
-		{"setValue_nok", fields{"v1_xxxx", Value{t: Integer, i: 123}}, args{Value{t: Integer, i: 345}}, true},
+		{"ok", fields{"v1_setValue", Value{t: I16, i: 123}}, args{Value{t: I16, i: 345}}, false},
+		{"nok", fields{"v1_xxxx", Value{t: I16, i: 123}}, args{Value{t: I16, i: 345}}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -183,7 +183,7 @@ func TestVariable_setValue(t *testing.T) {
 				n: tt.fields.n,
 				v: tt.fields.v,
 			}
-			SetVar("v1_setValue", Value{t: Integer, i: 789})
+			SetVar("v1_setValue", Value{t: I16, i: 789})
 			var err error
 			if err = v.setValue(&tt.args.val); (err != nil) != tt.wantErr {
 				t.Errorf("Variable.setValue() error = %v, wantErr %v", err, tt.wantErr)
@@ -192,9 +192,9 @@ func TestVariable_setValue(t *testing.T) {
 			if err == nil {
 				got, err = v.getValue()
 				if err != nil {
-					t.Errorf("Variable.setValue() = %v", err)
+					t.Errorf("Variable.setValue() %s = %v", tt.name, err)
 				} else if !reflect.DeepEqual(got, tt.args.val) {
-					t.Errorf("Variable.setValue() = %v, want %v", got, tt.args.val)
+					t.Errorf("Variable.setValue() %s = %v, want %v", tt.name, got, tt.args.val)
 				}
 			}
 		})
@@ -213,9 +213,9 @@ func TestVariable_getValue(t *testing.T) {
 		fields fields
 		want   Value
 	}{
-		{"getValue", fields{"v1_getValue", Value{t: Integer, i: 123}}, Value{t: Integer, i: 789}},
+		{"ok", fields{"v1_getValue", Value{t: I16, i: 123}}, Value{t: I16, i: 789}},
 	}
-	SetVar("v1_getValue", Value{t: Integer, i: 789})
+	SetVar("v1_getValue", Value{t: I16, i: 789})
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
@@ -227,9 +227,9 @@ func TestVariable_getValue(t *testing.T) {
 			}
 			got, err := v.getValue()
 			if err != nil {
-				t.Errorf("Variable.getValue() = %v", err)
+				t.Errorf("Variable.getValue() %s = %v", tt.name, err)
 			} else if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Variable.getValue() = %v, want %v", got, tt.want)
+				t.Errorf("Variable.getValue() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}

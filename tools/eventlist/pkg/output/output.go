@@ -36,7 +36,6 @@ var errNoEvents = errors.New("cannot open event file")
 
 var TimeFactor *float64
 var FormatType = "txt"
-var Level = ""
 
 func TimeInSecs(time uint64) float64 {
 	if TimeFactor == nil {
@@ -253,7 +252,7 @@ type Output struct {
 }
 
 func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string) int {
+	typedefs map[string]map[string]scvd.TdMember) int {
 	o.componentSize = len(o.columns[2]) // use minimum width of header
 	o.propertySize = len(o.columns[3])
 	for i := uint16(0); i < uint16(len(o.evProps)); i++ {
@@ -446,7 +445,7 @@ func escapeGen(s string) string {
 }
 
 func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, eventTable *EventsTable) error {
+	typedefs map[string]map[string]scvd.TdMember, eventTable *EventsTable) error {
 	if out == nil || in == nil {
 		return nil
 	}
@@ -492,24 +491,21 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 		}
 		var rep string
 		if evdef, ok := evdefs[ev.Info.ID]; ok {
-			// Filter events by level
-			if Level == "" || evdef.Level == Level {
-				eventRecord.Component = evdef.Brief
-				eventRecord.EventProperty = evdef.Property
-				if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
-					s := escapeGen(string(*ev.Data))
-					eventRecord.Value = s
-					err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
+			eventRecord.Component = evdef.Brief
+			eventRecord.EventProperty = evdef.Property
+			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
+				s := escapeGen(string(*ev.Data))
+				eventRecord.Value = s
+				err = conditionalWrite(out, "%5d %.8f %*s %*s \"%s\"\n",
+					eventRecord.Index, eventRecord.Time, -o.componentSize,
+					eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
+			} else {
+				rep, err = ev.EvalLine(evdef, typedefs)
+				if err == nil {
+					eventRecord.Value = rep
+					err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
 						eventRecord.Index, eventRecord.Time, -o.componentSize,
 						eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
-				} else {
-					rep, err = ev.EvalLine(evdef, typedefs)
-					if err == nil {
-						eventRecord.Value = rep
-						err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
-							eventRecord.Index, eventRecord.Time, -o.componentSize,
-							eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
-					}
 				}
 			}
 		} else {
@@ -559,7 +555,7 @@ func (o *Output) printHeader(out *bufio.Writer) error {
 }
 
 func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
+	typedefs map[string]map[string]scvd.TdMember, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
 	var b event.Binary
 	var err error
 	var eventCount int
@@ -609,14 +605,15 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 			err = o.printStatistic(out, eventCount, eventsTable)
 		}
 	}
+
 	if err == nil {
 		err = out.Flush()
 	}
 	return err
 }
 
-func Print(filename *string, formatType *string, level *string, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
+func Print(filename *string, formatType *string, eventFile *string, evdefs map[uint16]scvd.Event,
+	typedefs map[string]map[string]scvd.TdMember, statBegin bool, showStatistic bool) error {
 	var file *os.File
 	var err error
 	var o Output
@@ -636,9 +633,6 @@ func Print(filename *string, formatType *string, level *string, eventFile *strin
 		if *formatType == "xml" || *formatType == "json" {
 			FormatType = *formatType
 		}
-	}
-	if level != nil && *level != "" {
-		Level = *level
 	}
 
 	if filename != nil && len(*filename) != 0 {

@@ -51,8 +51,8 @@ func GetVar(n string) (*Variable, error) {
 	return v, nil
 }
 
-func SetVarI(n string, i int64) *Variable {
-	val := Value{t: Integer, i: i}
+func SetVarI32(n string, i int32) *Variable {
+	val := Value{t: I32, i: int64(i)}
 	v := new(Variable)
 	v.n = n
 	v.v = val
@@ -84,10 +84,10 @@ func (v *Variable) setValue(val *Value) error {
 	if _, ok := names[v.n]; !ok {
 		return typeError("Unknown variable", v.v.s)
 	}
-	vari := new(Variable)
-	vari.n = v.n
-	vari.v = *val
-	names[v.n] = vari
+	t := v.v.t
+	v.v = *val
+	v.v.Cast(t)
+	names[v.n].v = v.v
 	return nil
 }
 

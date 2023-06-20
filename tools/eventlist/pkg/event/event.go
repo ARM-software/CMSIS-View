@@ -46,14 +46,14 @@ func formatError(fn, str string) *eval.NumError {
 
 // get the enum value as string
 // count closing ]
-func getEnum(typedefs map[string]map[string]map[int16]string, val int64, value string, i *int) (string, error) {
+func getEnum(typedefs map[string]map[string]scvd.TdMember, val int64, value string, i *int) (string, error) {
 	j := strings.IndexAny(value[*i:], ":]")
 	if j == -1 {
 		return "", formatError("getEnum", value[*i:])
 	}
 	td := strings.TrimSpace(value[*i : *i+j])
-	if value[*i+j] == ':' {
-		members := typedefs[td] // select members of typedef
+	if value[*i+j] == ':' { 	// select a specific member of typedef
+		members := typedefs[td]
 		if members == nil {
 			return "", enumError("getEnum", td)
 		}
@@ -64,10 +64,10 @@ func getEnum(typedefs map[string]map[string]map[int16]string, val int64, value s
 		}
 		md := strings.TrimSpace(value[*i : *i+j])
 		entry := members[md]
-		if entry == nil {
+		if entry.Enum == nil {
 			return "", enumError("getEnum", md)
 		}
-		name, ok := entry[int16(val)]
+		name, ok := entry.Enum[int16(val)]
 		if !ok {
 			return "", enumError("getEnum", strconv.Itoa(int(val)))
 		}
@@ -75,8 +75,8 @@ func getEnum(typedefs map[string]map[string]map[int16]string, val int64, value s
 		return name, nil
 	}
 	*i += j + 1 // only enum name, no member
-	for _, mm := range typedefs[td] {
-		if name, ok := mm[int16(val)]; ok {
+	for _, mm := range typedefs[td] {	// search through all enums of this typedef
+		if name, ok := mm.Enum[int16(val)]; ok {
 			return name, nil
 		}
 	}
@@ -118,7 +118,7 @@ type Data struct {
 
 // calculate a format expression and return the result
 // if unknown code then return the code only
-func (e *Data) calculateExpression(value string, i *int) (string, error) {
+func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember, value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
 	var err error
@@ -140,42 +140,42 @@ func (e *Data) calculateExpression(value string, i *int) (string, error) {
 	}
 	switch c {
 	case 'd': // signed decimal
-		out = fmt.Sprintf("%d", val.GetInt())
+		out = fmt.Sprintf("%d", val.GetInt64())
 	case 'u': // unsigned decimal
-		out = fmt.Sprintf("%d", val.GetUInt())
+		out = fmt.Sprintf("%d", val.GetUInt64())
 	case 't': // text
-		out = elf.Sections.GetString(val.GetUInt())
+		out = elf.Sections.GetString(val.GetUInt64())
 	case 'x': // hexadecimal
-		out = fmt.Sprintf("%02x", val.GetUInt())
+		out = fmt.Sprintf("%02x", val.GetUInt64())
 	case 'F': // File
-		out = elf.Sections.GetString(val.GetUInt())
+		out = elf.Sections.GetString(val.GetUInt64())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt())
+			out = fmt.Sprintf("%08x", val.GetUInt64())
 		}
 	case 'C': // address with file
 		return "", eval.ErrSyntax
 	case 'I': // IPV4
-		out = fmt.Sprintf("%d.%d.%d.%d", val.GetUInt()>>24&0xFF, val.GetUInt()>>16&0xFF,
-			val.GetUInt()>>8&0xFF, val.GetUInt()&0xFF)
+		out = fmt.Sprintf("%d.%d.%d.%d", val.GetUInt64()>>24&0xFF, val.GetUInt64()>>16&0xFF,
+			val.GetUInt64()>>8&0xFF, val.GetUInt64()&0xFF)
 	case 'J': // IPV6			TODO: only part of IPV6
-		out = fmt.Sprintf("%x:%x:%x:%x:", val.GetUInt()>>48&0xFFFF, val.GetUInt()>>32&0xFFFF,
-			val.GetUInt()>>16&0xFFFF, val.GetUInt()&0xFFFF)
+		out = fmt.Sprintf("%x:%x:%x:%x:", val.GetUInt64()>>48&0xFFFF, val.GetUInt64()>>32&0xFFFF,
+			val.GetUInt64()>>16&0xFFFF, val.GetUInt64()&0xFFFF)
 	case 'N': // string address
-		out = elf.Sections.GetString(val.GetUInt())
+		out = elf.Sections.GetString(val.GetUInt64())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt())
+			out = fmt.Sprintf("%08x", val.GetUInt64())
 		}
 	case 'M': // MAC address
-		out = fmt.Sprintf("%02x-%02x-%02x-%02x-%02x-%02x", val.GetUInt()>>40&0xFF, val.GetUInt()>>32&0xFF,
-			val.GetUInt()>>24&0xFF, val.GetUInt()>>16&0xFF, val.GetUInt()>>8&0xFF, val.GetUInt()&0xFF)
+		out = fmt.Sprintf("%02x-%02x-%02x-%02x-%02x-%02x", val.GetUInt64()>>40&0xFF, val.GetUInt64()>>32&0xFF,
+			val.GetUInt64()>>24&0xFF, val.GetUInt64()>>16&0xFF, val.GetUInt64()>>8&0xFF, val.GetUInt64()&0xFF)
 	case 'S': // address
-		out = fmt.Sprintf("%08x", val.GetUInt())
+		out = fmt.Sprintf("%08x", val.GetUInt64())
 	case 'T': // type dependant
 		switch {
 		case val.IsFloating(): // TODO: Float not yet possible because of event record format
-			out = fmt.Sprintf("%f", val.GetFloat())
+			out = fmt.Sprintf("%f", val.GetFloat64())
 		case val.IsInteger():
-			out = fmt.Sprintf("%d", val.GetInt())
+			out = fmt.Sprintf("%d", val.GetInt64())
 		}
 	case 'U': // USB descriptor
 	default:
@@ -184,7 +184,7 @@ func (e *Data) calculateExpression(value string, i *int) (string, error) {
 	return out, nil
 }
 
-func (e *Data) calculateEnumExpression(typedefs map[string]map[string]map[int16]string,
+func (e *Data) calculateEnumExpression(typedefs map[string]map[string]scvd.TdMember,
 	value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
@@ -206,7 +206,7 @@ func (e *Data) calculateEnumExpression(typedefs map[string]map[string]map[int16]
 		*i++
 	}
 	if c == 'E' {
-		out, err = getEnum(typedefs, val.GetInt(), value, i)
+		out, err = getEnum(typedefs, val.GetInt64(), value, i)
 		if err != nil {
 			return "", err
 		}
@@ -216,7 +216,7 @@ func (e *Data) calculateEnumExpression(typedefs map[string]map[string]map[int16]
 	return out, nil
 }
 
-func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]map[int16]string) (string, error) {
+func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]scvd.TdMember) (string, error) {
 	var s string
 	for i := 0; i < len(scvdevent.Value); i++ {
 		c := scvdevent.Value[i]
@@ -253,7 +253,7 @@ func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]map
 				case 'T': // type dependant
 					fallthrough
 				case 'U': // USB descriptor
-					out, err := e.calculateExpression(string(scvdevent.Value), &i)
+					out, err := e.calculateExpression(typedefs, string(scvdevent.Value), &i)
 					if err != nil {
 						return "", err
 					}
@@ -297,24 +297,33 @@ type Binary struct {
 }
 
 func convert16(data []byte) uint16 {
-	if len(data) != 2 {
+	if len(data) < 1 {
 		return 0
 	}
-	return binary.LittleEndian.Uint16([]byte{data[0], data[1]})
+	if len(data) < 2 {
+		return binary.LittleEndian.Uint16([]byte{data[0], 0})
+	}
+	return binary.LittleEndian.Uint16(data)
 }
 
 func convert32(data []byte) uint32 {
-	if len(data) != 4 {
+	if len(data) < 1 {
 		return 0
 	}
-	return binary.LittleEndian.Uint32([]byte{data[0], data[1], data[2], data[3]})
+	if len(data) < 4 {
+		return binary.LittleEndian.Uint32(append(data, 0, 0, 0))
+	}
+	return binary.LittleEndian.Uint32(data)
 }
 
 func convert64(data []byte) uint64 {
-	if len(data) != 8 {
+	if len(data) < 1 {
 		return 0
 	}
-	return binary.LittleEndian.Uint64([]byte{data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]})
+	if len(data) < 8 {
+		return binary.LittleEndian.Uint64(append(data, 0, 0, 0, 0, 0, 0, 0))
+	}
+	return binary.LittleEndian.Uint64(data)
 }
 
 // get one data record
@@ -338,7 +347,7 @@ func (e *Data) Read(in *bufio.Reader) error {
 	if err != nil {
 		return err
 	}
-	if len(data) < 12 {
+	if length < 12 {
 		return eval.ErrEof
 	}
 	e.Time = convert64(data[:8])
@@ -346,21 +355,22 @@ func (e *Data) Read(in *bufio.Reader) error {
 	e.Typ = typ
 	switch typ {
 	case 1: // EventrecordData
-		if len(data) < 12+int(e.Info.length) {
-			return eval.ErrEof
-		}
 		e.Data = new([]uint8)
 		*e.Data = data[12 : 12+int(e.Info.length)]
-	case 2: // Eventrecord2
-		if len(data) < 20 {
-			return eval.ErrEof
+		e.Value1 = int32(convert32((*e.Data)[0:]))
+		if e.Info.length >= 4 {
+			e.Value2 = int32(convert32((*e.Data)[4:]))
+			if e.Info.length >= 8 {
+				e.Value3 = int32(convert32((*e.Data)[8:]))
+				if e.Info.length >= 12 {
+					e.Value4 = int32(convert32((*e.Data)[12:]))
+				}
+			}
 		}
+	case 2: // Eventrecord2
 		e.Value1 = int32(convert32(data[12:16]))
 		e.Value2 = int32(convert32(data[16:20]))
 	case 3: // Eventrecord4
-		if len(data) < 28 {
-			return eval.ErrEof
-		}
 		e.Value1 = int32(convert32(data[12:16]))
 		e.Value2 = int32(convert32(data[16:20]))
 		e.Value3 = int32(convert32(data[20:24]))
@@ -371,22 +381,22 @@ func (e *Data) Read(in *bufio.Reader) error {
 
 func (e *Data) GetValue(value string, i *int) (eval.Value, error) {
 	if *i < len(value) && value[*i] == '[' {
-		if e.Data == nil {
-			eval.SetVarI("val1", int64(e.Value1))
-			eval.SetVarI("val2", int64(e.Value2))
-			eval.SetVarI("val3", int64(e.Value3))
-			eval.SetVarI("val4", int64(e.Value4))
-		} else {
+//		if e.Data == nil {
+			eval.SetVarI32("val1", int32(e.Value1))
+			eval.SetVarI32("val2", int32(e.Value2))
+			eval.SetVarI32("val3", int32(e.Value3))
+			eval.SetVarI32("val4", int32(e.Value4))
+/*		} else {
 			ed := *e.Data
 			var ed8 [8]uint8
 			copy(ed8[:8], ed)
 			v := uint32(ed8[0])<<24 | uint32(ed8[1])<<16 | uint32(ed8[2])<<8 | uint32(ed8[3])
-			eval.SetVarI("val1", int64(v))
+			eval.SetVarI32("val1", int32(v))
 			v = uint32(ed8[4])<<24 | uint32(ed8[5])<<16 | uint32(ed8[6])<<8 | uint32(ed8[7])
-			eval.SetVarI("val2", int64(v))
-			eval.SetVarI("val3", 0)
-			eval.SetVarI("val4", 0)
-		}
+			eval.SetVarI32("val2", int32(v))
+			eval.SetVarI32("val3", 0)
+			eval.SetVarI32("val4", 0)
+		}*/
 		*i++ // skip [
 		j := strings.IndexAny(value[*i:], ",]")
 		var n eval.Value

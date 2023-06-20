@@ -40,8 +40,8 @@ func TestEval(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"test " + s0, args{&s0}, Value{t: Integer, i: 2}, false},
-		{"test " + s1, args{&s1}, Value{t: Floating, f: 1.23}, false},
+		{"test " + s0, args{&s0}, Value{t: I32, i: 2}, false},
+		{"test " + s1, args{&s1}, Value{t: F64, f: 1.23}, false},
 		{"test " + s2, args{&s2}, Value{t: Nix}, true},
 		{"test eof", args{&s3}, Value{t: Nix}, true},
 	}
@@ -52,11 +52,11 @@ func TestEval(t *testing.T) {
 
 			got, err := Eval(tt.args.s)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Eval() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Eval() error %s = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Eval() = %v, want %v", got, tt.want)
+				t.Errorf("Eval() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}

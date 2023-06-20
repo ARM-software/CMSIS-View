@@ -30,8 +30,16 @@ type Token int
 
 const (
 	Nix Token = iota
-	Integer
-	Floating
+	I8
+	U8
+	I16
+	U16
+	I32
+	U32
+	I64
+	U64
+	F32
+	F64
 	String
 	Identifier
 	List
@@ -127,33 +135,17 @@ var ITokens = map[string]Token{
 	"->":  Pointer,
 }
 
-type Type int
-
-const (
-	NoType Type = iota
-	Uint8
-	Int8
-	Uint16
-	Int16
-	Uint32
-	Int32
-	Uint64
-	Int64
-	Float
-	Double
-)
-
-var ITypes = map[string]Type{
-	"uint8_t":  Uint8,
-	"int8_t":   Int8,
-	"uint16_t": Uint16,
-	"int16_t":  Int16,
-	"uint32_t": Uint32,
-	"int32_t":  Int32,
-	"uint64_t": Uint64,
-	"int64_t":  Int64,
-	"float":    Float,
-	"double":   Double,
+var ITypes = map[string]Token{
+	"uint8_t":  U8,
+	"int8_t":   I8,
+	"uint16_t": U16,
+	"int16_t":  I16,
+	"uint32_t": U32,
+	"int32_t":  I32,
+	"uint64_t": U64,
+	"int64_t":  I64,
+	"float":    F32,
+	"double":   F64,
 }
 
 type Expression struct {
@@ -541,9 +533,15 @@ func (ex *Expression) lex() (Value, error) {
 			if err != nil {
 				return v, err
 			}
-			return Value{t: Floating, f: f}, nil
+			return Value{t: F64, f: f}, nil
 		}
-		return Value{t: Integer, i: int64(ui)}, nil
+		if ui > math.MaxInt32 {
+			if ui > math.MaxInt64 {
+				return Value{t: U64, i: int64(ui)}, nil
+			}
+			return Value{t: I64, i: int64(ui)}, nil
+		}
+		return Value{t: I32, i: int64(ui)}, nil
 
 	} else if 'a' <= lower(c) && lower(c) <= 'z' {
 	loop:
@@ -560,9 +558,9 @@ func (ex *Expression) lex() (Value, error) {
 			}
 		}
 		if strings.ToLower(s0) == "inf" {
-			return Value{t: Floating, f: math.Inf(0)}, nil
+			return Value{t: F64, f: math.Inf(0)}, nil
 		} else if strings.ToLower(s0) == "nan" {
-			return Value{t: Floating, f: math.NaN()}, nil
+			return Value{t: F64, f: math.NaN()}, nil
 		}
 		return Value{t: Identifier, s: s0}, nil
 
@@ -717,6 +715,7 @@ func (ex *Expression) lex() (Value, error) {
 					return v, syntaxError(fnLex, s0)
 				}
 				s0 += s
+				v.t = U16
 				v.i = int64(i)
 				done = true
 			case 'U':
@@ -726,6 +725,7 @@ func (ex *Expression) lex() (Value, error) {
 					return v, syntaxError(fnLex, s0)
 				}
 				s0 += s
+				v.t = I32
 				v.i = int64(i)
 				done = true
 			}
@@ -737,7 +737,9 @@ func (ex *Expression) lex() (Value, error) {
 			return Value{}, syntaxError(fnLex, s0)
 		}
 		if c == '\'' {
-			v.t = Integer
+			if v.t == Nix {
+				v.t = I8
+			}
 			return v, nil
 		}
 	} else {
@@ -785,11 +787,11 @@ func (ex *Expression) primary() (Value, error) {
 
 	v = ex.next
 	switch ex.next.t {
-	case Integer:
+	case I64, U64, I32, U32, I16, U16, I8, U8:
 		if ex.next, err = ex.lex(); err != nil {
 			return v, err
 		}
-	case Floating:
+	case F32, F64:
 		if ex.next, err = ex.lex(); err != nil {
 			return v, err
 		}
@@ -823,6 +825,7 @@ func (ex *Expression) primary() (Value, error) {
 	return v, nil
 }
 
+//
 // asnExpr
 // arguments , asnExpr
 func (ex *Expression) arguments() (Value, error) {
@@ -885,15 +888,17 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		if v, err = left.getValue(); err != nil {
 			return left, err
 		}
-		if err = v.Inc(); err != nil {
+		right = v
+		if err = right.Inc(); err != nil {
 			return v, err
 		}
-		if err = left.setValue(&v); err != nil { // do not change left, it is postincrement
+		if err = left.setValue(&right); err != nil {
 			return left, err // cannot happen because of working getValue
 		}
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
 		}
+		return v, nil
 	case SubSub:
 		if !left.IsIdentifier() {
 			return left, syntaxError("identifier expected", "")
@@ -901,15 +906,17 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		if v, err = left.getValue(); err != nil {
 			return left, err
 		}
-		if err = v.Dec(); err != nil {
+		right = v;
+		if err = right.Dec(); err != nil {
 			return v, err
 		}
-		if err = left.setValue(&v); err != nil { // do not change left, it is postdecrement
+		if err = left.setValue(&right); err != nil {
 			return left, err // cannot happen because of working getValue
 		}
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
 		}
+		return v, nil
 	case Dot:
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
@@ -950,6 +957,10 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 			if err = left.Function(&right); err != nil {
 				return left, err
 			}
+		} else {
+			if err = left.Function(&right); err != nil {
+				return left, err
+			}
 		}
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
@@ -970,7 +981,7 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 				return left, err
 			}
 		}
-		left.i = v.GetInt() // TODO: noch nicht implementiert
+		left.i = v.GetInt64() // TODO: noch nicht implementiert
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
 		}
@@ -1092,8 +1103,8 @@ func (ex *Expression) castExpr() (Value, error) {
 			}
 			return v, nil
 		}
-		var ty Type
-		if ty = ITypes[ex.next.s]; ty == NoType {
+		var ty Token
+		if ty = ITypes[ex.next.s]; ty == Nix {
 			ex.setPos(start)
 			ex.next.t = ParenO
 			if v, err = ex.unary(); err != nil && !errors.Is(err, ErrEof) {
@@ -1732,13 +1743,13 @@ func (ex *Expression) condExpr() (Value, error) {
 		}
 	}
 	switch left.t {
-	case Integer:
+	case I64, U64, I32, U32, I16, U16, I8, U8:
 		if left.i != 0 {
 			left = mid
 		} else {
 			left = right
 		}
-	case Floating:
+	case F32, F64:
 		if left.f != 0.0 {
 			left = mid
 		} else {
@@ -1789,7 +1800,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case ShrAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1813,7 +1827,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case PlusAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1837,7 +1854,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case MinusAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1861,7 +1881,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case OrAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1885,7 +1908,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case AndAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1909,7 +1935,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case XorAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1933,7 +1962,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case MulAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -1959,6 +1991,9 @@ func (ex *Expression) asnExpr() (Value, error) {
 		if err = left.setValue(&v); err != nil {
 			return v, err // cannot happen because left was checked before
 		}
+		if v, err = left.getValue(); err != nil {
+			return left, err // cannot happen because left was set before
+		}
 	case DivAssign:
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err
@@ -1981,7 +2016,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case ModAssign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -2005,7 +2043,10 @@ func (ex *Expression) asnExpr() (Value, error) {
 			return left, err
 		}
 		if err = left.setValue(&v); err != nil {
-			return v, err // cannot happen because left was checked before
+			return left, err // cannot happen because left was checked before
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	case Assign:
 		if ex.next, err = ex.lex(); err != nil {
@@ -2022,9 +2063,11 @@ func (ex *Expression) asnExpr() (Value, error) {
 				return right, err
 			}
 		}
-		v = right
-		if err = left.setValue(&v); err != nil {
-			return v, err
+		if err = left.setValue(&right); err != nil {
+			return left, err
+		}
+		if v, err = left.getValue(); err != nil {
+			return v, err // cannot happen because left was set before
 		}
 	default:
 		v = left
@@ -2042,16 +2085,16 @@ func (ex *Expression) expression() (Value, error) {
 	if v, err = ex.asnExpr(); err != nil {
 		return v, err
 	}
-	if v.IsIdentifier() {
-		if v, err = v.getValue(); err != nil {
-			return v, err
-		}
-	}
 	for ex.next.t == Comma || ex.next.t == Semi {
 		if ex.next, err = ex.lex(); err != nil {
 			return v, err
 		}
-		if _, err = ex.asnExpr(); err != nil && !errors.Is(err, ErrEof) {
+		if v, err = ex.asnExpr(); err != nil && !errors.Is(err, ErrEof) {
+			return v, err
+		}
+	}
+	if v.IsIdentifier() {
+		if v, err = v.getValue(); err != nil {
 			return v, err
 		}
 	}
