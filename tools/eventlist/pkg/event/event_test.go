@@ -212,14 +212,14 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 		{"expr d", ed1, args{tds, "d[val2]", &i}, "-24", 7, false},
 		{"expr u", ed1, args{tds, "u[val1]", &i}, "257", 7, false},
 		{"expr t", ed1, args{tds, "t[val4]", &i}, "def", 7, false},
-		{"expr x", ed1, args{tds, "x[val1]", &i}, "101", 7, false},
+		{"expr x", ed1, args{tds, "x[val1]", &i}, "0x101", 7, false},
 		{"expr F", ed1, args{tds, "F[val4]", &i}, "def", 7, false},
-		{"expr F", ed1, args{tds, "F[val1]", &i}, "00000101", 7, false},
+		{"expr F", ed1, args{tds, "F[val1]", &i}, "0x00000101", 7, false},
 		{"expr C", ed1, args{tds, "C[val2]", &i}, "", 7, true},
 		{"expr I", ed1, args{tds, "I[val3]", &i}, "37.72.10.117", 7, false},
 		{"expr J", ed1, args{tds, "J[val3]", &i}, "0:0:2548:a75:", 7, false},
 		{"expr N", ed1, args{tds, "N[val4]", &i}, "def", 7, false},
-		{"expr N", ed1, args{tds, "N[val1]", &i}, "00000101", 7, false},
+		{"expr N", ed1, args{tds, "N[val1]", &i}, "0x00000101", 7, false},
 		{"expr M", ed1, args{tds, "M[val3]", &i}, "00-00-25-48-0a-75", 7, false},
 		{"expr S", ed1, args{tds, "S[val3]", &i}, "25480a75", 7, false},
 		{"expr ?", ed1, args{tds, "?[val3]", &i}, "?", 7, false},
@@ -374,7 +374,7 @@ func TestEventData_EvalLine(t *testing.T) {
 		wantErr bool
 	}{
 		{"EvalLine ev1", ed1, args{ev1, tds}, "x%257y4711z", false},
-		{"EvalLine ev2", ed1, args{ev2, tds}, "x257y1267z", false},
+		{"EvalLine ev2", ed1, args{ev2, tds}, "x257y0x1267z", false},
 		{"EvalLine ev3", ed1, args{ev3, tds}, "x37.72.10.117y0:0:2548:a75:z", false},
 		{"EvalLine ev4", ed1, args{ev4, tds}, "x00-00-25-48-0a-75y25480a75z", false},
 		{"EvalLine evE1", ed1, args{evE1, tds}, "xenumy", false},
@@ -554,7 +554,8 @@ func TestEventData_Read(t *testing.T) {
 	var s3 = "../../testdata/test3.binary"
 	var s4 = "../../testdata/test4.binary"
 	var s5 = "../../testdata/test5.binary"
-	var s8 = "../../testdata/test14.binary"
+	var s8 = "../../testdata/test8.binary"
+	var s14 = "../../testdata/test14.binary"
 
 	var b0 = []uint8("hello wo")
 	b1 := append(b0, 0x12, 0x34, 0x56, 0x78, 0x9a, 0xbc, 0xde, 0x0f)
@@ -582,14 +583,15 @@ func TestEventData_Read(t *testing.T) {
 		wantEOF    bool
 		wantErr    bool
 	}{
-		{"ok4", fields{}, args{}, &s8, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Value3: 0x78563412, Value4: 0x0fdebc9a, Data: &b1, Time: 1410, Info: Info{0xfe00, 16, false}}, false, false},
 		{"fail0", fields{}, args{}, &s0, false, Data{}, true, false},
 		{"fail1", fields{}, args{}, &s1, false, Data{}, false, true},
 		{"fail2", fields{}, args{}, &s2, false, Data{}, false, true},
+		{"fail3", fields{}, args{}, &s8, false, Data{}, true, false},
 		{"failOpen", fields{}, args{}, &sNix, true, Data{}, true, false},
 		{"ok1", fields{}, args{}, &s3, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Data: &b0, Time: 1410, Info: Info{0xfe00, 8, false}}, false, false},
 		{"ok2", fields{}, args{}, &s4, false, Data{Typ: 2, Value1: 1, Value2: 2, Time: 31, Info: Info{0xff00, 0, false}}, false, false},
 		{"ok3", fields{}, args{}, &s5, false, Data{Typ: 3, Value1: 805332648, Value2: 24000, Value3: 1, Value4: -65536, Time: 306, Info: Info{0xf000, 0, true}}, false, false},
+		{"ok4", fields{}, args{}, &s14, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Value3: 0x78563412, Value4: 0x0fdebc9a, Data: &b1, Time: 1410, Info: Info{0xfe00, 16, false}}, false, false},
 	}
 	for _, tt := range tests {
 		tt := tt

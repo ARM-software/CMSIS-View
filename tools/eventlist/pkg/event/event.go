@@ -146,11 +146,11 @@ func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember,
 	case 't': // text
 		out = elf.Sections.GetString(val.GetUInt64())
 	case 'x': // hexadecimal
-		out = fmt.Sprintf("%02x", val.GetUInt64())
+		out = fmt.Sprintf("0x%02x", val.GetUInt64())
 	case 'F': // File
 		out = elf.Sections.GetString(val.GetUInt64())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt64())
+			out = fmt.Sprintf("0x%08x", val.GetUInt64())
 		}
 	case 'C': // address with file
 		return "", eval.ErrSyntax
@@ -163,7 +163,7 @@ func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember,
 	case 'N': // string address
 		out = elf.Sections.GetString(val.GetUInt64())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt64())
+			out = fmt.Sprintf("0x%08x", val.GetUInt64())
 		}
 	case 'M': // MAC address
 		out = fmt.Sprintf("%02x-%02x-%02x-%02x-%02x-%02x", val.GetUInt64()>>40&0xFF, val.GetUInt64()>>32&0xFF,
