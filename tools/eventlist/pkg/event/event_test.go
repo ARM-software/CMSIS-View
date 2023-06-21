@@ -555,6 +555,9 @@ func TestEventData_Read(t *testing.T) {
 	var s4 = "../../testdata/test4.binary"
 	var s5 = "../../testdata/test5.binary"
 	var s8 = "../../testdata/test8.binary"
+	var s9 = "../../testdata/test9.binary"
+	var s12 = "../../testdata/test12.binary"
+	var s13 = "../../testdata/test13.binary"
 	var s14 = "../../testdata/test14.binary"
 
 	var b0 = []uint8("hello wo")
@@ -583,15 +586,18 @@ func TestEventData_Read(t *testing.T) {
 		wantEOF    bool
 		wantErr    bool
 	}{
-		{"fail0", fields{}, args{}, &s0, false, Data{}, true, false},
-		{"fail1", fields{}, args{}, &s1, false, Data{}, false, true},
-		{"fail2", fields{}, args{}, &s2, false, Data{}, false, true},
-		{"fail3", fields{}, args{}, &s8, false, Data{}, true, false},
-		{"failOpen", fields{}, args{}, &sNix, true, Data{}, true, false},
-		{"ok1", fields{}, args{}, &s3, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Data: &b0, Time: 1410, Info: Info{0xfe00, 8, false}}, false, false},
-		{"ok2", fields{}, args{}, &s4, false, Data{Typ: 2, Value1: 1, Value2: 2, Time: 31, Info: Info{0xff00, 0, false}}, false, false},
-		{"ok3", fields{}, args{}, &s5, false, Data{Typ: 3, Value1: 805332648, Value2: 24000, Value3: 1, Value4: -65536, Time: 306, Info: Info{0xf000, 0, true}}, false, false},
-		{"ok4", fields{}, args{}, &s14, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Value3: 0x78563412, Value4: 0x0fdebc9a, Data: &b1, Time: 1410, Info: Info{0xfe00, 16, false}}, false, false},
+		{"read fail0", fields{}, args{}, &s0, false, Data{}, true, false},
+		{"read fail1", fields{}, args{}, &s1, false, Data{}, false, true},
+		{"read fail2", fields{}, args{}, &s2, false, Data{}, false, true},
+		{"read fail3", fields{}, args{}, &s8, false, Data{}, true, false},
+		{"read fail4", fields{}, args{}, &s9, false, Data{Typ: 1, Time: 1410, Info: Info{0xfe00, 8, false}}, true, false},
+		{"read fail5", fields{}, args{}, &s12, false, Data{Typ: 2, Time: 31, Info: Info{0xff00, 0, false}}, true, false},
+		{"read fail6", fields{}, args{}, &s13, false, Data{Typ: 3, Time: 306, Info: Info{0xf000, 0, true}}, true, false},
+		{"read failOpen", fields{}, args{}, &sNix, true, Data{}, true, false},
+		{"read ok1", fields{}, args{}, &s3, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Data: &b0, Time: 1410, Info: Info{0xfe00, 8, false}}, false, false},
+		{"read ok2", fields{}, args{}, &s4, false, Data{Typ: 2, Value1: 1, Value2: 2, Time: 31, Info: Info{0xff00, 0, false}}, false, false},
+		{"read ok3", fields{}, args{}, &s5, false, Data{Typ: 3, Value1: 805332648, Value2: 24000, Value3: 1, Value4: -65536, Time: 306, Info: Info{0xf000, 0, true}}, false, false},
+		{"read ok4", fields{}, args{}, &s14, false, Data{Typ: 1, Value1: 0x6c6c6568, Value2: 0x6f77206f, Value3: 0x78563412, Value4: 0x0fdebc9a, Data: &b1, Time: 1410, Info: Info{0xfe00, 16, false}}, false, false},
 	}
 	for _, tt := range tests {
 		tt := tt
