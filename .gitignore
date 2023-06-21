@@ -42,3 +42,4 @@ __debug_bin
 *.bak
 *.syso
 *.log
+*~

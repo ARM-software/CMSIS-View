@@ -545,7 +545,7 @@ func Test_convert64(t *testing.T) {
 }
 
 func TestEventData_Read(t *testing.T) {
-//	t.Parallel()
+	t.Parallel()
 
 	var s0 = "../../testdata/test0.binary"
 	var s1 = "../../testdata/test1.binary"
@@ -594,7 +594,7 @@ func TestEventData_Read(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-//			t.Parallel()
+			t.Parallel()
 
 			e := &Data{
 				Time:   tt.fields.Time,
