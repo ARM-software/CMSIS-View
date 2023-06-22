@@ -121,6 +121,7 @@ func TestID_getIdValue(t *testing.T) {
 
 func Test_getOne(t *testing.T) {
 	var name = "../../../testdata/test.xml"
+	var name1 = "../../../testdata/testBytes.xml"
 	var wrongName = "../../../testdata/xxxxx"
 	var nameErr1 = "../../../testdata/test_err1.xml"
 	var nameErr2 = "../../../testdata/test_err2.xml"
@@ -144,6 +145,7 @@ func Test_getOne(t *testing.T) {
 		tdWant  string
 		wantErr bool
 	}{
+		{"getOne Bytes", args{&name1, evs, tds}, 0x2003, "%x[val1.B0] %x[val1.B1] %x[val1.B2] %x[val1.B3]", "attr", "B0", 1, "ready", false},
 		{"getOne", args{&name, evs, tds}, 0xEF00, "File=fff", "attr", "member", 1, "ready", false},
 		{"getOne err", args{&wrongName, evs, tds}, 0, "", "", "", 0, "", true},
 		{"getOne err1", args{&nameErr1, evs, tds}, 0, "", "", "", 0, "", true},
@@ -158,7 +160,7 @@ func Test_getOne(t *testing.T) {
 			if string(evs[tt.ev].Value) != tt.evWant {
 				t.Errorf("getOne() event = %v, want %v", string(evs[tt.ev].Value), tt.evWant)
 			}
-			if tds[tt.td][tt.member].Enum[tt.enum] != tt.tdWant {
+			if tds[tt.td][tt.member].Enum != nil && tds[tt.td][tt.member].Enum[tt.enum] != tt.tdWant {
 				t.Errorf("getOne() enum = %v, want %v", tds[tt.td][tt.member].Enum[tt.enum], tt.tdWant)
 			}
 		})

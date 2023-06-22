@@ -84,6 +84,10 @@ type Event struct {
 	HName    string `xml:"hname,attr"`
 	Value    Value  `xml:"value,attr"`
 	Info     string `xml:"info,attr"`
+	Val1	 string `xml:"val1,attr"`
+	Val2	 string `xml:"val2,attr"`
+	Val3	 string `xml:"val3,attr"`
+	Val4	 string `xml:"val4,attr"`
 	Brief    string
 }
 
@@ -179,21 +183,25 @@ func getOne(filename *string, events map[uint16]Event,
 			if len(typedef.Members) > 0 {
 				members := make(map[string]TdMember)
 				for _, member := range typedef.Members {
-					if len(member.Enums) > 0 {
-						if m, ok := members[member.Name]; ok {
-							m.Enum = make(map[int16]string)
-							members[member.Name] = m
+					t := members[member.Name]
+					var off int64
+					off, err = strconv.ParseInt(member.Offset, 0, 0)
+					if err != nil {
+						return err
+					}
+					t.Offset = int32(off)
+					ty := eval.ITypes[member.Type]
+					t.Type = ty
+					members[member.Name] = t
+					for _, enum := range member.Enums {
+						var en int16
+						if en, err = enum.getInfo(); err != nil {
+							return err
 						}
-						for _, enum := range member.Enums {
-							var en int16
-							if en, err = enum.getInfo(); err != nil {
-								return err
-							}
-							t := members[member.Name]
-							t.Enum = make(map[int16]string)
-							t.Enum[en] = enum.Name
-							members[member.Name] = t
-						}
+						t := members[member.Name]
+						t.Enum = make(map[int16]string)
+						t.Enum[en] = enum.Name
+						members[member.Name] = t
 					}
 				}
 				if len(members) > 0 {

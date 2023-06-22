@@ -118,7 +118,7 @@ type Data struct {
 
 // calculate a format expression and return the result
 // if unknown code then return the code only
-func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember, value string, i *int) (string, error) {
+func (e *Data) calculateExpression(scvdevent scvd.Event, typedefs map[string]map[string]scvd.TdMember, value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
 	var err error
@@ -129,7 +129,7 @@ func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember,
 	c := value[*i]
 	if *i+1 < len(value) && value[*i+1] == '[' {
 		*i++
-		val, err = e.GetValue(value, i)
+		val, err = e.GetValue(scvdevent, typedefs, value, i)
 		if err != nil {
 			return "", err
 		}
@@ -184,7 +184,7 @@ func (e *Data) calculateExpression(typedefs map[string]map[string]scvd.TdMember,
 	return out, nil
 }
 
-func (e *Data) calculateEnumExpression(typedefs map[string]map[string]scvd.TdMember,
+func (e *Data) calculateEnumExpression(scvdevent scvd.Event, typedefs map[string]map[string]scvd.TdMember,
 	value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
@@ -196,7 +196,7 @@ func (e *Data) calculateEnumExpression(typedefs map[string]map[string]scvd.TdMem
 	c := value[*i]
 	if *i+1 < len(value) && value[*i+1] == '[' {
 		*i++
-		val, err = e.GetValue(value, i)
+		val, err = e.GetValue(scvdevent, typedefs, value, i)
 		if err != nil {
 			return "", err
 		}
@@ -253,14 +253,14 @@ func (e *Data) EvalLine(scvdevent scvd.Event, typedefs map[string]map[string]scv
 				case 'T': // type dependant
 					fallthrough
 				case 'U': // USB descriptor
-					out, err := e.calculateExpression(typedefs, string(scvdevent.Value), &i)
+					out, err := e.calculateExpression(scvdevent, typedefs, string(scvdevent.Value), &i)
 					if err != nil {
 						return "", err
 					}
 					s += out
 					i--
 				case 'E': // enum
-					out, err := e.calculateEnumExpression(typedefs, string(scvdevent.Value), &i)
+					out, err := e.calculateEnumExpression(scvdevent, typedefs, string(scvdevent.Value), &i)
 					if err != nil {
 						return "", err
 					}
@@ -388,10 +388,10 @@ func (e *Data) Read(in *bufio.Reader) error {
 	return nil
 }
 
-func (e *Data) GetValue(value string, i *int) (eval.Value, error) {
+func (e *Data) GetValue(scvdevent scvd.Event, typedefs map[string]map[string]scvd.TdMember, value string, i *int) (eval.Value, error) {
 	if *i < len(value) && value[*i] == '[' {
 //		if e.Data == nil {
-			eval.SetVarI32("val1", int32(e.Value1))
+			eval.SetVarI32("val1", int32(e.Value1))		// typedef holen
 			eval.SetVarI32("val2", int32(e.Value2))
 			eval.SetVarI32("val3", int32(e.Value3))
 			eval.SetVarI32("val4", int32(e.Value4))
