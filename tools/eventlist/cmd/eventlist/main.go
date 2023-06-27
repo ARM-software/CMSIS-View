@@ -161,17 +161,16 @@ func main() {
 			return
 		}
 	}
-	evdefs := make(map[uint16]scvd.Event)
-	typedefs := make(map[string]map[string]scvd.TdMember)
 
+	var sc scvd.ScvdData
 	var p []string = paths
-	if err = scvd.Get(&p, evdefs, typedefs); err != nil {
+	if err = sc.Get(&p); err != nil {
 		fmt.Print(Progname + ": ")
 		fmt.Println(err)
 		return
 	}
 
-	if err := output.Print(outputFile, formatType, &eventFile[0], evdefs, typedefs, statBegin, showStatistic); err != nil {
+	if err := output.Print(outputFile, formatType, &eventFile[0], &sc, statBegin, showStatistic); err != nil {
 		fmt.Print(Progname + ": ")
 		fmt.Println(err)
 	}

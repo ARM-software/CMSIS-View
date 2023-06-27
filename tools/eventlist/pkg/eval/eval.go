@@ -18,13 +18,24 @@
 
 package eval
 
-func Eval(s *string) (Value, error) {
+type TdMember struct {
+	Type   Token
+	Enum   map[int16]string
+	Offset int32
+	Info   string
+}
+
+var Typedefs map[string]map[string]TdMember
+
+func Eval(s *string, redefs map[string]string) (Value, error) {
 	var ex Expression
 	var v Value
 	var err error
 
+
 	ex.in = s
 	ex.pos = 0
+	ex.redefs = redefs;
 	if ex.next, err = ex.lex(); err != nil {
 		return v, err
 	}

@@ -21,6 +21,7 @@ package scvd
 
 import (
 	"testing"
+	"eventlist/pkg/eval"
 )
 
 func TestComponentViewer_getFromFile(t *testing.T) {
@@ -126,13 +127,10 @@ func Test_getOne(t *testing.T) {
 	var nameErr1 = "../../../testdata/test_err1.xml"
 	var nameErr2 = "../../../testdata/test_err2.xml"
 	var nameErr3 = "../../../testdata/test_err3.xml"
-	var evs = make(map[uint16]Event)
-	var tds = make(map[string]map[string]TdMember)
+	var sc ScvdData
 
 	type args struct {
 		filename *string
-		events   map[uint16]Event
-		typedefs map[string]map[string]TdMember
 	}
 	tests := []struct {
 		name    string
@@ -145,23 +143,28 @@ func Test_getOne(t *testing.T) {
 		tdWant  string
 		wantErr bool
 	}{
-		{"getOne Bytes", args{&name1, evs, tds}, 0x2003, "%x[val1.B0] %x[val1.B1] %x[val1.B2] %x[val1.B3]", "attr", "B0", 1, "ready", false},
-		{"getOne", args{&name, evs, tds}, 0xEF00, "File=fff", "attr", "member", 1, "ready", false},
-		{"getOne err", args{&wrongName, evs, tds}, 0, "", "", "", 0, "", true},
-		{"getOne err1", args{&nameErr1, evs, tds}, 0, "", "", "", 0, "", true},
-		{"getOne err2", args{&nameErr2, evs, tds}, 0, "", "", "", 0, "", true},
-		{"getOne err3", args{&nameErr3, evs, tds}, 0, "", "", "", 0, "", true},
+		{"getOne Bytes", args{&name1}, 0x2003, "%x[val1.B0] %x[val1.B1] %x[val1.B2] %x[val1.B3]", "attr", "B0", 1, "ready", false},
+		{"getOne", args{&name}, 0xEF00, "File=fff", "attr", "member", 1, "ready", false},
+		{"getOne err", args{&wrongName}, 0, "", "", "", 0, "", true},
+		{"getOne err1", args{&nameErr1}, 0, "", "", "", 0, "", true},
+		{"getOne err2", args{&nameErr2}, 0, "", "", "", 0, "", true},
+		{"getOne err3", args{&nameErr3}, 0, "", "", "", 0, "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := getOne(tt.args.filename, tt.args.events, tt.args.typedefs); (err != nil) != tt.wantErr {
+			sc.Events = make(map[uint16]Event)
+			for k := range eval.Typedefs {
+				delete(eval.Typedefs, k)
+			}
+			eval.Typedefs = make(map[string]map[string]eval.TdMember)
+			if err := sc.GetOne(tt.args.filename); (err != nil) != tt.wantErr {
 				t.Errorf("getOne() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if string(evs[tt.ev].Value) != tt.evWant {
-				t.Errorf("getOne() event = %v, want %v", string(evs[tt.ev].Value), tt.evWant)
+			if string(sc.Events[tt.ev].Value) != tt.evWant {
+				t.Errorf("getOne() event = %v, want %v", string(sc.Events[tt.ev].Value), tt.evWant)
 			}
-			if tds[tt.td][tt.member].Enum != nil && tds[tt.td][tt.member].Enum[tt.enum] != tt.tdWant {
-				t.Errorf("getOne() enum = %v, want %v", tds[tt.td][tt.member].Enum[tt.enum], tt.tdWant)
+			if eval.Typedefs[tt.td][tt.member].Enum != nil && eval.Typedefs[tt.td][tt.member].Enum[tt.enum] != tt.tdWant {
+				t.Errorf("getOne() enum = %v, want %v", eval.Typedefs[tt.td][tt.member].Enum[tt.enum], tt.tdWant)
 			}
 		})
 	}
@@ -170,25 +173,22 @@ func Test_getOne(t *testing.T) {
 func TestGet(t *testing.T) {
 	var files = []string{"../../../testdata/test.xml"}
 	var files1 = []string{"../../../testdata/xxxxx"}
-	var evs = make(map[uint16]Event)
-	var tds = make(map[string]map[string]TdMember)
+	var sc ScvdData
 
 	type args struct {
 		scvdFiles *[]string
-		events    map[uint16]Event
-		typedefs  map[string]map[string]TdMember
 	}
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		{"Get", args{&files, evs, tds}, false},
-		{"Get err", args{&files1, evs, tds}, true},
+		{"Get", args{&files}, false},
+		{"Get err", args{&files1}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := Get(tt.args.scvdFiles, tt.args.events, tt.args.typedefs); (err != nil) != tt.wantErr {
+			if err := sc.Get(tt.args.scvdFiles); (err != nil) != tt.wantErr {
 				t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

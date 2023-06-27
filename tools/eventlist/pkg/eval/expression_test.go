@@ -163,9 +163,9 @@ func TestExpression_back(t *testing.T) {
 		next Value
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		want    int
+		name   string
+		fields fields
+		want   int
 	}{
 		{s0, fields{&s0, 1, Value{}}, 0},
 		{s1, fields{&s1, 0, Value{}}, 0},
@@ -200,9 +200,9 @@ func TestExpression_skipToEnd(t *testing.T) {
 		next Value
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		want    int
+		name   string
+		fields fields
+		want   int
 	}{
 		{s0, fields{&s0, 0, Value{}}, 1},
 		{s1, fields{&s1, 0, Value{}}, 0},
@@ -237,9 +237,9 @@ func TestExpression_getPos(t *testing.T) {
 		next Value
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		want    int
+		name   string
+		fields fields
+		want   int
 	}{
 		{s0, fields{&s0, 1, Value{}}, 1},
 		{s1, fields{&s1, 0, Value{}}, 0},
@@ -273,10 +273,10 @@ func TestExpression_setPos(t *testing.T) {
 		next Value
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		set		int
-		want    int
+		name   string
+		fields fields
+		set    int
+		want   int
 	}{
 		{s0, fields{&s0, 0, Value{}}, 1, 1},
 		{s1, fields{&s1, 1, Value{}}, 0, 0},

@@ -608,6 +608,12 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	eds[0xEF00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
 	tds := make(map[string]map[string]scvd.TdMember)
+	var sc0 scvd.ScvdData
+	sc0.Typedefs = tds
+	sc0.Events = eds0
+	var sc scvd.ScvdData
+	sc.Typedefs = tds
+	sc.Events = eds
 
 	var s1 = "../../testdata/test1.binary"
 	var s3 = "../../testdata/test3.binary"
@@ -622,9 +628,8 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 		propertySize  int
 	}
 	type args struct {
-		file     string
-		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]scvd.TdMember
+		file string
+		sc   *scvd.ScvdData
 	}
 	tests := []struct {
 		name   string
@@ -635,12 +640,12 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 		want2  int
 		want3  float64
 	}{
-		{"test1", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s1, eds0, tds}, 0, 9, 14, 0.0},
-		{"test3", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s3, eds0, tds}, 1, 9, 14, 0.0},
-		{"test4", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s4, eds0, tds}, 1, 9, 14, 0.5},
-		{"test6", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s6, eds0, tds}, 1, 9, 14, 0.25},
-		{"test7a", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, eds0, tds}, 1, 9, 14, 0.25},
-		{"test7b", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, eds, tds}, 1, 15, 24, 0.25},
+		{"test1", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s1, &sc0}, 0, 9, 14, 0.0},
+		{"test3", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s3, &sc0}, 1, 9, 14, 0.0},
+		{"test4", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s4, &sc0}, 1, 9, 14, 0.5},
+		{"test6", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s6, &sc0}, 1, 9, 14, 0.25},
+		{"test7a", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, &sc0}, 1, 9, 14, 0.25},
+		{"test7b", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, &sc}, 1, 15, 24, 0.25},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -653,7 +658,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 			TimeFactor = nil
 			var b event.Binary
 			in := b.Open(&tt.args.file)
-			if got := o.buildStatistic(in, tt.args.evdefs, tt.args.typedefs); got != tt.want {
+			if got := o.buildStatistic(in, tt.args.sc); got != tt.want {
 				t.Errorf("Output.buildStatistic() %s = %v, want %v", tt.name, got, tt.want)
 			}
 			b.Close()
@@ -769,6 +774,8 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	eds := make(map[uint16]scvd.Event)
 	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	var sc scvd.ScvdData
+	sc.Events = eds
 
 	var s0 = "../../testdata/test0.binary"
 	var s1 = "../../testdata/test1.binary"
@@ -790,10 +797,9 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		propertySize  int
 	}
 	type args struct {
-		out      *bufio.Writer
-		in       *bufio.Reader
-		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]scvd.TdMember
+		out *bufio.Writer
+		in  *bufio.Reader
+		sc  *scvd.ScvdData
 	}
 	tests := []struct {
 		name    string
@@ -806,7 +812,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		{"readErr0", fields{}, args{}, &s0, "", false},
 		{"readErr1", fields{}, args{}, &s1, "", true},
 		{"read1", fields{}, args{}, &s10, line1, false},
-		{"read2", fields{}, args{evdefs: eds}, &s10, line2, false},
+		{"read2", fields{}, args{sc: &sc}, &s10, line2, false},
 		{"read3", fields{}, args{}, &s11, line3, false},
 		{"readNix", fields{}, args{}, &sNix, "", false},
 	}
@@ -827,7 +833,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.printEvents(tt.args.out, tt.args.in, tt.args.evdefs, tt.args.typedefs, &eventsTable); (err != nil) != tt.wantErr {
+			if err := o.printEvents(tt.args.out, tt.args.in, tt.args.sc, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.printEvents() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -943,8 +949,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		out           *bufio.Writer
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]scvd.TdMember
+		sc            *scvd.ScvdData
 		statBegin     bool
 		showStatistic bool
 	}
@@ -975,7 +980,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 				componentSize: tt.fields.componentSize,
 				propertySize:  tt.fields.propertySize,
 			}
-			if err := o.print(tt.args.out, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic, &eventsTable); (err != nil) != tt.wantErr {
+			if err := o.print(tt.args.out, tt.args.eventFile, tt.args.sc, tt.args.statBegin, tt.args.showStatistic, &eventsTable); (err != nil) != tt.wantErr {
 				t.Errorf("Output.print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			tt.args.out.Flush()
@@ -1013,8 +1018,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		filename      *string
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]scvd.TdMember
+		sc            *scvd.ScvdData
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1030,7 +1034,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.sc, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1077,8 +1081,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		filename      *string
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]scvd.TdMember
+		sc            *scvd.ScvdData
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1094,7 +1097,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.sc, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)
@@ -1137,8 +1140,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		filename      *string
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]scvd.TdMember
+		sc            *scvd.ScvdData
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1154,7 +1156,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
-			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.evdefs, tt.args.typedefs, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
+			if err := Print(tt.args.filename, &formatType, tt.args.eventFile, tt.args.sc, tt.args.statBegin, tt.args.showStatistic); (err != nil) != tt.wantErr {
 				t.Errorf("Print() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			file, err := os.Open(*tt.args.filename)

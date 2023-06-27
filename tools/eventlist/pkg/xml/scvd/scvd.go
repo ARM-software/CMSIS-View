@@ -84,10 +84,10 @@ type Event struct {
 	HName    string `xml:"hname,attr"`
 	Value    Value  `xml:"value,attr"`
 	Info     string `xml:"info,attr"`
-	Val1	 string `xml:"val1,attr"`
-	Val2	 string `xml:"val2,attr"`
-	Val3	 string `xml:"val3,attr"`
-	Val4	 string `xml:"val4,attr"`
+	Val1     string `xml:"val1,attr"`
+	Val2     string `xml:"val2,attr"`
+	Val3     string `xml:"val3,attr"`
+	Val4     string `xml:"val4,attr"`
 	Brief    string
 }
 
@@ -127,7 +127,7 @@ func (viewer *ComponentViewer) getFromFile(name *string) error {
 
 // get the enum value with calculation
 func (enum *Enum) getInfo() (int16, error) {
-	n, err := eval.Eval(&enum.Value)
+	n, err := eval.Eval(&enum.Value, nil)
 	if err != nil && !errors.Is(err, eval.ErrEof) {
 		return 0, err
 	}
@@ -136,22 +136,18 @@ func (enum *Enum) getInfo() (int16, error) {
 
 func (id *ID) getIdValue() (uint16, error) { //nolint:golint,revive
 	sid := string(*id)
-	n, err := eval.Eval(&sid)
+	n, err := eval.Eval(&sid, nil)
 	if err != nil && !errors.Is(err, eval.ErrEof) {
 		return 0, err
 	}
 	return uint16(n.GetInt64()), nil
 }
 
-type TdMember struct {
-	Type	eval.Token
-	Enum	map[int16]string
-	Offset  int32
-	Info	string
+type ScvdData struct {
+	Events   map[uint16]Event
 }
 
-func getOne(filename *string, events map[uint16]Event,
-	typedefs map[string]map[string]TdMember) error {
+func (s *ScvdData) GetOne(filename *string) error {
 	var viewer ComponentViewer
 	var err error
 	if err = viewer.getFromFile(filename); err == nil {
@@ -176,12 +172,12 @@ func getOne(filename *string, events map[uint16]Event,
 			if components[uint8(id>>8)] != nil {
 				event.Brief = components[uint8(id>>8)].Brief
 			}
-			events[id] = event
+			s.Events[id] = event
 		}
 		// extract enums from typedefs
 		for _, typedef := range viewer.Typedefs.Typedef {
 			if len(typedef.Members) > 0 {
-				members := make(map[string]TdMember)
+				members := make(map[string]eval.TdMember)
 				for _, member := range typedef.Members {
 					t := members[member.Name]
 					var off int64
@@ -205,7 +201,7 @@ func getOne(filename *string, events map[uint16]Event,
 					}
 				}
 				if len(members) > 0 {
-					typedefs[typedef.Name] = members
+					eval.Typedefs[typedef.Name] = members
 				}
 			}
 		}
@@ -214,11 +210,12 @@ func getOne(filename *string, events map[uint16]Event,
 }
 
 // returns the events and typedef map
-func Get(scvdFiles *[]string, events map[uint16]Event,
-	typedefs map[string]map[string]TdMember) error {
+func (s *ScvdData) Get(scvdFiles *[]string) error {
 	if scvdFiles != nil {
+		s.Events = make(map[uint16]Event)
+		eval.Typedefs = make(map[string]map[string]eval.TdMember)
 		for _, scvdFile := range *scvdFiles {
-			if err := getOne(&scvdFile, events, typedefs); err != nil {
+			if err := s.GetOne(&scvdFile); err != nil {
 				return err
 			}
 		}

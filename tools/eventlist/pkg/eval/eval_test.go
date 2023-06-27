@@ -50,7 +50,7 @@ func TestEval(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := Eval(tt.args.s)
+			got, err := Eval(tt.args.s, nil)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Eval() error %s = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return

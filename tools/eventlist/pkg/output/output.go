@@ -251,8 +251,7 @@ type Output struct {
 	propertySize  int
 }
 
-func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]scvd.TdMember) int {
+func (o *Output) buildStatistic(in *bufio.Reader, sc *scvd.ScvdData) int {
 	o.componentSize = len(o.columns[2]) // use minimum width of header
 	o.propertySize = len(o.columns[3])
 	for i := uint16(0); i < uint16(len(o.evProps)); i++ {
@@ -274,7 +273,7 @@ func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
 		var evdef scvd.Event
 		var ok bool
 		var rep string
-		if evdef, ok = evdefs[ev.Info.ID]; ok {
+		if evdef, ok = sc.Events[ev.Info.ID]; ok {
 			if len(evdef.Brief) > o.componentSize {
 				o.componentSize = len(evdef.Brief)
 			}
@@ -284,7 +283,7 @@ func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
 			class, _, _, _ := ev.Info.SplitID()
 			switch class {
 			case 0xEF:
-				rep, _ = ev.EvalLine(evdef, typedefs)
+				rep, _ = ev.EvalLine(sc, evdef)
 			}
 		}
 		class, group, idx, start := ev.Info.SplitID()
@@ -444,8 +443,7 @@ func escapeGen(s string) string {
 	return t
 }
 
-func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]scvd.TdMember, eventTable *EventsTable) error {
+func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, sc *scvd.ScvdData, eventTable *EventsTable) error {
 	if out == nil || in == nil {
 		return nil
 	}
@@ -490,7 +488,7 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 			Time:  beforeClockEvent + TimeInSecs(ev.Time-lastClockEvent),
 		}
 		var rep string
-		if evdef, ok := evdefs[ev.Info.ID]; ok {
+		if evdef, ok := sc.Events[ev.Info.ID]; ok {
 			eventRecord.Component = evdef.Brief
 			eventRecord.EventProperty = evdef.Property
 			if ev.Info.ID == 0xFE00 && ev.Data != nil { // special case stdout
@@ -500,7 +498,7 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 					eventRecord.Index, eventRecord.Time, -o.componentSize,
 					eventRecord.Component, -o.propertySize, eventRecord.EventProperty, eventRecord.Value)
 			} else {
-				rep, err = ev.EvalLine(evdef, typedefs)
+				rep, err = ev.EvalLine(sc, evdef)
 				if err == nil {
 					eventRecord.Value = rep
 					err = conditionalWrite(out, "%5d %.8f %*s %*s %s\n",
@@ -554,8 +552,7 @@ func (o *Output) printHeader(out *bufio.Writer) error {
 	return err
 }
 
-func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]scvd.TdMember, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
+func (o *Output) print(out *bufio.Writer, eventFile *string, sc *scvd.ScvdData, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
 	var b event.Binary
 	var err error
 	var eventCount int
@@ -567,7 +564,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 	}
 	in := b.Open(eventFile)
 	if in != nil {
-		eventCount = o.buildStatistic(in, evdefs, typedefs)
+		eventCount = o.buildStatistic(in, sc)
 		err = b.Close()
 	} else {
 		err = errNoEvents
@@ -585,7 +582,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 		if err == nil {
 			in = b.Open(eventFile)
 			if in != nil {
-				err = o.printEvents(out, in, evdefs, typedefs, eventsTable)
+				err = o.printEvents(out, in, sc, eventsTable)
 				if err != nil {
 					_ = b.Close()
 				} else {
@@ -612,8 +609,7 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 	return err
 }
 
-func Print(filename *string, formatType *string, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]scvd.TdMember, statBegin bool, showStatistic bool) error {
+func Print(filename *string, formatType *string, eventFile *string, sc *scvd.ScvdData, statBegin bool, showStatistic bool) error {
 	var file *os.File
 	var err error
 	var o Output
@@ -645,7 +641,7 @@ func Print(filename *string, formatType *string, eventFile *string, evdefs map[u
 	}
 
 	out := bufio.NewWriter(file)
-	err = o.print(out, eventFile, evdefs, typedefs, statBegin, showStatistic, &eventsTable)
+	err = o.print(out, eventFile, sc, statBegin, showStatistic, &eventsTable)
 	if err == nil {
 		if FormatType == "json" {
 			output, err := json.Marshal(eventsTable)

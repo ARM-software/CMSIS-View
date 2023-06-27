@@ -152,6 +152,7 @@ type Expression struct {
 	in   *string
 	pos  int
 	next Value
+	redefs map[string]string
 }
 
 var ErrRange = errors.New("value out of range")
@@ -825,7 +826,6 @@ func (ex *Expression) primary() (Value, error) {
 	return v, nil
 }
 
-//
 // asnExpr
 // arguments , asnExpr
 func (ex *Expression) arguments() (Value, error) {
@@ -906,7 +906,7 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		if v, err = left.getValue(); err != nil {
 			return left, err
 		}
-		right = v;
+		right = v
 		if err = right.Dec(); err != nil {
 			return v, err
 		}
