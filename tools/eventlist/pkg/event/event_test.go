@@ -266,7 +266,7 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 
 func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paralleltest
 	event := scvd.Event{Val1: "4BY"}
-//	var sc scvdm; //                                          6.ScvdData
+	var sc scvd.ScvdData
 
 	var i int
 

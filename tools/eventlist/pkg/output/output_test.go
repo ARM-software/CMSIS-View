@@ -603,17 +603,11 @@ func Test_eventProperty_getLast(t *testing.T) {
 }
 
 func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
-	eds0 := make(map[uint16]scvd.Event)
 	eds := make(map[uint16]scvd.Event)
 	eds[0xEF00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
-	tds := make(map[string]map[string]scvd.TdMember)
 	var sc0 scvd.ScvdData
-	sc0.Typedefs = tds
-	sc0.Events = eds0
 	var sc scvd.ScvdData
-	sc.Typedefs = tds
-	sc.Events = eds
 
 	var s1 = "../../testdata/test1.binary"
 	var s3 = "../../testdata/test3.binary"
