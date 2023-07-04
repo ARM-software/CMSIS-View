@@ -168,7 +168,7 @@ jobs:
           check-latest: true
 
       - name: Install govulncheck
-        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+        run: go install golang.org/x/vuln/cmd/govulncheck@v0.1.0
 
       - name: Run vulnerability check
         run: |
