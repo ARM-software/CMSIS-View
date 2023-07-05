@@ -146,11 +146,11 @@ func (e *Data) calculateExpression(value string, i *int) (string, error) {
 	case 't': // text
 		out = elf.Sections.GetString(val.GetUInt())
 	case 'x': // hexadecimal
-		out = fmt.Sprintf("%02x", val.GetUInt())
+		out = fmt.Sprintf("0x%02x", val.GetUInt())
 	case 'F': // File
 		out = elf.Sections.GetString(val.GetUInt())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt())
+			out = fmt.Sprintf("0x%08x", val.GetUInt())
 		}
 	case 'C': // address with file
 		return "", eval.ErrSyntax
@@ -163,7 +163,7 @@ func (e *Data) calculateExpression(value string, i *int) (string, error) {
 	case 'N': // string address
 		out = elf.Sections.GetString(val.GetUInt())
 		if len(out) == 0 {
-			out = fmt.Sprintf("%08x", val.GetUInt())
+			out = fmt.Sprintf("0x%08x", val.GetUInt())
 		}
 	case 'M': // MAC address
 		out = fmt.Sprintf("%02x-%02x-%02x-%02x-%02x-%02x", val.GetUInt()>>40&0xFF, val.GetUInt()>>32&0xFF,
