@@ -36,7 +36,7 @@ As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https:
 The following commands convert and build the project with build type `Debug` and target type `AVH`:
 
 ```sh
-cbuild EventStatistic.csolution.yml --update-rte -p --configuration .Debug+AVH
+cbuild EventStatistic.csolution.yml --update-rte -p -c .Debug+AVH
 ```
 
 ## Execute
