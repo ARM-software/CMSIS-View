@@ -510,11 +510,11 @@ __NAKED void ARM_FaultSave (void) {
  ,  [SFSR_reg_addr]                         "i" (&ARM_FaultInfo.FaultRegisters.SFSR)
  ,  [SFSR_ofs]                              "i" (offsetof(SCB_Type, SFSR ))
  ,  [SFAR_ofs]                              "i" (offsetof(SCB_Type, SFAR ))
+#endif
+#endif
 #if (ARM_FAULT_ARCH_ARMV8_1M_MAIN != 0)
- ,  [RFSR_reg_addr]                         "i" (&ARM_FaultInfo.RFSR)
+ ,  [RFSR_reg_addr]                         "i" (&ARM_FaultInfo.FaultRegisters.RFSR)
  ,  [RFSR_ofs]                              "i" (offsetof(SCB_Type, RFSR ))
-#endif
-#endif
 #endif
 #endif
  :  /* clobber list */
