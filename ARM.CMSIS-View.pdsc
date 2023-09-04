@@ -3,7 +3,7 @@
   <vendor>ARM</vendor>
   <name>CMSIS-View</name>
   <description>Debugger visualization of software events and statistics</description>
-  <url>http://www.keil.com/pack/</url>
+  <url>https://www.keil.com/pack/</url>
   <license>LICENSE</license>
   <repository type="git">https:/github.com/arm-software/CMSIS-View.git</repository>
 
