@@ -1,0 +1,82 @@
+name: TPIP Check
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/tpip-check.yml"
+      - "**/go.mod"
+      - "**/go.sum"
+      - "tools/eventlist/template/**"
+  workflow_dispatch:
+
+env:
+  tpip_report: "third_party_licenses.md"
+
+jobs:
+  check-licenses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          cache-dependency-path: tools/eventlist/go.sum
+          go-version-file: tools/eventlist/go.mod
+          check-latest: true
+
+      - name: Go tidy
+        run:  go mod tidy
+        working-directory: ./tools/eventlist
+
+      - name: Install go-licenses
+        run:  go install github.com/google/go-licenses@latest
+
+      - name: Generate TPIP Report
+        run:  |
+          cp LICENSE ./tools/eventlist
+
+      - name: Generate TPIP Report
+        run:  |
+          go-licenses report . ../make --ignore github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist --template ../../template/${{ env.tpip_report }}.template > ../../${{ env.tpip_report }}
+          date +"%Y/%m/%d %T" >> ../../${{ env.tpip_report }}
+        working-directory: ./tools/eventlist/cmd/eventlist
+        
+      - name: Archive TPIP report
+        uses: actions/upload-artifact@v3
+        with:
+          name: tpip-report
+          path: ./tools/eventlist/${{ env.tpip_report }}
+
+      - name: Print TPIP Report
+        run: cat ${{ env.tpip_report }} >> $GITHUB_STEP_SUMMARY
+        working-directory: ./tools/eventlist
+
+      - name: Check Licenses
+        run: go-licenses check . --ignore github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist --disallowed_types=forbidden,restricted
+        working-directory: ./tools/eventlist/cmd/eventlist
+
+  commit-changes:
+    needs: [ check-licenses ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Restore Changes
+        uses: actions/download-artifact@v3
+        with:
+          name: tpip-report
+          path: ./tools/eventlist
+
+      - name: Commit Changes
+        shell: bash
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Update TPIP report"
+          git push

@@ -308,6 +308,12 @@ jobs:
           cp tools/eventlist/docs/* release/eventlist-darwin-arm64/docs/
           cp tools/eventlist/docs/* release/eventlist-windows-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-windows-arm64/docs/
+          cp tools/eventlist/third_party_licenses.md release/eventlist-linux-amd64/
+          cp tools/eventlist/third_party_licenses.md release/eventlist-linux-arm64/
+          cp tools/eventlist/third_party_licenses.md release/eventlist-darwin-amd64/
+          cp tools/eventlist/third_party_licenses.md release/eventlist-darwin-arm64/
+          cp tools/eventlist/third_party_licenses.md release/eventlist-windows-amd64/
+          cp tools/eventlist/third_party_licenses.md release/eventlist-windows-arm64/
 
       - name: Download eventlist linux
         uses: actions/download-artifact@v3
@@ -351,12 +357,12 @@ jobs:
           # https://github.com/actions/upload-artifact#permission-loss
           chmod +x */eventlist*
 
-          zip -r eventlist-windows-amd64.zip eventlist-windows-amd64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE
-          zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-arm64/docs eventlist-windows-arm64/LICENSE
-          tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE
-          tar -czvf eventlist-linux-arm64.tar.gz  eventlist-linux-arm64/eventlist eventlist-linux-arm64/docs eventlist-linux-arm64/LICENSE
-          tar -czvf eventlist-darwin-amd64.tar.gz eventlist-darwin-amd64/eventlist eventlist-darwin-amd64/docs eventlist-darwin-amd64/LICENSE
-          tar -czvf eventlist-darwin-arm64.tar.gz eventlist-darwin-arm64/eventlist eventlist-darwin-arm64/docs eventlist-darwin-arm64/LICENSE
+          zip -r eventlist-windows-amd64.zip eventlist-windows-amd64/eventlist.exe eventlist-windows-amd64/docs eventlist-windows-amd64/LICENSE eventlist-windows-amd64/third_party_licenses.md
+          zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-arm64/docs eventlist-windows-arm64/LICENSE eventlist-windows-arm64/third_party_licenses.md
+          tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE eventlist-linux-amd64/third_party_licenses.md
+          tar -czvf eventlist-linux-arm64.tar.gz  eventlist-linux-arm64/eventlist eventlist-linux-arm64/docs eventlist-linux-arm64/LICENSE eventlist-linux-arm64/third_party_licenses.md
+          tar -czvf eventlist-darwin-amd64.tar.gz eventlist-darwin-amd64/eventlist eventlist-darwin-amd64/docs eventlist-darwin-amd64/LICENSE eventlist-darwin-amd64/third_party_licenses.md
+          tar -czvf eventlist-darwin-arm64.tar.gz eventlist-darwin-arm64/eventlist eventlist-darwin-arm64/docs eventlist-darwin-arm64/LICENSE eventlist-darwin-arm64/third_party_licenses.md
         working-directory: release
 
       - name: Calculate checksums
