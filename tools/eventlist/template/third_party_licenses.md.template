@@ -6,4 +6,4 @@
 | {{ .Name }} | {{ .Version }}  | [{{ .LicenseName }}]({{ .LicenseURL }}) |
 {{- end }}
 
-Report generated and repository checked for [forbidden](https://github.com/google/licenseclassifier/blob/842c0d70d7027215932deb13801890992c9ba364/license_type.go#L323) and [restricted](https://github.com/google/licenseclassifier/blob/842c0d70d7027215932deb13801890992c9ba364/license_type.go#L176) licenses on: 
+Report generated and repository checked for [forbidden](https://github.com/google/licenseclassifier/blob/842c0d70d7027215932deb13801890992c9ba364/license_type.go#L323) and [restricted](https://github.com/google/licenseclassifier/blob/842c0d70d7027215932deb13801890992c9ba364/license_type.go#L176) licenses.
