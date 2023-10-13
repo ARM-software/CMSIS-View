@@ -8,6 +8,8 @@ on:
       - "**/go.sum"
       - "tools/eventlist/template/**"
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 
 env:
   tpip_report: "third_party_licenses.md"
@@ -40,7 +42,6 @@ jobs:
       - name: Generate TPIP Report
         run:  |
           go-licenses report . ../make --ignore github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist --template ../../template/${{ env.tpip_report }}.template > ../../${{ env.tpip_report }}
-          date +"%Y/%m/%d %T" >> ../../${{ env.tpip_report }}
         working-directory: ./tools/eventlist/cmd/eventlist
         
       - name: Archive TPIP report
@@ -58,6 +59,10 @@ jobs:
         working-directory: ./tools/eventlist/cmd/eventlist
 
   commit-changes:
+    # Running this job only on specific event
+    # in order to have workaround for issue
+    # related to deletion of GH checks/status data
+    if: (github.event_name == 'schedule') || (github.event_name == 'workflow_dispatch')
     needs: [ check-licenses ]
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -72,11 +77,14 @@ jobs:
           name: tpip-report
           path: ./tools/eventlist
 
-      - name: Commit Changes
-        shell: bash
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "Update TPIP report"
-          git push
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: Update TPIP report
+          title: ':robot: [TPIP] Automated report updates'
+          body: |
+            Third party IP report updates
+          branch: update-tpip
+          delete-branch: true
+          labels: TPIP
+          reviewers: soumeh01

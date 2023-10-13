@@ -6,11 +6,15 @@ on:
     paths:
       - '.github/workflows/eventlist.yml'
       - 'tools/eventlist/**'
+      - '!.github/workflows/tpip-check.yml'
+      - '!tools/eventlist/template/**'
   push:
     branches: [ main ]
     paths:
       - '.github/workflows/eventlist.yml'
       - 'tools/eventlist/**'
+      - '!.github/workflows/tpip-check.yml'
+      - '!tools/eventlist/template/**'
   release:
     types: [published]
 
