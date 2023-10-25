@@ -3,7 +3,7 @@
 \page SCVD_Format SCVD file format
 
 The SCVD (Software Component View Description) files are formatted in XML and based on the schema file 
-<a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
+<a href="https://github.com/ARM-software/CMSIS-View/blob/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
 
 The SCVD file format is described in the following sections:
  - \subpage xml_elements : specifies the structure and top level elements of an SCVD file.
@@ -16,7 +16,7 @@ The SCVD file format is described in the following sections:
 \section scvd_validate SCVD file validation
 
 The schema file 
-<a href="https://github.com/ARM-software/CMSIS-View/tree/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
+<a href="https://github.com/ARM-software/CMSIS-View/blob/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
 specifies the XML format. Use this schema file together with XML tools for validating an *.scvd file. 
 
 \section scvd_in_debug Using SCVD files in a debugger
