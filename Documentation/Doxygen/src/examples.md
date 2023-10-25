@@ -108,14 +108,14 @@ int main (void) {
   EventStopC(0);                                // stop measurement event group C, slot 0
 
   while (1) {
-		__NOP();
+        __NOP();
   }
 }
 ```
 
 **Build and run**
 
-This example project does not require an IDE and can be built using the <a href="https://github.com/Open-CMSIS-Pack/cmsis-toolbox" target="_blank">CMSIS-Toolbox</a>.
+This example project does not require an IDE and can be built using the [CMSIS-Toolbox](https://github.com/Open-CMSIS-Pack/cmsis-toolbox).
 
 Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the `README.md` file to build and run the project. Use the \ref evntlst application to analyze the outcomes.
 
@@ -132,9 +132,11 @@ Clone this repository or download it as a ZIP file onto your computer. Follow th
 
 **Screenshots**
 
-User Interface \image html Fault_CM7_UI.png
+![User Interface](./images/Fault_CM7_UI.png)
 
-**EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility \image html Fault_CM7_eventlist_MemManage.png
+**EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility.
+
+![](./images/Fault_CM7_eventlist_MemManage.png)
 
 
 \page flt_example_CM33 B-U585I-IOT02A

@@ -1,18 +1,18 @@
 # Fault example (Cortex-M7) {#flt_example_CM7_readme}
 
-This project is a simple **Fault** component example running on **Arm Cortex-M7** microcontroller
-simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
+This project is a simple **Fault** component example running on **Arm Cortex-M7** microcontroller simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
 
-The application allows triggering of specific faults upon which the fault information is saved and system is reset.
-When system restarts the fault information is output via the **Event Recorder**.
+The application allows triggering of specific faults upon which the fault information is saved and system is reset. When system restarts the fault information is output via the **Event Recorder**.
 
 The fault information can also be inspected with **Component Viewer** in a debug session.
 
-> Note: This example runs on the **Arm Virtual Hardware** simulator and does not require any hardware.
+> **Note**
+> - This example runs on the **Arm Virtual Hardware** simulator and does not require any hardware.
 
 ## Prerequisites
 
-### Software:
+### Software
+
  - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) or newer
  - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
    - Arm Compiler 6 (part of the MDK)
@@ -21,18 +21,21 @@ The fault information can also be inspected with **Component Viewer** in a debug
  - [**Arm GNU Toolchain v12.2.MPACBTI-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
    (only necessary when building example with GCC)
 
-### CMSIS Packs:
+### CMSIS Packs
+
  - Required packs:
     - ARM::CMSIS-View
     - ARM::CMSIS-Compiler
     - ARM::CMSIS
     - Keil::V2M-MPS2_CMx_BSP v1.8.0
 
-   Missing packs can be installed by executing the following `csolution` and `cpackget` commands:
-   ```
+Missing packs can be installed by executing the following `csolution` and `cpackget` commands:
+
+```
    csolution list packs -s Fault.csolution.yml -m >missing_packs_list.txt
    cpackget add -f missing_packs_list.txt
-   ```
+```
+
 ## Build
 
 1. Use the `csolution` command to create `.cprj` project files (for **Arm Compiler 6** toolchain):
@@ -48,6 +51,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
    ```
    cbuild Fault.Debug+VHT_MPS2_Cortex-M7.cprj
    ```
+
 ## Run
 
 ### AVH Target
@@ -61,7 +65,7 @@ Execute the following steps:
    ```
    VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.elf
    ```
-   > Note: The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
+   > **Note:** The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
 
    The generated file `EventRecorder.log` contains the events that were generated during the example execution.
    This file is the input for the `eventlist` utility which can be used for further analysis.
@@ -70,13 +74,13 @@ Execute the following steps:
 
 The fault triggering is done by entering a number via simulator console (see possible values below).
 
-  - 0: terminate the example
-  - 1: trigger the data access (precise) Memory Management fault
-  - 2: trigger the data access (precise) Bus fault
-  - 3: trigger the data access (imprecise) Bus fault
-  - 4: trigger the instruction execution Bus fault
-  - 5: trigger the undefined instruction Usage fault
-  - 6: trigger the divide by 0 Usage fault
+ - 0: terminate the example
+ - 1: trigger the data access (precise) Memory Management fault
+ - 2: trigger the data access (precise) Bus fault
+ - 3: trigger the data access (imprecise) Bus fault
+ - 4: trigger the instruction execution Bus fault
+ - 5: trigger the undefined instruction Usage fault
+ - 6: trigger the divide by 0 Usage fault
 
 ### Running the example in the uVision
 
@@ -98,9 +102,9 @@ The fault triggering is done by entering a number via simulator console (see pos
 To analyze the result `eventlist` utility is needed, copy the executable `eventlist` file to the same folder where `EventRecorder.log` is located.
 
 To process `EventRecorder.log` file with the `eventlist` utility in **Windows Command Prompt** (cmd.exe) execute the following command:
-   ```
+```
    eventlist -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/ARM_Fault.scvd -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd -I %CMSIS_PACK_ROOT%/ARM\CMSIS/5.9.0/CMSIS/RTOS2/RTX/RTX5.scvd EventRecorder.log
-   ```
+```
 
-> Note: If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs
-        (for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/")
+> **Note**
+> - If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs (for example replace `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/` with `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/`)
