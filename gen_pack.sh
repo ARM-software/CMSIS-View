@@ -89,6 +89,7 @@ function preprocess() {
   return 0
 }
 
+#
 # custom post-processing steps
 #
 # usage: postprocess <build>
