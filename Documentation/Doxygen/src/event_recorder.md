@@ -433,13 +433,12 @@ The example below enables event recording for the MDK-Middleware **File System**
 
 ## Redirecting printf output {#printf_redirect}
 
-The Event Recorder can be used to retarget printf output. This is especially interesting for targets without
-ITM, such as Cortex-M0/M0+/M23. Steps to enable this:
+The Event Recorder can be used to retarget printf output. This is especially interesting for targets without ITM, such as Cortex-M0/M0+/M23. Steps to enable this:
  -# In the Manage Run-Time Environment window, set the component **CMSIS-Compiler:I/O:STDOUT** to use **Variant** *EVR*.
  -# Select the component **CMSIS-View:Event Recorder** or use the **Resolve** button.
  -# In the user code, include *EventRecorder.h* and call the `EventRecorderInitialize()` function in `main()`.
 
-Refer to the example [Retarget STDOUT via Event Recorder](https://arm-software.github.io/CMSIS-Compiler/latest/Retarget_Examples_er.html).
+Also see [CMSIS-Compiler documentation](https://arm-software.github.io/CMSIS-Compiler/latest/index.html) for addition details about printf redirecting.
 
 ## Event filtering {#er_filtering}
 

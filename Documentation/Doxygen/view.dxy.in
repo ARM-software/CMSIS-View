@@ -283,11 +283,11 @@ TAB_SIZE               = 2
 # @} or use a double escape (\\{ and \\})
 
 ALIASES                = "token{1}=<span class=\"XML-Token\">\1</span>" \
-                         "cviewer=<a href=\"https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_scvd_viewer.htm\" target=\"_blank\"><b>Component Viewer</b></a>" \
-                         "packinstaller=<a href=\"https://www2.keil.com/mdk5/packinstaller\" target=\"_blank\"><b>Pack Installer</b></a>" \
-                         "erecorder=<a href=\"https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr.htm\" target=\"_blank\"><b>Event Recorder</b></a>" \
-                         "estatistics=<a href=\"https://www.keil.com/support/man/docs/uv4/uv4_db_dbg_evr_stat.htm\" target=\"_blank\"><b>Event Statistics</b></a>" \
-                         "manscvd=<a href=\"https://www.keil.com/support/man/docs/uv4/uv4_ca_manage_scvd.htm\" target=\"_blank\"><b>Manage Component Viewer Description Files</b></a>" \
+                         "cviewer=<a href=\"https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Component-Viewer\" target=\"_blank\"><b>Component Viewer</b></a>" \
+                         "packinstaller=<a href=\"https://developer.arm.com/documentation/101407/latest/Creating-Applications/Software-Components/Pack-Installer\" target=\"_blank\"><b>Pack Installer</b></a>" \
+                         "erecorder=<a href=\"https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Event-Recorder\" target=\"_blank\"><b>Event Recorder</b></a>" \
+                         "estatistics=<a href=\"https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Event-Recorder/Event-Statistics-Window\" target=\"_blank\"><b>Event Statistics</b></a>" \
+                         "manscvd=<a href=\"https://developer.arm.com/documentation/101407/latest/Creating-Applications/Tips-and-Tricks/Manage-Component-Viewer-Description-Files\" target=\"_blank\"><b>Manage Component Viewer Description Files</b></a>" \
                          "elem{1}=<b>\<\1></b>" \
                          "mand{1}=<span class=\"mand\">\1</span>" \
                          "opt{1}=<span class=\"opt\">\1</span>" \

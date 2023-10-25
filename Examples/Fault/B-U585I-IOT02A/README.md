@@ -13,7 +13,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 ### Software
 
  - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) or newer
- - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
+ - [**Keil MDK v5.38**](https://developer.arm.com/Tools%20and%20Software/Keil%20MDK) or newer containing:
    - Arm Compiler 6 (part of the MDK)
  - [**STM32CubeMX v6.8.1**](https://www.st.com/en/development-tools/stm32cubemx.html) or newer with:
    - STM32Cube MCU Package for STM32U5 Series v1.2.0
