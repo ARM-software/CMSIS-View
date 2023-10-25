@@ -1,6 +1,7 @@
 # CMSIS-View
 
 The [**Keil MDK Event Recorder**](https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Event-Recorder) is now available as open source component along with tooling.
+
 This repository contains the source code of:
 
 - [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the Event Recorder and Fault software components.
@@ -12,8 +13,7 @@ This repository contains the source code of:
 ```txt
     📦
     ┣ 📂 .github          GitHub Action workflow and configuration
-    ┣ 📂 Documentation    Target directory for generated documentation
-    ┣ 📂 Doxygen          Source directory for documentation
+    ┣ 📂 Documentation    Documentation directory
     ┣ 📂 EventRecorder    Source code of EventRecorder software component
     ┣ 📂 Examples         Usage examples
     ┣ 📂 Fault            Source code of Fault software component
@@ -30,12 +30,12 @@ Some helper scripts are provided to generate the release artifacts from this rep
 Generating the HTML-formatted documentation from its Doxygen-based source is done via
 
 ```sh
-CMSIS-View $ ./Doxygen/gen_doc.sh
+CMSIS-View $ ./Documentation/Doxygen/gen_doc.sh
 ```
 
 Prerequisites for this script to succeed are:
 
-- Doxygen 1.9.2
+- Doxygen 1.9.6
 
 ### CMSIS-Pack Bundle
 

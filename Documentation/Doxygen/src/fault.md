@@ -15,8 +15,6 @@ A typical execution flow is shown in the diagram below.
 - \subpage flt_theory explains in details how the Fault component stores fault information and how it can be used for further analysis.
 - \subpage flt_use provides instructions on how to enable Fault component in a project.
 
-**Application Note**
-
 An application note is available that describes the Cortex-M fault exceptions from the programmers view and explains their usage during the software development cycle: [KAN209 - Using Cortex-M3/M4/M7 Fault Exceptions](https://developer.arm.com/documentation/kan209/latest).
 
 \page flt_theory Theory of operation
@@ -44,14 +42,14 @@ To see and analyze the details of a fault, there are the following options:
 
 This section contains the the technical data of the Fault component firmware.
 
-### RAM
+**RAM:**
 
 The Fault component uses the \ref ARM_FaultInfo structure to save information when the fault occurs. The size depends on the Arm Cortex-M core for which the code was compiled:
 
 - If the Arm Cortex-M core contains Fault Registers (e.g. Cortex-M33), the \ref ARM_FaultInfo structure requires **140 bytes** of uninitialized RAM memory.
 - If the Arm Cortex-M core does not contain Fault Registers (e.g. Cortex-M0), the \ref ARM_FaultInfo structure requires **104 bytes** of uninitialized RAM memory.
 
-### ROM
+**ROM:**
 
 The functions of the Fault component require the following amounts of ROM memory:
 
@@ -76,7 +74,7 @@ To use the Fault component in an application, you need to:
   - Add fault handlers that jump to \ref ARM_FaultSave function
   - Check if a fault has occurred and output fault information to Event Recorder or STDIO and analyze it, or analyze fault information in a Component Viewer window in a debug session 
 
-  Code example:
+**Code example:**
 ```c
 #include "EventRecorder.h"
 #include "ARM_Fault.h"
@@ -111,21 +109,22 @@ int main() {
 For preservation of the saved fault information after system reset, RAM for the \ref ARM_FaultInfo structure should be placed to a memory
 region that is not cleared (or initialized) by a system restart (reset).
 
-\note Make sure that you use normal, non-cacheable, and non-shareable memory for fault information data.
+> **Note**
+> - Make sure that you use normal, non-cacheable, and non-shareable memory for fault information data.
 
 For size of this memory section take a look at \ref flt_req. 
 
-### Create memory region {#flt_create_mem}
-
 To setup this uninitialized RAM, use either \ref flt_create_mem_ls or \ref flt_create_mem_uv procedure.
 
-#### Create memory region using linker script {#flt_create_mem_ls}
+
+### Create memory region using linker script {#flt_create_mem_ls}
 
 If the linker script does not contain provisions for uninitialized memory section then, for respective toolchain, add the necessary section like described below:
 
-##### Arm Compiler {#flt_create_mem_ls_ac}
 
-for the **Arm Compiler** toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):
+**Arm Compiler:**
+
+For the Arm Compiler toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):
 
   ```
   RW_NOINIT <start_address> UNINIT 0x800 {
@@ -133,15 +132,16 @@ for the **Arm Compiler** toolchain add the following code snippet to the linker 
   }
   ```
 
-> Note: \<start_address\> is the physical address in RAM where the section will start
+> **Note**
+> - \<start_address\> is the physical address in RAM where the section will start.
+> - 0x800 is the size of the section covering also default Event Recorder data, adjust that as necessary
 
-> Note: 0x800 is the size of the section covering also default Event Recorder data, adjust that as necessary
-   
-##### GCC {#flt_create_mem_ls_gcc}
 
-for the **GCC** toolchain add the following code snippet to the linker script (.ld file), in the part specifying RAM sections (usually before Heap section):
+**GCC:**
 
-  ```
+For the GCC toolchain add the following code snippet to the linker script (.ld file), in the part specifying RAM sections (usually before Heap section):
+
+```
   .noinit (NOLOAD) :
   {
     . = ALIGN(4);
@@ -150,9 +150,10 @@ for the **GCC** toolchain add the following code snippet to the linker script (.
     . = ALIGN(4);
     PROVIDE (__noinit_end = .);
   } > RAM
-  ```
+```
 
-> Note: this code snippet expects defined RAM memory region, if RAM region is not defined then adapt the script accordingly
+> **Note**
+> - The code snippet above expects defined RAM memory region, if RAM region is not defined then adapt the script accordingly.
 
 ### Create memory region using µVision {#flt_create_mem_uv}
 

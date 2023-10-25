@@ -237,7 +237,7 @@ Is the enclosing element for data type definitions.
   </tr>
 </table>
 &nbsp;
-<hr>
+
 
 
 \section elem_typedef \elemhead{component_viewer/typedefs/typedef}
@@ -461,7 +461,7 @@ StructofVarSz MyVarStruct;
 
 
 &nbsp;
-<hr>
+
 */
 
 /* ========================================================================================================================== */
@@ -553,7 +553,7 @@ Define the member of a \refelem{typedef}; typically a \em struct, \em class memb
     </typedef>
 \endcode
 &nbsp;
-<hr>
+
 \section elem_enum \elemhead{component_viewer/typedefs/typedef/member/enum}
 
 Defines an enumeration name that is displayed as text instead of a value.
@@ -644,7 +644,7 @@ Is the enclosing element for objects that define the output for the \cviewer.
   </tr>
 </table>
 &nbsp;
-<hr>
+
 \section elem_object \elemhead{component_viewer/objects/object}
 
 Define variables, calculations, and the viewer output for a software component.
@@ -1574,7 +1574,7 @@ This element is different from \ref elem_list.
 </object>
 \endcode
 
-<hr>
+
 &nbsp;
 */
 
@@ -1732,7 +1732,7 @@ Is the enclosing element for objects that define the output for \erecorder.
 \endcode
 &nbsp;
 &nbsp;
-<hr>
+
 
 \page  elem_group \elemhead{component_viewer/events/group}
 
@@ -1774,7 +1774,7 @@ Define groups of software components that are shown together.
 </table>
  
 &nbsp;
-<hr>
+
 
 \section  elem_group_component \elemhead{component_viewer/events/group/component}
 
@@ -1874,7 +1874,7 @@ Define software components that are tied to an event number.
 \endcode
 &nbsp;
 
-<hr>
+
 \section  elem_group_component_state \elemhead{component_viewer/events/group/component/state}
 
 Define state information for an event group.  This state information is used for:
@@ -1968,7 +1968,6 @@ to use also for any type of software component.
 \endcode
 &nbsp;
 
-<hr>
 
 \page  elem_event \elemhead{component_viewer/events/event}
 
@@ -2355,7 +2354,7 @@ Function Name        | Description
 \ref __Symbol_exists | Check if a specific symbol exists in the user application program.
 
 &nbsp;
-<hr>
+
 
 \section __CalcMemUsed __CalcMemUsed
 
@@ -2469,7 +2468,7 @@ Typical usage with an RTOS thread control block.
 \endcode
 
 &nbsp;
-<hr>
+
 
 \section __FindSymbol __FindSymbol
 
@@ -2536,7 +2535,6 @@ void StackTest (void) {
 \image html "CalcMemUsed.png"
 
 &nbsp;
-<hr>
 
 
 \section __GetRegVal __GetRegVal
@@ -2616,7 +2614,7 @@ become as follows:
     </object>
   </objects>
 \endcode
-<hr>
+
 
 \section __Symbol_exists __Symbol_exists
 \code
@@ -2632,7 +2630,7 @@ The function searches for a debug symbol in the loaded user application.
 
  and returns \token{1} when the symbol was found, otherwise \token{0} for false.
 &nbsp;
-<hr>
+
 
 
 \section __Offset_of __Offset_of
@@ -2652,7 +2650,7 @@ __Offset_of (Thread_CB:Task_ID)
 \endcode
 
 
-<hr>
+
 \section __size_of __size_of
 \code
 int32_t __size_of (symbol_name)
@@ -2689,7 +2687,6 @@ The following statements in the SCVD file output the number of elements of each 
 
 
 
-<hr>
 
 */
 
@@ -2743,7 +2740,7 @@ Format specifier       | Description
 
 The following examples show the usage of the various format specifiers.
 &nbsp;
-<hr>
+
 
 \subsection d_spec \%d, \%x, \%T format specifier
 
@@ -2823,7 +2820,7 @@ Output:
 \image html "d_spec.png" "Output of \%d, \%x, \%T format specifiers"
 
 &nbsp;
-<hr>
+
 
 
 
@@ -2865,7 +2862,7 @@ The following example shows how to output ASCII text, including an USB string:
 \image html "t_spec.png" "Output of \%t, \%U format specifiers"
 
 &nbsp;
-<hr>
+
 
 
 
@@ -2921,7 +2918,7 @@ enum color light2 = yellow;
 \image html "e_spec.png" "Output of \%E format specifiers"
 
 &nbsp;
-<hr>
+
 
 \subsection c_spec \%C, \%S format specifier
 
@@ -2969,7 +2966,7 @@ int32_t * pival=&sival;
 \image html "c_spec.png" "Output of \%C, %S format specifiers"
 
 &nbsp;
-<hr>
+
 
 \subsection n_spec \%N format specifier
 
@@ -3005,7 +3002,7 @@ volatile char *name = "MyName";
 \image html "n_spec.png" "Output of \%N format specifier"
 
 &nbsp;
-<hr>
+
 
 \subsection i_spec \%I, \%J, %M format specifier
 
@@ -3052,7 +3049,7 @@ The following example show how to output MAC and IP addresses that are part of t
 \image html "i_spec.png" "Output of \%I, \%J, %M format specifiers"
 
 &nbsp;
-<hr>
+
 
 
 \subsection p_spec \%%  format specifier
@@ -3094,7 +3091,7 @@ The example shows the <b>%</b>-sign output in the \em Property column.
 \image html "t_spec.png" "Output of \% format specifier"
 
 &nbsp;
-<hr>
+
 
 \subsection alert_bold alert and bold output
 
@@ -3142,7 +3139,7 @@ The value "Low [hex]" is shown in red and \b bold (both attributes are set).
 
 \image html "alert_bold_spec.png" "Output using bold and alert attributes"
 &nbsp;
-<hr>
+
 
 \subsection print_spec Dynamic output formats
 
@@ -3191,6 +3188,6 @@ Depending on the values, the item "Hi" is displayed as:
 
 \image html "print_spec.png" "Dynamic output format changes"
 &nbsp;
-<hr>
+
 
 */

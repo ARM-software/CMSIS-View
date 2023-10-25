@@ -1,5 +1,5 @@
 /**
-\defgroup Fault Fault
+\defgroup Fault Fault Analysis
 \brief Store, record, and analyze Cortex-M Exception Fault information.
 \details
 For an overview see \ref fault "Exception Fault Analysis".
@@ -27,18 +27,31 @@ and auxiliary functions.
 @{
 */
 
-/** ARM Fault major version used in \ref ARM_FaultInfo_t.Version major */
-#define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)
+/**
+\def ARM_FAULT_FAULT_INFO_VER_MAJOR
+\details
+ARM Fault major version used in ARM_FaultInfo_t.Version Major
+*/
 
-/** ARM Fault minor version used in \ref ARM_FaultInfo_t.Version minor */
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)
+/**
 
-/** @} Fault_Storage_Macros */
+\def ARM_FAULT_FAULT_INFO_VER_MINOR
+\details
+ARM Fault minor version used in ARM_FaultInfo.Version Minor
+*/
+/** @} End Fault_Storage_Macros */
 
-typedef struct {} ARM_FaultInfo_t;
+/**
+\struct ARM_FaultInfo_t
+\details
+Structure for storing fault information. Exposed via \ref ARM_FaultInfo.
 
-const char ARM_FaultVersion[];
+*/
+///\details Variable for storing fault information.
 ARM_FaultInfo_t ARM_FaultInfo;
+
+/// \details Variable for storing Arm Fault component version.
+const char ARM_FaultVersion[];
 
 /*=======0=========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1====*/
 /**
