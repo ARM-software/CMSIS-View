@@ -384,7 +384,7 @@ The source file <b>EventRecorder.c</b> implements \c __WEAK functions for \ref E
 This allows to overwrite the functions by a user application.
 
 \note ARM Cortex-M3/M4/M7/M33 processors provide a debug timer (DWT CYCCNT) that can be used during debug. Refer to
-<a href="http://infocenter.arm.com/help/topic/com.arm.doc.100165_0201_00_en/ric1417175941906.html">DWT Programmers' model</a>
+<a href="https://developer.arm.com/documentation/100165/latest/Data-Watchpoint-and-Trace-Unit/DWT-Programmers--model">DWT Programmers' model</a>
 for more information.
 
 \b Code \b Example

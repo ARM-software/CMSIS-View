@@ -145,7 +145,7 @@ This example project shows **Exception Fault Analysis** using **Arm Cortex-M33**
 
 **Build and run**
 
-This example project requires the [**Keil MDK**](https://www.keil.com/mdk5).
+This example project requires the [**Keil MDK**](https://developer.arm.com/Tools%20and%20Software/Keil%20MDK).
 
 Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM33_readme "README.md" file to build and run the project.
 
