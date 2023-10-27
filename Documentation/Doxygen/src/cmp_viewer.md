@@ -21,8 +21,8 @@ The following steps enable views for static information of software components i
 **For User Code:**
 
  1. Create an \ref SCVD_Format "SCVD file" to display \ref cv_static_information.
- 1. Add the SCVD file to µVision as described in \manscvd.
- 1. Use the µVision debugger windows as described in \cviewer.
+ 2. Add the SCVD file to µVision as described in \manscvd.
+ 3. Use the µVision debugger windows as described in \cviewer.
 
 **For Pre-annotated software components:**
 

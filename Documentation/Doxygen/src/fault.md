@@ -67,7 +67,7 @@ The following steps explain how to enable Fault component using the µVision. Ot
 **For User Code:**
 
  1. \ref flt_add_component.
- 1. \ref flt_place_uninit_memory "Locate fault information in uninitialized memory" to be preserved over system reset.
+ 2. \ref flt_place_uninit_memory "Locate fault information in uninitialized memory" to be preserved over system reset.
 
 ## Add Fault Storage (and Record) Component {#flt_add_component}
 
@@ -164,12 +164,12 @@ For the GCC toolchain add the following code snippet to the linker script (.ld f
 
 To setup this uninitialized RAM in the µVision, follow the steps below:
 
-1. In the **Options for Target** dialog, define a Read/Write Memory Area that is not initialized, by splitting available internal RAM into 2 areas.<br/>
+ 1. In the **Options for Target** dialog, define a Read/Write Memory Area that is not initialized, by splitting available internal RAM into 2 areas.<br/>
    For example, split IRAM1 into two regions. Reduce size of IRAM1 to 0x800 and create an IRAM2 area with remaining of the available RAM. Enable **NoInit** for the IRAM1 region.<br/>
    ![Create RAM area](./images/Fault_create_iram2.png)
 
 
-2. In the **Options for Component Class 'CMSIS-View'** dialog (opens with right-click on **ARM_FaultStorage.c** in the **Project** window), on the **Memory** tab, assign **Zero Initialized Data** to the IRAM1 region.<br/>
+ 2. In the **Options for Component Class 'CMSIS-View'** dialog (opens with right-click on **ARM_FaultStorage.c** in the **Project** window), on the **Memory** tab, assign **Zero Initialized Data** to the IRAM1 region.<br/>
     ![Create RAM area](./images/Fault_memory_location.png)
 
-3. Build the application to place the \ref ARM_FaultInfo structure to uninitialized RAM.
+ 3. Build the application to place the \ref ARM_FaultInfo structure to uninitialized RAM.
