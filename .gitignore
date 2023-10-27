@@ -10,9 +10,9 @@
 .DS_Store
 
 # Generated Files
-Documentation/html
-/Doxygen/src/history.txt
-/Doxygen/view.dxy
+/Documentation/html
+/Documentation/Doxygen/src/history.txt
+/Documentation/Doxygen/view.dxy
 /PACK.xsd
 /output
 /build

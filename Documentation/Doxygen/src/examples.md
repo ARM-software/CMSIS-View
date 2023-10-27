@@ -5,6 +5,7 @@ These examples show the usage of the \subpage er_examples and \subpage flt_examp
 \page er_examples Event Recorder
 
 This example shows you how to utilize Event Recorder in own application software.
+
 This example project is based on an Arm Cortex-M processor and uses the [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox) for project build, and runs on [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
 
 Example Project                                | Description
@@ -25,12 +26,9 @@ Example Project                                | Description
 
 This example project shows how to use start/stop events with the Event Recorder.
 
-The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The
-call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer.  A call to EventStop with slot 15 
-stops the timers of all slots in the specific group.
+The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer.  A call to EventStop with slot 15 stops the timers of all slots in the specific group.
 
-This demo application does some time consuming calculations that are recorded. It runs in simulation and does not require any
-hardware to be present.
+This demo application does some time consuming calculations that are recorded. It runs in simulation and does not require any hardware to be present.
 
 **main.c File**
 
@@ -132,9 +130,11 @@ Clone this repository or download it as a ZIP file onto your computer. Follow th
 
 **Screenshots**
 
-![User Interface](./images/Fault_CM7_UI.png)
+User Interface:
 
-**EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility.
+![](./images/Fault_CM7_UI.png)
+
+**EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility:
 
 ![](./images/Fault_CM7_eventlist_MemManage.png)
 
@@ -151,12 +151,22 @@ Clone this repository or download it as a ZIP file onto your computer. Follow th
 
 **Screenshots**
 
-User Interface \image html Fault_CM33_UI.png
+User Interface:
 
-**Component View** when no fault was saved yet \image html Fault_CM33_CV_NoFault.png
+![](./images/Fault_CM33_UI.png)
 
-**Component View** when Memory Management fault has occurred \image html Fault_CM33_CV_MemManage.png
+**Component View** when no fault was saved yet:
 
-**Event Recorder** messages when Memory Management fault was decoded and output to Event Recorder \image html Fault_CM33_EvR_MemManage.png
+![](./images/Fault_CM33_CV_NoFault.png)
 
-**Serial Terminal** output when Memory Management fault was decoded and output to STDIO \image html Fault_CM33_STDIO_MemManage.png
+**Component View** when Memory Management fault has occurred:
+
+![](./images/Fault_CM33_CV_MemManage.png)
+
+**Event Recorder** messages when Memory Management fault was decoded and output to Event Recorder:
+
+![](./images/Fault_CM33_EvR_MemManage.png)
+
+**Serial Terminal** output when Memory Management fault was decoded and output to STDIO:
+
+![](./images/Fault_CM33_STDIO_MemManage.png)
