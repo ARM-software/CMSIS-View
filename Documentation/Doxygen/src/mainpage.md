@@ -28,8 +28,8 @@ Directory                             | Description
 📂 EventRecorder                      | \ref evr implementation
 📂 Examples                           | \ref ExampleProjects "Examples projects" using CMSIS-View
 📂 Fault                              | Implementation of the \ref fault "Fault component"
-📄 LICENSE                            | License Agreement (Apache 2.0)
 📄 ARM.CMSIS-View.pdsc                | Pack description file in CMSIS-Pack format
+📄 LICENSE                            | License Agreement (Apache 2.0)
 
 See [CMSIS Documentation](https://arm-software.github.io/CMSIS_6/) for an overview of CMSIS software components, tools and specifications.
 
