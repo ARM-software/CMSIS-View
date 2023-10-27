@@ -190,18 +190,18 @@ Target: Cortex-M3 using DWT cycle counter as timer
 **For User Code:**
 
  1. \ref Add_Event_Recorder.
- 1. [Optional] \ref place_uninit_memory "Locate the Event Recorder data to uninitialized memory" to avoid overwriting the entries on program reset.
- 1. [Optional] Set the correct \ref initial_timestamp "initial time stamp".
- 1. [Optional] Create a \ref heartbeat "heartbeat" to avoid timer overflow problems.
- 1. Add \ref Event_Annotations in the C source to be able to stream dynamic event information.
- 1. Create an \ref SCVD_Format "SCVD file" to \ref Format_Event_Information that matches with application code.
+ 2. [Optional] \ref place_uninit_memory "Locate the Event Recorder data to uninitialized memory" to avoid overwriting the entries on program reset.
+ 3. [Optional] Set the correct \ref initial_timestamp "initial time stamp".
+ 4. [Optional] Create a \ref heartbeat "heartbeat" to avoid timer overflow problems.
+ 5. Add \ref Event_Annotations in the C source to be able to stream dynamic event information.
+ 6. Create an \ref SCVD_Format "SCVD file" to \ref Format_Event_Information that matches with application code.
 
 **For Pre-annotated Software Components:**
 
 The software packs for MDK-Middleware, CMSIS, CMSIS-FreeRTOS already contain the relevant *.SCVD files and the related event annotations in the C source code.
 
  1. \ref Add_Event_Recorder to the project.
- 1. Select a \ref Debug_Variants "Debug" variant for the middleware component to enable event information (for RTX5 select **Source** variant).
+ 2. Select a \ref Debug_Variants "Debug" variant for the middleware component to enable event information (for RTX5 select **Source** variant).
 
 ## Add Event Recorder Component {#Add_Event_Recorder}
 
@@ -447,8 +447,8 @@ The example below enables event recording for the MDK-Middleware **File System**
 The Event Recorder can be used to retarget printf output. This is especially interesting for targets without ITM, such as Cortex-M0/M0+/M23. Steps to enable this:
 
  1. In the Manage Run-Time Environment window, set the component **CMSIS-Compiler:I/O:STDOUT** to use **Variant** *EVR*.
- 1. Select the component **CMSIS-View:Event Recorder** or use the **Resolve** button.
- 1. In the user code, include *EventRecorder.h* and call the `EventRecorderInitialize()` function in `main()`.
+ 2. Select the component **CMSIS-View:Event Recorder** or use the **Resolve** button.
+ 3. In the user code, include *EventRecorder.h* and call the `EventRecorderInitialize()` function in `main()`.
 
 Also see [CMSIS-Compiler documentation](https://arm-software.github.io/CMSIS-Compiler/latest/index.html) for addition details about printf redirecting.
 
