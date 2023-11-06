@@ -81,11 +81,11 @@ echo "\"${UTILITY_DOXYGEN}\" view.dxy"
 "${UTILITY_DOXYGEN}" view.dxy
 
 mkdir -p "${DIRNAME}/../html/search/"
-cp -f "${DIRNAME}/Doxygen_Templates/search.css" "${DIRNAME}/../html/search/"
-cp -f "${DIRNAME}/Doxygen_Templates/navtree.js" "${DIRNAME}/../html/"
-cp -f "${DIRNAME}/Doxygen_Templates/resize.js" "${DIRNAME}/../html/"
+cp -f "${DIRNAME}/style_template/search.css" "${DIRNAME}/../html/search/"
+cp -f "${DIRNAME}/style_template/navtree.js" "${DIRNAME}/../html/"
+cp -f "${DIRNAME}/style_template/resize.js" "${DIRNAME}/../html/"
 
-sed -e "s/{datetime}/${datetime}/" "${DIRNAME}/Doxygen_Templates/footer.js.in" \
+sed -e "s/{datetime}/${datetime}/" "${DIRNAME}/style_template/footer.js.in" \
   | sed -e "s/{year}/${year}/" \
   | sed -e "s/{projectName}/${projectName}/" \
   | sed -e "s/{projectNumber}/${projectNumber}/" \
