@@ -16,8 +16,9 @@ Refer to [Using Event Statistics](https://arm-software.github.io/CMSIS-View/main
 This demo application does some time consuming calculations that are recorded
 and can be displayed in the Event Statistics window.
 
->Note:
-This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 model](https://arm-software.github.io/AVH/main/simulation/html/Using.html) and does not require any hardware.
+> **Note**
+> - This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 model](https://arm-software.github.io/AVH/main/simulation/html/Using.html)
+and does not require any hardware.
 
 ## Prerequisites
 
@@ -29,7 +30,8 @@ Tools:
    - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
  - [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
 
-As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware) available via the AWS Marketplace as this image contains all relevant tools.
+As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware)
+ available via the AWS Marketplace as this image contains all relevant tools.
 
 ## Compile Project
 
@@ -76,7 +78,8 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
       Max: Start: 0.00001219 val1=0x10004e5d, val2=0x00000057 Stop: 5.17925291 val1=0x10004e5d, val2=0x00000067
 ```
 
-When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command the context of the program is shown
+When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist`
+command the context of the program is shown
 
 ```sh
 eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
@@ -117,5 +120,6 @@ When using Windows Command Prompt use the following command:
 eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 ```
 
-> Note: If CMSIS-View v1.0.0 pack is not installed, in the previous command replace corresponding path with the path of the latest installed pack
-        (for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/EventRecorder/")
+> **Note**
+> If CMSIS-View v1.0.0 pack is not installed, in the previous command replace corresponding path with the path of the latest installed pack
+ (for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/EventRecorder/")

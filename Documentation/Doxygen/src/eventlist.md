@@ -1,14 +1,16 @@
-# Eventlist Utility {#evntlst}
+# eventlist Utility {#evntlst}
 
 ## Overview {#about_evntlst}
 
-Eventlist is a command line tool for processing Event Recorder data stored to a log file.
+**eventlist** is a command line tool for processing Event Recorder data stored to a log file.
 
 The utility is a Go application that is available for all major operating systems and is run from the command line. Refer to the [eventlist source code](https://github.com/ARM-software/CMSIS-View/tree/main/tools/eventlist) for more information including the invocation details.
 
-## Analyze Events
+## Usage example {#evntlst_example}
 
-It is used in the example project \ref scvd_evt_stat. Build and run the example. Then run  `eventlist -s EventRecorder.log` in a terminal to create the human readable output:
+eventlist functionality can be easily tested with the example project \ref scvd_evt_stat.
+
+Build and run the example. Then in the terminal run `eventlist -s EventRecorder.log` to obtain the following human readable output:
 
 ```txt
    Start/Stop event statistic
@@ -33,11 +35,19 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Max: Start: 0.00000000 val1=0x10004d43, val2=0x00000057 Stop: 180.67371888 val1=0x10004d43, val2=0x00000062
 ```
 
-### Adding Context
+The output can be improved with extra context as explained in the next section.
+
+## Adding context {#evntlst_context}
 
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist` command, the context of the program is shown.
 
-Run `eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I ./EventRecorder.scvd ./EventRecorder.log` in a terminal window. The output should look like the following:
+For the event recorder log from the \ref evntlst_example run in a terminal window:
+
+```
+eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I ./EventRecorder.scvd ./EventRecorder.log
+```
+
+The output should look like the following:
 
 ```txt
   :
@@ -71,4 +81,4 @@ C(0)      1   180.67372s  180.67372s  180.67372s  180.67372s  180.67372s  180.67
       Max: Start: 0.00000000 File=./EventStatistic/main.c(87) Stop: 180.67371888 File=./EventStatistic/main.c(98)
 ```
 
-Customizing the SCVD file enable you to create application specific output that can be easily read and analyzed for debugging purposes.
+Customizing the SCVD file enables creating application specific output that can be easily read and analyzed for debugging purposes.

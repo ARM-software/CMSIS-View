@@ -1,36 +1,32 @@
 # Examples {#ExampleProjects}
 
-These examples show the usage of the \subpage er_examples and \subpage flt_examples.
+CMSIS-View provides several example projects that demonstrate the usage of CMSIS-View software components in embedded applications. The projects are available in the `Examples/` directory and are also part of the CMSIS-View pack.
 
-\page er_examples Event Recorder
+Example Project                                      | Description
+:----------------------------------------------------|:-----------------------------------------
+\subpage scvd_evt_stat "EventStatistic"             | Shows the usage of start/stop events for statistical code profiling using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+\subpage flt_example_CM7 "Fault/VHT_MPS2_Cortex-M7"  | Shows the usage of the Fault component on a Cortex-M7 [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+\subpage flt_example_CM33 "Fault/B-U585I-IOT02A"     | Shows the usage of the Fault component on a Cortex-M33 with TrustZone. This example runs on STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
 
-This example shows you how to utilize Event Recorder in own application software.
+Other examples with CMSIS-View support can be also found in various CMSIS packs with device support, BSP and software components. For example [CMSIS-RTX](https://arm-software.github.io/CMSIS-RTX/latest/index.html), [MDK Middleware](https://www.keil.com/pack/doc/mw/General/html/index.html) and others, or also in GitHub projects at [https://github.com/Arm-Examples](https://github.com/Arm-Examples).
 
-This example project is based on an Arm Cortex-M processor and uses the [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox) for project build, and runs on [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+\page scvd_evt_stat EventStatistic
 
-Example Project                                | Description
-:----------------------------------------------|:-----------------------------------------
-\subpage scvd_evt_stat "SCVD Event Statistics" | Shows the usage of start/stop events for statistical code profiling.
+The EventStatistics example project shows how to use start/stop events with the Event Recorder and obtain execution statistics.
 
-\page flt_examples Fault component
+The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer. A call to EventStop with slot 15 stops the timers of all slots in the specific group.
 
-These examples show you how to utilize Fault component in own application software. 
+This example project is located in the `Examples/EventStatistic/` directory. It uses the [CMSIS-Toolbox](https://github.com/Open-CMSIS-Pack/cmsis-toolbox) for project build and runs on [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation and does not require real hardware board.
 
-Example Project                                | Description
-:----------------------------------------------|:-----------------------------------------
-\subpage flt_example_CM7 "VHT_MPS2_Cortex-M7"  | Shows the usage of Fault component on an Cortex-M7. This example runs on [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
-\subpage flt_example_CM33 "B-U585I-IOT02A"     | Shows the usage of Fault component on an Cortex-M33 with TrustZone. This example runs on STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
+**Build and run**
 
+Follow the instructions in the [example's README.md](https://github.com/ARM-software/CMSIS-View/blob/main/Examples/EventStatistic/README.md) to build and run the project.
 
-\page scvd_evt_stat Event Statistics
-
-This example project shows how to use start/stop events with the Event Recorder.
-
-The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer.  A call to EventStop with slot 15 stops the timers of all slots in the specific group.
-
-This demo application does some time consuming calculations that are recorded. It runs in simulation and does not require any hardware to be present.
+Use the \ref evntlst to analyze the outcomes.
 
 **main.c File**
+
+The application code in the main.c file does some time consuming calculations that are recorded.
 
 ```c
 #include "RTE_Components.h"             // Component selection
@@ -111,22 +107,13 @@ int main (void) {
 }
 ```
 
-**Build and run**
+\page flt_example_CM7 Fault/VHT_MPS2_Cortex-M7
 
-This example project does not require an IDE and can be built using the [CMSIS-Toolbox](https://github.com/Open-CMSIS-Pack/cmsis-toolbox).
-
-Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the `README.md` file to build and run the project. Use the \ref evntlst application to analyze the outcomes.
-
-
-\page flt_example_CM7 VHT_MPS2_Cortex-M7
-
-This example project shows **Exception Fault Analysis** using **Arm Cortex-M7** simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
+This example project shows \ref fault on an Arm Cortex-M7 based device, using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/simulation/html/Using.html) processor simulation as the target platform.
 
 **Build and run**
 
-This example project does not require an IDE and can be built using the [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox).
-
-Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM7_readme "README.md" file to build and run the project.
+Follow the instructions in the [example's README.md](https://github.com/ARM-software/CMSIS-View/blob/main/Examples/Fault/VHT_MPS2_Cortex-M7/README.md) to build and run the project.
 
 **Screenshots**
 
@@ -134,20 +121,18 @@ User Interface:
 
 ![](./images/Fault_CM7_UI.png)
 
-**EventRecorder.log** containing saved Memory Management fault information, processed with **eventlist** utility:
+EventRecorder.log file containing saved Memory Management fault information, processed with eventlist utility:
 
 ![](./images/Fault_CM7_eventlist_MemManage.png)
 
 
-\page flt_example_CM33 B-U585I-IOT02A
+\page flt_example_CM33 Fault/B-U585I-IOT02A
 
-This example project shows **Exception Fault Analysis** using **Arm Cortex-M33** running on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
+This example project shows \ref fault on an Arm Cortex-M33 based device. STMicroelectronics [B-U585I-IOT02A](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board is used as the target platform.
 
 **Build and run**
 
-This example project requires the [**Keil MDK**](https://developer.arm.com/Tools%20and%20Software/Keil%20MDK).
-
-Clone this repository or download it as a ZIP file onto your computer. Follow the instructions in the \subpage flt_example_CM33_readme "README.md" file to build and run the project.
+Follow the instructions in the [example's README.md](https://github.com/ARM-software/CMSIS-View/blob/main/Examples/Fault/B-U585I-IOT02A/README.md) to build and run the project.
 
 **Screenshots**
 
@@ -155,18 +140,18 @@ User Interface:
 
 ![](./images/Fault_CM33_UI.png)
 
-**Component View** when no fault was saved yet:
+Component View when no fault was saved yet:
 
 ![](./images/Fault_CM33_CV_NoFault.png)
 
-**Component View** when Memory Management fault has occurred:
+Component View when Memory Management fault has occurred:
 
 ![](./images/Fault_CM33_CV_MemManage.png)
 
-**Event Recorder** messages when Memory Management fault was decoded and output to Event Recorder:
+Event Recorder messages when Memory Management fault was decoded and output to Event Recorder:
 
 ![](./images/Fault_CM33_EvR_MemManage.png)
 
-**Serial Terminal** output when Memory Management fault was decoded and output to STDIO:
+Serial Terminal output when Memory Management fault was decoded and output to STDIO:
 
 ![](./images/Fault_CM33_STDIO_MemManage.png)

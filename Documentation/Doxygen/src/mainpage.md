@@ -10,15 +10,13 @@ In addition, using the Event Recorder API, you can annotate your code so that yo
 
 Key elements of CMSIS-View are:
 
- - \ref er_use "Event Recorder" - is an embedded software component that provides an [API (function calls)](modules.html) for event annotations in the code.
- - \ref evntlst, a command line tool for processing Event Recorder log files.
- - \ref fault with infrastructure and functions to store, record, and analyze exception fault information.
+ - \ref er_use "Event Recorder" - an embedded software component that provides an [API (function calls)](modules.html) for event annotations in the code.
+ - \ref evntlst "eventlist utility" - a command line tool for processing Event Recorder log files.
+ - \ref fault "Fault" - an embedded software component with infrastructure and functions to store, record, and analyze exception fault information.
 
 ## Access to CMSIS-View {#view_access}
 
-CMSIS-View is actively maintained in [**CMSIS-View GitHub repository**](https://github.com/ARM-software/CMSIS-View) that contains the full source of CMSIS-View firmware, implementation of eventlist utility, examples, as well as this documentation.
-
-CMSIS-View software components are released in [CMSIS-Pack format](https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/index.html). An overview of the pack and downloads are available on [CMSIS-View Pack page](https://www.keil.arm.com/packs/cmsis-view-arm/versions/).
+CMSIS-View is actively maintained in [**CMSIS-View GitHub repository**](https://github.com/ARM-software/CMSIS-View) and is released as a standalone [**CMSIS-View pack**](https://www.keil.arm.com/packs/cmsis-view-arm/versions/) in the [CMSIS-Pack format](https://open-cmsis-pack.github.io/Open-CMSIS-Pack-Spec/main/html/index.html).
 
 The table below explains the content of **ARM::CMSIS-View** pack.
 
@@ -33,7 +31,7 @@ Directory                             | Description
 
 See [CMSIS Documentation](https://arm-software.github.io/CMSIS_6/) for an overview of CMSIS software components, tools and specifications.
 
-## Documentation Content {#content}
+## Documentation Structure {#doc_structure}
 
 This user's guide contains the following chapters:
 
@@ -45,7 +43,7 @@ This user's guide contains the following chapters:
  - \ref SCVD_Format : describes the format of the Software Component View Description (*.SCVD) files that define the content that is displayed.
  - \ref fault : infrastructure and functions to store, record, and analyze the Cortex-M Exception Fault information.
  - \ref ExampleProjects are available demonstrating standard use cases.
- - [**API References**](modules.html) describes the API and the functions of the **Event Recorder** and **Fault components** in details.
+ - [**API References**](modules.html) describes the API and the functions of the **Event Recorder** and **Fault** components in details.
 
 ## License {#license}
 

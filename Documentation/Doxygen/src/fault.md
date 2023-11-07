@@ -1,8 +1,8 @@
-# Exception Fault Analysis {#fault}
+# Fault Analysis {#fault}
 
 ## Overview {#about_fault}
 
-The software components under **CMSIS-View:Fault** provide infrastructure and [API (function calls)](modules.html) to store, record, and analyze the Cortex-M Exception Fault information.
+The software components **CMSIS-View:Fault** provide infrastructure and \ref Ref_Fault "API function calls" to store, record, and analyze the Cortex-M Exception Fault information.
 
 Arm Cortex-M processors raise an exception fault on critical system failures such as illegal memory write or read, access to an disabled peripheral, execution of an invalid instruction, or division by zero:
 
