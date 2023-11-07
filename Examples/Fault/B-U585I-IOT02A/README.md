@@ -4,7 +4,8 @@
 
 This project is a simple **Fault** component example running on **Arm Cortex-M33** microcontroller on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
 
-The application allows triggering of specific faults upon which the fault information is saved and system is reset. When system restarts the fault information is output via the **Event Recorder** and via the **STDIO**.
+The application allows triggering of specific faults upon which the fault information is saved and system is reset.
+When system restarts the fault information is output via the **Event Recorder** and via the **STDIO**.
 
 The fault information can also be inspected with **Component Viewer** in a debug session.
 
@@ -35,6 +36,7 @@ The fault information can also be inspected with **Component Viewer** in a debug
 This board has to be properly configured with **TrustZone** enabled. Please follow the steps below carefully:
 
 Configure the following **Option bytes** with **STM32CubeProgrammer** utility:
+
  - **User Configuration**:
    - `TZEN`: checked
    - `DBANK`: checked
@@ -58,6 +60,7 @@ Configure the following **Option bytes** with **STM32CubeProgrammer** utility:
 ### Build and Run with uVision
 
 To try the example with uVision, do the following steps:
+
  1. Open the `Fault.uvmpw` in the uVision
  2. Build the `Project: Fault_S` project
  3. Build the `Project: Fault_NS` project
@@ -90,7 +93,8 @@ To build the example with CMSIS-Toolbox do the following steps:
     ```
 
 > **Note**
-> - To run and debug executables built with CMSIS-Toolbox with uVision, it is necessary to adapt uVision settings relating to output file, and also adapt Debug.ini and Flash.ini scripts accordingly
+> - To run and debug executables built with CMSIS-Toolbox with uVision, it is necessary to adapt uVision settings relating to output file,
+ and also adapt Debug.ini and Flash.ini scripts accordingly
 
 ## User Interface
 
@@ -110,16 +114,19 @@ The fault triggering is done by entering a number via **Serial Terminal** applic
 ## Example details
 
 Clock Settings:
+
  - XTAL = MSIS =   4 MHz
  - Core =      **160 MHz**
 
 The example contains 2 applications: Secure and Non-Secure.
 
 **Secure application** (bare-metal, no RTOS):
+
  - setups the system (clocks, power, security and privilege rights (GTZC), caching) according to the CubeMX configuration
  - provides a function for triggering a fault on the Secure side
 
 **Non-Secure application** (uses RTX RTOS and Standard C Library):
+
  - setups the peripherals used by the non-secure application (LEDs, button, UART1) according to the CubeMX configuration
  - it runs 2 threads:
     - `AppThread` thread: Blink Green LED with 1 second interval
@@ -127,4 +134,5 @@ The example contains 2 applications: Secure and Non-Secure.
 
 When a fault is triggered the fault handler saves the fault information with the `ARM_FaultSave` function.
 
-When valid fault information exists it can be viewed with **Component Viewer** or with `ARM_FaultRecord` function the fault information can be output to the **Event Recorder** or with the `RM_FaultPrint` function it can be output to the STDIO.
+When valid fault information exists it can be viewed with **Component Viewer** or with `ARM_FaultRecord` function the fault information
+ can be output to the **Event Recorder** or with the `ARM_FaultPrint` function it can be output to the STDIO.

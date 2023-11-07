@@ -1,4 +1,15 @@
 /**
+\defgroup Ref_EventRecorder Event Recorder API
+\brief Collect time-stamped event data about code execution.
+\details
+For an overview see \ref evr.
+
+This section explains the functions of the component <b>CMSIS-View:Event Recorder</b> for event annotations in the code.
+
+@{
+*/
+
+/**
 \defgroup EventRecorder_Setup Event Recorder Setup
 \brief Functions that initialize and control the event recorder and configure event filtering
 \details
@@ -437,6 +448,10 @@ source is switched (i.e. from XTAL to low-power clock).
   first thread that is running after \b osKernelStart.
 - Updating the clock frequency of the Event Recorder will lead to a recalculation of previously received packets and thus to
   wrong display of earlier data in the µVision debugger.
+*/
+
+/**
+@}
 */
 
 /**

@@ -1,8 +1,10 @@
 # Fault example (Cortex-M7) {#flt_example_CM7_readme}
 
-This project is a simple **Fault** component example running on **Arm Cortex-M7** microcontroller simulated by [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
+This project is a simple **Fault** component example running on **Arm Cortex-M7** microcontroller simulated by 
+[**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
 
-The application allows triggering of specific faults upon which the fault information is saved and system is reset. When system restarts the fault information is output via the **Event Recorder**.
+The application allows triggering of specific faults upon which the fault information is saved and system is reset.
+When system restarts the fault information is output via the **Event Recorder**.
 
 The fault information can also be inspected with **Component Viewer** in a debug session.
 
@@ -65,7 +67,8 @@ Execute the following steps:
    ```
    VHT_MPS2_Cortex-M7 -f vht_config.txt out/Fault/VHT_MPS2_Cortex-M7/Debug/Fault.elf
    ```
-   > **Note:** The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
+   > **Note:** The Arm Virtual Hardware executables have to be in the environment path, otherwise absolute path to the 
+   `VHT_MPS2_Cortex-M7.exe` (e.g. `c:\Keil\ARM\VHT\VHT_MPS2_Cortex-M7`) has to be provided instead of `VHT_MPS2_Cortex-M7`.
 
    The generated file `EventRecorder.log` contains the events that were generated during the example execution.
    This file is the input for the `eventlist` utility which can be used for further analysis.
@@ -107,4 +110,5 @@ To process `EventRecorder.log` file with the `eventlist` utility in **Windows Co
 ```
 
 > **Note**
-> - If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs (for example replace `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/` with `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/`)
+> - If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs
+ (for example replace `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/` with `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/`)

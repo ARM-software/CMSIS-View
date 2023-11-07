@@ -1,8 +1,8 @@
 /**
-\defgroup Fault Fault Analysis
+\defgroup Ref_Fault Fault API
 \brief Store, record, and analyze Cortex-M Exception Fault information.
 \details
-For an overview see \ref fault "Exception Fault Analysis".
+For an overview see \ref fault.
 
 This section contains the functions of the component <b>CMSIS-View:Fault</b> that store, record, and analyze the Cortex-M Exception Fault information.
 
