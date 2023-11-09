@@ -1,12 +1,18 @@
 # CMSIS-View
 
-The [**Keil MDK Event Recorder**](https://developer.arm.com/documentation/101407/latest/Debugging/Debug-Windows-and-Dialogs/Event-Recorder) is now available as open source component along with tooling.
+**CMSIS-View** provides software components and utilities that allow embedded software developers to analyze program execution flows, debug potential issues, and measure code execution times. The data can be observed in real-time in an IDE or can be saved as a log file during program execution.
 
 This repository contains the source code of:
 
-- [**ARM::CMSIS-View**](https://arm-software.github.io/CMSIS-View/main/index.html) software pack that provides the Event Recorder and Fault software components.
+- [**ARM::CMSIS-View pack**](https://www.keil.arm.com/packs/cmsis-view-arm) that provides the Event Recorder and Fault software components.
 - [**EventList**](./tools/eventlist) command line utility that allows to dump the events on command line.
 - [**Example Projects**](./Examples) that show the usage of the Event Recorder and Fault components.
+
+[CMSIS-View documentation](https://arm-software.github.io/CMSIS-View) explains available functionality and APIs.
+
+> **Note**
+> - CMSIS-View replaces and extends functionality previously provided as part of *Keil::ARM_Compiler* pack.
+> - See [Migrating projects from CMSIS v5 to CMSIS v6](https://learn.arm.com/learning-paths/microcontrollers/project-migration-cmsis-v6) for a guidance on updating existing projects to CMSIS-View.
 
 ## Repository toplevel structure
 
@@ -36,6 +42,8 @@ CMSIS-View $ ./Documentation/Doxygen/gen_doc.sh
 Prerequisites for this script to succeed are:
 
 - Doxygen 1.9.6
+
+Also see [Documentation README](./documentation/README.md).
 
 ### CMSIS-Pack Bundle
 

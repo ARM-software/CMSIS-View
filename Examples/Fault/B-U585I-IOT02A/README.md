@@ -2,7 +2,8 @@
 
 ## STMicroelectronics B-U585I-IOT02A board
 
-This project is a simple **Fault** component example running on **Arm Cortex-M33** microcontroller on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
+This project is a simple **Fault** component example running on **Arm Cortex-M33** microcontroller
+on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
 
 The application allows triggering of specific faults upon which the fault information is saved and system is reset.
 When system restarts the fault information is output via the **Event Recorder** and via the **STDIO**.
@@ -135,4 +136,4 @@ The example contains 2 applications: Secure and Non-Secure.
 When a fault is triggered the fault handler saves the fault information with the `ARM_FaultSave` function.
 
 When valid fault information exists it can be viewed with **Component Viewer** or with `ARM_FaultRecord` function the fault information
- can be output to the **Event Recorder** or with the `ARM_FaultPrint` function it can be output to the STDIO.
+can be output to the **Event Recorder** or with the `ARM_FaultPrint` function it can be output to the STDIO.
