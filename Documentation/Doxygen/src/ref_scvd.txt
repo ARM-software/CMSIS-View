@@ -1,27 +1,27 @@
 /* ========================================================================================================================== */
-/** 
+/**
 \page SCVD_Format SCVD file format
 
-The SCVD (Software Component View Description) files are formatted in XML and based on the schema file 
-<a href="https://github.com/ARM-software/CMSIS-View/blob/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
+The SCVD (Software Component View Description) files are formatted in XML and based on the schema file <a href="https://github.com/ARM-software/CMSIS-View/blob/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
 
 The SCVD file format is described in the following sections:
+
  - \subpage xml_elements : specifies the structure and top level elements of an SCVD file.
  - \subpage Symbol_Access : explains how to refer to application symbols when reading program variables.
  - \subpage data_type : lists available scalar data types used in XML elements and explains how complex data types are defined.
- - \subpage scvd_expression : describes supported expressions for making calculations in an SCVD file. 
- - \subpage builtin_function : lists built-in functions that can be used for  calculating stack memory usage, accessing CPU registers or application program symbols. 
+ - \subpage scvd_expression : describes supported expressions for making calculations in an SCVD file.
+ - \subpage builtin_function : lists built-in functions that can be used for  calculating stack memory usage, accessing CPU registers or application program symbols.
  - \subpage value_output : shows how to format output data for display in the \cviewer or \erecorder.
 
 \section scvd_validate SCVD file validation
 
-The schema file 
-<a href="https://github.com/ARM-software/CMSIS-View/blob/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
-specifies the XML format. Use this schema file together with XML tools for validating an *.scvd file. 
+The schema file <a href="https://github.com/ARM-software/CMSIS-View/blob/main/Schema/Component_Viewer.xsd"><b>Component_Viewer.xsd</b></a>.
+specifies the XML format. Use this schema file together with XML tools for validating an *.scvd file.
 
 \section scvd_in_debug Using SCVD files in a debugger
 
 The following steps explain how to use an *.SCVD file in the µVision Debugger. Other tools might require different steps:
+
  - Add the SCVD file to µVision as described in <a href="https://developer.arm.com/documentation/101407/0538/Creating-Applications/Tips-and-Tricks/Manage-Component-Viewer-Description-Files" target="_blank"><b>Manage Component Viewer Description Files</b></a>.
  - Use the debug windows as described in \cviewer.
 
@@ -44,7 +44,7 @@ In the *.pdsc file example below \token{Network.scvd} is added to the debugger w
 */
 
 /* ========================================================================================================================== */
-/** 
+/**
 \page xml_elements XML elements
 
 The top level elements of an SCVD file are:
@@ -57,14 +57,14 @@ The top level elements of an SCVD file are:
 The overall XML structure of an SCVD file is shown below.
 
 \image html SCVDExample.png "Example of an SCVD File"
- 
+
 */
 
 /* ========================================================================================================================== */
-/** 
+/**
 \page elem_component_viewer  \elemhead{component_viewer}
 
-The element \elem{component_viewer} provides the outermost frame of the description. All elements are described within this scope. 
+The element \elem{component_viewer} provides the outermost frame of the description. All elements are described within this scope.
 
 <table class="cmtable" summary="Root Element: component_viewer">
   <tr>
@@ -83,8 +83,7 @@ The element \elem{component_viewer} provides the outermost frame of the descript
   </tr>
   <tr>
     <td> xmlns:xs </td>
-    <td> Specifies the underlying XML schema to which the SCVD schema is compliant. 
-    Has to be set to: \token{"http://www.w3.org/2001/XMLSchema-instance"}. </td>
+    <td> Specifies the underlying XML schema to which the SCVD schema is compliant. Has to be set to: \token{"http://www.w3.org/2001/XMLSchema-instance"}. </td>
     <td> xs:decimal </td>
     <td> required </td>
   </tr>
@@ -156,7 +155,7 @@ The element \elem{component_viewer} provides the outermost frame of the descript
           <item property="Hi"  value="%d[MySymbol.hi]"/>
         </item>
       </out>
-    </object>   
+    </object>
   </objects>
   
 </component_viewer>
@@ -164,7 +163,7 @@ The element \elem{component_viewer} provides the outermost frame of the descript
 */
 
 /* ========================================================================================================================== */
-/** 
+/**
 \page elem_component \elemhead{component_viewer/component}
 
 Define the name of component that is described in this SCVD file.  This element specifies also the version of the SCVD file.
@@ -209,7 +208,7 @@ Define the name of component that is described in this SCVD file.  This element 
 */
 
 /* ========================================================================================================================== */
-/** 
+/**
 \page elem_typedefs \elemhead{component_viewer/typedefs}
 
 Is the enclosing element for data type definitions.
@@ -289,8 +288,7 @@ explain that \ref complex_data_type referenced via a  \refelem{typedef} pointer 
     <td>import</td>
     <td>Name of a \ref Symbol_Access "symbol" in the user application which is loaded into the debugger. The underlaying data type of this symbol is used to:
  - recalculate the value of the \attr{size} of this \refelem{typedef} element.
- - for \refelem{elem_member,member} elements with no explicit \attr{offset}, the offset value of matching \refelem{elem_member,member} is set. If the \refelem{elem_member,member} is not part 
-   of the symbol in the user application the \attr{offset} value is set to \token{-1}. \ref __Offset_of can be used to check this value.
+ - for \refelem{elem_member,member} elements with no explicit \attr{offset}, the offset value of matching \refelem{elem_member,member} is set. If the \refelem{elem_member,member} is not part of the symbol in the user application the \attr{offset} value is set to \token{-1}. \ref __Offset_of can be used to check this value.
 
 \b Example: Use the data type information of \ref Symbol_Access "symbol" \em tcb in source module \em main.c
 \code
@@ -330,7 +328,7 @@ explain that \ref complex_data_type referenced via a  \refelem{typedef} pointer 
   <typedefs>
     
     <!-- Structure reflecting an array -->
-    <typedef name="TypeArray1" size="8">  
+    <typedef name="TypeArray1" size="8">
       <member name="type_ref"      type="uint32_t"   offset="0"  info="Pointer to array"/>
       <member name="id1"           type="uint8_t"    offset="4"  info="Type ID"/>
       <member name="attr"          type="uint8_t"    offset="5"  info="Type Attribute"/>
@@ -338,7 +336,7 @@ explain that \ref complex_data_type referenced via a  \refelem{typedef} pointer 
     </typedef>
     
     <!-- Helper variables for Stack-usage calculation -->
-    <typedef name="TypeArray2" size="8">  
+    <typedef name="TypeArray2" size="8">
        <var   name="XcurSP"        type="uint32_t"   value="0"/>
        <var   name="bSimpleStk"    type="int32_t"/>
      </typedef>
@@ -374,7 +372,7 @@ void MyComp_initialize (void) {
       <item property="Generic">
         <item property="Version"            value="%d[MyComp_info.version]"/>
         <item property="Channels"           value="%d[MyComp_info.channels]"/>
-        <item property="Max. Transmit Size" value="%d[MyComp_info.buffersize] Bytes"/>		
+        <item property="Max. Transmit Size" value="%d[MyComp_info.buffersize] Bytes"/>
       </item>
     </out>
   </object>
@@ -465,7 +463,7 @@ StructofVarSz MyVarStruct;
 */
 
 /* ========================================================================================================================== */
-/** 
+/**
 \page elem_member \elemhead{component_viewer/typedefs/typedef/member}
 
 Define the member of a \refelem{typedef}; typically a \em struct, \em class member, or enumeration.
@@ -499,8 +497,7 @@ Define the member of a \refelem{typedef}; typically a \em struct, \em class memb
   </tr>
   <tr>
     <td>offset</td>
-    <td>Offset to base address in \token{[Bytes]}. Use the uVision debug dialog \b Symbols to find the offset. You can use \ref scvd_expression.
-        For imported members, the offset is recalculated. Refer to the description of \attr{import} in \refelem{typedef}.
+    <td>Offset to base address in \token{[Bytes]}. Use the uVision debug dialog \b Symbols to find the offset. You can use \ref scvd_expression. For imported members, the offset is recalculated. Refer to the description of \attr{import} in \refelem{typedef}.
     </td>
     <td>xs:string</td>
     <td>required</td>
@@ -557,8 +554,7 @@ Define the member of a \refelem{typedef}; typically a \em struct, \em class memb
 \section elem_enum \elemhead{component_viewer/typedefs/typedef/member/enum}
 
 Defines an enumeration name that is displayed as text instead of a value.
-A symbolic enumerator name represents a constant value that can be 
-referenced using the syntax \token{typedef_name:member_name:enum_name}.
+A symbolic enumerator name represents a constant value that can be referenced using the syntax \token{typedef_name:member_name:enum_name}.
 
 <table class="cmtable" summary="Element: enum">
   <tr>

@@ -60,7 +60,7 @@ PROJECT_BRIEF          = "Record program events, display status information, and
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = style_template/cmsis_logo_white_small.png
+PROJECT_LOGO           = ./style_template/cmsis_logo_white_small.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -939,9 +939,9 @@ INPUT                  = ./src/mainpage.md \
                          ./src/cmp_viewer.md \
                          ./src/fault.md \
                          ./src/examples.md \
-                         ./src/Ref_EventRecorder.txt \
-                         ./src/Ref_Fault.txt \
-                         ./src/Ref_scvd_format.txt \
+                         ./src/ref_evr.txt \
+                         ./src/ref_fault.txt \
+                         ./src/ref_scvd.txt \
                          ../../EventRecorder/Include/EventRecorder.h \
                          ../../EventRecorder/Config/EventRecorderConf.h \
                          ../../Fault/Include/ARM_Fault.h
@@ -1077,9 +1077,7 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = ../../Examples/ \
-                         ../../Examples/EventStatistic/README.md
-
+EXAMPLE_PATH           = 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
 # *.h) to filter out the source-files in the directories. If left blank all
@@ -1410,13 +1408,13 @@ HTML_EXTRA_STYLESHEET  = ./style_template/extra_stylesheet.css \
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = style_template/tabs.css \
-                         style_template/version.css \
-                         style_template/tab_b.png \
-                         style_template/printComponentTabs.js \
-                         style_template/darkmode_toggle.js \
-                         style_template/navtree.js \
-                         style_template/dropdown.png
+HTML_EXTRA_FILES       = ./style_template/tabs.css \
+                         ./style_template/version.css \
+                         ./style_template/tab_b.png \
+                         ./style_template/printComponentTabs.js \
+                         ./style_template/darkmode_toggle.js \
+                         ./style_template/navtree.js \
+                         ./style_template/dropdown.png
 
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.

@@ -1,6 +1,6 @@
 ﻿# Overview {#mainpage}
 
-**CMSIS-View** offers software developers methodologies, software components, and utilities that provide visibility into internal operation of embedded applications and software components.
+**CMSIS-View** equips software developers with software components, utilities and methodologies that provide visibility into internal operation of embedded applications and software components.
 
 With the software components of CMSIS-View, developers can collect time-accurate event-based information, display program execution status, and analyze fault exceptions. It allows to analyze execution flows, debug potential issues, and measure execution times. The data can be observed in real-time in an IDE or can be saved as a log file during program execution. 
 
@@ -10,9 +10,13 @@ In addition, using the Event Recorder API, you can annotate your code so that yo
 
 Key elements of CMSIS-View are:
 
- - \ref er_use "Event Recorder" - an embedded software component that provides an [API (function calls)](modules.html) for event annotations in the code.
+ - \ref er_use "Event Recorder" - an embedded software component that provides API functions for event annotations in the code.
  - \ref evntlst "eventlist utility" - a command line tool for processing Event Recorder log files.
  - \ref fault "Fault" - an embedded software component with infrastructure and functions to store, record, and analyze exception fault information.
+
+> **Note**
+> - CMSIS-View replaces and extends functionality previously provided as part of *Keil::ARM_Compiler* pack.
+> - See [Migrating projects from CMSIS v5 to CMSIS v6](https://learn.arm.com/learning-paths/microcontrollers/project-migration-cmsis-v6) for a guidance on updating existing projects to CMSIS-View.
 
 ## Access to CMSIS-View {#view_access}
 
