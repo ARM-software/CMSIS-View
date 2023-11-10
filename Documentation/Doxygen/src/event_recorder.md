@@ -2,7 +2,7 @@
 
 ## Overview {#about_evr}
 
-The software component **Event Recorder** provides [API function calls](modules.html) for event annotations in the application code or software component libraries. These API functions record event timing and data information while the program is executing.
+The software component **Event Recorder** provides \ref Ref_EventRecorder "API functions" for event annotations in the application code or software component libraries. These API functions record event timing and data information while the program is executing.
 
 The Event Filter which is controlled from the target application or the debugger allows to specify the event ids that are stored in the **event buffer** that is located in the memory of the target system. This **event buffer** may be continuously read by the debug unit and displayed in the **Event Recorder** window of the debugger.
 
@@ -366,10 +366,10 @@ These \ref EventRecorder_Data functions receive as first parameter an *id* event
 **Example:**
 
 ```c
-#include "EventRecorder.h"                       // ARM::CMSIS-View:Event Recorder
+#include "EventRecorder.h"                                   // ARM::CMSIS-View:Event Recorder
 
-int some_error = 0;                              // error flag
-char string[10] = "MyTest";                      // some test string
+int some_error = 0;                                          // error flag
+char string[10] = "MyTest";                                  // some test string
 
 void MyFunction (int parameter) {
   EventRecord2 (1+EventLevelAPI, parameter, 0);              // Event at Start
@@ -383,10 +383,10 @@ void MyFunction (int parameter) {
 }
 
 int main (void) {
-  EventRecorderInitialize (EventRecordAll, 1);	// initialize and start Event Recorder
+  EventRecorderInitialize (EventRecordAll, 1);               // initialize and start Event Recorder
 
   MyFunction (0x10);
-  some_error = 1;                               // set error flag
+  some_error = 1;                                            // set error flag
   MyFunction (0x60);
 }
 ```

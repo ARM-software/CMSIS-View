@@ -12,7 +12,7 @@ eventlist functionality can be easily tested with the example project \ref scvd_
 
 Build and run the example. Then in the terminal run `eventlist -s EventRecorder.log` to obtain the following human readable output:
 
-```txt
+```text
    Start/Stop event statistic
    --------------------------
 
@@ -49,7 +49,7 @@ eventlist -a ./out/EventStatistic/Debug/AVH/Debug+AVH.axf -I ./EventRecorder.scv
 
 The output should look like the following:
 
-```txt
+```text
   :
 
 53947 180.66841874 EvCtrl    StartAv(15)             v1=776 v2=0
