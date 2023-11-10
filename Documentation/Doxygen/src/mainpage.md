@@ -10,9 +10,9 @@ In addition, using the Event Recorder API, you can annotate your code so that yo
 
 Key elements of CMSIS-View are:
 
- - \ref er_use "Event Recorder" - an embedded software component that provides API functions for event annotations in the code.
+ - \ref evr "Event Recorder" - an embedded software component that provides \ref Ref_EventRecorder for event annotations in the code.
  - \ref evntlst "eventlist utility" - a command line tool for processing Event Recorder log files.
- - \ref fault "Fault" - an embedded software component with infrastructure and functions to store, record, and analyze exception fault information.
+ - \ref fault "Fault" - an embedded software component with infrastructure and \ref Ref_Fault to store, record, and analyze exception fault information.
 
 > **Note**
 > - CMSIS-View replaces and extends functionality previously provided as part of *Keil::ARM_Compiler* pack.
