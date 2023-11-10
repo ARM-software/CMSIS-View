@@ -35,6 +35,9 @@ __debug_bin
 # Output of the go coverage tool
 *.out
 
+# Output of the linkchecker tool
+linkchecker-out.csv
+
 *.sw*
 **/.trunk
 **/.vscode
