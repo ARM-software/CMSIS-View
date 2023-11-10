@@ -162,23 +162,13 @@ jobs:
     name: "Vulnerability check"
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Install Go
-        uses: actions/setup-go@v3
+      - name: Scan for Vulnerabilities
+        uses: golang/govulncheck-action@v1
         with:
-          go-version-file: tools/eventlist/go.mod
+          go-version-file: ./tools/eventlist/go.mod
           check-latest: true
-
-      - name: Install govulncheck
-        run: go install golang.org/x/vuln/cmd/govulncheck@v0.1.0
-
-      - name: Run vulnerability check
-        run: |
-          echo "$(govulncheck ./... 2>&1 | tee vulnerability_report.out)"
-          test -n "$(grep 'No vulnerabilities found.' vulnerability_report.out)"
-        working-directory: ./tools/eventlist
+          go-package: ./...
+          work-dir: ./tools/eventlist
 
   test:
     if: |
