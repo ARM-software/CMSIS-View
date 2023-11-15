@@ -71,6 +71,6 @@ var group__Fault__Storage =
     [ "ARM_FaultSave", "group__Fault__Storage.html#ga4a614184dca42fb415d0a01ba03163e3", null ],
     [ "ARM_FaultExit", "group__Fault__Storage.html#gad813a8434754f3a2e4bdbd82a11f2292", null ],
     [ "ARM_FaultPrint", "group__Fault__Storage.html#ga139ab9a8507bbbc389d518a9886f0691", null ],
-    [ "ARM_FaultVersion", "group__Fault__Storage.html#gad20ff5240efa780c2875426157710aee", null ],
-    [ "ARM_FaultInfo", "group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac", null ]
+    [ "ARM_FaultInfo", "group__Fault__Storage.html#ga775536834c48e2014db1157224f0cdac", null ],
+    [ "ARM_FaultVersion", "group__Fault__Storage.html#gad20ff5240efa780c2875426157710aee", null ]
 ];

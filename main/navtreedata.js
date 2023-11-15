@@ -25,19 +25,17 @@
 var NAVTREE =
 [
   [ "CMSIS-View", "index.html", [
-    [ "Content", "index.html#content", null ],
-    [ "License", "index.html#license", null ],
+    [ "Overview", "index.html", "index" ],
     [ "Revision History", "rev_hist.html", null ],
     [ "Event Recorder", "evr.html", "evr" ],
     [ "Event Statistics", "ev_stat.html", [
       [ "Overview", "ev_stat.html#about_event_statistics", null ],
       [ "Display current consumption", "ev_stat.html#es_display_energy", null ]
     ] ],
-    [ "eventlist", "evntlst.html", [
+    [ "eventlist Utility", "evntlst.html", [
       [ "Overview", "evntlst.html#about_evntlst", null ],
-      [ "Analyze Events", "evntlst.html#autotoc_md2", [
-        [ "Adding Context", "evntlst.html#autotoc_md3", null ]
-      ] ]
+      [ "Usage example", "evntlst.html#evntlst_example", null ],
+      [ "Adding context", "evntlst.html#evntlst_context", null ]
     ] ],
     [ "Component Viewer", "cmp_viewer.html", [
       [ "Overview", "cmp_viewer.html#about_cmp_viewer", null ],
@@ -45,17 +43,16 @@ var NAVTREE =
         [ "Static Component Information", "cmp_viewer.html#cv_static_information", null ]
       ] ]
     ] ],
-    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ],
-    [ "Exception Fault Analysis", "fault.html", "fault" ],
+    [ "Fault Analysis", "fault.html", "fault" ],
     [ "Examples", "ExampleProjects.html", "ExampleProjects" ],
+    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ],
     [ "API Reference", "modules.html", "modules" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"ExampleProjects.html",
-"scvd_expression.html#numeric_constant"
+"ExampleProjects.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
