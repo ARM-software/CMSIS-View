@@ -353,7 +353,7 @@ Select debug variant</div></div>
 Redirecting printf output</h1>
 <p>The Event Recorder can be used to retarget printf output. This is especially interesting for targets without ITM, such as Cortex-M0/M0+/M23. Steps to enable this:</p>
 <ol type="1">
-<li>In the Manage Run-Time Environment window, set the component <b>CMSIS-Compiler:I/O:STDOUT</b> to use <b>Variant</b> <em>EVR</em>.</li>
+<li>In the Manage Run-Time Environment window, select the component <b>CMSIS-Compiler:STDOUT:Event Recorder</b>.</li>
 <li>Select the component <b>CMSIS-View:Event Recorder</b> or use the <b>Resolve</b> button.</li>
 <li>In the user code, include <em>EventRecorder.h</em> and call the <code><a class="el" href="group__EventRecorder__Setup.html#gac5369fe03bdcb771bacb25d7734a5f23" title="Initialize Event Recorder.">EventRecorderInitialize()</a></code> function in <code>main()</code>.</li>
 </ol>
