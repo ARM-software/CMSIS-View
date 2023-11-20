@@ -16,11 +16,17 @@
  * limitations under the License.
  */
 
-//lint -emacro((923,9078),CoreDebug,DWT,SysTick) "cast from unsigned long to pointer"
+//lint -emacro((923,9078),DCB,DWT,SysTick) "cast from unsigned long to pointer"
 //lint -ecall(534,__disable_irq) "Ignoring return value"
 
 #include "RTE_Components.h"
 #include CMSIS_device_header
+
+/* Support for legacy Debug Control Block Register definitions (CMSIS v5) */
+#if (!defined(DCB) && defined(CoreDebug))
+#define DCB                   CoreDebug
+#define DCB_DEMCR_TRCENA_Msk  CoreDebug_DEMCR_TRCENA_Msk
+#endif
 
 #if (__CORTEX_M >= 3U)
 #include <stdatomic.h>
@@ -841,8 +847,8 @@ __STATIC_INLINE uint32_t SysTimerIsRunning (void) {
 __WEAK uint32_t EventRecorderTimerSetup (void) {
 #if   (EVENT_TIMESTAMP_SOURCE == 0)
   #if ((__CORTEX_M >= 3U) && (__CORTEX_M != 23U))
-    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    DCB->DEMCR |= DCB_DEMCR_TRCENA_Msk;
+    DWT->CTRL  |= DWT_CTRL_CYCCNTENA_Msk;
     return 1U;
   #else
     TimeStamp = 0U;

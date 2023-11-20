@@ -11,12 +11,13 @@
     <release version="0.0.0">
       Active development ...
       Event Recorder:
+      - Add support for CMSIS v6
       - Update conditions to prevent simultaneous selection of CMSIS-View::Event Recorder and Compiler::Event Recorder components
-      - Update Event Statistic example to support CMSIS-Toolbox v2.0.0
+      - Update Event Statistic example to support CMSIS-Toolbox v2
       Fault component:
       - Extend section name for fault information, for easier absolute addressing via the linker script
-      - Update Fault example for Cortex-M33 (B-U585I-IOT02A) with improved GCC support and add support for building with CMSIS-Toolbox v2.0.0
-      - Update Fault example for AVH Cortex-M7 to support CMSIS-Toolbox v2.0.0
+      - Update Fault example for Cortex-M33 (B-U585I-IOT02A) with improved GCC support and add support for building with CMSIS-Toolbox v2
+      - Update Fault example for AVH Cortex-M7 to support CMSIS-Toolbox v2
     </release>
   </releases>
 
@@ -48,18 +49,20 @@
     <condition id="EventRecorder">
       <description>Conditions for Event Recorder</description>
       <require condition="Cortex-M Device"/>
-      <deny Cclass="Compiler" Cgroup="Event Recorder"/>
+      <require Cclass="CMSIS"      Cgroup="CORE"/>
+      <deny    Cclass="Compiler"   Cgroup="Event Recorder"/>
     </condition>
     <condition id="FaultRecord">
       <description>Conditions for Fault Record</description>
       <require condition="Cortex-M Device"/>
+      <require Cclass="CMSIS"      Cgroup="CORE"/>
       <require Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage"/>
       <require Cclass="CMSIS-View" Cgroup="Event Recorder"/>
     </condition>
   </conditions>
 
   <components>
-    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.2" condition="EventRecorder">
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.3" condition="EventRecorder">
       <description>Event Recording via Debug Access Port (DAP)</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_EventRecorder
@@ -73,7 +76,7 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.2" condition="EventRecorder">
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.3" condition="EventRecorder">
       <description>Event Recording via Debug Access Port (DAP) and Semihosting</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_EventRecorder

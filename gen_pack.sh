@@ -12,7 +12,7 @@ set -o pipefail
 REQUIRED_GEN_PACK_LIB="0.9.0"
 
 # Set default command line arguments
-DEFAULT_ARGS=(-c "v")
+DEFAULT_ARGS=(-c "pack/")
 
 # Pack warehouse directory - destination
 # Default: ./output
@@ -64,6 +64,7 @@ PACK_DELETE_FILES="
 # Default: empty
 #
 PACKCHK_DEPS="
+  ARM.CMSIS.pdsc
   ARM.V2M_MPS3_SSE_300_BSP.pdsc
   Keil.B-U585I-IOT02A_BSP.pdsc
 "

@@ -67,7 +67,7 @@ find_doxygen "${REQ_DXY_VERSION}"
 [[ ${RUN_LINKCHECKER} != 0 ]] && find_linkchecker
 
 if [ -z "${VERSION_FULL}" ]; then
-  VERSION_FULL=$(git_describe "v")
+  VERSION_FULL=$(git_describe "pack/")
 fi
 
 pushd "${DIRNAME}" > /dev/null
