@@ -40,29 +40,9 @@
 #include "cmsis_os2.h"
 #endif
 
-#if !defined(__USED)
-  #define __USED __attribute__((used))
-#endif
-#if !defined(__WEAK)
-  #define __WEAK __attribute__((weak))
-#endif
-#if !defined(__ALIGNED)
-  #define __ALIGNED(x) __attribute__((aligned(x)))
-#endif
 #if !defined(__NO_INIT)
- //lint -esym(9071, __NO_INIT) "defined macro is reserved to the compiler"
- #if   defined (__CC_ARM)                                           /* ARM Compiler 4/5 */
-  #define __NO_INIT __attribute__ ((section (".bss.noinit"), zero_init))
- #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)    /* ARM Compiler 6 */
-  #define __NO_INIT __attribute__ ((section (".bss.noinit")))
- #elif defined (__GNUC__)                                           /* GNU Compiler */
-  #define __NO_INIT __attribute__ ((section (".noinit")))
- #elif defined (__ICCARM__)                                         /* IAR Compiler */
-  #define __NO_INIT __attribute__ ((section (".noinit")))
- #else
-  #warning "No compiler specific solution for __NO_INIT. __NO_INIT is ignored."
-  #define __NO_INIT
- #endif
+//lint -esym(9071, __NO_INIT) "defined macro is reserved to the compiler"
+#define __NO_INIT __attribute__ ((section (".bss.noinit")))
 #endif
 
 //lint -e(9026) "Function-like macro"
@@ -429,12 +409,7 @@ __STATIC_INLINE void UnlockRecord (uint32_t *mem, uint32_t info) {
 
 #define MODE_wb                 5U
 
-#if defined(__CC_ARM)
-static __asm    int32_t semihosting_call (uint32_t operation, void *args) {
-  bkpt  0xab
-  bx    lr
-}
-#elif defined(__ICCARM__)
+#if defined(__ICCARM__)
 #define semihosting_call __semihosting
 #else
 __STATIC_INLINE int32_t semihosting_call (uint32_t operation, void *args) {

@@ -28,27 +28,12 @@
 
 // Compiler-specific defines
 #if !defined(__NAKED)
-  //lint -esym(9071, __NAKED) "Suppress: defined macro is reserved to the compiler"
-  #define __NAKED __attribute__((naked))
+//lint -esym(9071, __NAKED) "Suppress: defined macro is reserved to the compiler"
+#define __NAKED __attribute__((naked))
 #endif
-#if !defined(__WEAK)
-  //lint -esym(9071, __WEAK) "Suppress: defined macro is reserved to the compiler"
-  #define __WEAK __attribute__((weak))
-#endif
-#if !defined(__NO_INIT)
-  //lint -esym(9071, __NO_INIT) "Suppress: defined macro is reserved to the compiler"
-  #if   defined (__CC_ARM)                                           /* ARM Compiler 4/5 */
-    #define __NO_INIT __attribute__ ((section (".bss.noinit.fault"), zero_init))
-  #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)    /* ARM Compiler 6 */
-    #define __NO_INIT __attribute__ ((section (".bss.noinit.fault")))
-  #elif defined (__GNUC__)                                           /* GNU Compiler */
-    #define __NO_INIT __attribute__ ((section (".noinit.fault")))
-  #elif defined (__ICCARM__)                                         /* IAR Compiler */
-    #define __NO_INIT __attribute__ ((section (".noinit.fault")))
-  #else
-    #warning "No compiler specific solution for __NO_INIT. __NO_INIT is ignored."
-    #define __NO_INIT
-  #endif
+#if !defined(__NO_INIT_FAULT)
+//lint -esym(9071, __NO_INIT_FAULT) "Suppress: defined macro is reserved to the compiler"
+#define __NO_INIT_FAULT __attribute__ ((section (".bss.noinit.fault")))
 #endif
 
 #if    (ARM_FAULT_FAULT_REGS_EXIST != 0)
@@ -71,7 +56,7 @@
 const char ARM_FaultVersion[] __USED = ARM_FAULT_VERSION;
 
 // Fault information
-ARM_FaultInfo_t ARM_FaultInfo __USED __NO_INIT;
+ARM_FaultInfo_t ARM_FaultInfo __USED __NO_INIT_FAULT;
 
 // Local function prototype
 static uint32_t CalcCRC32 (      uint32_t init_val,
