@@ -1,4 +1,4 @@
-# Fault example (Cortex-M33) {#flt_example_CM33_readme}
+# Fault example (Cortex-M33)
 
 ## STMicroelectronics B-U585I-IOT02A board
 
@@ -20,15 +20,16 @@ The fault information can also be inspected with **Component Viewer** in a debug
  - [**STM32CubeMX v6.8.1**](https://www.st.com/en/development-tools/stm32cubemx.html) or newer with:
    - STM32Cube MCU Package for STM32U5 Series v1.2.0
  - [**STM32CubeProgrammer**](https://www.st.com/en/development-tools/stm32cubeprog.html) utility
- - [**Arm GNU Toolchain v12.2.MPACBTI-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+ - [**Arm GNU Toolchain v12.3-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
    (only necessary when building example with GCC)
 
 ### CMSIS Packs
 
  - Required packs:
     - ARM::CMSIS-View
-    - ARM::CMSIS-Compiler
-    - ARM::CMSIS
+    - ARM::CMSIS v6.0.0 or newer
+    - ARM::CMSIS-RTX v1.0.0 or newer
+    - ARM::CMSIS-Compiler v2.0.0 or newer
     - Keil::STM32U5xx_DFP v2.1.0
     - Keil::B-U585I-IOT02A_BSP v1.0.0
 

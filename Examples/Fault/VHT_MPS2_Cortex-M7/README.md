@@ -1,4 +1,4 @@
-# Fault example (Cortex-M7) {#flt_example_CM7_readme}
+# Fault example (Cortex-M7)
 
 This project is a simple **Fault** component example running on **Arm Cortex-M7** microcontroller simulated by 
 [**Arm Virtual Hardware**](https://arm-software.github.io/AVH/main/simulation/html/Using.html) with the **VHT_MPS2_Cortex-M7** model simulator.
@@ -20,22 +20,23 @@ The fault information can also be inspected with **Component Viewer** in a debug
    - Arm Compiler 6 (part of the MDK)
    - Arm Virtual Hardware (AVH) for MPS2 platform with Cortex-M7 (part of the MDK-Professional)
  - [**eventlist v1.1.0**](https://github.com/ARM-software/CMSIS-View/releases/tag/tools%2Feventlist%2F1.1.0) or newer
- - [**Arm GNU Toolchain v12.2.MPACBTI-Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+ - [**Arm GNU Toolchain v12.3.Rel1**](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
    (only necessary when building example with GCC)
 
 ### CMSIS Packs
 
  - Required packs:
     - ARM::CMSIS-View
-    - ARM::CMSIS-Compiler
-    - ARM::CMSIS
+    - ARM::CMSIS v6.0.0 or newer
+    - ARM::CMSIS-RTX v1.0.0 or newer
+    - ARM::CMSIS-Compiler v2.0.0 or newer
     - Keil::V2M-MPS2_CMx_BSP v1.8.0
 
 Missing packs can be installed by executing the following `csolution` and `cpackget` commands:
 
 ```
-   csolution list packs -s Fault.csolution.yml -m >missing_packs_list.txt
-   cpackget add -f missing_packs_list.txt
+csolution list packs -s Fault.csolution.yml -m >missing_packs_list.txt
+cpackget add -f missing_packs_list.txt
 ```
 
 ## Build
@@ -106,9 +107,9 @@ To analyze the result `eventlist` utility is needed, copy the executable `eventl
 
 To process `EventRecorder.log` file with the `eventlist` utility in **Windows Command Prompt** (cmd.exe) execute the following command:
 ```
-   eventlist -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/ARM_Fault.scvd -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd -I %CMSIS_PACK_ROOT%/ARM\CMSIS/5.9.0/CMSIS/RTOS2/RTX/RTX5.scvd EventRecorder.log
+eventlist -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/ARM_Fault.scvd -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd -I %CMSIS_PACK_ROOT%/ARM/CMSIS-RTX/1.0.0/RTX5.scvd EventRecorder.log
 ```
 
 > **Note**
-> - If CMSIS-View v1.0.0 or CMSIS v5.9.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs
+> - If CMSIS-View v1.0.0 or CMSIS-RTX v1.0.0 packs are not installed, in the previous command replace corresponding path with the path of the latest installed packs
  (for example replace `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/Fault/` with `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/Fault/`)

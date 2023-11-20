@@ -4,8 +4,8 @@ project:
     trustzone: secure
 
   packs:
-    - pack: ARM::CMSIS
-    - pack: ARM::CMSIS-Compiler
+    - pack: ARM::CMSIS@>=6.0.0-0
+    - pack: ARM::CMSIS-Compiler@>=2.0.0-0
     - pack: ARM::CMSIS-View
 
   groups:
@@ -21,9 +21,10 @@ project:
   components:
     - component: CMSIS:CORE
 
-    - component: CMSIS-Compiler:I/O:STDERR&Breakpoint
-    - component: CMSIS-Compiler:I/O:STDOUT&Breakpoint
-    - component: CMSIS-Compiler:I/O:STDIN&Breakpoint
+    - component: CMSIS-Compiler:CORE
+    - component: CMSIS-Compiler:STDERR:Breakpoint
+    - component: CMSIS-Compiler:STDOUT:Breakpoint
+    - component: CMSIS-Compiler:STDIN:Breakpoint
 
     - component: CMSIS-View:Fault:Storage
 
