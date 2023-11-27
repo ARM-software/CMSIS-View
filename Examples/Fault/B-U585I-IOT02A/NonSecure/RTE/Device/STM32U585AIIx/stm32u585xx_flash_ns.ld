@@ -277,7 +277,7 @@ SECTIONS
   /* Uninitialized memory for Fault information (ARM_FaultInfo) */
   .noinit.fault 0x200B0000 (NOLOAD) :
   {
-    *(.bss.noinit.fault)
+    *(.noinit.fault)
   } > RAM
 
   /* This section contains data that is not initialised
@@ -287,7 +287,7 @@ SECTIONS
   {
     . = ALIGN(4);
     PROVIDE (__noinit_start = .);
-    *(.bss.noinit)
+    *(.noinit)
     . = ALIGN(4);
     PROVIDE (__noinit_end = .);
   } > RAM

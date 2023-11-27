@@ -42,7 +42,7 @@
 
 #if !defined(__NO_INIT)
 //lint -esym(9071, __NO_INIT) "defined macro is reserved to the compiler"
-#define __NO_INIT __attribute__ ((section (".bss.noinit")))
+#define __NO_INIT __attribute__ ((section (".noinit")))
 #endif
 
 //lint -e(9026) "Function-like macro"

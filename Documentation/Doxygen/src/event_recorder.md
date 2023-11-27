@@ -260,7 +260,8 @@ For the **Arm Compiler** toolchain add the following code snippet to the linker 
 
 ```
   RW_NOINIT <start_address> UNINIT 0x800 {
-    * (.bss.noinit*)
+    *(.noinit)
+    *(.noinit.*)
   }
 ```
 
@@ -276,10 +277,11 @@ For the **GCC** toolchain add the following code snippet to the linker script (.
   .noinit (NOLOAD) :
   {
     . = ALIGN(4);
-    PROVIDE (__noinit_start = .);
-    *(.noinit*)
+    __noinit_start = .;
+    *(.noinit)
+    *(.noinit.*)
     . = ALIGN(4);
-    PROVIDE (__noinit_end = .);
+    __noinit_end = .;
   } > RAM
 ```
 

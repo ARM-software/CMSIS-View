@@ -33,7 +33,7 @@
 #endif
 #if !defined(__NO_INIT_FAULT)
 //lint -esym(9071, __NO_INIT_FAULT) "Suppress: defined macro is reserved to the compiler"
-#define __NO_INIT_FAULT __attribute__ ((section (".bss.noinit.fault")))
+#define __NO_INIT_FAULT __attribute__ ((section (".noinit.fault")))
 #endif
 
 #if    (ARM_FAULT_FAULT_REGS_EXIST != 0)
