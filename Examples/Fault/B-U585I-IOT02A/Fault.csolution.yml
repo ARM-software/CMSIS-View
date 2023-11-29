@@ -5,7 +5,7 @@ solution:
 
   packs:
     - pack: Keil::STM32U5xx_DFP@2.1.0
-    - pack: Keil::B-U585I-IOT02A_BSP
+    - pack: Keil::B-U585I-IOT02A_BSP@1.0.0
 
   target-types:
     - type: HW

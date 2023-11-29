@@ -31,7 +31,7 @@
   //lint -esym(9071, __NAKED) "Suppress: defined macro is reserved to the compiler"
   #define __NAKED __attribute__((naked))
 #endif
-#if !defined(__NO_INIT__FAULT)
+#if !defined(__NO_INIT_FAULT)
   //lint -esym(9071, __NO_INIT_FAULT) "Suppress: defined macro is reserved to the compiler"
   #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)         /* ARM Compiler 6 */
     #define __NO_INIT_FAULT __attribute__ ((section (".bss.noinit.fault")))
