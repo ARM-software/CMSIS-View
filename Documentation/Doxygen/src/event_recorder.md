@@ -260,8 +260,8 @@ For the **Arm Compiler** toolchain add the following code snippet to the linker 
 
 ```
   RW_NOINIT <start_address> UNINIT 0x800 {
-    *(.noinit)
-    *(.noinit.*)
+    *(.bss.noinit)
+    *(.bss.noinit.*)
   }
 ```
 

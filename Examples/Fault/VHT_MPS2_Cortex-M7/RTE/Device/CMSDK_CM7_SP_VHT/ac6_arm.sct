@@ -79,8 +79,8 @@ LR_ROM __RO_BASE __RO_SIZE  {                       ; load region size_region
 
 #if __NOINIT_SIZE > 0
   RW_NOINIT __RW_NOINIT_BASE UNINIT __NOINIT_SIZE { ; no init data
-    *(.noinit)
-    *(.noinit.*)
+    *(.bss.noinit)
+    *(.bss.noinit.*)
   }
 #endif
 

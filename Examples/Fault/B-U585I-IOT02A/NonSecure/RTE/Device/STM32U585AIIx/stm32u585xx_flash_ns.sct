@@ -99,12 +99,12 @@ LR_APP __LR_BASE __LR_SIZE  {                                        /* load reg
   }
 
   RW_NOINIT_FAULT 0x200B0000 UNINIT 0x100 {                          /* Uninitialized memory for Fault information (ARM_FaultInfo) */
-    *(.noinit.fault)
+    *(.bss.noinit.fault)
   }
 
 #if __NOINIT_SIZE > 0
   RW_NOINIT __RW_NOINIT_BASE UNINIT __NOINIT_SIZE {                  /* no init data */
-    *(.noinit)
+    *(.bss.noinit)
   }
 #endif
 

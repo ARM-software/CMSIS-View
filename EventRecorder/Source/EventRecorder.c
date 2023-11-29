@@ -41,8 +41,12 @@
 #endif
 
 #if !defined(__NO_INIT)
-//lint -esym(9071, __NO_INIT) "defined macro is reserved to the compiler"
-#define __NO_INIT __attribute__ ((section (".noinit")))
+  //lint -esym(9071, __NO_INIT) "Suppress: defined macro is reserved to the compiler"
+  #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)         /* ARM Compiler 6 */
+    #define __NO_INIT __attribute__ ((section (".bss.noinit")))
+  #else                                                                 /* all other compilers */
+    #define __NO_INIT __attribute__ ((section (".noinit")))
+  #endif
 #endif
 
 //lint -e(9026) "Function-like macro"

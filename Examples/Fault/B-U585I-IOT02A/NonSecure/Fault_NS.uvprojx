@@ -712,7 +712,7 @@
       </package>
       <package name="B-U585I-IOT02A_BSP" schemaVersion="1.7.2" url="https://github.com/MDK-Packs/Pack/raw/master/B-U585I-IOT02A_BSP/" vendor="Keil" version="1.0.0">
         <targetInfos>
-          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
+          <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </package>
       <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0">
