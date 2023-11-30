@@ -191,8 +191,8 @@ Create memory region using linker script</h2>
 <p><b>Arm Compiler</b></p>
 <p>For the <b>Arm Compiler</b> toolchain add the following code snippet to the linker script (.sct file), in the part specifying RAM sections (usually before Heap section):</p>
 <div class="fragment"><div class="line">RW_NOINIT &lt;start_address&gt; UNINIT 0x800 {</div>
-<div class="line">  *(.noinit)</div>
-<div class="line">  *(.noinit.*)</div>
+<div class="line">  *(.bss.noinit)</div>
+<div class="line">  *(.bss.noinit.*)</div>
 <div class="line">}</div>
 </div><!-- fragment --><blockquote class="doxtable">
 <p>&zwj;<b>Notes</b></p><ul>
