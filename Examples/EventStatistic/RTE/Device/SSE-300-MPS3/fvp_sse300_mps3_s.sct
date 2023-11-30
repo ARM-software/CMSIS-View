@@ -59,8 +59,8 @@ LR_CODE S_CODE_START {
     }
 
     ER_DATA_NOINIT +0 ALIGN 64 UNINIT 0x00002000 {
-        *(.noinit)
-        *(.noinit.*)
+        *(.bss.noinit)
+        *(.bss.noinit.*)
     }
 
     #if HEAP_SIZE > 0

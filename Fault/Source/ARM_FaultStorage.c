@@ -28,12 +28,16 @@
 
 // Compiler-specific defines
 #if !defined(__NAKED)
-//lint -esym(9071, __NAKED) "Suppress: defined macro is reserved to the compiler"
-#define __NAKED __attribute__((naked))
+  //lint -esym(9071, __NAKED) "Suppress: defined macro is reserved to the compiler"
+  #define __NAKED __attribute__((naked))
 #endif
 #if !defined(__NO_INIT_FAULT)
-//lint -esym(9071, __NO_INIT_FAULT) "Suppress: defined macro is reserved to the compiler"
-#define __NO_INIT_FAULT __attribute__ ((section (".noinit.fault")))
+  //lint -esym(9071, __NO_INIT_FAULT) "Suppress: defined macro is reserved to the compiler"
+  #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)         /* ARM Compiler 6 */
+    #define __NO_INIT_FAULT __attribute__ ((section (".bss.noinit.fault")))
+  #else                                                                 /* all other compilers */
+    #define __NO_INIT_FAULT __attribute__ ((section (".noinit.fault")))
+  #endif
 #endif
 
 #if    (ARM_FAULT_FAULT_REGS_EXIST != 0)
