@@ -88,24 +88,35 @@ func Test_infoOpt(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		sopt string
 		lopt string
-		opt  string
+		arg  bool
 	}
 	tests := []struct {
 		name string
 		args args
 		want string
 	}{
-		{"test.run opt", args{"test.run", "", "ef"}, "\t-test.run ef yy\trun only tests and examples matching `regexp`\n"},
-		{"test.run", args{"test.run", "", ""}, "\t-test.run\trun only tests and examples matching `regexp`\n"},
-		{"test help", args{"", "help", ""}, "\t--help\tshow short help\n"},
-		{"test", args{"", "", ""}, "\t\tunknown option\n"},
-		{"test s", args{"a", "", ""}, "\t-a\tunknown option\n"},
-		{"test l", args{"", "cd", ""}, "\t--cd\tunknown option\n"},
-		{"test s l", args{"a", "cd", ""}, "\t-a --cd\tunknown option\n"},
-		{"test opt", args{"", "", "ef"}, "\t ef\tunknown option\n"},
-		{"test s opt", args{"a", "", "ef"}, "\t-a ef\tunknown option\n"},
-		{"test l opt", args{"", "cd", "ef"}, "\t--cd ef\tunknown option\n"},
-		{"test s l opt", args{"a", "cd", "ef"}, "\t-a --cd ef\tunknown option\n"},
+		{"test.run opt", args{"test.run", "", true},
+			"  -test.run arg       run only tests and examples matching `regexp`\n"},
+		{"test.run", args{"test.run", "", false},
+			"  -test.run           run only tests and examples matching `regexp`\n"},
+		{"test help", args{"", "help", false},
+			"      --help          Print usage\n"},
+		{"test", args{"", "", false},
+			"                      unknown option\n"},
+		{"test s", args{"a", "", false},
+			"  -a                  unknown option\n"},
+		{"test l", args{"", "cd", false},
+			"      --cd            unknown option\n"},
+		{"test s l", args{"a", "cd", false},
+			"  -a, --cd            unknown option\n"},
+		{"test opt", args{"", "", true},
+			"     arg              unknown option\n"},
+		{"test s opt", args{"a", "", true},
+			"  -a arg              unknown option\n"},
+		{"test l opt", args{"", "cd", true},
+			"      --cd arg        unknown option\n"},
+		{"test s l opt", args{"a", "cd", true},
+			"  -a, --cd arg        unknown option\n"},
 	}
 	_ = flag.Set("test.run", "yy")
 	for _, tt := range tests { //nolint:golint,paralleltest
@@ -117,7 +128,7 @@ func Test_infoOpt(t *testing.T) { //nolint:golint,paralleltest
 			defer restore()
 			r, w, _ := os.Pipe()
 			os.Stdout = w
-			infoOpt(flag.CommandLine, tt.args.sopt, tt.args.lopt, tt.args.opt)
+			infoOpt(flag.CommandLine, tt.args.sopt, tt.args.lopt, tt.args.arg)
 			w.Close()
 			buf, _ := io.ReadAll(r)
 			if string(buf) != tt.want {
@@ -153,16 +164,20 @@ func Test_main(t *testing.T) { //nolint:golint,paralleltest
 			"----- -----      -----       ---         ---         -------     -----       ----\\n"
 
 	help :=
-		"Usage: [^ ]+ \\[-I <scvdFile>\\]\\.\\.\\. \\[-o <outputFile>\\] \\[-a <elf/axfFile>\\] \\[-b\\] <logFile>\\n" +
-			"\\t-a <fileName> \\telf/axf file name\\n" +
-			"\\t-b --begin\\tshow statistic at beginning\\n" +
-			"\\t-h --help\\tshow short help\\n" +
-			"\\t-I <fileName> \\tinclude SCVD file name\\n" +
-			"\\t-o <fileName> \\toutput file name\\n" +
-			"\\t-s --statistic\\tshow statistic only\\n" +
-			"\\t-V --version\\tshow version info\\n"
+		"Usage:\\n" +
+			"  [^ ]+ \\[-options\\] <logFile>\\n\\n" +
+			"Options:\\n" +
+			"  -a arg            Application file: telf/axf file name\\n" +
+			"  -b --begin        Output order: show statistic at beginning\\n" +
+			"  -h --help         Print usage\\n" +
+			"  -I arg            \\[\\.\\.\\.\\] Include SCVD file name\\n" +
+			"  -o arg            Output file\\n" +
+			"  -s --statistic    Output: show statistic but no events\\n" +
+			"  -V --version      Show version info\\n" +
+			"  -f --format arg   Output format: txt, json, xml\\n" +
+			"  -l --level arg    Level: Error|API|Op|Detail\\n"
 
-	versionInfo = "1.2.3 (C) 2022 Arm Ltd. and Contributors"
+	versionInfo = "1.2.3 (C) 2023 Arm Ltd. and Contributors"
 	tests := []struct {
 		name       string
 		args       []string
