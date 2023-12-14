@@ -121,19 +121,19 @@ func main() {
 	}
 	// parse command line
 	commFlag.Var(&paths, "I", "include SCVD file name")
-	outputFile := commFlag.String("o", "", "output file name")
-	elfFile := commFlag.String("a", "", "elf/axf file name")
-	formatType := commFlag.String("f", "", "format type: txt, json, xml")
+	outputFile := commFlag.String("o", "", "output file")
+	elfFile := commFlag.String("a", "", "application file: elf/axf file name")
+	formatType := commFlag.String("f", "", "output format: txt, json, xml")
 	level := commFlag.String("l", "", "level: Error|API|Op|Detail")
 	var statBegin bool
-	commFlag.BoolVar(&statBegin, "b", false, "show statistic at beginning")
-	commFlag.BoolVar(&statBegin, "begin", false, "show statistic at beginning")
+	commFlag.BoolVar(&statBegin, "b", false, "output order: show statistic before events")
+	commFlag.BoolVar(&statBegin, "begin", false, "output order: show statistic before events")
 	var showVersion bool
 	commFlag.BoolVar(&showVersion, "V", false, "show version info")
 	commFlag.BoolVar(&showVersion, "version", false, "show version info")
 	var showStatistic bool
-	commFlag.BoolVar(&showStatistic, "s", false, "show statistic only")
-	commFlag.BoolVar(&showStatistic, "statistic", false, "show statistic only")
+	commFlag.BoolVar(&showStatistic, "s", false, "output: show statistic but no events")
+	commFlag.BoolVar(&showStatistic, "statistic", false, "output: show statistic but no events")
 	err = commFlag.Parse(os.Args[1:])
 
 	if usage || err != nil {
