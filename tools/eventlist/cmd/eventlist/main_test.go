@@ -128,7 +128,7 @@ func Test_infoOpt(t *testing.T) { //nolint:golint,paralleltest
 			defer restore()
 			r, w, _ := os.Pipe()
 			os.Stdout = w
-			infoOpt(flag.CommandLine, tt.args.sopt, tt.args.lopt, tt.args.arg)
+			_ = infoOpt(flag.CommandLine, tt.args.sopt, tt.args.lopt, tt.args.arg)
 			w.Close()
 			buf, _ := io.ReadAll(r)
 			if string(buf) != tt.want {
