@@ -52,7 +52,7 @@ func infoOpt(flags *flag.FlagSet, sopt string, lopt string, arg bool) error {
 	if err != nil {
 		return err
 	}
-	n := 0
+	var n int
 	if sopt != "" {
 		if n, err = fmt.Printf("-%s", sopt); err != nil {
 			return err
