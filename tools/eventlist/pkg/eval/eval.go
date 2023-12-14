@@ -21,11 +21,27 @@ package eval
 type TdMember struct {
 	Type   Token
 	Enum   map[int16]string
-	Offset int32
+	Offset uint32
 	Info   string
 }
 
-var Typedefs map[string]map[string]TdMember
+// An internal "copy" of scvd.Typedef to be used by this package
+type TdTypedef struct {
+	Size    int
+	Members map[string]TdMember
+}
+
+var Typedefs map[string]TdTypedef
+
+type EventVals struct {
+	Val1	string
+	Val2	string
+	Val3	string
+	Val4	string
+	Val5	string
+	Val6	string
+}
+var EventV EventVals
 
 func Eval(s *string, redefs map[string]string) (Value, error) {
 	var ex Expression

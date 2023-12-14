@@ -1,1 +1,1 @@
-{"events":[{"index":0,"time":7.75,"component":"0xFF","eventProperty":"0xFF03","value":"val1=0x00000004, val2=0x00000002"},{"index":1,"time":7.75,"component":"0xFE","eventProperty":"0xFE00","value":"hello wo"}],"statistics":[]}
+{"events":[{"index":0,"time":7.75,"component":"briefbriefbrief","eventProperty":"propertypropertyproperty","value":"value"},{"index":1,"time":7.75,"component":"briefbriefbrief","eventProperty":"propertypropertyproperty","value":"hello wo"}],"statistics":[]}

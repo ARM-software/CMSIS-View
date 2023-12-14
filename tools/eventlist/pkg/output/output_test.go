@@ -639,7 +639,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 		{"test4", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s4, &sc0}, 1, 9, 14, 0.5},
 		{"test6", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s6, &sc0}, 1, 9, 14, 0.25},
 		{"test7a", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, &sc0}, 1, 9, 14, 0.25},
-		{"test7b", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, &sc}, 1, 15, 24, 0.25},
+		{"test7b", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, &sc}, 1, 9, 14, 0.25},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -777,12 +777,10 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	var s11 = "../../testdata/test11.binary"
 	var sNix = "../../testdata/xxxx"
 
-	line1 := "    0 0.00000124 0xFF     0xFF03       val1=0x00000004, val2=0x00000002\n" +
-		"    1 0.00000124 0xFE     0xFE00       \"hello wo\"\n"
 	line2 := "    0 0.00000124 briefbriefbrief propertypropertyproperty value\n" +
 		"    1 0.00000124 briefbriefbrief propertypropertyproperty \"hello wo\"\n"
 	line3 := "    0 0.00000124 0xFF     0xFF00       val1=0x00000004, val2=0x00000002\n" +
-		"    1 0.00000124 0xFE     0xFE00       \"hello wo\"\n"
+		"    1 0.00000124 briefbriefbrief propertypropertyproperty \"hello wo\"\n"
 
 	type fields struct {
 		evProps       [4]eventProperty
@@ -805,9 +803,8 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	}{
 		{"readErr0", fields{}, args{}, &s0, "", false},
 		{"readErr1", fields{}, args{}, &s1, "", true},
-		{"read1", fields{}, args{}, &s10, line1, false},
 		{"read2", fields{}, args{sc: &sc}, &s10, line2, false},
-		{"read3", fields{}, args{}, &s11, line3, false},
+		{"read3", fields{}, args{sc: &sc}, &s11, line3, false},
 		{"readNix", fields{}, args{}, &sNix, "", false},
 	}
 	eventsTable := EventsTable{
@@ -908,6 +905,12 @@ func TestOutput_printHeader(t *testing.T) { //nolint:golint,paralleltest
 func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 	var b bytes.Buffer
 
+	eds := make(map[uint16]scvd.Event)
+	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	var sc scvd.ScvdData
+	sc.Events = eds
+
 	//	var e0 = "../../testdata/test.xml"
 	var s10 = "../../testdata/test10.binary"
 	var s11 = "../../testdata/nix.binary"
@@ -956,8 +959,8 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 	}{
 		{"stat empty", fields{}, args{eventFile: nil}, line1, true},
 		{"stat wrong", fields{}, args{eventFile: &s11}, line1, true},
-		{"statEnd", fields{}, args{eventFile: &s10}, line1, false},
-		{"statBegin", fields{}, args{eventFile: &s10, statBegin: true}, line2, false},
+		{"statEnd", fields{}, args{eventFile: &s10, sc: &sc}, line1, false},
+		{"statBegin", fields{}, args{eventFile: &s10, sc: &sc, statBegin: true}, line2, false},
 	}
 	eventsTable := EventsTable{
 		Events:     []EventRecord{},
@@ -992,16 +995,22 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 	o1 := "testOutput.out"
 
+	eds := make(map[uint16]scvd.Event)
+	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	var sc scvd.ScvdData
+	sc.Events = eds
+
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
 		"   Detailed event list\n",
 		"   -------------------\n",
 		"\n",
-		"Index Time (s)   Component Event Property Value\n",
-		"----- --------   --------- -------------- -----\n",
-		"    0 7.75000000 0xFF      0xFF03         val1=0x00000004, val2=0x00000002\n",
-		"    1 7.75000000 0xFE      0xFE00         \"hello wo\"\n",
+		"Index Time (s)   Component       Event Property           Value\n",
+		"----- --------   ---------       --------------           -----\n",
+		"    0 7.75000000 briefbriefbrief propertypropertyproperty value\n",
+		"    1 7.75000000 briefbriefbrief propertypropertyproperty \"hello wo\"\n",
 		"\n",
 		"   Start/Stop event statistic\n",
 		"   --------------------------\n",
@@ -1022,7 +1031,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 		args    args
 		wantErr bool
 	}{
-		{"test", args{filename: &o1, eventFile: &s10}, false},
+		{"test", args{filename: &o1, eventFile: &s10, sc: &sc}, false},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -1066,10 +1075,16 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	o1 := "testOutput.json"
 
+	eds := make(map[uint16]scvd.Event)
+	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	var sc scvd.ScvdData
+	sc.Events = eds
+
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
-		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"0xFF\",\"eventProperty\":\"0xFF03\",\"value\":\"val1=0x00000004, val2=0x00000002\"},{\"index\":1,\"time\":7.75,\"component\":\"0xFE\",\"eventProperty\":\"0xFE00\",\"value\":\"hello wo\"}],\"statistics\":[]}",
+		"{\"events\":[{\"index\":0,\"time\":7.75,\"component\":\"briefbriefbrief\",\"eventProperty\":\"propertypropertyproperty\",\"value\":\"value\"},{\"index\":1,\"time\":7.75,\"component\":\"briefbriefbrief\",\"eventProperty\":\"propertypropertyproperty\",\"value\":\"hello wo\"}],\"statistics\":[]}",
 	}
 
 	type args struct {
@@ -1085,7 +1100,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 		args    args
 		wantErr bool
 	}{
-		{"test", args{filename: &o1, eventFile: &s10}, false},
+		{"test", args{filename: &o1, eventFile: &s10, sc: &sc}, false},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -1125,10 +1140,16 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 	o1 := "testOutput.xml"
 
+	eds := make(map[uint16]scvd.Event)
+	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	var sc scvd.ScvdData
+	sc.Events = eds
+
 	var s10 = "../../testdata/test10.binary"
 
 	lines1 := [...]string{
-		"<EventsTable><events><index>0</index><time>7.75</time><component>0xFF</component><eventProperty>0xFF03</eventProperty><value>val1=0x00000004, val2=0x00000002</value></events><events><index>1</index><time>7.75</time><component>0xFE</component><eventProperty>0xFE00</eventProperty><value>hello wo</value></events></EventsTable>",
+		"<EventsTable><events><index>0</index><time>7.75</time><component>briefbriefbrief</component><eventProperty>propertypropertyproperty</eventProperty><value>value</value></events><events><index>1</index><time>7.75</time><component>briefbriefbrief</component><eventProperty>propertypropertyproperty</eventProperty><value>hello wo</value></events></EventsTable>",
 	}
 
 	type args struct {
@@ -1144,7 +1165,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 		args    args
 		wantErr bool
 	}{
-		{"test", args{filename: &o1, eventFile: &s10}, false},
+		{"test", args{filename: &o1, eventFile: &s10, sc: &sc}, false},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {

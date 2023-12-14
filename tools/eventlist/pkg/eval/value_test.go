@@ -225,6 +225,106 @@ func TestValue_addList(t *testing.T) {
 	}
 }
 
+func TestValue_Extract(t *testing.T) {
+//	t.Parallel()
+
+	type fields struct {
+		t Token
+		i int64
+		f float64
+		s string
+		v *Variable
+		l []Value
+	}
+	type args struct {
+		t Token
+		o uint32
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want	Value
+		wantErr bool
+	}{
+		{"1B0", fields{t: I8, i: 0x12}, args{U8, 0}, Value{t: U8, i: 0x12}, false},
+		{"1BI0", fields{t: I8, i: 0xFE}, args{I8, 0}, Value{t: I8, i: -2}, false},
+		{"2B0", fields{t: I16, i: 0x1234}, args{U8, 0}, Value{t: U8, i: 0x12}, false},
+		{"2B1", fields{t: I16, i: 0x1234}, args{U8, 1}, Value{t: U8, i: 0x34}, false},
+		{"2W0", fields{t: I16, i: 0x1234}, args{U16, 0}, Value{t: U16, i: 0x1234}, false},
+		{"2BI1", fields{t: I16, i: 0xFEDC}, args{I8, 1}, Value{t: I8, i: -36}, false},
+		{"4B0", fields{t: I32, i: 0x12345678}, args{U8, 0}, Value{t: U8, i: 0x12}, false},
+		{"4B1", fields{t: I32, i: 0x12345678}, args{U8, 1}, Value{t: U8, i: 0x34}, false},
+		{"4B2", fields{t: I32, i: 0x12345678}, args{U8, 2}, Value{t: U8, i: 0x56}, false},
+		{"4B3", fields{t: I32, i: 0x12345678}, args{U8, 3}, Value{t: U8, i: 0x78}, false},
+		{"4W0", fields{t: I32, i: 0x12345678}, args{U16, 0}, Value{t: U16, i: 0x1234}, false},
+		{"4W1", fields{t: I32, i: 0x12345678}, args{U16, 1}, Value{t: U16, i: 0x3456}, false},
+		{"4W2", fields{t: I32, i: 0x12345678}, args{U16, 2}, Value{t: U16, i: 0x5678}, false},
+		{"4D0", fields{t: I32, i: 0x12345678}, args{U32, 0}, Value{t: U32, i: 0x12345678}, false},
+		{"4BI2", fields{t: I32, i: 0xFEDCBA98}, args{I8, 2}, Value{t: I8, i: -70}, false},
+		{"4WI2", fields{t: I32, i: 0xFEDCBA98}, args{I16, 2}, Value{t: I16, i: -17768}, false},
+		{"8B0", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 0}, Value{t: U8, i: 0x12}, false},
+		{"8B1", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 1}, Value{t: U8, i: 0x34}, false},
+		{"8B2", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 2}, Value{t: U8, i: 0x56}, false},
+		{"8B3", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 3}, Value{t: U8, i: 0x78}, false},
+		{"8B4", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 4}, Value{t: U8, i: 0x9a}, false},
+		{"8B5", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 5}, Value{t: U8, i: 0xbc}, false},
+		{"8B6", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 6}, Value{t: U8, i: 0xde}, false},
+		{"8B7", fields{t: I64, i: 0x123456789abcdef0}, args{U8, 7}, Value{t: U8, i: 0xf0}, false},
+		{"8W0", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 0}, Value{t: U16, i: 0x1234}, false},
+		{"8W1", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 1}, Value{t: U16, i: 0x3456}, false},
+		{"8W2", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 2}, Value{t: U16, i: 0x5678}, false},
+		{"8W3", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 3}, Value{t: U16, i: 0x789a}, false},
+		{"8W4", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 4}, Value{t: U16, i: 0x9abc}, false},
+		{"8W5", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 5}, Value{t: U16, i: 0xbcde}, false},
+		{"8W6", fields{t: I64, i: 0x123456789abcdef0}, args{U16, 6}, Value{t: U16, i: 0xdef0}, false},
+		{"8D0", fields{t: I64, i: 0x123456789abcdef0}, args{U32, 0}, Value{t: U32, i: 0x12345678}, false},
+		{"8D1", fields{t: I64, i: 0x123456789abcdef0}, args{U32, 1}, Value{t: U32, i: 0x3456789a}, false},
+		{"8D2", fields{t: I64, i: 0x123456789abcdef0}, args{U32, 2}, Value{t: U32, i: 0x56789abc}, false},
+		{"8D3", fields{t: I64, i: 0x123456789abcdef0}, args{U32, 3}, Value{t: U32, i: 0x789abcde}, false},
+		{"8D4", fields{t: I64, i: 0x123456789abcdef0}, args{U32, 4}, Value{t: U32, i: 0x9abcdef0}, false},
+		{"8L0", fields{t: I64, i: 0x123456789abcdef0}, args{U64, 0}, Value{t: U64, i: 0x123456789abcdef0}, false},
+		{"8BI3", fields{t: I64, i: -81985529216486896}, args{I8, 3}, Value{t: I8, i: -104}, false},
+		{"8WI3", fields{t: I64, i: -81985529216486896}, args{I16, 3}, Value{t: I16, i: -26506}, false},
+		{"8DI3", fields{t: I64, i: -81985529216486896}, args{I32, 3}, Value{t: I32, i: -1737075662}, false},
+		{"1B1 err", fields{t: I8}, args{U8, 1}, Value{t: I8}, true},
+		{"2B2 err", fields{t: I16}, args{U8, 2}, Value{t: I16}, true},
+		{"2W1 err", fields{t: I16}, args{U16, 1}, Value{t: I16}, true},
+		{"4B4 err", fields{t: I32}, args{U8, 4}, Value{t: I32}, true},
+		{"4W3 err", fields{t: I32}, args{U16, 3}, Value{t: I32}, true},
+		{"4D1 err", fields{t: I32}, args{U32, 1}, Value{t: I32}, true},
+		{"8B8 err", fields{t: I64}, args{U8, 8}, Value{t: I64}, true},
+		{"8W7 err", fields{t: I64}, args{U16, 7}, Value{t: I64}, true},
+		{"8D5 err", fields{t: I64}, args{U32, 5}, Value{t: I64}, true},
+		{"8L1 err", fields{t: I64}, args{I64, 1}, Value{t: I64}, true},
+		{"1B1 err1", fields{t: I8}, args{String, 0}, Value{t: I8}, true},
+		{"1B1 err2", fields{t: Nix}, args{U8, 0}, Value{t: Nix}, true},
+		{"1B1 err3", fields{t: String}, args{U8, 0}, Value{t: String}, true},
+		{"1B1 err4", fields{t: I8}, args{Nix, 0}, Value{t: I8}, true},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+//			t.Parallel()
+
+			v := &Value{
+				t: tt.fields.t,
+				i: tt.fields.i,
+				f: tt.fields.f,
+				s: tt.fields.s,
+				v: tt.fields.v,
+				l: tt.fields.l,
+			}
+			if err := v.Extract(tt.args.t, tt.args.o); (err != nil) != tt.wantErr {
+				t.Errorf("Value.Extract() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
+			}
+			if !reflect.DeepEqual(*v, tt.want) {
+				t.Errorf("Value.Extract() %s = %v, want %v", tt.name, v, tt.want)
+			}
+		})
+	}
+}
+
 func TestValue_GetInt64(t *testing.T) {
 	t.Parallel()
 
@@ -383,6 +483,45 @@ func TestValue_GetList(t *testing.T) {
 			}
 			if got := v.GetList(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Value.GetList() %s = %v, want %v", tt.name, got, tt.want)
+			}
+		})
+	}
+}
+
+func TestValue_GetFString(t *testing.T) {
+	t.Parallel()
+
+	type fields struct {
+		t Token
+		i int64
+		f float64
+		s string
+		v *Variable
+		l []Value
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{"test_string", fields{t: String, s: "abc"}, "abc"},
+		{"test_nix", fields{t: I8, i: 123}, ""},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			v := &Value{
+				t: tt.fields.t,
+				i: tt.fields.i,
+				f: tt.fields.f,
+				s: tt.fields.s,
+				v: tt.fields.v,
+				l: tt.fields.l,
+			}
+			if got := v.GetString(); got != tt.want {
+				t.Errorf("Value.GetString() %s = %v, want %v", tt.name, got, tt.want)
 			}
 		})
 	}

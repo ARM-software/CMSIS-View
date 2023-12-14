@@ -185,7 +185,7 @@ func (s *ScvdData) GetOne(filename *string) error {
 					if err != nil {
 						return err
 					}
-					t.Offset = int32(off)
+					t.Offset = uint32(off)
 					ty := eval.ITypes[member.Type]
 					t.Type = ty
 					members[member.Name] = t
@@ -201,7 +201,12 @@ func (s *ScvdData) GetOne(filename *string) error {
 					}
 				}
 				if len(members) > 0 {
-					eval.Typedefs[typedef.Name] = members
+					var size int64
+					size, err = strconv.ParseInt(typedef.Size, 0, 0)
+					if err != nil {
+						return err
+					}
+					eval.Typedefs[typedef.Name] = eval.TdTypedef{Size: int(size), Members: members}
 				}
 			}
 		}
@@ -213,7 +218,7 @@ func (s *ScvdData) GetOne(filename *string) error {
 func (s *ScvdData) Get(scvdFiles *[]string) error {
 	if scvdFiles != nil {
 		s.Events = make(map[uint16]Event)
-		eval.Typedefs = make(map[string]map[string]eval.TdMember)
+		eval.Typedefs = make(map[string]eval.TdTypedef)
 		for _, scvdFile := range *scvdFiles {
 			if err := s.GetOne(&scvdFile); err != nil {
 				return err

@@ -31,18 +31,18 @@ import (
 func Test_getEnum(t *testing.T) { //nolint:golint,paralleltest
 	var vals = make(map[int16]string)
 	var enms = make(map[string]eval.TdMember)
-	var tds = make(map[string]map[string]eval.TdMember)
+	var tds = make(map[string]eval.TdTypedef)
 
 	vals[4711] = "enum"
 	var e = enms["enumName"]
 	e.Enum = vals
 	enms["enumName"] = e
-	tds["typName"] = enms
+	tds["typName"] = eval.TdTypedef{Members: enms}
 
 	var i int
 
 	type args struct {
-		typedefs map[string]map[string]eval.TdMember
+		typedefs map[string]eval.TdTypedef
 		val      int64
 		value    string
 		i        *int
@@ -171,17 +171,19 @@ func TestInfo_SplitID(t *testing.T) {
 func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,paralleltest
 	var member = make(map[int16]string)
 	var members = make(map[string]eval.TdMember)
-	var tds = make(map[string]map[string]eval.TdMember)
+	var tds = make(map[string]eval.TdTypedef)
 
 	var m = members["B2"]
 	m.Enum = member
+	m.Offset = 2
+	m.Type = eval.U8
 	members["B2"] = m
-	tds["4BY"] = members
-	event := scvd.Event{Val1: "4BY"}
+	tds["4BY"] = eval.TdTypedef{Size: 4, Members: members}
 	var sc scvd.ScvdData
 	sc.Events = make(map[uint16]scvd.Event)
-	sc.Events[1] = event
+	sc.Events[1] = scvd.Event{Val1: "4BY"}
 	eval.Typedefs = tds
+	eval.EventV = eval.EventVals{Val1: "4BY"}
 
 	var i int
 
@@ -201,7 +203,6 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 
 	type args struct {
 		sc    *scvd.ScvdData
-		event scvd.Event
 		value string
 		i     *int
 	}
@@ -213,25 +214,25 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 		wantI   int
 		wantErr bool
 	}{
-		{"expr x member", ed1, args{&sc, event, "x[val1.B2]", &i}, "-24", 7, false},
-		{"expr empty", ed1, args{&sc, event, "", &i}, "", 0, true},
-		{"expr T", ed1, args{&sc, event, "T[val2]", &i}, "-24", 7, false},
-		{"expr d", ed1, args{&sc, event, "d[val2]", &i}, "-24", 7, false},
-		{"expr u", ed1, args{&sc, event, "u[val1]", &i}, "257", 7, false},
-		{"expr t", ed1, args{&sc, event, "t[val4]", &i}, "def", 7, false},
-		{"expr x", ed1, args{&sc, event, "x[val1]", &i}, "0x101", 7, false},
-		{"expr F", ed1, args{&sc, event, "F[val4]", &i}, "def", 7, false},
-		{"expr F", ed1, args{&sc, event, "F[val1]", &i}, "0x00000101", 7, false},
-		{"expr C", ed1, args{&sc, event, "C[val2]", &i}, "", 7, true},
-		{"expr I", ed1, args{&sc, event, "I[val3]", &i}, "37.72.10.117", 7, false},
-		{"expr J", ed1, args{&sc, event, "J[val3]", &i}, "0:0:2548:a75:", 7, false},
-		{"expr N", ed1, args{&sc, event, "N[val4]", &i}, "def", 7, false},
-		{"expr N", ed1, args{&sc, event, "N[val1]", &i}, "0x00000101", 7, false},
-		{"expr M", ed1, args{&sc, event, "M[val3]", &i}, "00-00-25-48-0a-75", 7, false},
-		{"expr S", ed1, args{&sc, event, "S[val3]", &i}, "25480a75", 7, false},
-		{"expr ?", ed1, args{&sc, event, "?[val3]", &i}, "?", 7, false},
-		{"expr err1", ed1, args{&sc, event, "S[", &i}, "", 2, true},
-		{"expr err2", ed1, args{&sc, event, "S[val3,", &i}, "", 6, true},
+		{"expr empty", ed1, args{&sc, "", &i}, "", 0, true},
+		{"expr T", ed1, args{&sc, "T[val2]", &i}, "-24", 7, false},
+		{"expr d", ed1, args{&sc, "d[val2]", &i}, "-24", 7, false},
+		{"expr u", ed1, args{&sc, "u[val1]", &i}, "257", 7, false},
+		{"expr t", ed1, args{&sc, "t[val4]", &i}, "def", 7, false},
+		{"expr x", ed1, args{&sc, "x[val1]", &i}, "0x101", 7, false},
+		{"expr F1", ed1, args{&sc, "F[val4]", &i}, "def", 7, false},
+		{"expr F2", ed1, args{&sc, "F[val1]", &i}, "0x00000101", 7, false},
+		{"expr C", ed1, args{&sc, "C[val2]", &i}, "", 7, true},
+		{"expr I", ed1, args{&sc, "I[val3]", &i}, "37.72.10.117", 7, false},
+		{"expr J", ed1, args{&sc, "J[val3]", &i}, "0:0:2548:a75:", 7, false},
+		{"expr N1", ed1, args{&sc, "N[val4]", &i}, "def", 7, false},
+		{"expr N2", ed1, args{&sc, "N[val1]", &i}, "0x00000101", 7, false},
+		{"expr M", ed1, args{&sc, "M[val3]", &i}, "00-00-25-48-0a-75", 7, false},
+		{"expr S", ed1, args{&sc, "S[val3]", &i}, "25480a75", 7, false},
+		{"expr ?", ed1, args{&sc, "?[val3]", &i}, "?", 7, false},
+		{"expr x member", ed1, args{&sc, "x[val1.B2]", &i}, "0x01", 10, false},
+		{"expr err1", ed1, args{&sc, "S[", &i}, "", 2, true},
+		{"expr err2", ed1, args{&sc, "S[val3,", &i}, "", 6, true},
 	}
 	if err := elf.Sections.Readelf(&fileTest); err != nil {
 		t.Errorf("Data.calculateExpression() cannot open %s", fileTest)
@@ -249,7 +250,7 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 				Info:   tt.fields.Info,
 			}
 			i = 0
-			got, err := e.calculateExpression(tt.args.sc, tt.args.event, tt.args.value, tt.args.i)
+			got, err := e.calculateExpression(tt.args.sc, tt.args.value, tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Data.calculateExpression() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return
@@ -265,8 +266,22 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 }
 
 func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paralleltest
-	event := scvd.Event{Val1: "4BY"}
 	var sc scvd.ScvdData
+	sc.Events = make(map[uint16]scvd.Event)
+	sc.Events[1] = scvd.Event{Val1: "4BY"}
+
+	var member = make(map[int16]string)
+	var members = make(map[string]eval.TdMember)
+	var tds = make(map[string]eval.TdTypedef)
+
+	member[4711] = "enum"
+	var m = members["B2"]
+	m.Enum = member
+	m.Offset = 2
+	m.Type = eval.I32
+	members["B2"] = m
+	tds["typName"] = eval.TdTypedef{Size: 4, Members: members}
+	eval.Typedefs = tds
 
 	var i int
 
@@ -284,7 +299,6 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 
 	type args struct {
 		sc    *scvd.ScvdData
-		event scvd.Event
 		value string
 		i     *int
 	}
@@ -296,12 +310,12 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 		wantI   int
 		wantErr bool
 	}{
-		{"enumExpr empty", ed1, args{&sc, event, "", &i}, "", 0, true},
-		{"enumExpr E", ed1, args{&sc, event, "E[val2, typName]", &i}, "enum", 16, false},
-		{"enumExpr err1", ed1, args{&sc, event, "S[", &i}, "", 2, true},
-		{"enumExpr err2", ed1, args{&sc, event, "S[val3]", &i}, "", 6, true},
-		{"enumExpr err3", ed1, args{&sc, event, "E[val3, xxx]", &i}, "", 12, true},
-		{"enumExpr err4", ed1, args{&sc, event, "S[val3, xxx]", &i}, "", 7, true},
+		{"enumExpr empty", ed1, args{&sc, "", &i}, "", 0, true},
+		{"enumExpr E", ed1, args{&sc, "E[val2, typName]", &i}, "enum", 16, false},
+		{"enumExpr err1", ed1, args{&sc, "S[", &i}, "", 2, true},
+		{"enumExpr err2", ed1, args{&sc, "S[val3]", &i}, "", 6, true},
+		{"enumExpr err3", ed1, args{&sc, "E[val3, xxx]", &i}, "", 12, true},
+		{"enumExpr err4", ed1, args{&sc, "S[val3, xxx]", &i}, "", 7, true},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -315,7 +329,7 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 				Info:   tt.fields.Info,
 			}
 			i = 0
-			got, err := e.calculateEnumExpression(tt.args.sc, tt.args.event, tt.args.value, tt.args.i)
+			got, err := e.calculateEnumExpression(tt.args.sc, tt.args.value, tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Data.calculateEnumExpression() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -644,17 +658,15 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 	var ed1 = fields{Time: 306, Value1: 0x300066a8, Value2: 24000, Value3: 1, Value4: 0, Data: nil, Info: Info{}}
 	var hello = []uint8("Hello")
 	var ed2 = fields{Time: 306, Value1: 0, Value2: 0, Value3: 0, Value4: 0, Data: &hello, Info: Info{}}
-	event := scvd.Event{Val1: "4BY"}
 	var sc scvd.ScvdData
 	sc.Events = make(map[uint16]scvd.Event)
-	sc.Events[1] = event
+	sc.Events[1] = scvd.Event{Val1: "4BY"}
 
 	var i int
 
 	type args struct {
 		value string
 		sc    *scvd.ScvdData
-		event scvd.Event
 		i     *int
 	}
 	tests := []struct {
@@ -665,10 +677,10 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 		want    eval.Value
 		wantErr bool
 	}{
-		{"val1", ed1, args{"[val1]", &sc, event, &i}, 1, eval.Value{}, false},
-		//		{"data", ed2, args{"[val1]", &sc, event, &i}, 2, eval.Value{}, false},
-		{"nixvar", ed2, args{"xx", &sc, event, &i}, 3, eval.Value{}, true},
-		{"valxxx", ed1, args{"[valxxx]", &sc, event, &i}, 4, eval.Value{}, true},
+		{"val1", ed1, args{"[val1]", &sc, &i}, 1, eval.Value{}, false},
+		//		{"data", ed2, args{"[val1]", &sc, &i}, 2, eval.Value{}, false},
+		{"nixvar", ed2, args{"xx", &sc, &i}, 3, eval.Value{}, true},
+		{"valxxx", ed1, args{"[valxxx]", &sc, &i}, 4, eval.Value{}, true},
 	}
 	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
@@ -689,7 +701,7 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 			case 2:
 				tt.want.Compose(eval.I32, 0x48656C6C, 0.0, "")
 			}
-			got, err := e.GetValue(tt.args.sc, tt.args.event, tt.args.value, tt.args.i)
+			got, err := e.GetValue(tt.args.sc, tt.args.value, tt.args.i)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Data.GetValue() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
 				return

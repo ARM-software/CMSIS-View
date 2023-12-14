@@ -46,7 +46,7 @@ func formatError(fn, str string) *eval.NumError {
 
 // get the enum value as string
 // count closing ]
-func getEnum(typedefs map[string]map[string]eval.TdMember, val int64, value string, i *int) (string, error) {
+func getEnum(typedefs map[string]eval.TdTypedef, val int64, value string, i *int) (string, error) {
 	j := strings.IndexAny(value[*i:], ":]")
 	if j == -1 {
 		return "", formatError("getEnum", value[*i:])
@@ -54,7 +54,7 @@ func getEnum(typedefs map[string]map[string]eval.TdMember, val int64, value stri
 	td := strings.TrimSpace(value[*i : *i+j])
 	if value[*i+j] == ':' { // select a specific member of typedef
 		members := typedefs[td]
-		if members == nil {
+		if members.Members == nil {
 			return "", enumError("getEnum", td)
 		}
 		*i += j + 1
@@ -63,7 +63,7 @@ func getEnum(typedefs map[string]map[string]eval.TdMember, val int64, value stri
 			return "", formatError("getEnum", value[*i:])
 		}
 		md := strings.TrimSpace(value[*i : *i+j])
-		entry := members[md]
+		entry := members.Members[md]
 		if entry.Enum == nil {
 			return "", enumError("getEnum", md)
 		}
@@ -75,7 +75,7 @@ func getEnum(typedefs map[string]map[string]eval.TdMember, val int64, value stri
 		return name, nil
 	}
 	*i += j + 1                       // only enum name, no member
-	for _, mm := range typedefs[td] { // search through all enums of this typedef
+	for _, mm := range typedefs[td].Members { // search through all enums of this typedef
 		if name, ok := mm.Enum[int16(val)]; ok {
 			return name, nil
 		}
@@ -118,7 +118,7 @@ type Data struct {
 
 // calculate a format expression and return the result
 // if unknown code then return the code only
-func (e *Data) calculateExpression(sc *scvd.ScvdData, scvdevent scvd.Event, value string, i *int) (string, error) {
+func (e *Data) calculateExpression(sc *scvd.ScvdData, value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
 	var err error
@@ -129,7 +129,7 @@ func (e *Data) calculateExpression(sc *scvd.ScvdData, scvdevent scvd.Event, valu
 	c := value[*i]
 	if *i+1 < len(value) && value[*i+1] == '[' {
 		*i++
-		val, err = e.GetValue(sc, scvdevent, value, i)
+		val, err = e.GetValue(sc, value, i)
 		if err != nil {
 			return "", err
 		}
@@ -184,7 +184,7 @@ func (e *Data) calculateExpression(sc *scvd.ScvdData, scvdevent scvd.Event, valu
 	return out, nil
 }
 
-func (e *Data) calculateEnumExpression(sc *scvd.ScvdData, scvdevent scvd.Event, value string, i *int) (string, error) {
+func (e *Data) calculateEnumExpression(sc *scvd.ScvdData, value string, i *int) (string, error) {
 	var val eval.Value
 	var out string
 	var err error
@@ -195,7 +195,7 @@ func (e *Data) calculateEnumExpression(sc *scvd.ScvdData, scvdevent scvd.Event, 
 	c := value[*i]
 	if *i+1 < len(value) && value[*i+1] == '[' {
 		*i++
-		val, err = e.GetValue(sc, scvdevent, value, i)
+		val, err = e.GetValue(sc, value, i)
 		if err != nil {
 			return "", err
 		}
@@ -252,14 +252,14 @@ func (e *Data) EvalLine(sc *scvd.ScvdData, scvdevent scvd.Event) (string, error)
 				case 'T': // type dependant
 					fallthrough
 				case 'U': // USB descriptor
-					out, err := e.calculateExpression(sc, scvdevent, string(scvdevent.Value), &i)
+					out, err := e.calculateExpression(sc, string(scvdevent.Value), &i)
 					if err != nil {
 						return "", err
 					}
 					s += out
 					i--
 				case 'E': // enum
-					out, err := e.calculateEnumExpression(sc, scvdevent, string(scvdevent.Value), &i)
+					out, err := e.calculateEnumExpression(sc, string(scvdevent.Value), &i)
 					if err != nil {
 						return "", err
 					}
@@ -387,7 +387,7 @@ func (e *Data) Read(in *bufio.Reader) error {
 	return nil
 }
 
-func (e *Data) GetValue(sc *scvd.ScvdData, scvdevent scvd.Event, value string, i *int) (eval.Value, error) {
+func (e *Data) GetValue(sc *scvd.ScvdData, value string, i *int) (eval.Value, error) {
 	if *i < len(value) && value[*i] == '[' {
 		//		if e.Data == nil {
 		eval.SetVarI32("val1", int32(e.Value1)) // typedef holen

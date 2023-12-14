@@ -926,10 +926,29 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		}
 		if !ex.next.IsIdentifier() {
 			return ex.next, syntaxError("identifier expected", "")
-		} // TODO: noch nicht implementiert
-		if ex.next, err = ex.lex(); err != nil {
+		}
+		s := EventV.Val1
+		var t TdTypedef
+		var ok bool
+		if t, ok = Typedefs[s]; !ok {
+			return left, syntaxError("unkown typedef name", "")
+		}
+		var td TdMember
+		if td, ok = t.Members[ex.next.s]; !ok {
+			return left, syntaxError("unkown typedef member", "")
+		}
+		var vx	*Variable
+		if vx, err = GetVar(left.s); err != nil {
+			return left, err
+		}
+		v = vx.v
+		if err = v.Extract(td.Type, td.Offset); err != nil {
 			return ex.next, err
 		}
+		if ex.next, err = ex.lex(); err != nil {
+			return v, err
+		}
+		return v, nil
 	case Pointer:
 		if ex.next, err = ex.lex(); err != nil {
 			return left, err

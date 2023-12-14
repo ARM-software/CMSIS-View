@@ -20,8 +20,8 @@
 package scvd
 
 import (
-	"testing"
 	"eventlist/pkg/eval"
+	"testing"
 )
 
 func TestComponentViewer_getFromFile(t *testing.T) {
@@ -156,15 +156,15 @@ func Test_getOne(t *testing.T) {
 			for k := range eval.Typedefs {
 				delete(eval.Typedefs, k)
 			}
-			eval.Typedefs = make(map[string]map[string]eval.TdMember)
+			eval.Typedefs = make(map[string]eval.TdTypedef)
 			if err := sc.GetOne(tt.args.filename); (err != nil) != tt.wantErr {
 				t.Errorf("getOne() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if string(sc.Events[tt.ev].Value) != tt.evWant {
 				t.Errorf("getOne() event = %v, want %v", string(sc.Events[tt.ev].Value), tt.evWant)
 			}
-			if eval.Typedefs[tt.td][tt.member].Enum != nil && eval.Typedefs[tt.td][tt.member].Enum[tt.enum] != tt.tdWant {
-				t.Errorf("getOne() enum = %v, want %v", eval.Typedefs[tt.td][tt.member].Enum[tt.enum], tt.tdWant)
+			if eval.Typedefs[tt.td].Members[tt.member].Enum != nil && eval.Typedefs[tt.td].Members[tt.member].Enum[tt.enum] != tt.tdWant {
+				t.Errorf("getOne() enum = %v, want %v", eval.Typedefs[tt.td].Members[tt.member].Enum[tt.enum], tt.tdWant)
 			}
 		})
 	}

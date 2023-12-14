@@ -83,6 +83,53 @@ func (v *Value) addList(v1 Value) error {
 	return nil
 }
 
+//                         Nix I8 U8 I16 U16 I32 U32 I64 U64
+var bytesizes = [...]uint32 {0, 1, 1,  2,  2,  4,  4,  8,  8}
+
+func (v *Value) Extract(t Token, offset uint32) error {
+	const fnExtract = "Extract"
+
+	if int(v.t) > len(bytesizes) || offset > bytesizes[v.t] {
+		return typeError(fnExtract, "")
+	}
+	if int(t) > len(bytesizes) || offset > bytesizes[v.t]-bytesizes[t] {
+		return typeError(fnExtract, "")
+	}
+	// 0  1  2  3  4  5  6  7
+	// 56 48 40 32 24 16 8  0
+	// 24 16 8  0
+	// 8  0
+	// 0
+	switch v.t {
+	case I64, U64, I32, U32, I16, U16, I8, U8:
+		v.i >>= 8*(bytesizes[v.t]-(offset+bytesizes[t]))
+	default:
+		return typeError(fnExtract, "")
+	}
+	switch t {
+	case I64:
+	case U64:
+		v.i = int64(uint64(v.i))
+	case I32:
+		v.i = int64(int32(v.i))
+	case U32:
+		v.i = int64(uint32(v.i))
+	case I16:
+		v.i = int64(int16(v.i))
+	case U16:
+		v.i = int64(uint16(v.i))
+	case I8:
+		v.i = int64(int8(v.i))
+	case U8:
+		v.i = int64(uint8(v.i))
+	default:
+		return typeError(fnExtract, "")
+	}
+	v.t = t
+	v.f = 0
+	return nil
+}
+
 func (v *Value) GetInt64() int64 {
 	switch v.t {
 	case I64, U64, I32, U32, I16, U16, I8, U8:
@@ -118,6 +165,13 @@ func (v *Value) GetList() []Value {
 		return v.l
 	}
 	return nil
+}
+
+func (v *Value) GetString() string {
+	if v.IsString() {
+		return v.s
+	}
+	return ""
 }
 
 func (v *Value) IsInteger() bool {

@@ -835,7 +835,7 @@ func TestExpression_primary(t *testing.T) {
 			}
 			got, err := ex.primary()
 			if errors.Is(err, ErrEof) != tt.wantEOF {
-				t.Errorf("Expression.primary() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
+				t.Errorf("Expression.primary() %s error = %v, wantEOF %v", tt.name, err, tt.wantEOF)
 				return
 			}
 			if (err != nil) != tt.wantErr {
@@ -890,7 +890,7 @@ func TestExpression_arguments(t *testing.T) {
 			}
 			got, err := ex.arguments()
 			if errors.Is(err, ErrEof) != tt.wantEOF {
-				t.Errorf("Expression.arguments() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
+				t.Errorf("Expression.arguments() %s error = %v, wantEOF %v", tt.name, err, tt.wantEOF)
 				return
 			}
 			if !errors.Is(err, ErrEof) && (err != nil) != tt.wantErr {
@@ -934,11 +934,23 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 	var s27 = "[abc]"
 	var s28 = "(1,2,3,4) +"
 	var s29 = "(\"reg\") +"
+	var s30 = ".val"
+	var s31 = ".val +"
+
+	members := make(map[string]TdMember)
+	members["val"] = TdMember{Type: U8, Offset: 1}
+	members1 := make(map[string]TdMember)
+	members1["val"] = TdMember{Type: U16, Offset: 2}
+	tds := make(map[string]TdTypedef)
+	tds["v"] = TdTypedef{Size: 16, Members: members}
+	tds1 := make(map[string]TdTypedef)
+	tds1["v"] = TdTypedef{Size: 8, Members: members1}
 
 	type fields struct {
 		in   *string
 		pos  int
 		next Value
+		td   map[string]TdTypedef
 	}
 	tests := []struct {
 		name    string
@@ -947,42 +959,49 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 		wantEOF bool
 		wantErr bool
 	}{
-		{"Postincrement", fields{&s0, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: I16, i: 789}, false, false},
-		{"Postincrement_fail", fields{&s1, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
-		{"Postincrement_eof", fields{&s2, 0, Value{t: Identifier, s: "PostfixName2"}}, Value{t: Identifier, s: "PostfixName2"}, true, false},
-		{"Postincrement_fail1", fields{&s0, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Postincrement_fail2", fields{&s0, 0, Value{t: Identifier, s: "PostfixName1"}}, Value{t: Nix}, false, true},
-		{"Postdecrement", fields{&s3, 0, Value{t: Identifier, s: "PostfixName"}}, Value{t: I16, i: 789}, false, false},
-		{"Postdecrement_fail", fields{&s4, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
-		{"Postdecrement_eof", fields{&s5, 0, Value{t: Identifier, s: "PostfixName2"}}, Value{t: Identifier, s: "PostfixName2"}, true, false},
-		{"Postdecrement_fail1", fields{&s3, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Postdecrement_fail2", fields{&s3, 0, Value{t: Identifier, s: "PostfixName1"}}, Value{t: Nix}, false, true},
-		{"Dot", fields{&s6, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
-		{"Dot_fail", fields{&s6, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
-		{"Dot_eof_fail", fields{&s7, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, true},
-		{"Dot_fail1", fields{&s8, 0, Value{t: Identifier, s: "name"}}, Value{t: I32, i: 123}, false, true},
-		{"Dot_eof", fields{&s9, 0, Value{t: Identifier, s: "name"}}, Value{t: Nix}, true, false},
-		{"Pointer", fields{&s10, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, false},
-		{"Pointer_fail", fields{&s10, 0, Value{t: I32, i: 0x12345}}, Value{t: I32, i: 0x12345}, false, true},
-		{"Pointer_eof_fail", fields{&s11, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, true, true},
-		{"Pointer_fail1", fields{&s12, 0, Value{t: Identifier, s: "name"}}, Value{t: I32, i: 123}, false, true},
-		{"Pointer_eof", fields{&s13, 0, Value{t: Identifier, s: "name"}}, Value{t: Nix}, true, false},
-		{"Function_unknown", fields{&s14, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Function_unknown1", fields{&s15, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Function1_eof", fields{&s17, 0, Value{t: Identifier, s: "__GetRegVal"}}, Value{t: I32, i: 0}, true, false},
-		{"Function_GetRegVal", fields{&s29, 0, Value{t: Identifier, s: "__GetRegVal"}}, Value{t: I32, i: 0}, false, false},
-		{"Function_CalcMemUsed", fields{&s28, 0, Value{t: Identifier, s: "__CalcMemUsed"}}, Value{t: I32, i: 0}, false, false},
-		{"Function_FcntErr", fields{&s29, 0, Value{t: Identifier, s: "xxx"}}, Value{t: Identifier, s: "xxx"}, false, true},
-		{"Function_err", fields{&s18, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Function_err1", fields{&s19, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Function_err2", fields{&s20, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Index", fields{&s21, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name", i: 123}, false, false},
-		{"Index_eof", fields{&s22, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name", i: 123}, true, false},
-		{"Index_err", fields{&s23, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Index_err1", fields{&s24, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Index_err2", fields{&s25, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
-		{"Index_name", fields{&s26, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name", i: 789}, true, false},
-		{"Index_name_err", fields{&s27, 0, Value{t: Identifier, s: "name"}}, Value{t: Identifier, s: "name"}, false, true},
+		{"Postincrement", fields{&s0, 0, Value{t: Identifier, s: "PostfixName"}, nil}, Value{t: I16, i: 789}, false, false},
+		{"Postincrement_fail", fields{&s1, 0, Value{t: I32, i: 0x12345}, nil}, Value{t: I32, i: 0x12345}, false, true},
+		{"Postincrement_eof", fields{&s2, 0, Value{t: Identifier, s: "PostfixName2"}, nil}, Value{t: Identifier, s: "PostfixName2"}, true, false},
+		{"Postincrement_fail1", fields{&s0, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Postincrement_fail2", fields{&s0, 0, Value{t: Identifier, s: "PostfixName1"}, nil}, Value{t: Nix}, false, true},
+		{"Postdecrement", fields{&s3, 0, Value{t: Identifier, s: "PostfixName"}, nil}, Value{t: I16, i: 789}, false, false},
+		{"Postdecrement_fail", fields{&s4, 0, Value{t: I32, i: 0x12345}, nil}, Value{t: I32, i: 0x12345}, false, true},
+		{"Postdecrement_eof", fields{&s5, 0, Value{t: Identifier, s: "PostfixName2"}, nil}, Value{t: Identifier, s: "PostfixName2"}, true, false},
+		{"Postdecrement_fail1", fields{&s3, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Postdecrement_fail2", fields{&s3, 0, Value{t: Identifier, s: "PostfixName1"}, nil}, Value{t: Nix}, false, true},
+		{"Dot_value", fields{&s30, 0, Value{t: Identifier, s: "PostfixName"}, tds}, Value{t: U8, i:21}, true, false},
+		{"Dot_value1", fields{&s31, 0, Value{t: Identifier, s: "PostfixName"}, tds}, Value{t: U8, i:21}, false, false},
+		{"Dot_value_err", fields{&s6, 0, Value{t: Identifier, s: "abc"}, nil}, Value{t: Identifier, s: "abc"}, false, true},
+		{"Dot_value_err_td", fields{&s30, 0, Value{t: Identifier, s: "PostfixName"}, tds}, Value{t: U8, i:21}, true, false},
+		{"Dot_value_err_member", fields{&s9, 0, Value{t: Identifier, s: "xxx"}, tds}, Value{t: Identifier, s: "xxx"}, false, true},
+		{"Dot_value_err_value", fields{&s30, 0, Value{t: Identifier, s: "xxx"}, tds}, Value{t: Identifier, s: "xxx"}, false, true},
+		{"Dot_value_err_extract", fields{&s30, 0, Value{t: Identifier, s: "PostfixName"}, tds1}, Value{t: Identifier, s: "val"}, false, true},
+		{"Dot_undef", fields{&s6, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Dot_fail", fields{&s6, 0, Value{t: I32, i: 0x12345}, nil}, Value{t: I32, i: 0x12345}, false, true},
+		{"Dot_eof_fail", fields{&s7, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, true, true},
+		{"Dot_fail1", fields{&s8, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: I32, i: 123}, false, true},
+		{"Dot_undef1", fields{&s9, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Pointer", fields{&s10, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, false},
+		{"Pointer_fail", fields{&s10, 0, Value{t: I32, i: 0x12345}, nil}, Value{t: I32, i: 0x12345}, false, true},
+		{"Pointer_eof_fail", fields{&s11, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, true, true},
+		{"Pointer_fail1", fields{&s12, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: I32, i: 123}, false, true},
+		{"Pointer_eof", fields{&s13, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Nix}, true, false},
+		{"Function_unknown", fields{&s14, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Function_unknown1", fields{&s15, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Function1_eof", fields{&s17, 0, Value{t: Identifier, s: "__GetRegVal"}, nil}, Value{t: I32, i: 0}, true, false},
+		{"Function_GetRegVal", fields{&s29, 0, Value{t: Identifier, s: "__GetRegVal"}, nil}, Value{t: I32, i: 0}, false, false},
+		{"Function_CalcMemUsed", fields{&s28, 0, Value{t: Identifier, s: "__CalcMemUsed"}, nil}, Value{t: I32, i: 0}, false, false},
+		{"Function_FcntErr", fields{&s29, 0, Value{t: Identifier, s: "xxx"}, nil}, Value{t: Identifier, s: "xxx"}, false, true},
+		{"Function_err", fields{&s18, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Function_err1", fields{&s19, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Function_err2", fields{&s20, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Index", fields{&s21, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name", i: 123}, false, false},
+		{"Index_eof", fields{&s22, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name", i: 123}, true, false},
+		{"Index_err", fields{&s23, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Index_err1", fields{&s24, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Index_err2", fields{&s25, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
+		{"Index_name", fields{&s26, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name", i: 789}, true, false},
+		{"Index_name_err", fields{&s27, 0, Value{t: Identifier, s: "name"}, nil}, Value{t: Identifier, s: "name"}, false, true},
 	}
 
 	for _, tt := range tests { //nolint:golint,paralleltest
@@ -1006,9 +1025,11 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 				tt.fields.next.v = vari2
 				tt.want.v = vari2
 			}
+			EventV.Val1 = "v"
+			Typedefs = tt.fields.td
 			got, err := ex.postfix()
 			if errors.Is(err, ErrEof) != tt.wantEOF {
-				t.Errorf("Expression.primary() %s error = %v, wantErr %v", tt.name, err, tt.wantErr)
+				t.Errorf("Expression.postfix() %s error = %v, wantEof %v", tt.name, err, tt.wantEOF)
 				return
 			}
 			if !errors.Is(err, ErrEof) && (err != nil) != tt.wantErr {
