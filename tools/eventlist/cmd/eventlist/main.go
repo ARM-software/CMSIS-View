@@ -47,34 +47,58 @@ func (s *includes) Set(v string) error {
 
 var paths includes
 
-func infoOpt(flags *flag.FlagSet, sopt string, lopt string, opt string) {
-	fmt.Print("\t")
+func infoOpt(flags *flag.FlagSet, sopt string, lopt string, arg bool) error {
+	pos, err := fmt.Print("  ")
+	if err != nil {
+		return err
+	}
+	var n int
 	if sopt != "" {
-		fmt.Printf("-%s", sopt)
+		if n, err = fmt.Printf("-%s", sopt); err != nil {
+			return err
+		}
+		pos += n
 	}
 	if lopt != "" {
-		if sopt != "" {
-			fmt.Print(" ")
+		if sopt == "" {
+			if n, err = fmt.Printf("    "); err != nil {
+				return err
+			}
+		} else {
+			if n, err = fmt.Printf(", "); err != nil {
+				return err
+			}
 		}
-		fmt.Printf("--%s", lopt)
+		pos += n
+		if n, err = fmt.Printf("--%s", lopt); err != nil {
+			return err
+		}
+		pos += n
 	}
-	if opt != "" {
-		fmt.Printf(" %s", opt)
+	if arg {
+		if sopt == "" && lopt == "" {
+			if n, err = fmt.Printf("  "); err != nil {
+				return err
+			}
+			pos += n
+		}
+		if n, err = fmt.Printf(" arg"); err != nil {
+			return err
+		}
+		pos += n
 	}
+	fmt.Printf("%*s", 22-pos, " ")
 	if lopt == "help" {
-		fmt.Printf("\t%s\n", "show short help")
+		fmt.Printf("%s\n", "Print usage")
 	} else {
 		f := flags.Lookup(sopt)
 		if f == nil {
-			fmt.Printf("\t%s\n", "unknown option")
+			fmt.Printf("%s\n", "unknown option")
 		} else {
-			if opt == "" {
-				fmt.Printf("\t%s\n", f.Usage)
-			} else {
-				fmt.Printf(" %s\t%s\n", f.Value.String(), f.Usage)
-			}
+			fmt.Printf("%s\n", f.Usage)
 		}
 	}
+	return nil
 }
 
 func main() {
@@ -106,42 +130,48 @@ func main() {
 	usage := false
 
 	commFlag.Usage = func() {
-		fmt.Printf("Usage: %s [-I <scvdFile>]... [-o <outputFile>] [-a <elf/axfFile>] [-b] <logFile>\n",
-			Progname)
-		infoOpt(commFlag, "a", "", "<fileName>")
-		infoOpt(commFlag, "b", "begin", "")
-		infoOpt(commFlag, "h", "help", "")
-		infoOpt(commFlag, "I", "", "<fileName>")
-		infoOpt(commFlag, "o", "", "<fileName>")
-		infoOpt(commFlag, "s", "statistic", "")
-		infoOpt(commFlag, "V", "version", "")
-		infoOpt(commFlag, "f", "format", "<formatType>")
-		infoOpt(commFlag, "l", "level", "<Error|API|Op|Detail>")
+		fmt.Printf("%s: Event Listing %s\n\n", Progname, versionInfo)
+		fmt.Printf("Usage:\n  %s [options] <logFile>\n\n", Progname)
+		fmt.Printf("Options:\n")
+		_ = infoOpt(commFlag, "a", "", true)
+		_ = infoOpt(commFlag, "b", "begin", false)
+		_ = infoOpt(commFlag, "h", "help", false)
+		_ = infoOpt(commFlag, "I", "", true)
+		_ = infoOpt(commFlag, "o", "", true)
+		_ = infoOpt(commFlag, "s", "statistic", false)
+		_ = infoOpt(commFlag, "V", "version", false)
+		_ = infoOpt(commFlag, "f", "format", true)
+		_ = infoOpt(commFlag, "l", "level", true)
 		usage = true
 	}
 	// parse command line
-	commFlag.Var(&paths, "I", "include SCVD file name")
-	outputFile := commFlag.String("o", "", "output file name")
-	elfFile := commFlag.String("a", "", "elf/axf file name")
-	formatType := commFlag.String("f", "", "format type: txt, json, xml")
-	level := commFlag.String("l", "", "level: Error|API|Op|Detail")
+	commFlag.Var(&paths, "I", "[...] Include SCVD file name(s)")
+	outputFile := commFlag.String("o", "", "Output file")
+	elfFile := commFlag.String("a", "", "Application file: elf/axf file name")
+	formatType := commFlag.String("f", "", "Output format: txt, json, xml")
+	level := commFlag.String("l", "", "Level: Error|API|Op|Detail")
 	var statBegin bool
-	commFlag.BoolVar(&statBegin, "b", false, "show statistic at beginning")
-	commFlag.BoolVar(&statBegin, "begin", false, "show statistic at beginning")
+	commFlag.BoolVar(&statBegin, "b", false, "Output order: show statistic before events")
+	commFlag.BoolVar(&statBegin, "begin", false, "Output order: show statistic before events")
 	var showVersion bool
-	commFlag.BoolVar(&showVersion, "V", false, "show version info")
-	commFlag.BoolVar(&showVersion, "version", false, "show version info")
+	commFlag.BoolVar(&showVersion, "V", false, "Show version info")
+	commFlag.BoolVar(&showVersion, "version", false, "Show version info")
 	var showStatistic bool
-	commFlag.BoolVar(&showStatistic, "s", false, "show statistic only")
-	commFlag.BoolVar(&showStatistic, "statistic", false, "show statistic only")
+	commFlag.BoolVar(&showStatistic, "s", false, "Output: show statistic but no events")
+	commFlag.BoolVar(&showStatistic, "statistic", false, "Output: show statistic but no events")
 	err = commFlag.Parse(os.Args[1:])
 
 	if usage || err != nil {
 		return
 	}
 
+	if len(os.Args) == 1 {
+		commFlag.Usage()
+		return
+	}
+
 	if showVersion {
-		fmt.Printf("%s %s\n", Progname, versionInfo)
+		fmt.Printf("%s: Event Listing %s\n", Progname, versionInfo)
 		return
 	}
 
