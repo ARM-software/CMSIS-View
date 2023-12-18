@@ -933,6 +933,7 @@ WARN_LOGFILE           =
 
 INPUT                  = ./src/mainpage.md \
                          ./src/history.md \
+                         ./src/history.txt \
                          ./src/event_recorder.md \
                          ./src/ev_stat.md \
                          ./src/eventlist.md \
