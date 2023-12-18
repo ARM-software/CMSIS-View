@@ -125,7 +125,37 @@ $(document).ready(function(){initNavTree('rev_hist.html',''); initResizable(); }
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_src_history"></a> CMSIS-View version is offically updated upon releases of the <a href="https://www.keil.arm.com/packs/cmsis-view-arm/versions/">CMSIS-View pack</a>.</p>
-<p>The table below provides information about the changes delivered with specific versions of CMSIS-View. </p>
+<p>The table below provides information about the changes delivered with specific versions of CMSIS-View.</p>
+<table class="cmtable" summary="Revision History">
+<tr>
+<th>Version </th><th>Description  </th></tr>
+<tr>
+<td>v1.1.0 </td><td><ul>
+<li>Event Recorder<ul>
+<li>Add support for CMSIS v6</li>
+<li>Update conditions to prevent simultaneous selection of CMSIS-View:Event Recorder and Compiler:Event Recorder components</li>
+<li>Update Event Statistic example to support CMSIS-Toolbox v2</li>
+</ul>
+</li>
+<li>Fault component<ul>
+<li>Extend section name for fault information, for easier absolute addressing via the linker script</li>
+<li>Update Fault example for Cortex-M33 (B-U585I-IOT02A) with improved GCC support and add support for building with CMSIS-Toolbox v2</li>
+<li>Update Fault example for AVH Cortex-M7 to support CMSIS-Toolbox v2   </li>
+</ul>
+</li>
+</ul>
+</td></tr>
+<tr>
+<td>v1.0.0 </td><td>Initial release of EventRecorder and Fault components as replacement for Keil.ARM-Compiler pack.<ul>
+<li>Rename component class to CMSIS-View. For migration, deselect old "Compiler::EventRecorder" component and select new "CMSIS-View::EventRecorder" one.</li>
+<li>Fixes/additions for IAR Compiler</li>
+<li>Enhacements for documentation</li>
+<li>Optimize Record Lock/Unlock in Event Recorder (using C11 atomics except for Cortex-M0)</li>
+<li>Correct timestamp overflow handling in Event Recorder</li>
+<li>Add "CMSIS-View::Fault" component for recording system faults.   </li>
+</ul>
+</td></tr>
+</table>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
