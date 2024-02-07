@@ -123,14 +123,14 @@
       <description>Example that shows the usage of start/stop events for statistical code profiling with the Event Statistics window.</description>
       <board name="V2M-MPS3-SSE-300-FVP" vendor="ARM"/>
       <project>
-        <environment name="cmsis" load="EventStatistic.csolution.yml"/>
+        <environment name="csolution" load="EventStatistic.csolution.yml"/>
       </project>
     </example>
     <example name="Fault example" folder="Examples/Fault/B-U585I-IOT02A" doc="README.md">
       <description>Example that shows the usage of Fault component on an Cortex-M33 with TrustZone.</description>
       <board name="B-U585I-IOT02A" vendor="STMicroelectronics"/>
       <project>
-        <environment name="cmsis" load="Fault.csolution.yml"/>
+        <environment name="csolution" load="Fault.csolution.yml"/>
       </project>
     </example>
   </examples>
