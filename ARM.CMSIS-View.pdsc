@@ -5,6 +5,11 @@
   <description>Debugger visualization of software events and statistics</description>
   <url>https://www.keil.com/pack/</url>
   <license>LICENSE</license>
+  <licenseSets>
+    <licenseSet id="all" default="true" gating="true">
+      <license name="LICENSE" title="Apache 2.0 open-source license" spdx="Apache-2.0"/>
+    </licenseSet>
+  </licenseSets>
   <repository type="git">https:/github.com/arm-software/CMSIS-View.git</repository>
 
   <releases>
