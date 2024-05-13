@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package schemaVersion="1.7.25" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.25/schema/PACK.xsd">
+<package schemaVersion="1.7.36" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.36/schema/PACK.xsd">
   <vendor>ARM</vendor>
   <name>CMSIS-View</name>
   <description>Debugger visualization of software events and statistics</description>
@@ -42,6 +42,7 @@
       <accept Dcore="Cortex-M23"/>
       <accept Dcore="Cortex-M33"/>
       <accept Dcore="Cortex-M35P"/>
+      <accept Dcore="Cortex-M52"/>
       <accept Dcore="Cortex-M55"/>
       <accept Dcore="Cortex-M85"/>
       <accept Dcore="ARMV8MBL"/>
@@ -67,7 +68,7 @@
   </conditions>
 
   <components>
-    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.5.3" condition="EventRecorder">
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cversion="1.6.0" condition="EventRecorder">
       <description>Event Recording via Debug Access Port (DAP)</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_EventRecorder
@@ -81,7 +82,7 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.5.3" condition="EventRecorder">
+    <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="Semihosting" Cversion="1.6.0" condition="EventRecorder">
       <description>Event Recording via Debug Access Port (DAP) and Semihosting</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_EventRecorder
@@ -96,7 +97,7 @@
         <file category="other"  name="EventRecorder/EventRecorder.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cversion="1.0.1" condition="Cortex-M Device">
+    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cversion="1.1.0" condition="Cortex-M Device">
       <description>Fault Storage</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_Fault_Storage
@@ -109,7 +110,7 @@
         <file category="other"  name="Fault/ARM_Fault.scvd"/>
       </files>
     </component>
-    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cversion="1.0.0" condition="FaultRecord">
+    <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cversion="1.1.0" condition="FaultRecord">
       <description>Fault Record (Output decoded fault information via EventRecorder)</description>
       <RTE_Components_h>
         #define RTE_CMSIS_View_Fault_Record
