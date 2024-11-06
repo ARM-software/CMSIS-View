@@ -2,7 +2,7 @@ linters:
     enable:
         - errname
         - errorlint
-        - goerr113
+        - err113
         - makezero
         - nilerr
         - paralleltest
