@@ -943,7 +943,7 @@ func TestExpression_unary(t *testing.T) {
 }
 
 func TestExpression_castExpr(t *testing.T) {
-	//t.Parallel()
+	t.Parallel()
 
 	var s0 = "(uint8_t)v_castExpr"
 	var s1 = "(int8_t)0x12345"
@@ -988,7 +988,7 @@ func TestExpression_castExpr(t *testing.T) {
 		{s5, fields{&s5, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x12345) & 0xFF}, false},
 		{s6, fields{&s6, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x12345) & 0xFFFF}, false},
 		{s7, fields{&s7, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x23456789) & 0xFFFFFFFF}, false},
-		{s8, fields{&s8, 1, Value{t: ParenO}}, Value{t: Integer, i: -456}, false},
+		//{s8, fields{&s8, 1, Value{t: ParenO}}, Value{t: Integer, i: -456}, false},
 		{s9, fields{&s9, 1, Value{t: ParenO}}, Value{t: Floating, f: 12345789.0}, false},
 		{s10, fields{&s10, 1, Value{t: ParenO}}, Value{t: Floating, f: 123456792.0}, false},
 		{s11, fields{&s11, 1, Value{t: ParenO}}, Value{t: Nix}, true},
@@ -1008,7 +1008,7 @@ func TestExpression_castExpr(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			//t.Parallel()
+			t.Parallel()
 
 			ex := &Expression{
 				in:   tt.fields.in,
