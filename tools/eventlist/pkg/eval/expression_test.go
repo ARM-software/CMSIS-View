@@ -943,7 +943,7 @@ func TestExpression_unary(t *testing.T) {
 }
 
 func TestExpression_castExpr(t *testing.T) {
-	t.Parallel()
+	//t.Parallel()
 
 	var s0 = "(uint8_t)v_castExpr"
 	var s1 = "(int8_t)0x12345"
@@ -953,7 +953,7 @@ func TestExpression_castExpr(t *testing.T) {
 	var s5 = "(uint8_t)-0x12345"
 	var s6 = "(uint16_t)-0x12345"
 	var s7 = "(uint32_t)-0x123456789"
-	var s8 = "(uint64_t)-456.789"
+	var s8 = "(uint64_t)-456.0789"
 	var s9 = "(double)12345789"
 	var s10 = "(float)123456789"
 	var s11 = "($"
@@ -1008,7 +1008,7 @@ func TestExpression_castExpr(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
+			//t.Parallel()
 
 			ex := &Expression{
 				in:   tt.fields.in,
