@@ -45,7 +45,7 @@ jobs:
         working-directory: ./tools/eventlist/cmd/eventlist
         
       - name: Archive TPIP report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tpip-report
           path: ./tools/eventlist/${{ env.tpip_report }}
