@@ -65,7 +65,7 @@ jobs:
         working-directory: ./tools/eventlist
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-linux-amd64
           path: ./tools/eventlist/build/linux-amd64
@@ -73,7 +73,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-linux-arm64
           path: ./tools/eventlist/build/linux-arm64
@@ -81,7 +81,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-darwin-amd64
           path: ./tools/eventlist/build/darwin-amd64
@@ -89,7 +89,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-darwin-arm64
           path: ./tools/eventlist/build/darwin-arm64
@@ -97,7 +97,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-windows-amd64
           path: ./tools/eventlist/build/windows-amd64
@@ -105,7 +105,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-windows-arm64
           path: ./tools/eventlist/build/windows-arm64
@@ -203,7 +203,7 @@ jobs:
         working-directory: ./tools/eventlist
 
       - name: Archive unit test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: unit-test-result-${{ matrix.os }}
           path: ./tools/eventlist/build/evenlistunittest-*.xml
