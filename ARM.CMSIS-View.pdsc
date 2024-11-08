@@ -2,7 +2,7 @@
 <package schemaVersion="1.7.36" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.36/schema/PACK.xsd">
   <vendor>ARM</vendor>
   <name>CMSIS-View</name>
-  <description>Debugger visualization of software events and statistics</description>
+  <description overview="./Documentation/Overview.md">Debugger visualization of software events and statistics</description>
   <url>https://www.keil.com/pack/</url>
   <license>LICENSE</license>
   <licenseSets>
