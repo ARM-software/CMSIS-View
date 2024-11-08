@@ -109,7 +109,7 @@ int main (void) {
 
 \page flt_example_CM7 Fault/VHT_MPS2_Cortex-M7
 
-This example project shows \ref fault on an Arm Cortex-M7 based device, using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/simulation/html/Using.html) processor simulation as the target platform.
+This example project shows \ref fault on an Arm Cortex-M7 based device, using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/simulation/html/using.html) processor simulation as the target platform.
 
 **Build and run**
 
