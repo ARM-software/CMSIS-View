@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Name:    Fault.c
  * Purpose: Fault example program
  *----------------------------------------------------------------------------*/
@@ -25,9 +25,9 @@ extern int stdio_init (void);
 osThreadId_t tid_AppThread;
 osThreadId_t tid_FaultTriggerThread;
 
-/*---------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Application thread
- *---------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------*/
 static __NO_RETURN void AppThread (void *argument) {
   volatile uint32_t counter = 0U;
 
@@ -39,9 +39,9 @@ static __NO_RETURN void AppThread (void *argument) {
   }
 }
 
-/*---------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Fault trigger thread
- *---------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------*/
 static __NO_RETURN void FaultTriggerThread (void *argument) {
   char ch;
 
@@ -50,13 +50,13 @@ static __NO_RETURN void FaultTriggerThread (void *argument) {
   // Display user interface message
   printf("\r\n--- Fault example ---\r\n\r\n");
   printf("To trigger a fault please input a corresponding number:\r\n");
-  printf(" - 0: terminate the example\r\n");
-  printf(" - 1: data access (precise) Memory Management fault\r\n");
-  printf(" - 2: data access (precise) Bus fault\r\n");
-  printf(" - 3: data access (imprecise) Bus fault\r\n");
-  printf(" - 4: instruction execution Bus fault\r\n");
-  printf(" - 5: undefined instruction Usage fault\r\n");
-  printf(" - 6: divide by 0 Usage fault\r\n\r\n");
+  printf(" - 0: Terminate the example\r\n");
+  printf(" - 1: Data access (precise) Memory Management fault\r\n");
+  printf(" - 2: Data access (precise) Bus fault\r\n");
+  printf(" - 3: Data access (imprecise) Bus fault\r\n");
+  printf(" - 4: Instruction execution Bus fault\r\n");
+  printf(" - 5: Undefined instruction Usage fault\r\n");
+  printf(" - 6: Divide by 0 Usage fault\r\n\r\n");
   printf("Input>");
 
   for (;;) {
@@ -69,9 +69,9 @@ static __NO_RETURN void FaultTriggerThread (void *argument) {
   }
 }
 
-/*---------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Application main function
- *---------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------*/
 int main (void) {
 
   SystemCoreClockUpdate();                      // Update SystemCoreClock variable
@@ -114,5 +114,6 @@ int main (void) {
   tid_FaultTriggerThread = osThreadNew(FaultTriggerThread, NULL, NULL);
   osKernelStart();                              // Start thread execution
 
-  for (;;);
+  for (;;) {                                    // Loop forever
+  }
 }
