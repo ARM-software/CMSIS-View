@@ -1,8 +1,5 @@
 project:
-
-  packs:
-    - pack: ARM::CMSIS
-    - pack: ARM::CMSIS-View
+  description: Event Statistic example
 
   groups:
     - group: Documentation
@@ -18,9 +15,13 @@ project:
 
     - component: CMSIS-View:Event Recorder&Semihosting
 
-    - component: Native Driver:Timeout
-    - component: Native Driver:SysCounter
-    - component: Native Driver:SysTimer
-
     - component: Device:Definition
-    - component: Device:Startup&Baremetal
+    - component: Device:Native Driver:SysCounter
+    - component: Device:Native Driver:SysTimer
+    - component: Device:Native Driver:Timeout
+
+    - component: Device:Startup&C Startup
+
+  linker:
+    - script: ./RTE/Device/SSE-300-MPS3/fvp_sse300_mps3_s.sct
+      for-compiler: AC6
