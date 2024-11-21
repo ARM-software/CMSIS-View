@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2024 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -20,7 +20,7 @@
 
 #include "RTE_Components.h"
 #include  CMSIS_device_header
-#include "../Secure/interface.h"        // Secure functions interface header
+#include "../STM32CubeMX/B-U585I-IOT02A/STM32CubeMX/Secure_nsclib/secure_nsc.h"
 
 // ARM_FaultTrigger function ---------------------------------------------------
 

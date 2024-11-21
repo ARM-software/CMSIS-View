@@ -1,22 +1,26 @@
 solution:
-
-  created-for: CMSIS-Toolbox@2.0.0
+  description: Fault example for B-U585I-IOT02A board (Cortex-M33)
+  created-for: CMSIS-Toolbox@2.6.0
   cdefault:
 
+  select-compiler:
+    # list of tested compilers that can be selected
+    - compiler: AC6
+
   packs:
-    - pack: Keil::STM32U5xx_DFP@2.1.0
-    - pack: Keil::B-U585I-IOT02A_BSP@1.0.0
+    - pack: Keil::STM32U5xx_DFP@^3.0.0
+    - pack: Keil::B-U585I-IOT02A_BSP@^2.0.0
 
   target-types:
-    - type: HW
+    - type: B-U585I-IOT02A
       board: STMicroelectronics::B-U585I-IOT02A
       device: STMicroelectronics::STM32U585AIIx
 
   build-types:
     - type: Debug
       debug: on
-      optimize: none
+      optimize: debug
 
   projects:
-    - project: ./Secure/Fault_S.cproject.yml
-    - project: ./NonSecure/Fault_NS.cproject.yml
+    - project: Secure/Fault_S.cproject.yml
+    - project: NonSecure/Fault_NS.cproject.yml

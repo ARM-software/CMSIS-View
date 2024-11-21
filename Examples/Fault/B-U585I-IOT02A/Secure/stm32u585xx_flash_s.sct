@@ -1,0 +1,109 @@
+#! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m33 -xc -mcmse
+/* command above MUST be in first line (no comment above!) */
+
+/******************************************************************************
+ * @file     stm32u585xx_flash_s.sct
+ * @brief    ARM Linker Script for STM32U575xx Device
+ * @version  V2.0.0
+ * @date     16. March 2023
+ ******************************************************************************/
+/*
+ * Copyright (c) 2023 Arm Limited. All rights reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the License); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+// <<< Use Configuration Wizard in Context Menu >>>
+ */
+
+/*
+// <h> Flash Configuration
+//   <i> specify the base address and the size of the used Flash
+//   <o0> Flash Base Address <0x0-0xFFFFFFFF:8>
+//   <o1> Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
+// </h>
+ */
+#define __ROM_BASE           0x0C000000
+#define __ROM_SIZE           0x00100000
+
+/*
+// <h> RAM Configuration
+//   <i> specify the base address and the complete size of the used RAM
+//   <o0> RAM Base Address    <0x0-0xFFFFFFFF:8>
+//   <o1> RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+// </h>
+ */
+#define __RAM_BASE           0x30000000
+#define __RAM_SIZE           0x00040000
+
+/*
+// <h> NOINIT Data Configuration
+//   <i> specify the size of the section which holds the uninitialized data
+//   <o0>  NOINIT Size (in Bytes) <0x0-0xFFFFFFFF:32>
+// </h>
+ */
+#define __NOINIT_SIZE        0x00000000
+
+/*
+// <h> CMSE Veneer Configuration
+//   <o0>  CMSE Veneer Size (in Bytes) <0x0-0xFFFFFFFF:32>
+// </h>
+ */
+#define __CMSEVENEER_SIZE    0x00002000
+
+/*
+// <<< end of configuration section >>>
+ */
+
+#define __CV_BASE          ( __ROM_BASE + __ROM_SIZE - __CMSEVENEER_SIZE )
+#define __CV_SIZE          ( __CMSEVENEER_SIZE )
+
+#define __LR_BASE          ( __ROM_BASE )
+#define __LR_SIZE          ( __ROM_SIZE - __CV_SIZE )
+
+#define __RW_BASE          ( __RAM_BASE )
+#define __RW_SIZE          ( __RAM_SIZE - __NOINIT_SIZE )
+#define __RW_NOINIT_BASE   ( __RAM_BASE + __RW_SIZE )                /* starts after RW_RAM section */
+
+
+LR_APP __LR_BASE __LR_SIZE  {                                        /* load region for application */
+  ER_APP __LR_BASE __LR_SIZE  {                                      /* execution region for application */
+   *.o (RESET, +First)
+   *(InRoot$$Sections)
+   .ANY (+RO)
+   .ANY (+XO)
+  }
+
+  RW_RAM __RW_BASE __RW_SIZE {                                       /* RW, ZI data */
+   .ANY (+RW +ZI)
+  }
+
+#if __NOINIT_SIZE > 0
+  RW_NOINIT __RW_NOINIT_BASE UNINIT __NOINIT_SIZE {                  /* no init data */
+    *(.bss.noinit)
+  }
+#endif
+
+  RW_NS_NOINIT_FAULT 0x200B0000 UNINIT 0x100 {                       /* Uninitialized memory for Fault information (ARM_FaultInfo) */
+    *(.bss.noinit.fault)
+  }
+}
+
+LR_CMSE_VENEER __CV_BASE ALIGN 32 __CV_SIZE  {                       /* load/execution region for CMSE Veneers */
+  ER_CMSE_VENEER __CV_BASE __CV_SIZE  {
+   *(Veneer$$CMSE)
+  }
+}

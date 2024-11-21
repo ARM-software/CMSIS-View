@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Name:    Fault.c
  * Purpose: Fault example program
  *----------------------------------------------------------------------------*/
@@ -11,7 +11,7 @@
 #include  CMSIS_device_header
 
 #include "cmsis_os2.h"
-#include "../Secure/interface.h"        // Secure functions interface header
+#include "cmsis_vio.h"
 
 #include "ARM_Fault.h"
 #include "ARM_FaultTrigger.h"
@@ -25,24 +25,24 @@ extern osThreadId_t tid_FaultTriggerThread;
 osThreadId_t tid_AppThread;
 osThreadId_t tid_FaultTriggerThread;
 
-/*---------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Application thread
- *---------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------*/
 static __NO_RETURN void AppThread (void *argument) {
 
   (void)argument;
 
   for (;;) {
     osDelay(500U);
-    HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
+    vioSetSignal(vioLED1, vioLEDon);    // Switch LED1 on
     osDelay(500U);
-    HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
+    vioSetSignal(vioLED1, vioLEDoff);   // Switch LED1 off
   }
 }
 
-/*---------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
  * Fault trigger thread
- *---------------------------------------------------------------------------*/
+ *----------------------------------------------------------------------------*/
 static __NO_RETURN void FaultTriggerThread (void *argument) {
   char ch;
 
@@ -57,7 +57,7 @@ static __NO_RETURN void FaultTriggerThread (void *argument) {
   printf(" - 4: Non-Secure fault, Non-Secure divide by 0 Usage fault\r\n");
   printf(" - 5: Secure fault, Non-Secure data access from Secure RAM memory\r\n");
   printf(" - 6: Secure fault, Non-Secure instruction execution from Secure Flash memory\r\n");
-  printf(" - 7: Secure fault, Secure undefined instruction Usage fault\r\n");
+  printf(" - 7: Secure fault, Secure undefined instruction Usage fault\r\n\r\n");
   printf("Input>");
 
   for (;;) {
@@ -66,10 +66,24 @@ static __NO_RETURN void FaultTriggerThread (void *argument) {
   }
 }
 
-/*---------------------------------------------------------------------------
- * Application initialization
- *---------------------------------------------------------------------------*/
-void AppInitialize (void) {
+/*-----------------------------------------------------------------------------
+ * Application main thread
+ *----------------------------------------------------------------------------*/
+__NO_RETURN void app_main_thread (void *argument) {
+
   tid_AppThread          = osThreadNew(AppThread,          NULL, NULL);
   tid_FaultTriggerThread = osThreadNew(FaultTriggerThread, NULL, NULL);
+
+  for (;;) {                            // Loop forever
+  }
+}
+
+/*-----------------------------------------------------------------------------
+ * Application initialization
+ *----------------------------------------------------------------------------*/
+int app_main (void) {
+  osKernelInitialize();                         /* Initialize CMSIS-RTOS2 */
+  osThreadNew(app_main_thread, NULL, NULL);
+  osKernelStart();                              /* Start thread execution */
+  return 0;
 }
