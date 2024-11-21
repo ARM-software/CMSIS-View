@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2024 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -161,8 +161,9 @@ void ARM_FaultPrint (void) {
 
   /* Output: Decoded MemManage fault information */
   if (ARM_FaultInfo.Content.FaultRegs != 0U) {
-    uint32_t scb_cfsr  = ARM_FaultInfo.FaultRegisters.CFSR;
-    uint32_t scb_mmfar = ARM_FaultInfo.FaultRegisters.MMFAR;
+    uint32_t scb_cfsr   = ARM_FaultInfo.FaultRegisters.CFSR;
+    uint32_t scb_mmfar  = ARM_FaultInfo.FaultRegisters.MMFAR;
+    uint8_t  faults_cnt = 0U;
 
     if ((scb_cfsr & (SCB_CFSR_IACCVIOL_Msk  |
                      SCB_CFSR_DACCVIOL_Msk  |
@@ -175,19 +176,36 @@ void ARM_FaultPrint (void) {
       printf("  Fault:               MemManage - ");
 
       if ((scb_cfsr & SCB_CFSR_IACCVIOL_Msk) != 0U) {
+        faults_cnt++;
         printf("Instruction execution failure due to MPU violation or fault");
       }
       if ((scb_cfsr & SCB_CFSR_DACCVIOL_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               MemManage - ");
+        }
         printf("Data access failure due to MPU violation or fault");
       }
       if ((scb_cfsr & SCB_CFSR_MUNSTKERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               MemManage - ");
+        }
         printf("Exception exit unstacking failure due to MPU access violation");
       }
       if ((scb_cfsr & SCB_CFSR_MSTKERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               MemManage - ");
+        }
         printf("Exception entry stacking failure due to MPU access violation");
       }
 #ifdef SCB_CFSR_MLSPERR_Msk
       if ((scb_cfsr & SCB_CFSR_MLSPERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               MemManage - ");
+        }
         printf("Floating-point lazy stacking failure due to MPU access violation");
       }
 #endif
@@ -200,8 +218,9 @@ void ARM_FaultPrint (void) {
 
   /* Output: Decoded BusFault information */
   if (ARM_FaultInfo.Content.FaultRegs != 0U) {
-    uint32_t scb_cfsr = ARM_FaultInfo.FaultRegisters.CFSR;
-    uint32_t scb_bfar = ARM_FaultInfo.FaultRegisters.BFAR;
+    uint32_t scb_cfsr   = ARM_FaultInfo.FaultRegisters.CFSR;
+    uint32_t scb_bfar   = ARM_FaultInfo.FaultRegisters.BFAR;
+    uint8_t  faults_cnt = 0U;
 
     if ((scb_cfsr & (SCB_CFSR_IBUSERR_Msk     |
                      SCB_CFSR_PRECISERR_Msk   |
@@ -215,22 +234,43 @@ void ARM_FaultPrint (void) {
       printf("  Fault:               BusFault - ");
 
       if ((scb_cfsr & SCB_CFSR_IBUSERR_Msk) != 0U) {
+        faults_cnt++;
         printf("Instruction prefetch failure due to bus fault");
       }
       if ((scb_cfsr & SCB_CFSR_PRECISERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               BusFault - ");
+        }
         printf("Data access failure due to bus fault (precise)");
       }
       if ((scb_cfsr & SCB_CFSR_IMPRECISERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               BusFault - ");
+        }
         printf("Data access failure due to bus fault (imprecise)");
       }
       if ((scb_cfsr & SCB_CFSR_UNSTKERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               BusFault - ");
+        }
         printf("Exception exit unstacking failure due to bus fault");
       }
       if ((scb_cfsr & SCB_CFSR_STKERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               BusFault - ");
+        }
         printf("Exception entry stacking failure due to bus fault");
       }
 #ifdef SCB_CFSR_LSPERR_Msk
       if ((scb_cfsr & SCB_CFSR_LSPERR_Msk) != 0U) {
+        faults_cnt++;
+        if (faults_cnt > 1U) {
+          printf("\n  Fault:               BusFault - ");
+        }
         printf("Floating-point lazy stacking failure due to bus fault");
       }
 #endif

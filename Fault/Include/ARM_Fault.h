@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2024 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -90,11 +90,11 @@
 #endif
 
 // Fault component version
-#define ARM_FAULT_VERSION              "1.0.1"
+#define ARM_FAULT_VERSION              "1.1.0"
 
 // Fault Information structure type version
 #define ARM_FAULT_FAULT_INFO_VER_MAJOR (1U)             // ARM_FaultInfo type Version.Major
-#define ARM_FAULT_FAULT_INFO_VER_MINOR (0U)             // ARM_FaultInfo type Version.Minor
+#define ARM_FAULT_FAULT_INFO_VER_MINOR (1U)             // ARM_FaultInfo type Version.Minor
 
 #ifdef __cplusplus
 extern "C" {
