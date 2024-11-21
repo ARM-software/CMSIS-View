@@ -67,6 +67,7 @@ PACKCHK_DEPS="
   ARM.CMSIS.pdsc
   ARM.V2M_MPS3_SSE_300_BSP.pdsc
   Keil.B-U585I-IOT02A_BSP.pdsc
+  Keil.V2M-MPS2_CMx_BSP.pdsc
 "
 
 # Optional: restrict fallback modes for changelog generation
