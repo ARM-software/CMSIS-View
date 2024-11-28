@@ -1,4 +1,4 @@
-# Fault example (Cortex-M33)
+# Fault example for B-U585I-IOT02A board (Cortex-M33)
 
 This project is a simple **Fault** component example running on an **Arm Cortex-M33** microcontroller
 on a STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
@@ -12,22 +12,10 @@ The fault information can also be inspected with **Component Viewer** in a debug
 
 ### Software
 
-- [**Arm Keil Studio Pack**](https://marketplace.visualstudio.com/items?itemName=Arm.keil-studio-pack)
-- [**CMSIS-Toolbox**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) **v2.6.0** or newer
+- [**Arm Keil Studio for VS Code**](https://marketplace.visualstudio.com/items?itemName=Arm.keil-studio-pack)
 - [**STM32CubeMX**](https://www.st.com/en/development-tools/stm32cubemx.html) **v6.12.1** or newer
 - [**STM32CubeProgrammer**](https://www.st.com/en/development-tools/stm32cubeprog.html) utility
 - [**Keil MDK**](https://developer.arm.com/Tools%20and%20Software/Keil%20MDK) **v5.41** or newer
-
-### CMSIS Packs
-
-- Required packs:
-  - [ARM::CMSIS-View](https://www.keil.arm.com/packs/cmsis-view-arm/versions/) **v1.2.0** or newer
-  - [ARM::CMSIS](https://www.keil.arm.com/packs/cmsis-arm/overview/) **v6.1.0** or newer
-  - [ARM::CMSIS-RTX](https://www.keil.arm.com/packs/cmsis-rtx-arm/versions/) **v5.9.0** or newer
-  - [ARM::CMSIS-Compiler](https://www.keil.arm.com/packs/cmsis-compiler-arm/versions/) **v2.1.0** or newer
-  - [ARM::CMSIS-Driver_STM32](https://www.keil.arm.com/packs/cmsis-driver_stm32-arm/overview/) **v1.0.0** or newer
-  - [Keil::STM32U5xx_DFP](https://www.keil.arm.com/packs/stm32u5xx_dfp-keil/overview/) **v3.0.0** or newer
-  - [Keil::B-U585I-IOT02A_BSP](https://www.keil.arm.com/packs/b-u585i-iot02a_bsp-keil/overview/) **v2.0.0** or newer
 
 ### Hardware
 
@@ -57,62 +45,44 @@ Configure the following **Option bytes** with the **STM32CubeProgrammer** utilit
 
 ### Arm Keil Studio
 
-#### Compiler: Arm Compiler 6
-
-To try the example with the **Arm Keil Studio**, do the following steps:
+To try the example with the **Arm Keil Studio**, follow the steps below:
 
  1. open the **Visual Studio Code**.
- 2. click on the **CMSIS** extension, click on the **Create a New Solution** button, then under **Create new solution** for
-    **Target Board (Optional)** select **B-U585I-IOT02A (Rev.C)**, under **Templates, Reference Applications, and Examples**
-    look for and select the **Fault example**, choose the desired **Solution Location** and click on the **Create** button.
- 3. in the **Configure Solution** tab select **AC6** compiler and click on the **OK** button.
- 4. build the solution (click on the **hammer** button).
- 5. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (click on the **Run** button).  
-    In case of issues use **uVision** for downloading to flash (just open **Fault.csolution.yml** in the **uVision**, click on the **Rebuild** button,
-    in **Options for Target** dialog under **Debug** select **ST-Link Debugger** and click on the **OK** button; now click on the **Download** button).
- 6. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
- 7. press the **RESET** button on the board.
- 8. follow the instructions in the **Serial Terminal** and observe the results.
+ 2. in the **Configure Solution** tab select the **AC6** compiler and click on the **OK** button.
 
-#### Compiler: GCC
+    > **Note**  
+    > To use **GCC** instead of AC6 compiler do the following:
+    > - in the **Fault.csolution.yml** csolution file replace `compiler: AC6` with `compiler: GCC`.
+    > - launch the **STM32CubeMX generator**: in the **CMSIS** extension project view click on the **Run Generator** button for **Device:CubeMX** component.
+    > - in the **STM32CubeMX**: open from the menu **Project Manager - Project - Toolchain/IDE**,
+    >   select **STM32CubeIDE** and clear **Generate Under Root** check box, and click on the **GENERATE CODE** button.
 
-To try the example with the **Arm Keil Studio**, do the following steps:
+ 3. build the solution (in the **CMSIS** extension view click on the **Build solution** button).
+ 4. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (in the **CMSIS** extension view click on the **Run** button).  
 
- 1. open the **Visual Studio Code**.
- 2. click on the **CMSIS** extension, click on the **Create a New Solution** button, then under **Create new solution** for
-    **Target Board (Optional)** select **B-U585I-IOT02A (Rev.C)**, under **Templates, Reference Applications, and Examples**
-    look for and select the **Fault example**, choose the desired **Solution Location** and click on the **Create** button.
- 3. in the **Configure Solution** tab select **AC6** compiler.
- 4. in the **Fault.csolution.yml** csolution file replace `compiler: AC6` with `compiler: GCC`.
- 5. launch the **STM32CubeMX generator** by selecting **Device:CubeMX** component in the project view and clicking on the **cog** button.
- 6. in the **STM32CubeMX**: open from the menu **Project Manager - Project - Toolchain/IDE**,
-    select **STM32CubeIDE** and clear **Generate Under Root** check box, and click on the **GENERATE CODE** button.
- 7. clean the solution (click on the **...** button and select **Clean all out and tmp directories**).
- 8. build the solution (click on the **hammer** button).
- 9. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (click on the **Run** button).  
-    In case of issues use **uVision** for downloading to flash (just open **Fault.csolution.yml** in the **uVision**,
-    in **Options for Target** dialog under **Debug** select **ST-Link Debugger** and click on the **OK** button; now click on the **Download** button).
- 10. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
- 11. press the **RESET** button on the board.
- 12. follow the instructions in the **Serial Terminal** and observe the results.
+    > **Note**  
+    > In case of issues with download you can use **STM32CubeProgrammer** or **uVision**.  
+    > Procedure using **uVision**: open **Fault.csolution.yml** in the **uVision**, click on the **Rebuild** button,
+    > in **Options for Target** dialog under **Debug** select **ST-Link Debugger** and click on the **OK** button; now click on the **Download** button.
+
+ 5. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
+ 6. press the **RESET** button on the board.
+ 7. follow the instructions in the **Serial Terminal** and observe the results.
 
 ### uVision
 
-To try the example with the **uVision**, do the following steps:
+To try the example with the **uVision**, follow the steps below:
 
  1. open the **uVision**.
- 2. start the **Pack Installer** and under **Boards** tab select **B-U585I-IOT02A (Rev.C)**, then under **Examples** tab
-    for **Fault example (B-U585I-IOT02A)** example click on the **Copy** button, choose the desired **Destination Folder**, and
-    select **Use Pack Folder Structure** check box, select also **Launch uVision** check box and click on the **OK** button.
- 3. build the **Project: Fault_S** project (click on the **Rebuild** button).
- 4. build the **Project: Fault_NS** project (set **Fault_NS** as active project and click on the **Rebuild** button).
- 5. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (click on the **Download** button).
- 6. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
- 7. press the **RESET** button on the board.
- 8. follow the instructions in the **Serial Terminal** and observe the results.
+ 2. build the **Project: Fault_S** project (click on the **Rebuild** button).
+ 3. build the **Project: Fault_NS** project (set **Fault_NS** as active project and click on the **Rebuild** button).
+ 4. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (click on the **Download** button).
+ 5. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
+ 6. press the **RESET** button on the board.
+ 7. follow the instructions in the **Serial Terminal** and observe the results.
 
 > **Note**  
-> In the debug session fault information can be inspected in the **Component View** and **Event Recorder** windows
+> In the debug session fault information can be inspected in the **Component View** and **Event Recorder** windows.
 
 ## User Interface
 
