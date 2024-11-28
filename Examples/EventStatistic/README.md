@@ -31,10 +31,10 @@ and can be displayed in the Event Statistics window.
 
 To try the example with the **Arm Keil Studio**, follow the steps below:
 
- 1. open the **Visual Studio Code**.
+ 1. open the example in the **Visual Studio Code**.
  2. in the **Configure Solution** tab select the **AC6** compiler and click on the **OK** button.
  3. build the solution (in the **CMSIS** extension view click on the **Build solution** button).
- 4. run the AVH model from the command line by executing the following command:
+ 4. run the **FVP model** from the command line by executing the following command:
     ```shell
     FVP_Corstone_SSE-300 -f fvp_config.txt --simlimit=60 out/EventStatistic/AVH/Debug/EventStatistic.axf
     ```
