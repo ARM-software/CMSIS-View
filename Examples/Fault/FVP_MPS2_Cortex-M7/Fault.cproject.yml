@@ -6,7 +6,6 @@ project:
     - pack: ARM::CMSIS@^6.1.0
     - pack: ARM::CMSIS-Compiler@^2.1.0
     - pack: ARM::CMSIS-RTX@^5.9.0
-    - pack: Keil::V2M-MPS2_CMx_BSP@^1.8.0
 
   groups:
     - group: Documentation
