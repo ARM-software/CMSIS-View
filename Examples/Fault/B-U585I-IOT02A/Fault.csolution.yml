@@ -7,6 +7,10 @@ solution:
     # list of tested compilers that can be selected
     - compiler: AC6
 
+  packs:
+    - pack: Keil::STM32U5xx_DFP@^3.0.0
+    - pack: Keil::B-U585I-IOT02A_BSP@^2.0.0
+
   target-types:
     - type: B-U585I-IOT02A
       board: STMicroelectronics::B-U585I-IOT02A

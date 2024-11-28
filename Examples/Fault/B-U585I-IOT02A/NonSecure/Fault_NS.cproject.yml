@@ -10,8 +10,6 @@ project:
     - pack: ARM::CMSIS-Compiler@^2.1.0
     - pack: ARM::CMSIS-RTX@^5.9.0
     - pack: ARM::CMSIS-Driver_STM32@^1.0.0
-    - pack: Keil::STM32U5xx_DFP@^3.0.0
-    - pack: Keil::B-U585I-IOT02A_BSP@^2.0.0
 
   groups:
     - group: Documentation

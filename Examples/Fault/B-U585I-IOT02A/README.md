@@ -47,7 +47,7 @@ Configure the following **Option bytes** with the **STM32CubeProgrammer** utilit
 
 To try the example with the **Arm Keil Studio**, follow the steps below:
 
- 1. open the **Visual Studio Code**.
+ 1. open the example in the **Visual Studio Code**.
  2. in the **Configure Solution** tab select the **AC6** compiler and click on the **OK** button.
 
     > **Note**  
@@ -73,13 +73,12 @@ To try the example with the **Arm Keil Studio**, follow the steps below:
 
 To try the example with the **uVision**, follow the steps below:
 
- 1. open the **uVision**.
- 2. build the **Project: Fault_S** project (click on the **Rebuild** button).
- 3. build the **Project: Fault_NS** project (set **Fault_NS** as active project and click on the **Rebuild** button).
- 4. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (click on the **Download** button).
- 5. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
- 6. press the **RESET** button on the board.
- 7. follow the instructions in the **Serial Terminal** and observe the results.
+ 1. open the example in the **uVision**.
+ 2. build the projects (select **Project - Batch Build**).
+ 3. download the built applications (Fault_S/Fault_NS) to the MCU's Flash (click on the **Download** button).
+ 4. open the **Serial Terminal** application and connect to the **STMicroelectronics STLink Virtual COM Port (COMx)** (115200-8-N-1).
+ 5. press the **RESET** button on the board.
+ 6. follow the instructions in the **Serial Terminal** and observe the results.
 
 > **Note**  
 > In the debug session fault information can be inspected in the **Component View** and **Event Recorder** windows.
