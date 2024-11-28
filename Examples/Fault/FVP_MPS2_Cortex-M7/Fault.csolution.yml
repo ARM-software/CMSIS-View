@@ -8,13 +8,6 @@ solution:
     - compiler: AC6
     - compiler: GCC
 
-  packs:
-    - pack: ARM::CMSIS-View@^1.2.0-0
-    - pack: ARM::CMSIS@^6.1.0
-    - pack: ARM::CMSIS-Compiler@^2.1.0
-    - pack: ARM::CMSIS-RTX@^5.9.0
-    - pack: Keil::V2M-MPS2_CMx_BSP@^1.8.0
-
   target-types:
     - type: FVP_MPS2_Cortex-M7
       board: ARM::V2M-MPS2:B
