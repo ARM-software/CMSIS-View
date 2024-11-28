@@ -140,17 +140,11 @@
       </project>
     </example>
     <example name="Fault example" folder="Examples/Fault/B-U585I-IOT02A" doc="README.md">
-      <description>Example that shows the usage of Fault component on a Cortex-M33 device with TrustZone.</description>
+      <description>Example that shows the usage of Fault component on the B-U585I-IOT02A board (Cortex-M33) with TrustZone.</description>
       <board name="B-U585I-IOT02A" vendor="STMicroelectronics"/>
       <project>
         <environment name="csolution" load="Fault.csolution.yml"/>
-      </project>
-    </example>
-    <example name="Fault example" folder="Examples/Fault/B-U585I-IOT02A" doc="README.md">
-      <description>Example that shows the usage of Fault component on a Cortex-M33 device with TrustZone.</description>
-      <board name="B-U585I-IOT02A" vendor="STMicroelectronics"/>
-      <project>
-        <environment name="uv" load="Fault.uvmpw"/>
+        <environment name="uv"        load="Fault.uvmpw"/>
       </project>
     </example>
   </examples>
