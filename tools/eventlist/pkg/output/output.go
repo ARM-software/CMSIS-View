@@ -367,7 +367,7 @@ func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *E
 						TextMaxB:    o.evProps[i].values[j].textMaxB,
 						TextMaxE:    o.evProps[i].values[j].textMaxE,
 					}
-					err = conditionalWrite(out, eventStat.Event)
+					err = conditionalWrite(out, "%s", eventStat.Event)
 					if err == nil && j < 10 {
 						err = conditionalWrite(out, " ")
 					}
