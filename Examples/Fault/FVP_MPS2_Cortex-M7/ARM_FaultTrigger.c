@@ -33,6 +33,7 @@ void ARM_FaultTrigger (uint32_t fault_id) {
 
   switch (fault_id) {
     case ARM_FAULT_ID_MEM_DATA:                     // Trigger Non-Secure MemManage fault - data access
+      __set_CONTROL(CONTROL_nPRIV_Msk);             // Switch to unprivileged mode
       val = *((uint32_t *)0x20000000);              // Read from address not allowed by the MPU (non-privileged access not allowed)
       break;
 
