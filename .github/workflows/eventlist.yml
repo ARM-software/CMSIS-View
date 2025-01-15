@@ -198,6 +198,11 @@ jobs:
       - name: Install go-junit-report
         run: go install github.com/jstemmer/go-junit-report/v2@latest
 
+      - name: Run unit test TEST
+        run: |
+          go test -v ./...
+        working-directory: ./tools/eventlist
+
       - name: Run unit test
         run: |
           go test -v 2>&1 ./... | go-junit-report -set-exit-code > build/evenlistunittest-${{ matrix.os }}.xml
