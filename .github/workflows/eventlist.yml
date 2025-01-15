@@ -119,20 +119,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6
         with:
-          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
           version: latest
+          skip-cache: true
           working-directory: ./tools/eventlist
+          args: "--verbose --print-issued-lines --print-linter-name --out-${NO_FUTURE}format colored-line-number --timeout 300s --max-issues-per-linter 0 --max-same-issues 0"
 
   format:
     if: github.event_name != 'pull_request'

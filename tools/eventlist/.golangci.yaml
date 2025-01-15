@@ -1,15 +1,21 @@
+run:
+  timeout: 10m
+
+  # Run linters over integration tests
+  build-tags:
+    - integration
+
 linters:
-    enable:
-        - errname
-        - errorlint
-        - goerr113
-        - makezero
-        - nilerr
-        - paralleltest
-        - prealloc
-        - predeclared
-        - revive
-        - thelper
-        - unconvert
-        - unparam
-        - wastedassign
+  disable-all: true # Disable defaults, then enable the ones we want
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - bodyclose
+    - stylecheck
+    - gosec
+    - goimports
