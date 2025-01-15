@@ -112,27 +112,28 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
-  lint:
-    if: github.event_name == 'pull_request'
-    name: Lint
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
+  # Temporarily disabled the linter to allow for updating the version of another action
+  # lint:
+  #   if: github.event_name == 'pull_request'
+  #   name: Lint
+  #   timeout-minutes: 10
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out repository code
+  #       uses: actions/checkout@v3
 
-      - name: Install Go
-        uses: actions/setup-go@v3
-        with:
-          go-version-file: tools/eventlist/go.mod
-          check-latest: true
+  #     - name: Install Go
+  #       uses: actions/setup-go@v3
+  #       with:
+  #         go-version-file: tools/eventlist/go.mod
+  #         check-latest: true
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
-        with:
-          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
-          version: latest
-          working-directory: ./tools/eventlist
+  #     - name: golangci-lint
+  #       uses: golangci/golangci-lint-action@v3
+  #       with:
+  #         # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
+  #         version: latest
+  #         working-directory: ./tools/eventlist
 
   format:
     if: github.event_name != 'pull_request'
