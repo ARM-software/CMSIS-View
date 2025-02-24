@@ -17,6 +17,8 @@
 /output
 /build
 /Examples/**/*.cbuild.yml
+/Examples/**/*.cbuild-run.yml
+/Examples/**/*.cbuild-pack.yml
 /Examples/**/*.cprj
 /Examples/**/RTE/_**/*
 /Examples/**/.clangd

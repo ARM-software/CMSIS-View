@@ -24,3 +24,4 @@ solution:
   projects:
     - project: Secure/Fault_S.cproject.yml
     - project: NonSecure/Fault_NS.cproject.yml
+  compiler: AC6
