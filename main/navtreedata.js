@@ -45,8 +45,7 @@ var NAVTREE =
     ] ],
     [ "Fault Analysis", "fault.html", "fault" ],
     [ "Examples", "ExampleProjects.html", "ExampleProjects" ],
-    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ],
-    [ "API Reference", "modules.html", "modules" ]
+    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ]
   ] ]
 ];
 
@@ -55,5 +54,5 @@ var NAVTREEINDEX =
 "ExampleProjects.html"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';

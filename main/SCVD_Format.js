@@ -32,8 +32,8 @@ var SCVD_Format =
         [ "%E format specifier", "value_output.html#e_spec", null ],
         [ "%C, %S format specifier", "value_output.html#c_spec", null ],
         [ "%N format specifier", "value_output.html#n_spec", null ],
-        [ "%I, %J, %M format specifier", "value_output.html#i_spec", null ],
-        [ "%%  format specifier", "value_output.html#p_spec", null ],
+        [ "%I, %J, M format specifier", "value_output.html#i_spec", null ],
+        [ "%% format specifier", "value_output.html#p_spec", null ],
         [ "alert and bold output", "value_output.html#alert_bold", null ],
         [ "Dynamic output formats", "value_output.html#print_spec", null ]
       ] ]
