@@ -45,7 +45,8 @@ var NAVTREE =
     ] ],
     [ "Fault Analysis", "fault.html", "fault" ],
     [ "Examples", "ExampleProjects.html", "ExampleProjects" ],
-    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ]
+    [ "SCVD file format", "SCVD_Format.html", "SCVD_Format" ],
+    [ "API Reference", "topics.html", "topics" ]
   ] ]
 ];
 
