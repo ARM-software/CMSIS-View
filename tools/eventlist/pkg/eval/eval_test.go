@@ -65,7 +65,7 @@ func TestEval(t *testing.T) {
 	}
 }
 
-func TestGetValue(t *testing.T) {
+func TestGetValue(t *testing.T) { //nolint:golint,paralleltest
 	var tds = make(Typedefs)
 
 	type args struct {
@@ -81,7 +81,7 @@ func TestGetValue(t *testing.T) {
 		{"GetInfo", args{"1+1", tds}, 2, false},
 		{"GetInfo err", args{"??", tds}, 0, true},
 	}
-	for _, tt := range tests {
+	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := GetValue(tt.args.value, tt.args.typedefs)
 			if (err != nil) != tt.wantErr {
@@ -95,7 +95,7 @@ func TestGetValue(t *testing.T) {
 	}
 }
 
-func TestGetIdValue(t *testing.T) {
+func TestGetIdValue(t *testing.T) { //nolint:golint,paralleltest
 	id1 := "2+3"
 	id2 := "=="
 	var tds = make(Typedefs)
@@ -113,7 +113,7 @@ func TestGetIdValue(t *testing.T) {
 		{"getIdValue", args{id1, tds}, 5, false},
 		{"getIdValue err", args{id2, tds}, 0, true},
 	}
-	for _, tt := range tests {
+	for _, tt := range tests { //nolint:golint,paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := GetIdValue(tt.args.id, tt.args.typedefs)
 			if (err != nil) != tt.wantErr {
