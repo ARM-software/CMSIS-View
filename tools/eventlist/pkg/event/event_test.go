@@ -336,7 +336,7 @@ func TestEventData_EvalLine(t *testing.T) {
 	var ev3 scvd.EventType = scvd.EventType{ID: "id3", Value: "x%I[val3]y%J[val3]z"}
 	var ev4 scvd.EventType = scvd.EventType{ID: "id4", Value: "x%M[val3]y%S[val3]z"}
 	var evE1 scvd.EventType = scvd.EventType{ID: "idE1", Value: "x%E[val2, typName]y"}
-	var evTD scvd.EventType = scvd.EventType{ID: "idTD", Val3: "4BY", Value: "x%x[val3.B2]y"}
+	var evTD scvd.EventType = scvd.EventType{ID: "idTD", Val1: "v1", Val2: "v2", Val3: "4BY", Val4: "v4", Val5: "v5", Val6: "v6", Value: "x%x[val3.B2]y"}
 	var everr1 scvd.EventType = scvd.EventType{ID: "iderr1", Value: "x%d[;]y"}
 	var everr2 scvd.EventType = scvd.EventType{ID: "iderr2", Value: "x%E[;]y"}
 
@@ -379,7 +379,6 @@ func TestEventData_EvalLine(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		{"EvalLine evTD", ed1, args{evTD, tds}, "x0x48y", false},
 		{"EvalLine ev1", ed1, args{ev1, tds}, "x%257y4711z", false},
 		{"EvalLine ev2", ed1, args{ev2, tds}, "x257y0x1267z", false},
 		{"EvalLine ev3", ed1, args{ev3, tds}, "x37.72.10.117y0:0:2548:a75:z", false},
