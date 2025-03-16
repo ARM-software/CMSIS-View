@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -157,9 +157,11 @@ var ITypes = map[string]Type{
 }
 
 type Expression struct {
-	in   *string
-	pos  int
-	next Value
+	in       *string
+	pos      int
+	next     Value
+	typedefs Typedefs
+	tdUsed   map[string]string
 }
 
 var ErrRange = errors.New("value out of range")
@@ -176,6 +178,9 @@ type NumError struct {
 	Err  error  // error reason
 }
 
+// Error returns a formatted error string for the NumError type.
+// The returned string includes the function name, the number that caused the error,
+// and the original error message.
 func (e *NumError) Error() string {
 	return "expression." + e.Func + ": " + "parsing \"" + e.Num + "\": " + e.Err.Error()
 }
@@ -194,7 +199,12 @@ func typeError(fn, str string) *NumError {
 	return &NumError{fn, str, ErrType}
 }
 
-// get next character, step, return ErrEof if end of string, no other errors possible
+// get retrieves the current byte from the input and advances the position.
+// It returns the byte and an error if the end of the input is reached.
+//
+// Returns:
+//   - byte: The current byte from the input.
+//   - error: ErrEof if the end of the input is reached.
 func (ex *Expression) get() (byte, error) {
 	if ex.pos >= len(*ex.in) {
 		return 0, ErrEof
@@ -204,7 +214,13 @@ func (ex *Expression) get() (byte, error) {
 	return c, nil
 }
 
-// peek next character, return ErrEof if end of string, no other errors possible
+// peek returns the next byte in the input without advancing the position.
+// If the end of the input is reached, it returns an error ErrEof.
+//
+// Returns:
+//
+//	byte: The next byte in the input.
+//	error: ErrEof if the end of the input is reached.
 func (ex *Expression) peek() (byte, error) {
 	if ex.pos >= len(*ex.in) {
 		return 0, ErrEof
@@ -213,28 +229,44 @@ func (ex *Expression) peek() (byte, error) {
 	return c, nil
 }
 
+// back moves the position pointer one step back if it is not already at the beginning.
 func (ex *Expression) back() {
 	if ex.pos > 0 {
 		ex.pos--
 	}
 }
 
+// skipToEnd sets the position of the Expression to the end of the input.
+// This effectively skips all remaining characters in the input.
 func (ex *Expression) skipToEnd() {
 	ex.pos = len(*ex.in)
 }
 
+// getPos returns the position of the expression.
+// It retrieves the value of the pos field from the Expression struct.
+// Used in conjunction with setPos to save and restore the position.
 func (ex *Expression) getPos() int {
 	return ex.pos
 }
 
+// setPos sets the position of the expression to the given value.
+//
+// Parameters:
+//
+//	pos - the new position to set for the expression.
 func (ex *Expression) setPos(pos int) {
 	ex.pos = pos
 }
 
+// lower converts an uppercase ASCII letter to its lowercase equivalent.
 func lower(c byte) byte {
 	return c | ('x' - 'X')
 }
 
+// parseUint parses an unsigned integer from the expression.
+// It supports decimal, octal, and hexadecimal formats.
+// The function returns the parsed uint64 value and an error if any occurred during parsing.
+// If the input is empty or contains invalid characters, appropriate errors are returned.
 func (ex *Expression) parseUint() (uint64, error) {
 	const fnParseUint = "parseUint"
 
@@ -308,6 +340,19 @@ loop:
 	return n, nil
 }
 
+// parseFloat parses a floating-point number from the expression.
+// It handles optional leading signs, decimal points, and exponents.
+// It returns the parsed float64 value and an error if the parsing fails.
+// The function assumes that the input is well-formed and does not perform
+// extensive validation beyond basic syntax checks.
+//
+// The function supports numbers with up to 19 significant digits and
+// handles both positive and negative exponents. It uses a lookup table
+// for efficient exponentiation.
+//
+// Returns:
+// - float64: The parsed floating-point number.
+// - error: An error if the parsing fails, otherwise nil.
 func (ex *Expression) parseFloat() (float64, error) {
 	var pow10Tab = []float64{
 		1e1, 1e2, 1e4, 1e8, 1e16, 1e32, 1e64, 1e128, 1e256, 0,
@@ -452,6 +497,12 @@ func (ex *Expression) parseFloat() (float64, error) {
 	return f, nil
 }
 
+// hex parses a hexadecimal number from the expression and returns the
+// corresponding byte value and the string representation of the parsed
+// hexadecimal number. It reads characters from the expression until it
+// encounters a non-hexadecimal character, at which point it stops and
+// returns the results. If a non-hexadecimal character is encountered,
+// it is pushed back to the expression for further processing.
 func (ex *Expression) hex() (cx byte, s string) {
 	for {
 		var c byte
@@ -473,6 +524,15 @@ func (ex *Expression) hex() (cx byte, s string) {
 	return cx, s
 }
 
+// hex4 reads the next four characters from the expression, interprets them as a hexadecimal number,
+// and returns the corresponding uint16 value along with the string representation of the characters.
+// If any character is not a valid hexadecimal digit, it returns a rangeError.
+//
+// Returns:
+//
+//	cx (uint16): The uint16 value of the hexadecimal number.
+//	s (string): The string representation of the four characters read.
+//	err (error): An error if any character is not a valid hexadecimal digit, otherwise nil.
 func (ex *Expression) hex4() (cx uint16, s string, err error) {
 	for i := 0; i < 4; i++ {
 		var c byte
@@ -491,6 +551,15 @@ func (ex *Expression) hex4() (cx uint16, s string, err error) {
 	return cx, s, nil
 }
 
+// hex8 reads the next 8 characters from the expression, interprets them as a hexadecimal number,
+// and returns the corresponding uint32 value along with the string representation of the characters.
+// If any character is not a valid hexadecimal digit, it returns a rangeError.
+//
+// Returns:
+//
+//	cx (uint32): The uint32 value of the hexadecimal number.
+//	s (string): The string representation of the four characters read.
+//	err (error): An error if any character is not a valid hexadecimal digit, otherwise nil.
 func (ex *Expression) hex8() (cx uint32, s string, err error) {
 	for i := 0; i < 8; i++ {
 		var c byte
@@ -509,6 +578,24 @@ func (ex *Expression) hex8() (cx uint32, s string, err error) {
 	return cx, s, nil
 }
 
+// lex performs lexical analysis on the input expression.
+// It reads characters from the input, identifies tokens, and returns a Value representing the token
+// and an error if any issues are encountered during the process.
+//
+// The method handles various types of tokens including:
+// - Whitespace characters (spaces, tabs, form feeds)
+// - Digits (0-9) which can be parsed as integers or floating-point numbers
+// - Identifiers (a-z, A-Z, and underscores)
+// - String literals enclosed in double quotes (")
+// - Character literals enclosed in single quotes (')
+// - Special tokens and comments
+//
+// The method uses helper functions such as get, back, peek, parseUint, parseFloat, hex, hex4, hex8,
+// and skipToEnd to perform specific tasks during the lexical analysis.
+//
+// Returns:
+// - Value: A struct representing the identified token.
+// - error: An error if any issues are encountered during the lexical analysis.
 func (ex *Expression) lex() (Value, error) {
 	const fnLex = "Lex"
 
@@ -777,8 +864,14 @@ func (ex *Expression) lex() (Value, error) {
 
 // Integer
 // Identifier
+// TypedefIdentifier : Identifier
+// TypedefIdentifier : Identifier : Identifier
 // String
 // ( expression )
+// primary parses the primary expressions in the given context.
+// It handles different types of tokens such as Integer, Floating, Identifier, String, and Parentheses.
+// For Identifiers, it also handles typedefs and their members, including enums.
+// It returns the parsed Value and an error if any issues are encountered during parsing.
 func (ex *Expression) primary() (Value, error) {
 	var v Value
 	var err error
@@ -799,6 +892,44 @@ func (ex *Expression) primary() (Value, error) {
 		mu.Unlock()
 		if ex.next, err = ex.lex(); err != nil {
 			return v, err
+		}
+		itypedef, ok := ex.typedefs[v.s]
+		if ok && ex.next.t == Colon {
+			if ex.next, err = ex.lex(); err != nil {
+				return v, syntaxError("member name expected", "")
+			}
+			v1 := ex.next // typedef_name:member
+			if ex.next.t != Identifier {
+				return v1, syntaxError("member name expected", "")
+			}
+			if ex.next, err = ex.lex(); err != nil {
+				return v1, err
+			}
+			member, ok := itypedef.Members[v1.s]
+			if !ok {
+				return v1, syntaxError(v1.s+" unknown in "+v.s, "")
+			}
+			if ok && ex.next.t == Colon {
+				if ex.next, err = ex.lex(); err != nil {
+					return v1, syntaxError("enum name expected", "")
+				}
+				v2 := ex.next
+				if ex.next.t != Identifier {
+					return v2, syntaxError("enum name expected", "")
+				}
+				for n, s := range member.Enums {
+					if s == v2.s {
+						v = Value{t: Integer, i: n}
+						if ex.next, err = ex.lex(); err != nil {
+							return v, err
+						}
+						return v, nil
+					}
+				}
+				return v2, syntaxError("enum "+v2.s+"unknown", "")
+			}
+			return Eval(&member.Offset, ex.typedefs, ex.tdUsed)
+			// return Value{t: Integer, i: int64(member.Offset)}, nil
 		}
 	case String:
 		if ex.next, err = ex.lex(); err != nil {
@@ -825,6 +956,12 @@ func (ex *Expression) primary() (Value, error) {
 
 // asnExpr
 // arguments , asnExpr
+// arguments parses and returns a list of argument expressions.
+// It starts by checking if the next token is Nix, in which case it returns an empty value.
+// Otherwise, it parses the first argument expression and adds it to the list.
+// It then enters a loop to parse additional arguments separated by commas.
+// If a syntax error or end-of-file error occurs, it returns the error.
+// The function returns the list of parsed argument expressions or an error if any occurred.
 func (ex *Expression) arguments() (Value, error) {
 	var left Value
 	var right Value
@@ -868,6 +1005,22 @@ loop:
 // primary ( )
 // primary ( arguments )
 // primary [ asnExpr ]
+// postfix evaluates postfix expressions for the given Expression.
+// It handles various postfix operators such as increment (AddAdd), decrement (SubSub),
+// member access (Dot), pointer access (Pointer), function calls (ParenO), and array indexing (BracketO).
+// The function returns the evaluated Value and an error if any occurred during the evaluation.
+//
+// Supported postfix operators:
+// - AddAdd: Post-increment operator (e.g., x++)
+// - SubSub: Post-decrement operator (e.g., x--)
+// - Dot: Member access operator (e.g., obj.field)
+// - Pointer: Pointer access operator (e.g., ptr->field)
+// - ParenO: Function call operator (e.g., func())
+// - BracketO: Array indexing operator (e.g., arr[index])
+//
+// Returns:
+// - Value: The evaluated value after applying the postfix operator.
+// - error: An error if any occurred during the evaluation.
 func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 	var left Value
 	var right Value
@@ -919,7 +1072,29 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 		}
 		if !ex.next.IsIdentifier() {
 			return ex.next, syntaxError("identifier expected", "")
-		} // TODO: noch nicht implementiert
+		}
+		members, ok := ex.typedefs[ex.tdUsed[left.s]]
+		if ok { // it is a val* typedef
+			member, ok := members.Members[ex.next.s]
+			if ok { // field found
+				if right, err = Eval(&member.Offset, ex.typedefs, ex.tdUsed); err != nil {
+					return ex.next, err
+				}
+				if v, err = left.getValue(); err != nil {
+					return left, err
+				}
+				if !right.IsInteger() {
+					return right, syntaxError("integer offset expected", "")
+				}
+				if err = v.Extract(members.Size, members.BigEndian, uint32(right.i)); err != nil {
+					return left, err
+				}
+				if err = v.Cast(member.IType); err != nil {
+					return v, err
+				}
+				return v, nil
+			}
+		}
 		if ex.next, err = ex.lex(); err != nil {
 			return ex.next, err
 		}
@@ -983,6 +1158,16 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 // ~ postfix
 // ! postfix
 // postfix
+// unary parses and evaluates a unary expression. It handles the following unary operators:
+// - Add (+)
+// - Sub (-)
+// - Compl (~)
+// - Not (!)
+//
+// For each operator, it advances the lexer, processes the postfix expression, and applies the corresponding operation.
+// If the operand is an identifier, it retrieves its value before applying the operation.
+//
+// Returns the evaluated Value or an error if the expression is invalid or an operation fails.
 func (ex *Expression) unary() (Value, error) {
 	var v Value
 	var right Value
@@ -1075,6 +1260,19 @@ func (ex *Expression) unary() (Value, error) {
 
 // unary
 // ( type ) castExpr
+// castExpr parses and evaluates a cast expression in the form of (Type) expression.
+// It handles the following scenarios:
+// 1. If the next token is an opening parenthesis, it checks if the following token is an identifier.
+//   - If not, it resets the position and treats it as a unary expression.
+//   - If it is an identifier, it checks if it is a valid type.
+//   - If not, it resets the position and treats it as a unary expression.
+//   - If it is a valid type, it expects a closing parenthesis and then recursively calls castExpr to evaluate the expression.
+//   - If the evaluated value is an identifier, it retrieves its value.
+//   - It then attempts to cast the value to the specified type.
+//
+// 2. If the next token is not an opening parenthesis, it treats the expression as a unary expression.
+//
+// Returns the evaluated value and any error encountered during parsing or evaluation.
 func (ex *Expression) castExpr() (Value, error) {
 	var v Value
 	var err error
@@ -1133,6 +1331,13 @@ func (ex *Expression) castExpr() (Value, error) {
 // mulExpr * castExpr
 // mulExpr / castExpr
 // mulExpr % castExpr
+// mulExpr parses and evaluates a multiplication, division, or modulus expression.
+// It handles the following operators: *, /, %.
+// The function first parses the left-hand side expression and then iterates through
+// the operators, parsing the right-hand side expression and performing the corresponding
+// operation. If an identifier is encountered, it retrieves its value before performing
+// the operation. The function returns the resulting value or an error if any occurs
+// during parsing or evaluation.
 func (ex *Expression) mulExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1214,6 +1419,13 @@ loop:
 // mulExpr
 // addExpr + mulExpr
 // addExpr - mulExpr
+// addExpr parses and evaluates an addition or subtraction expression.
+// It handles the following operators: +, -.
+// The function first parses the left-hand side expression and then iterates through
+// the operators, parsing the right-hand side expression and performing the corresponding
+// operation. If an identifier is encountered, it retrieves its value before performing
+// the operation. The function returns the resulting value or an error if any occurs
+// during parsing or evaluation.
 func (ex *Expression) addExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1275,6 +1487,14 @@ loop:
 // addExpr
 // shiftExpr << addExpr
 // shiftExpr >> addExpr
+// shiftExpr parses and evaluates shift expressions (both left and right shifts).
+// It starts by evaluating the left-hand side of the shift expression using addExpr.
+// Then, it enters a loop to handle multiple shift operations in sequence.
+// For each shift operation, it checks the type of shift (Shl for left shift, Shr for right shift),
+// consumes the next token, and evaluates the right-hand side of the shift expression using addExpr.
+// If either the left or right value is an identifier, it resolves the identifier to its value.
+// Finally, it performs the shift operation (Shl or Shr) and updates the left value accordingly.
+// The function returns the final evaluated value or an error if any occurs during parsing or evaluation.
 func (ex *Expression) shiftExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1338,6 +1558,14 @@ loop:
 // relExpr <= shiftExpr
 // relExpr > shiftExpr
 // relExpr >= shiftExpr
+// relExpr parses and evaluates relational expressions in the form of
+// "left < right", "left <= right", "left > right", and "left >= right".
+// It first evaluates the left-hand side expression using shiftExpr, then
+// iteratively processes relational operators and their corresponding
+// right-hand side expressions. If the left or right values are identifiers,
+// it resolves their actual values before performing the comparison.
+// The function returns the final evaluated Value or an error if any occurs
+// during parsing or evaluation.
 func (ex *Expression) relExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1439,6 +1667,11 @@ loop:
 // relExpr
 // equExpr == relExpr
 // equExpr != relExpr
+// equExpr evaluates equality and inequality expressions in the Expression.
+// It first evaluates a relational expression and then checks for equality (==) or inequality (!=) operators.
+// If an equality or inequality operator is found, it evaluates the right-hand side expression and compares it with the left-hand side.
+// The function handles identifiers by resolving their values before comparison.
+// It returns the final evaluated Value and an error if any occurs during the evaluation process.
 func (ex *Expression) equExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1499,6 +1732,13 @@ loop:
 
 // equExpr
 // andExpr & equExpr
+// andExpr evaluates a logical AND expression in the context of the Expression struct.
+// It first evaluates the left-hand side of the expression using equExpr().
+// Then, it enters a loop to process any subsequent AND operations.
+// For each AND operation, it evaluates the right-hand side of the expression using equExpr().
+// If either side of the expression is an identifier, it resolves the identifier to its value.
+// Finally, it performs the logical AND operation on the left and right values.
+// The function returns the result of the AND operation or an error if any step fails.
 func (ex *Expression) andExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1539,6 +1779,13 @@ loop:
 
 // andExpr
 // xorExpr ^ andExpr
+// xorExpr evaluates an XOR expression in the context of the Expression struct.
+// It first evaluates the left-hand side using the andExpr method. Then, it enters
+// a loop to process any subsequent XOR operations. For each XOR operation, it
+// evaluates the right-hand side using the andExpr method. If either side is an
+// identifier, it retrieves its value. Finally, it performs the XOR operation on
+// the left and right values. The method returns the final evaluated value or an
+// error if any occurs during the evaluation process.
 func (ex *Expression) xorExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1579,6 +1826,13 @@ loop:
 
 // xorExpr
 // orExpr | xorExpr
+// orExpr evaluates an OR expression in the context of the Expression struct.
+// It first evaluates the left-hand side of the expression using xorExpr.
+// Then, it enters a loop to process any subsequent OR operations.
+// For each OR operation, it evaluates the right-hand side using xorExpr,
+// resolves any identifiers to their values, and performs the OR operation.
+// If an error occurs during any of these steps, it returns the error.
+// Otherwise, it returns the final evaluated value of the OR expression.
 func (ex *Expression) orExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1619,6 +1873,13 @@ loop:
 
 // orExpr
 // logAndExpr && orExpr
+// logAndExpr evaluates a logical AND expression.
+// It first evaluates the left operand using the orExpr method.
+// Then, it enters a loop to process any subsequent logical AND operations.
+// For each logical AND operation, it evaluates the right operand using the orExpr method.
+// If either operand is an identifier, it retrieves its value.
+// Finally, it performs the logical AND operation on the left and right operands.
+// The method returns the result of the logical AND operation or an error if any occurs during evaluation.
 func (ex *Expression) logAndExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1659,6 +1920,13 @@ loop:
 
 // logAndExpr
 // logOrExpr || logAndExpr
+// logOrExpr evaluates a logical OR expression.
+// It first evaluates the left-hand side of the expression using logAndExpr.
+// Then, it enters a loop to process any subsequent logical OR operators.
+// For each logical OR operator, it evaluates the right-hand side of the expression using logAndExpr.
+// If either side of the expression is an identifier, it retrieves its value.
+// Finally, it performs the logical OR operation on the left and right values.
+// The function returns the result of the logical OR expression or an error if any occurs during evaluation.
 func (ex *Expression) logOrExpr() (Value, error) {
 	var left Value
 	var right Value
@@ -1699,6 +1967,15 @@ loop:
 
 // logOrExpr
 // logOrExpr ? expression : asnExpr
+// condExpr evaluates a conditional expression (ternary operator) in the form of
+// "condition ? trueExpression : falseExpression". It first evaluates the condition
+// using logOrExpr, then checks for the presence of the '?' token. If the token is
+// present, it evaluates the trueExpression and checks for the ':' token. If the ':'
+// token is present, it evaluates the falseExpression. Depending on the value of the
+// condition, it returns either the trueExpression or the falseExpression. If the
+// condition is an identifier, it resolves its value before making the comparison.
+// It returns the evaluated Value or an error if any part of the expression fails to
+// parse or evaluate correctly.
 func (ex *Expression) condExpr() (Value, error) {
 	var left Value
 	var mid Value
@@ -1757,6 +2034,10 @@ func (ex *Expression) condExpr() (Value, error) {
 
 // condExpr
 // condExpr ?= asnExpr
+// asnExpr parses and evaluates an assignment expression.
+// It supports various assignment operators such as ShlAssign, ShrAssign, PlusAssign, MinusAssign, OrAssign, AndAssign, XorAssign, MulAssign, DivAssign, ModAssign, and Assign.
+// The function returns the resulting Value and an error if any occurs during parsing or evaluation.
+// It ensures that the left-hand side of the assignment is an identifier and performs the appropriate operation based on the assignment operator.
 func (ex *Expression) asnExpr() (Value, error) {
 	var v Value
 	var left Value
@@ -2035,6 +2316,16 @@ func (ex *Expression) asnExpr() (Value, error) {
 // asnExpr
 // expression "," asnExpr
 // expression ";" asnExpr
+// expression evaluates the current expression and returns its value.
+// It first attempts to parse an assignment expression. If the resulting
+// value is an identifier, it retrieves the actual value associated with
+// that identifier. The function then processes any subsequent comma or
+// semicolon tokens, continuing to parse assignment expressions until
+// the end of the expression is reached or an error occurs.
+//
+// Returns:
+//   - Value: The evaluated value of the expression.
+//   - error: An error if the expression could not be evaluated.
 func (ex *Expression) expression() (Value, error) {
 	var v Value
 	var err error

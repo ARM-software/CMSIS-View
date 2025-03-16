@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -639,6 +639,16 @@ func TestExpression_primary(t *testing.T) {
 	var s2 = "$"
 	var s3 = "5"
 	var s4 = "6)"
+	var s5 = ":me+"
+	var s6 = ":me:en+"
+	var s7 = ":"
+	var s8 = ":xx"
+	var s9 = ":1"
+	var s10 = ":xx+"
+	var s11 = ":me:"
+	var s12 = ":me:1"
+	var s13 = ":me:ex"
+	var s14 = ":me:en"
 
 	type fields struct {
 		in   *string
@@ -657,6 +667,8 @@ func TestExpression_primary(t *testing.T) {
 		{"Identifier", fields{&s0, 0, Value{t: Identifier, s: "vari"}}, Value{t: Identifier, s: "vari"}, false, false},
 		{"String", fields{&s0, 0, Value{t: String, s: "abc"}}, Value{t: String, s: "abc"}, false, false},
 		{"subExpression", fields{&s1, 0, Value{t: ParenO}}, Value{t: Integer, i: 4711}, false, false},
+		{"typedef:member", fields{&s5, 0, Value{t: Identifier, s: "td"}}, Value{t: Integer, i: 123}, false, false},
+		{"typedef:member:enum", fields{&s6, 0, Value{t: Identifier, s: "td"}}, Value{t: Integer, i: 4711}, false, false},
 		{"Integer_fail", fields{&s2, 0, Value{t: Integer, i: 0x12345}}, Value{t: Integer, i: 0x12345}, false, true},
 		{"Floating_fail", fields{&s2, 0, Value{t: Floating, f: 1.2345}}, Value{t: Floating, f: 1.2345}, false, true},
 		{"Identifier_fail", fields{&s2, 0, Value{t: Identifier, s: "vari"}}, Value{t: Identifier, s: "vari"}, false, true},
@@ -665,17 +677,35 @@ func TestExpression_primary(t *testing.T) {
 		{"subExpression_fail2", fields{&s0, 0, Value{t: ParenO}}, Value{t: Nix}, false, true},
 		{"subExpression_fail3", fields{&s3, 0, Value{t: ParenO}}, Value{t: Integer, i: 5}, false, true},
 		{"subExpression_fail4", fields{&s4, 0, Value{t: ParenO}}, Value{t: Integer, i: 6}, true, true},
+		{"typedef:fail", fields{&s7, 0, Value{t: Identifier, s: "td"}}, Value{t: Identifier, s: "td"}, false, true},
+		{"typedef:fail1", fields{&s8, 0, Value{t: Identifier, s: "td"}}, Value{t: Identifier, s: "xx"}, true, true},
+		{"typedef:fail2", fields{&s9, 0, Value{t: Identifier, s: "td"}}, Value{t: Integer, i: 1}, false, true},
+		{"typedef:fail3", fields{&s10, 0, Value{t: Identifier, s: "td"}}, Value{t: Identifier, s: "xx"}, false, true},
+		{"typedef:fail4", fields{&s11, 0, Value{t: Identifier, s: "td"}}, Value{t: Identifier, s: "me"}, false, true},
+		{"typedef:fail5", fields{&s12, 0, Value{t: Identifier, s: "td"}}, Value{t: Integer, i: 1}, false, true},
+		{"typedef:fail6", fields{&s13, 0, Value{t: Identifier, s: "td"}}, Value{t: Identifier, s: "ex"}, false, true},
+		{"typedef:fail7", fields{&s14, 0, Value{t: Identifier, s: "td"}}, Value{t: Integer, i: 4711}, true, true},
 		{"fail", fields{&s0, 0, Value{t: Add}}, Value{t: Add}, false, true},
 	}
+	var enums Member
+	enums.Offset = "123"
+	enums.Enums = make(map[int64]string)
+	enums.Enums[4711] = "en"
+	var td ITypedef
+	td.Members = make(map[string]Member)
+	td.Members["me"] = enums
+	tds := make(Typedefs)
+	tds["td"] = td
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
 			ex := &Expression{
-				in:   tt.fields.in,
-				pos:  tt.fields.pos,
-				next: tt.fields.next,
+				in:       tt.fields.in,
+				pos:      tt.fields.pos,
+				next:     tt.fields.next,
+				typedefs: tds,
 			}
 			got, err := ex.primary()
 			if errors.Is(err, ErrEof) != tt.wantEOF {
