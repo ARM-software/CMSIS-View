@@ -1087,7 +1087,7 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 					return right, syntaxError("integer offset expected", "")
 				}
 				if err = v.Extract(members.Size, members.BigEndian, uint32(right.i)); err != nil {
-					return left, err
+					return v, err
 				}
 				if err = v.Cast(member.IType); err != nil {
 					return v, err
