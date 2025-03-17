@@ -199,8 +199,14 @@ jobs:
 
       - name: Run unit test
         run: |
-          go test -v 2>&1 ./... | go-junit-report -set-exit-code > build/evenlistunittest-${{ matrix.os }}.xml
+          go test -v ./... > build/evenlistunittest-${{ matrix.os }}.txt
         working-directory: ./tools/eventlist
+
+      - name: Generate JUnit test report
+        if: always()
+        working-directory: ./tools/eventlist
+        run: |
+          go-junit-report -set-exit-code -in build/evenlistunittest-${{ matrix.os }}.txt -iocopy -out build/evenlistunittest-${{ matrix.os }}.xml
 
       - name: Archive unit test results
         uses: actions/upload-artifact@v4
@@ -264,7 +270,10 @@ jobs:
       - name: Check coverage
         run: |
           go test ./... -race -coverprofile=build/cover.out -covermode=atomic
-          test `go tool cover -func build/cover.out | tail -1 | awk '{print ($3 + 0)*10}'` -gt 980
+          COVERAGE=$(go tool cover -func build/cover.out | tail -1 | awk '{print $3}' | tr -d '%')
+          echo "Test Coverage: $COVERAGE%"
+          COVERAGE_INT=$(echo "$COVERAGE * 10 / 1" | bc)
+          test "$COVERAGE_INT" -gt 975
         working-directory: ./tools/eventlist
 
       - name: Upload coverage to Codecov
