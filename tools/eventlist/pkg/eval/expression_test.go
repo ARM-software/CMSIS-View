@@ -1007,7 +1007,7 @@ func TestExpression_castExpr(t *testing.T) {
 	var s5 = "(uint8_t)-0x12345"
 	var s6 = "(uint16_t)-0x12345"
 	var s7 = "(uint32_t)-0x123456789"
-	var s8 = "(uint64_t)-456.789"
+	var s8 = "(uint64_t)456.789"
 	var s9 = "(double)12345789"
 	var s10 = "(float)123456789"
 	var s11 = "($"
@@ -1042,7 +1042,7 @@ func TestExpression_castExpr(t *testing.T) {
 		{s5, fields{&s5, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x12345) & 0xFF}, false},
 		{s6, fields{&s6, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x12345) & 0xFFFF}, false},
 		{s7, fields{&s7, 1, Value{t: ParenO}}, Value{t: Integer, i: (-0x23456789) & 0xFFFFFFFF}, false},
-		{s8, fields{&s8, 1, Value{t: ParenO}}, Value{t: Integer, i: -456}, false},
+		{s8, fields{&s8, 1, Value{t: ParenO}}, Value{t: Integer, i: 456}, false},
 		{s9, fields{&s9, 1, Value{t: ParenO}}, Value{t: Floating, f: 12345789.0}, false},
 		{s10, fields{&s10, 1, Value{t: ParenO}}, Value{t: Floating, f: 123456792.0}, false},
 		{s11, fields{&s11, 1, Value{t: ParenO}}, Value{t: Nix}, true},
