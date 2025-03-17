@@ -272,7 +272,8 @@ jobs:
           go test ./... -race -coverprofile=build/cover.out -covermode=atomic
           COVERAGE=$(go tool cover -func build/cover.out | tail -1 | awk '{print $3}' | tr -d '%')
           echo "Test Coverage: $COVERAGE%"
-          test $(echo "$COVERAGE * 10" | bc) -gt 975
+          COVERAGE_INT=$(echo "$COVERAGE * 10 / 1" | bc)
+          test "$COVERAGE_INT" -gt 975
         working-directory: ./tools/eventlist
 
       - name: Upload coverage to Codecov
