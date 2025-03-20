@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -47,6 +47,15 @@ type symbols struct {
 
 var Symbols symbols
 
+// Readelf reads the ELF file specified by the given filename and populates the sections and symbols.
+// It opens the ELF file, iterates through its sections, and appends relevant sections to the sections slice.
+// It also reads the symbols from the ELF file and stores them in the Symbols map.
+//
+// Parameters:
+//   - name: A pointer to the string containing the filename of the ELF file to be read.
+//
+// Returns:
+//   - error: An error if any occurs during the reading of the ELF file, otherwise nil.
 func (s *sections) Readelf(name *string) error {
 	file, err := elf.Open(*name)
 	if err != nil {
@@ -78,6 +87,19 @@ func (s *sections) Readelf(name *string) error {
 	return nil
 }
 
+// GetString retrieves a null-terminated string from the sections data
+// at the specified address. It iterates through the sections to find
+// the section containing the address, then extracts the string starting
+// from the address until the null terminator.
+//
+// Parameters:
+//
+//	addr - The address from which to retrieve the string.
+//
+// Returns:
+//
+//	The null-terminated string found at the specified address, or an
+//	empty string if the address is not within any section.
 func (s *sections) GetString(addr uint64) string {
 	for _, es := range s.sections {
 		if addr >= es.addr && addr < es.addr+uint64(len(es.data)) {
@@ -88,11 +110,26 @@ func (s *sections) GetString(addr uint64) string {
 	return ""
 }
 
+// Init initializes the symbols map and adds a new symbol with the given name, address, and size.
+// Parameters:
+//   - name: The name of the symbol to be added.
+//   - addr: The address of the symbol.
+//   - size: The size of the symbol.
 func (s *symbols) Init(name string, addr uint64, size uint64) {
 	s.symbols = make(map[string]symbol)
 	s.symbols[name] = symbol{addr, size}
 }
 
+// GetAddrSize retrieves the address and size of a symbol by its name.
+// It returns the address, size, and a boolean indicating whether the symbol was found.
+//
+// Parameters:
+//   - name: The name of the symbol to look up.
+//
+// Returns:
+//   - addr: The address of the symbol if found, otherwise 0.
+//   - size: The size of the symbol if found, otherwise 0.
+//   - found: A boolean indicating whether the symbol was found.
 func (s *symbols) GetAddrSize(name string) (addr uint64, size uint64, found bool) {
 	sym, found := s.symbols[name]
 	if !found {

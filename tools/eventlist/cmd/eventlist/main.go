@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -20,6 +20,7 @@ package main
 
 import (
 	"eventlist/pkg/elf"
+	"eventlist/pkg/eval"
 	"eventlist/pkg/output"
 	"eventlist/pkg/xml/scvd"
 	"flag"
@@ -33,6 +34,8 @@ var versionInfo string
 
 type includes []string
 
+// String returns the first element of the includes slice as a string.
+// If the slice is nil or empty, it returns an empty string.
 func (s *includes) String() string {
 	if s == nil || len(*s) == 0 {
 		return ""
@@ -40,6 +43,17 @@ func (s *includes) String() string {
 	return (*s)[0]
 }
 
+// Set appends the given string value to the includes slice.
+// It implements the flag.Value interface, allowing the includes
+// slice to be used as a command-line flag.
+//
+// Parameters:
+//
+//	v - the string value to be appended to the includes slice.
+//
+// Returns:
+//
+//	An error, which is always nil in this implementation.
 func (s *includes) Set(v string) error {
 	*s = append(*s, v)
 	return nil
@@ -47,6 +61,21 @@ func (s *includes) Set(v string) error {
 
 var paths includes
 
+// infoOpt prints information about a command-line option.
+//
+// Parameters:
+//   - flags: A FlagSet containing the defined command-line flags.
+//   - sopt: The short option name (e.g., "h" for "-h").
+//   - lopt: The long option name (e.g., "help" for "--help").
+//   - arg: A boolean indicating whether the option requires an argument.
+//
+// Returns:
+//   - error: An error if any of the printing operations fail, otherwise nil.
+//
+// The function prints the short and/or long option names, followed by
+// "arg" if the option requires an argument. It then prints the usage
+// information for the option, or "unknown option" if the option is not
+// found in the FlagSet.
 func infoOpt(flags *flag.FlagSet, sopt string, lopt string, arg bool) error {
 	pos, err := fmt.Print("  ")
 	if err != nil {
@@ -101,6 +130,27 @@ func infoOpt(flags *flag.FlagSet, sopt string, lopt string, arg bool) error {
 	return nil
 }
 
+// main is the entry point of the event listing tool. It parses command-line
+// arguments, sets up the necessary configurations, and processes the event
+// log file. The tool supports various options such as specifying an output
+// file, format type, and level of detail. It also includes options for
+// displaying version information and statistics.
+//
+// Usage:
+//
+//	eventlist [options] <logFile>
+//
+// Options:
+//
+//	-a <file>        Application file: elf/axf file name
+//	-b, --begin      Output order: show statistic before events
+//	-h, --help       Show help message
+//	-I <file>        Include SCVD file name(s)
+//	-o <file>        Output file
+//	-s, --statistic  Output: show statistic but no events
+//	-V, --version    Show version info
+//	-f <format>      Output format: txt, json, xml
+//	-l <level>       Level: Error|API|Op|Detail
 func main() {
 	var err error
 	Progname = os.Args[0]
@@ -193,8 +243,8 @@ func main() {
 			return
 		}
 	}
-	evdefs := make(map[uint16]scvd.Event)
-	typedefs := make(map[string]map[string]map[int16]string)
+	evdefs := make(scvd.Events)
+	typedefs := make(eval.Typedefs)
 
 	var p []string = paths
 	if err = scvd.Get(&p, evdefs, typedefs); err != nil {

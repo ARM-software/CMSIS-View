@@ -1,0 +1,4 @@
+loadboard B-U585I-IOT02A allmodes
+project name STM32CubeMX
+project toolchain "MDK-ARM V5"
+SetCopyLibrary "copy only"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2021 Arm Limited. All rights reserved.
+ * Copyright (c) 2016-2024 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -127,7 +127,7 @@ extern uint32_t EventRecord4 (uint32_t id, uint32_t val1, uint32_t val2, uint32_
 // Event Start/Stop macros for execution statistics ----------------------------
 
 /// \param[in]    slot   slot number (up to 16 slots, 0..15) 
-#define EventStartA(slot)          EventRecord2 (0xEF00U+EventLevelError+(slot), ((uint32_t) __FILE__), __LINE__)
+#define EventStartA(slot)          EventRecord2 (0xEF00U+EventLevelError+((slot) & 0xFU), ((uint32_t) __FILE__), __LINE__)
 
 /// \param[in]    slot   slot number (up to 16 slots, 0..15) 
 /// \param[in]    v1     first data value

@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U002000123156501320323443 -O2254 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("ARM CoreSight SW-DP (ARM Core") -D00(0BE12477) -L00(0) -TO131090 -TC160000000 -TT10000000 -TP21 -TDS800D -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC8000 -FN2 -FF0STM32U5xx_2M_0800.FLM -FS08000000 -FL0200000 -FP0($$Device:STM32U585AIIx$CMSIS\Flash\STM32U5xx_2M_0800.FLM) -FF1STM32U5xx_2M_0C00.FLM -FS1C000000 -FL1200000 -FP1($$Device:STM32U585AIIx$CMSIS\Flash\STM32U5xx_2M_0C00.FLM) -WA0 -WE0 -WVCE4 -WS2710 -WM0 -WP2</Name>
+          <Name>-U002000123156501320323443 -O2254 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("ARM CoreSight SW-DP (ARM Core") -D00(0BE12477) -L00(0) -TO131090 -TC160000000 -TT10000000 -TP21 -TDS800D -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO7 -FD20000000 -FC8000 -FN2 -FF0STM32U5xx_2M_0800.FLM -FS08000000 -FL0200000 -FP0($$Device:STM32U585AIIx$CMSIS\Flash\STM32U5xx_2M_0800.FLM) -FF1STM32U5xx_2M_0C00.FLM -FS1C000000 -FL1200000 -FP1($$Device:STM32U585AIIx$CMSIS\Flash\STM32U5xx_2M_0C00.FLM) -WA0 -WE0 -WVCE4 -WS2710 -WM0 -WP2 -WK0-R0</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -150,8 +150,8 @@
       </TargetDriverDllRegistry>
       <Breakpoint/>
       <ScvdPack>
-        <Filename>C:\Arm\Packs\ARM\CMSIS-View\1.1.0\Fault\ARM_Fault.scvd</Filename>
-        <Type>ARM::CMSIS-View@1.1.0</Type>
+        <Filename>C:\ARM\PACK\ARM\CMSIS-View\1.2.0\Fault\ARM_Fault.scvd</Filename>
+        <Type>ARM::CMSIS-View@1.2.0</Type>
         <SubType>1</SubType>
       </ScvdPack>
       <Tracepoint>
@@ -227,7 +227,7 @@
   </Group>
 
   <Group>
-    <GroupName>:STM32CubeMX_S:Common Sources</GroupName>
+    <GroupName>:CubeMX:CubeMX</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -235,24 +235,24 @@
     <File>
       <GroupNumber>2</GroupNumber>
       <FileNumber>2</FileNumber>
-      <FileType>1</FileType>
+      <FileType>2</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Board\B-U585I-IOT02A\STM32CubeMX\Secure\Src\main.c</PathWithFileName>
-      <FilenameWithoutPath>main.c</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\MDK-ARM\startup_stm32u585xx.s</PathWithFileName>
+      <FilenameWithoutPath>startup_stm32u585xx.s</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
       <FileNumber>3</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Board\B-U585I-IOT02A\STM32CubeMX\Secure\Inc\stm32u5xx_it.h</PathWithFileName>
-      <FilenameWithoutPath>stm32u5xx_it.h</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Secure\Src\system_stm32u5xx_s.c</PathWithFileName>
+      <FilenameWithoutPath>system_stm32u5xx_s.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -263,8 +263,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Board\B-U585I-IOT02A\STM32CubeMX\Secure\Src\stm32u5xx_it.c</PathWithFileName>
-      <FilenameWithoutPath>stm32u5xx_it.c</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Secure\Src\main.c</PathWithFileName>
+      <FilenameWithoutPath>main.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -275,55 +275,55 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Board\B-U585I-IOT02A\STM32CubeMX\Secure\Src\secure_nsc.c</PathWithFileName>
-      <FilenameWithoutPath>secure_nsc.c</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Secure\Src\stm32u5xx_it.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_it.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
       <FileNumber>6</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Board\B-U585I-IOT02A\STM32CubeMX\Secure_nsclib\secure_nsc.h</PathWithFileName>
-      <FilenameWithoutPath>secure_nsc.h</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Secure\Src\stm32u5xx_hal_msp.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_msp.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
       <FileNumber>7</FileNumber>
-      <FileType>5</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Board\B-U585I-IOT02A\STM32CubeMX\STM32CubeMX.ioc</PathWithFileName>
-      <FilenameWithoutPath>STM32CubeMX.ioc</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Secure\Src\secure_nsc.c</PathWithFileName>
+      <FilenameWithoutPath>secure_nsc.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>2</GroupNumber>
+      <FileNumber>8</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Secure\Src\stm32u5xx_hal_timebase_tim.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_timebase_tim.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
   </Group>
 
   <Group>
-    <GroupName>Interface</GroupName>
+    <GroupName>:CubeMX:STM32 HAL Driver</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
-    <File>
-      <GroupNumber>3</GroupNumber>
-      <FileNumber>8</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>.\interface.c</PathWithFileName>
-      <FilenameWithoutPath>interface.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>9</FileNumber>
@@ -331,8 +331,404 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\tz_context.c</PathWithFileName>
-      <FilenameWithoutPath>tz_context.c</FilenameWithoutPath>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_cortex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_cortex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>10</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_gtzc.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_gtzc.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>11</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>12</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_i2c.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_i2c.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>13</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_i2c_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_i2c_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>14</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_rcc.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_rcc.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>15</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_rcc_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_rcc_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>16</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_flash.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_flash.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>17</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_flash_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_flash_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>18</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_gpio.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_gpio.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>19</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_dma.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_dma.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>20</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_dma_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_dma_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>21</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_exti.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_exti.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>22</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_pwr.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_pwr.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>23</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_pwr_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_pwr_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>24</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_icache.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_icache.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>25</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_tim.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_tim.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>26</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_tim_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_tim_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>27</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_utils.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_utils.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>28</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_exti.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_exti.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>29</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_mdf.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_mdf.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>30</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_ospi.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_ospi.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>31</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_dlyb.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_dlyb.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>32</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_spi.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_spi.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>33</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_spi_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_spi_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>34</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_uart.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_uart.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>35</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_uart_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_uart_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>36</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_ucpd.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_ucpd.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>37</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_gpio.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_gpio.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>38</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_lpgpio.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_lpgpio.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>39</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_dma.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_dma.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>40</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_pcd.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_pcd.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>41</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_pcd_ex.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_hal_pcd_ex.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>42</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_usb.c</PathWithFileName>
+      <FilenameWithoutPath>stm32u5xx_ll_usb.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

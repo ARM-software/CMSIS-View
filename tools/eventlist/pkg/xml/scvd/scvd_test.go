@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -20,6 +20,7 @@
 package scvd
 
 import (
+	"eventlist/pkg/eval"
 	"testing"
 )
 
@@ -28,9 +29,9 @@ func TestComponentViewer_getFromFile(t *testing.T) {
 	var wrongName = "../../../testdata/xxxxx"
 
 	type fields struct {
-		Component Component
-		Typedefs  Typedefs
-		Events    Events
+		Component ComponentsType
+		Typedefs  TypedefsType
+		Events    EventsType
 	}
 	type args struct {
 		name *string
@@ -58,93 +59,34 @@ func TestComponentViewer_getFromFile(t *testing.T) {
 	}
 }
 
-func TestEnum_getInfo(t *testing.T) {
-	type fields struct {
-		Name  string
-		Value string
-		Info  string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		want    int16
-		wantErr bool
-	}{
-		{"getInfo", fields{"Name", "1+1", "Info"}, 2, false},
-		{"getInfo err", fields{"Name", "??", "Info"}, 0, true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			enum := &Enum{
-				Name:  tt.fields.Name,
-				Value: tt.fields.Value,
-				Info:  tt.fields.Info,
-			}
-			got, err := enum.getInfo()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Enum.getInfo() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("Enum.getInfo() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestID_getIdValue(t *testing.T) {
-	var id1 ID = "2+3"
-	var id2 ID = "=="
-
-	tests := []struct {
-		name    string
-		id      *ID
-		want    uint16
-		wantErr bool
-	}{
-		{"getIdValue", &id1, 5, false},
-		{"getIdValue err", &id2, 0, true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.id.getIdValue()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ID.getIdValue() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("ID.getIdValue() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_getOne(t *testing.T) {
 	var name = "../../../testdata/test.xml"
+	var name1 = "../../../testdata/test1.xml"
 	var wrongName = "../../../testdata/xxxxx"
 	var nameErr1 = "../../../testdata/test_err1.xml"
 	var nameErr2 = "../../../testdata/test_err2.xml"
 	var nameErr3 = "../../../testdata/test_err3.xml"
-	var evs = make(map[uint16]Event)
-	var tds = make(map[string]map[string]map[int16]string)
+	var evs = make(Events)
+	var tds = make(eval.Typedefs)
 
 	type args struct {
 		filename *string
-		events   map[uint16]Event
-		typedefs map[string]map[string]map[int16]string
+		events   Events
+		typedefs eval.Typedefs
 	}
 	tests := []struct {
 		name    string
 		args    args
-		ev      uint16
+		ev      IDType
 		evWant  string
 		td      string
 		member  string
-		enum    int16
+		enum    int64
 		tdWant  string
 		wantErr bool
 	}{
 		{"getOne", args{&name, evs, tds}, 0xEF00, "File=fff", "attr", "member", 1, "ready", false},
+		{"getOne1", args{&name1, evs, tds}, 0x2003, "%x[val1.B0] %x[val1.B1] %x[val1.B2] %x[val1.B3]", "BY4", "B2", -1, "2", false},
 		{"getOne err", args{&wrongName, evs, tds}, 0, "", "", "", 0, "", true},
 		{"getOne err1", args{&nameErr1, evs, tds}, 0, "", "", "", 0, "", true},
 		{"getOne err2", args{&nameErr2, evs, tds}, 0, "", "", "", 0, "", true},
@@ -158,8 +100,17 @@ func Test_getOne(t *testing.T) {
 			if string(evs[tt.ev].Value) != tt.evWant {
 				t.Errorf("getOne() event = %v, want %v", string(evs[tt.ev].Value), tt.evWant)
 			}
-			if tds[tt.td][tt.member][tt.enum] != tt.tdWant {
-				t.Errorf("getOne() enum = %v, want %v", tds[tt.td][tt.member][tt.enum], tt.tdWant)
+			if tt.enum == -1 {
+				if tt.args.events[tt.ev].Val1 != tt.td {
+					t.Errorf("getOne() val1 = %v, want %v", tt.args.events[tt.ev].Val1, tt.td)
+				}
+				if tds[tt.td].Members[tt.member].Offset != tt.tdWant {
+					t.Errorf("getOne() enum = %v, want %v", tds[tt.td].Members[tt.member].Offset, tt.tdWant)
+				}
+			} else {
+				if tds[tt.td].Members[tt.member].Enums[tt.enum] != tt.tdWant {
+					t.Errorf("getOne() enum = %v, want %v", tds[tt.td].Members[tt.member].Enums[tt.enum], tt.tdWant)
+				}
 			}
 		})
 	}
@@ -168,13 +119,13 @@ func Test_getOne(t *testing.T) {
 func TestGet(t *testing.T) {
 	var files = []string{"../../../testdata/test.xml"}
 	var files1 = []string{"../../../testdata/xxxxx"}
-	var evs = make(map[uint16]Event)
-	var tds = make(map[string]map[string]map[int16]string)
+	var evs = make(Events)
+	var tds = make(eval.Typedefs)
 
 	type args struct {
 		scvdFiles *[]string
-		events    map[uint16]Event
-		typedefs  map[string]map[string]map[int16]string
+		events    Events
+		typedefs  eval.Typedefs
 	}
 	tests := []struct {
 		name    string

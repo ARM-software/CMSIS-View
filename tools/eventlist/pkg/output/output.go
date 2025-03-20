@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -104,6 +104,9 @@ type EventsTable struct {
 	Statistics []EventRecordStatistic `json:"statistics" xml:"statistics"`
 }
 
+// init initializes the eventStatistic struct by setting default values for its fields.
+// It sets boolean fields evFirst and evStart to false, count to 0, min to the maximum float64 value,
+// max to 0, and other numeric fields (first, last, avg, minTime, maxTime, firstTime, lastTime) to 0.
 func (es *eventStatistic) init() {
 	es.evFirst = false
 	es.evStart = false
@@ -119,6 +122,25 @@ func (es *eventStatistic) init() {
 	es.lastTime = 0
 }
 
+// add records the start and stop events with their respective times and texts,
+// and updates the event statistics accordingly.
+//
+// Parameters:
+//   - time: The time at which the event occurred.
+//   - start: A boolean indicating whether the event is a start event (true) or a stop event (false).
+//   - text: A string containing additional information about the event.
+//
+// The function updates the following statistics:
+//   - Minimum event duration and its start time and texts.
+//   - Maximum event duration and its start time and texts.
+//   - First event duration and its start time.
+//   - Last event duration and its start time.
+//   - Total duration of all events.
+//   - Average duration of all events.
+//   - Count of events.
+//
+// If a start event is recorded while another start event is still active, it is ignored.
+// Similarly, if a stop event is recorded without a corresponding start event, it is ignored.
 func (es *eventStatistic) add(time float64, start bool, text string) {
 	if start {
 		if es.evStart {
@@ -162,12 +184,24 @@ type eventProperty struct {
 	values [16]eventStatistic
 }
 
+// init initializes all the values in the eventProperty's values slice by calling
+// their respective init methods. It iterates over each element in the slice and
+// invokes the init method on each one.
 func (ep *eventProperty) init() {
 	for i := uint16(0); i < uint16(len(ep.values)); i++ {
 		ep.values[i].init()
 	}
 }
 
+// add adds an event to the eventProperty. If the idx is 15 and start is false,
+// it stops all events by iterating through all values and calling their add method.
+// Otherwise, it adds the event to the specific index in the values slice.
+//
+// Parameters:
+//   - time: The time at which the event occurs.
+//   - idx: The index of the event in the values slice.
+//   - start: A boolean indicating whether the event is a start event.
+//   - text: A string containing additional information about the event.
 func (ep *eventProperty) add(time float64, idx uint16, start bool, text string) {
 	if idx == 15 && !start { // stop 15 means stop all
 		for i := uint16(0); i < uint16(len(ep.values)); i++ {
@@ -178,6 +212,16 @@ func (ep *eventProperty) add(time float64, idx uint16, start bool, text string) 
 	}
 }
 
+// getCount returns the count of events at the specified index.
+// If the index is out of range, it returns 0.
+//
+// Parameters:
+//
+//	idx - the index of the event property to retrieve the count for.
+//
+// Returns:
+//
+//	The count of events at the specified index, or 0 if the index is out of range.
 func (ep *eventProperty) getCount(idx uint16) int {
 	if int(idx) >= len(ep.values) {
 		return 0
@@ -185,6 +229,18 @@ func (ep *eventProperty) getCount(idx uint16) int {
 	return ep.values[idx].count
 }
 
+// getAddCount returns a string indicating whether an event should be added.
+// If the event at the given index has started, it returns "+1". Otherwise,
+//
+//	it returns "  " as place holder.
+//
+// Parameters:
+//
+//	idx (uint16): The index of the event in the values slice.
+//
+// Returns:
+//
+//	string: "+1" if the event at the given index has started, otherwise "  ".
 func (ep *eventProperty) getAddCount(idx uint16) string {
 	if int(idx) < len(ep.values) && ep.values[idx].evStart {
 		return "+1"
@@ -192,6 +248,19 @@ func (ep *eventProperty) getAddCount(idx uint16) string {
 	return "  "
 }
 
+// convertUnit converts a given float64 value `v` to a string representation
+// with an appropriate unit prefix (G, M, k, m, µ, n) based on its magnitude.
+// The `unit` parameter is the base unit to which the prefix will be added.
+// The function returns a formatted string with the value adjusted to the
+// appropriate magnitude and the corresponding unit prefix.
+//
+// Parameters:
+//   - v: The float64 value to be converted.
+//   - unit: The base unit as a string.
+//
+// Returns:
+//
+//	A string representing the value `v` with the appropriate unit prefix.
 func convertUnit(v float64, unit string) string { //nolint:golint,unparam
 	switch {
 	case v >= 1e9:
@@ -218,18 +287,58 @@ func convertUnit(v float64, unit string) string { //nolint:golint,unparam
 	return fmt.Sprintf("%9.5f%s", v, unit)
 }
 
+// getTot retrieves the total time (tot) value from the eventProperty at the specified index,
+// converts it to a string representation in seconds, and returns it.
+//
+// Parameters:
+//
+//	idx (uint16): The index of the eventProperty value to retrieve.
+//
+// Returns:
+//
+//	string: The total time value converted to a string in seconds.
 func (ep *eventProperty) getTot(idx uint16) string {
 	return convertUnit(ep.values[idx].tot, "s")
 }
 
+// getMin returns the minimum value from the eventProperty values at the specified index,
+// converted to a string representation with the unit "s" (seconds).
+//
+// Parameters:
+//
+//	idx (uint16): The index of the value to retrieve.
+//
+// Returns:
+//
+//	string: The minimum value at the specified index, converted to a string with the unit "s".
 func (ep *eventProperty) getMin(idx uint16) string {
 	return convertUnit(ep.values[idx].min, "s")
 }
 
+// getMax retrieves the maximum value from the eventProperty's values at the specified index,
+// converts it to a string with the appropriate unit, and returns it.
+//
+// Parameters:
+//
+//	idx - The index of the value to retrieve.
+//
+// Returns:
+//
+//	A string representing the maximum value at the specified index, converted to the appropriate unit.
 func (ep *eventProperty) getMax(idx uint16) string {
 	return convertUnit(ep.values[idx].max, "s")
 }
 
+// getAvg calculates the average value for the event property at the specified index.
+// It returns the average value as a string with the appropriate unit.
+//
+// Parameters:
+//
+//	idx (uint16): The index of the event property value to calculate the average for.
+//
+// Returns:
+//
+//	string: The average value as a string with the unit "s". If the count is zero, it returns "0s".
 func (ep *eventProperty) getAvg(idx uint16) string {
 	if ep.values[idx].count != 0 {
 		return convertUnit(ep.values[idx].avg/float64(ep.values[idx].count), "s")
@@ -237,10 +346,30 @@ func (ep *eventProperty) getAvg(idx uint16) string {
 	return convertUnit(0, "s")
 }
 
+// getFirst retrieves the first value from the eventProperty at the specified index,
+// converts it to a string representation in seconds, and returns it.
+//
+// Parameters:
+//
+//	idx (uint16): The index of the value to retrieve.
+//
+// Returns:
+//
+//	string: The string representation of the first value in seconds.
 func (ep *eventProperty) getFirst(idx uint16) string {
 	return convertUnit(ep.values[idx].first, "s")
 }
 
+// getLast retrieves the last value from the eventProperty at the specified index,
+// converts it to a string representation in seconds, and returns it.
+//
+// Parameters:
+//
+//	idx - The index of the value to retrieve.
+//
+// Returns:
+//
+//	A string representation of the last value at the specified index, converted to seconds.
 func (ep *eventProperty) getLast(idx uint16) string {
 	return convertUnit(ep.values[idx].last, "s")
 }
@@ -252,8 +381,23 @@ type Output struct {
 	propertySize  int
 }
 
-func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string) int {
+// TODO: escape-sequeces for Color and Bold
+
+// buildStatistic processes events from the provided bufio.Reader and updates
+// the Output structure with statistics about the events. It reads events,
+// evaluates their properties, and updates the component and property sizes
+// based on the event definitions. It also handles specific event classes and
+// updates the event properties accordingly.
+//
+// Parameters:
+//   - in: a bufio.Reader from which events are read.
+//   - evdefs: a map of event definitions (scvd.Events).
+//   - typedefs: a map of type definitions (eval.Typedefs).
+//
+// Returns:
+//
+//	The total number of events processed.
+func (o *Output) buildStatistic(in *bufio.Reader, evdefs scvd.Events, typedefs eval.Typedefs) int {
 	o.componentSize = len(o.columns[2]) // use minimum width of header
 	o.propertySize = len(o.columns[3])
 	for i := uint16(0); i < uint16(len(o.evProps)); i++ {
@@ -272,7 +416,7 @@ func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
 			return 0
 		}
 		eventCount++
-		var evdef scvd.Event
+		var evdef scvd.EventType
 		var ok bool
 		var rep string
 		if evdef, ok = evdefs[ev.Info.ID]; ok {
@@ -321,6 +465,17 @@ func (o *Output) buildStatistic(in *bufio.Reader, evdefs map[uint16]scvd.Event,
 	return eventCount
 }
 
+// conditionalWrite writes formatted data to the provided bufio.Writer
+// if the global FormatType is set to "txt". It uses fmt.Fprintf to
+// format the data according to the specified format string and arguments.
+//
+// Parameters:
+//   - out: A pointer to a bufio.Writer where the formatted data will be written.
+//   - format: A format string as described in the fmt package documentation.
+//   - a: Variadic arguments to be formatted according to the format string.
+//
+// Returns:
+//   - err: An error value if writing to the bufio.Writer fails, otherwise nil.
 func conditionalWrite(out *bufio.Writer, format string, a ...any) (err error) {
 	if FormatType == "txt" {
 		_, err = fmt.Fprintf(out, format, a...)
@@ -329,6 +484,19 @@ func conditionalWrite(out *bufio.Writer, format string, a ...any) (err error) {
 	return nil
 }
 
+// printStatistic writes the event statistics to the provided bufio.Writer.
+// It includes details such as event count, total, min, max, average, first, and last occurrences.
+// The statistics are formatted and written in a tabular form.
+//
+// Parameters:
+//
+//	out - A pointer to a bufio.Writer where the statistics will be written.
+//	eventCount - The total number of events to be processed.
+//	eventTable - A pointer to an EventsTable where the statistics will be stored.
+//
+// Returns:
+//
+//	An error if any write operation fails, otherwise nil.
 func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *EventsTable) error {
 	var err error
 
@@ -410,6 +578,21 @@ func (o *Output) printStatistic(out *bufio.Writer, eventCount int, eventTable *E
 	return err
 }
 
+// escapeGen takes a string as input and returns a new string with certain characters
+// escaped using backslashes. The function handles the following characters:
+// - Single quote ('): escaped as \'
+// - Double quote ("): escaped as \"
+// - Alert/bell (\a): escaped as \a
+// - Backspace (\b): escaped as \b
+// - Escape (\x1b): escaped as \e
+// - Form feed (\f): escaped as \f
+// - Newline (\n): escaped as \n
+// - Carriage return (\r): escaped as \r
+// - Horizontal tab (\t): escaped as \t
+// - Vertical tab (\v): escaped as \v
+// For any other control characters (ASCII values less than 32), the function
+// escapes them using their octal representation (e.g., \000).
+// All other characters are left unchanged.
 func escapeGen(s string) string {
 	var t string
 	for _, c := range s {
@@ -445,8 +628,23 @@ func escapeGen(s string) string {
 	return t
 }
 
-func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, eventTable *EventsTable) error {
+// printEvents reads events from the input buffer, processes them, and writes the formatted events to the output buffer.
+// It also updates the event table with the processed events.
+//
+// Parameters:
+//   - out: A buffered writer to which the formatted events will be written.
+//   - in: A buffered reader from which the events will be read.
+//   - evdefs: A map of event definitions used to interpret the events.
+//   - typedefs: A map of type definitions used for evaluating event data.
+//   - eventTable: A table to store the processed events.
+//
+// Returns:
+//   - error: An error if any occurs during reading, processing, or writing events.
+//
+// The function processes special events such as EventRecorderInitialize (ID 0xFF00) and Clock event (ID 0xFF03)
+// to adjust the time factor. It filters events based on the specified level and formats them accordingly.
+// The function handles special cases like stdout events (ID 0xFE00) differently.
+func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs scvd.Events, typedefs eval.Typedefs, eventTable *EventsTable) error {
 	if out == nil || in == nil {
 		return nil
 	}
@@ -540,6 +738,16 @@ func (o *Output) printEvents(out *bufio.Writer, in *bufio.Reader, evdefs map[uin
 	return err
 }
 
+// printHeader writes the header section of the detailed event list to the provided bufio.Writer.
+// It includes the title, a separator line, and column headers formatted according to the Output struct's settings.
+//
+// Parameters:
+//
+//	out (*bufio.Writer): The buffered writer to which the header will be written.
+//
+// Returns:
+//
+//	error: An error if any write operation fails, otherwise nil.
 func (o *Output) printHeader(out *bufio.Writer) error {
 	var err error
 	if err = conditionalWrite(out, "   Detailed event list\n"); err != nil {
@@ -558,8 +766,23 @@ func (o *Output) printHeader(out *bufio.Writer) error {
 	return err
 }
 
-func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
+// print generates and writes the output for the given event file and definitions.
+// It processes the events, builds statistics, and prints the event details and statistics
+// based on the provided flags.
+//
+// Parameters:
+//   - out: A buffered writer to write the output.
+//   - eventFile: A pointer to the event file path string.
+//   - evdefs: Event definitions.
+//   - typedefs: Type definitions.
+//   - statBegin: A flag indicating whether to print statistics at the beginning.
+//   - showStatistic: A flag indicating whether to show statistics.
+//   - eventsTable: A pointer to the events table.
+//
+// Returns:
+//   - An error if any operation fails, otherwise nil.
+func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs scvd.Events,
+	typedefs eval.Typedefs, statBegin bool, showStatistic bool, eventsTable *EventsTable) error {
 	var b event.Binary
 	var err error
 	var eventCount int
@@ -615,8 +838,23 @@ func (o *Output) print(out *bufio.Writer, eventFile *string, evdefs map[uint16]s
 	return err
 }
 
-func Print(filename *string, formatType *string, level *string, eventFile *string, evdefs map[uint16]scvd.Event,
-	typedefs map[string]map[string]map[int16]string, statBegin bool, showStatistic bool) error {
+// Print generates and writes event data to a specified file or standard output in a given format.
+// It supports XML and JSON formats and can include statistics if specified.
+//
+// Parameters:
+//   - filename: Pointer to the name of the file where the output will be written. If nil or empty, output is written to stdout.
+//   - formatType: Pointer to the format type ("xml" or "json"). If nil or invalid, default format is used.
+//   - level: Pointer to the level of detail for the output. If nil or empty, default level is used.
+//   - eventFile: Pointer to the event file name.
+//   - evdefs: Event definitions.
+//   - typedefs: Type definitions.
+//   - statBegin: Boolean flag indicating whether to include statistics at the beginning.
+//   - showStatistic: Boolean flag indicating whether to show statistics.
+//
+// Returns:
+//   - error: An error if the file could not be created or written to, or if there was an error during the output generation.
+func Print(filename *string, formatType *string, level *string, eventFile *string, evdefs scvd.Events,
+	typedefs eval.Typedefs, statBegin bool, showStatistic bool) error {
 	var file *os.File
 	var err error
 	var o Output

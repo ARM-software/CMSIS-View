@@ -1,13 +1,15 @@
 project:
+  description: Fault example for B-U585I-IOT02A board (Cortex-M33) - non-secure application
 
   processor:
     trustzone: non-secure
 
   packs:
-    - pack: ARM::CMSIS@>=6.0.0-0
-    - pack: ARM::CMSIS-RTX@>=5.8.0-0
-    - pack: ARM::CMSIS-Compiler@>=2.0.0-0
-    - pack: ARM::CMSIS-View
+    - pack: ARM::CMSIS-View@^1.2.0-0
+    - pack: ARM::CMSIS@^6.1.0
+    - pack: ARM::CMSIS-Compiler@^2.1.0
+    - pack: ARM::CMSIS-RTX@^5.9.0
+    - pack: ARM::CMSIS-Driver_STM32@^1.0.0
 
   groups:
     - group: Documentation
@@ -20,35 +22,32 @@ project:
         - file: ARM_FaultTrigger.c
         - file: ARM_FaultPrint.c
         - file: retarget_stdio.c
-
-    - group: CMSE_Library
-      files:
-        - file: $cmse-lib(Fault_S)$
+          define:
+            - RETARGET_STDIO_UART: 1
 
   components:
     - component: CMSIS:CORE
+
     - component: CMSIS:OS Tick:SysTick
     - component: CMSIS:RTOS2:Keil RTX5&Source
 
     - component: CMSIS-Compiler:CORE
-    - component: CMSIS-Compiler:STDERR:Custom
-    - component: CMSIS-Compiler:STDOUT:Custom
     - component: CMSIS-Compiler:STDIN:Custom
+    - component: CMSIS-Compiler:STDOUT:Custom
+    - component: CMSIS-Compiler:STDERR:Custom
 
     - component: CMSIS-View:Event Recorder&DAP
     - component: CMSIS-View:Fault:Record
     - component: CMSIS-View:Fault:Storage
 
-    - component: Device:STM32Cube Framework:STM32CubeMX
+    - component: Device:CubeMX
+    - component: CMSIS Driver:GPIO
+    - component: CMSIS Driver:USART
+    - component: CMSIS Driver:VIO:Board
 
-    - component: Device:STM32Cube HAL:Common
-    - component: Device:STM32Cube HAL:Cortex
-    - component: Device:STM32Cube HAL:DMA
-    - component: Device:STM32Cube HAL:Flash
-    - component: Device:STM32Cube HAL:GPIO
-    - component: Device:STM32Cube HAL:GTZC
-    - component: Device:STM32Cube HAL:PWR
-    - component: Device:STM32Cube HAL:RCC
-    - component: Device:STM32Cube HAL:UART
+  linker:
+    - script: stm32u585xx_flash_ns.sct
+      for-compiler: AC6
 
-    - component: Device:Startup&Source C
+    - script: STM32U585AIIXQ_FLASH.ld
+      for-compiler: GCC

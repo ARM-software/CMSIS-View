@@ -10,13 +10,13 @@
       <TargetName>B-U585I-IOT02A</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6210000::V6.21::ARMCLANG</pCCUsed>
+      <pCCUsed>6220000::V6.22::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32U585AIIx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32U5xx_DFP.2.1.0</PackID>
+          <PackID>Keil.STM32U5xx_DFP.3.0.0</PackID>
           <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00040000) IRAM2(0x20040000,0x00080000) IROM(0x08000000,0x00200000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-Wno-unsafe-buffer-usage</MiscControls>
-              <Define>RTE_Compiler_EventRecorder, RTE_Compiler_EventRecorder_DAP</Define>
+              <Define>RETARGET_STDIO_UART=1, RTE_Compiler_EventRecorder, RTE_Compiler_EventRecorder_DAP</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -371,7 +371,7 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\RTE\Device\STM32U585AIIx\stm32u585xx_flash_ns.sct</ScatterFile>
+            <ScatterFile>.\stm32u585xx_flash_ns.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -417,43 +417,158 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>:STM32CubeMX_NS:Common Sources</GroupName>
+          <GroupName>:CubeMX:CubeMX</GroupName>
           <Files>
+            <File>
+              <FileName>startup_stm32u585xx.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\MDK-ARM\startup_stm32u585xx.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_stm32u5xx_ns.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\system_stm32u5xx_ns.c</FilePath>
+            </File>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Board\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32u5xx_it.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Board\B-U585I-IOT02A\STM32CubeMX\NonSecure\Inc\stm32u5xx_it.h</FilePath>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\main.c</FilePath>
             </File>
             <File>
               <FileName>stm32u5xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Board\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\stm32u5xx_it.c</FilePath>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\stm32u5xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>secure_nsc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Board\B-U585I-IOT02A\STM32CubeMX\Secure_nsclib\secure_nsc.h</FilePath>
+              <FileName>stm32u5xx_hal_msp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\stm32u5xx_hal_msp.c</FilePath>
             </File>
             <File>
-              <FileName>STM32CubeMX.ioc</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Board\B-U585I-IOT02A\STM32CubeMX\STM32CubeMX.ioc</FilePath>
+              <FileName>stm32u5xx_hal_timebase_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\NonSecure\Src\stm32u5xx_hal_timebase_tim.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>CMSE Library</GroupName>
+          <GroupName>:CubeMX:STM32 HAL Driver</GroupName>
           <Files>
             <File>
-              <FileName>interface.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Secure\interface.h</FilePath>
+              <FileName>stm32u5xx_ll_utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_utils.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32u5xx_ll_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_ll_exti.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_cortex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_cortex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_gtzc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_gtzc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_i2c_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_i2c_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_rcc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_rcc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_rcc_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_flash_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_flash_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_dma_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_dma_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_exti.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_pwr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_pwr.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_pwr_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_pwr_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_icache.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_icache.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_tim_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_tim_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32u5xx_hal_uart_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\STM32CubeMX\B-U585I-IOT02A\STM32CubeMX\Drivers\STM32U5xx_HAL_Driver\Src\stm32u5xx_hal_uart_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>:CubeMX:CMSE Library</GroupName>
+          <Files>
             <File>
               <FileName>Fault_S_CMSE_Lib.o</FileName>
               <FileType>3</FileType>
@@ -532,6 +647,9 @@
               </Aads>
             </GroupArmAds>
           </GroupOption>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS Driver</GroupName>
         </Group>
         <Group>
           <GroupName>::CMSIS-Compiler</GroupName>
@@ -685,77 +803,60 @@
   </Targets>
 
   <RTE>
-    <packages>
-      <filter>
-        <targetInfos/>
-      </filter>
-      <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0">
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
-        </targetInfos>
-      </package>
-      <package name="CMSIS-RTX" vendor="ARM" version="5.8.0">
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
-        </targetInfos>
-      </package>
-      <package name="CMSIS-View" vendor="ARM">
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </package>
-      <package name="CMSIS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="6.0.0">
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
-        </targetInfos>
-      </package>
-      <package name="B-U585I-IOT02A_BSP" schemaVersion="1.7.2" url="https://github.com/MDK-Packs/Pack/raw/master/B-U585I-IOT02A_BSP/" vendor="Keil" version="1.0.0">
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
-        </targetInfos>
-      </package>
-      <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0">
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A" versionMatchMode="fixed"/>
-        </targetInfos>
-      </package>
-    </packages>
     <gpdscs>
-      <gpdsc name="../Board/B-U585I-IOT02A/STM32CubeMX/NonSecure/FrameworkCubeMX.gpdsc">
+      <gpdsc generator="CubeMX" name="../STM32CubeMX/B-U585I-IOT02A/Fault_NS.cgen.yml">
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </gpdsc>
     </gpdscs>
     <boards>
-      <board Bname="B-U585I-IOT02A" Bvendor="STMicroelectronics" Bversion="Rev.C">
-        <package name="B-U585I-IOT02A_BSP" schemaVersion="1.7.2" url="https://github.com/MDK-Packs/Pack/raw/master/B-U585I-IOT02A_BSP/" vendor="Keil" version="1.0.0"/>
+      <board Bname="B-U585I-IOT02A" Brevision="Rev.C" Bvendor="STMicroelectronics" Bversion="Rev.C">
+        <package name="B-U585I-IOT02A_BSP" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="Keil" version="2.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </board>
     </boards>
     <apis>
-      <api Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="OS Interface" condition="Cortex-M Device" exclusive="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
+      <api Capiversion="1.0.0" Cclass="CMSIS Driver" Cgroup="GPIO" exclusive="0">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="STDERR" condition="CortexDevice" exclusive="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <api Capiversion="2.4.0" Cclass="CMSIS Driver" Cgroup="USART" exclusive="0">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="STDIN" condition="CortexDevice" exclusive="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <api Capiversion="1.0.0" Cclass="CMSIS Driver" Cgroup="VIO" exclusive="1">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="STDOUT" condition="CortexDevice" exclusive="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <api Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="OS Interface" condition="ARMCC CortexDevice" exclusive="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A"/>
+        </targetInfos>
+      </api>
+      <api Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="STDERR" condition="CortexDevice" exclusive="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A"/>
+        </targetInfos>
+      </api>
+      <api Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="STDIN" condition="CortexDevice" exclusive="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="B-U585I-IOT02A"/>
+        </targetInfos>
+      </api>
+      <api Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="STDOUT" condition="CortexDevice" exclusive="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
@@ -772,52 +873,46 @@
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </api>
-      <api Capiversion="1.1.0" Cclass="Device" Cgroup="STM32Cube Framework" condition="STM32U5" exclusive="1">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </api>
     </apis>
     <components>
-      <component Cclass="CMSIS-Compiler" Cgroup="CORE" Cvendor="ARM" Cversion="1.0.0" condition="ARMCC CortexDevice">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <component Cclass="CMSIS-Compiler" Cgroup="CORE" Cvendor="ARM" Cversion="1.1.0" condition="ARMCC CortexDevice">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="OS Interface" Csub="CMSIS-RTOS2" Cvendor="ARM" Cversion="2.0.0" condition="ARMCC CORE CMSIS-RTOS2">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <component Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="OS Interface" Csub="CMSIS-RTOS2" Cvendor="ARM" Cversion="2.1.0" condition="ARMCC CORE CMSIS-RTOS2">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="STDERR" Csub="Custom" Cvendor="ARM" Cversion="1.0.0" condition="CORE" custom="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <component Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="STDERR" Csub="Custom" Cvendor="ARM" Cversion="1.1.0" condition="CORE" custom="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="STDIN" Csub="Custom" Cvendor="ARM" Cversion="1.0.0" condition="CORE" custom="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <component Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="STDIN" Csub="Custom" Cvendor="ARM" Cversion="1.1.0" condition="CORE" custom="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Capiversion="1.0.0" Cclass="CMSIS-Compiler" Cgroup="STDOUT" Csub="Custom" Cvendor="ARM" Cversion="1.0.0" condition="CORE" custom="1">
-        <package name="CMSIS-Compiler" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="2.0.0"/>
+      <component Capiversion="1.1.0" Cclass="CMSIS-Compiler" Cgroup="STDOUT" Csub="Custom" Cvendor="ARM" Cversion="1.1.0" condition="CORE" custom="1">
+        <package name="CMSIS-Compiler" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.3" condition="EventRecorder">
-        <package name="CMSIS-View" schemaVersion="1.7.25" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
+      <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.6.0" condition="EventRecorder">
+        <package name="CMSIS-View" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cvendor="ARM" Cversion="1.0.0" condition="FaultRecord">
-        <package name="CMSIS-View" schemaVersion="1.7.25" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
+      <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Record" Cvendor="ARM" Cversion="1.1.0" condition="FaultRecord">
+        <package name="CMSIS-View" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>
@@ -826,8 +921,8 @@
           </targetInfo>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cvendor="ARM" Cversion="1.0.1" condition="Cortex-M Device">
-        <package name="CMSIS-View" schemaVersion="1.7.25" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1"/>
+      <component Cclass="CMSIS-View" Cgroup="Fault" Csub="Storage" Cvendor="ARM" Cversion="1.1.0" condition="Cortex-M Device">
+        <package name="CMSIS-View" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="1.2.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A">
             <c>
@@ -836,8 +931,8 @@
           </targetInfo>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.0.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="6.0.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
@@ -848,104 +943,58 @@
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.8.0" condition="RTX5 NS">
-        <package name="CMSIS-RTX" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
+      <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.0" condition="RTX5 NS">
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube Framework" Csub="STM32CubeMX" Cvendor="Keil" Cversion="2.0.0" condition="STCubeMX" doc="C:/Arm/Packs/Keil/STM32U5xx_DFP/2.1.0/MDK/CubeMX/Documentation/cubemx.html" generated="1" generator="STM32CubeMX_NS" selectable="1">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+      <component Capiversion="1.0.0" Cclass="CMSIS Driver" Cgroup="GPIO" Cvendor="Keil" Cversion="1.1.0" condition="CMSIS Driver requirements">
+        <package name="CMSIS-Driver_STM32" schemaVersion="1.7.37" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1-dev17+gb10490b"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Common" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL Common">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+      <component Capiversion="2.4.0" Cclass="CMSIS Driver" Cgroup="USART" Cvendor="Keil" Cversion="3.0.0" condition="CMSIS Driver requirements">
+        <package name="CMSIS-Driver_STM32" schemaVersion="1.7.37" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.1-dev17+gb10490b"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Cortex" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+      <component Capiversion="1.0.0" Cclass="CMSIS Driver" Cgroup="VIO" Csub="Board" Cvendor="Keil" Cversion="2.0.2" condition="B-U585I-IOT02A GPIO">
+        <package name="B-U585I-IOT02A_BSP" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="Keil" version="2.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="DMA" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+      <component Cclass="Device" Cgroup="CubeMX" Cvendor="Keil" Cversion="1.0.0" condition="STM32U5 CMSIS" generator="CubeMX">
+        <package name="STM32U5xx_DFP" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="Keil" version="3.0.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="Flash" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="GPIO" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="GTZC" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="PWR" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="RCC" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL GPIO Flash">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="STM32Cube HAL" Csub="UART" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 HAL DMA">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="Startup" Cvariant="Source C" Cvendor="Keil" Cversion="1.0.0" condition="STM32U5 CMSIS">
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A">
-            <asm>
-              <ClangAsmOpt>4</ClangAsmOpt>
-            </asm>
-          </targetInfo>
         </targetInfos>
       </component>
     </components>
     <files>
       <file attr="config" category="header" name="EventRecorder\Config\EventRecorderConf.h" version="1.1.0">
         <instance index="0">RTE\CMSIS-View\EventRecorderConf.h</instance>
-        <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.5.3" condition="EventRecorder"/>
-        <package name="CMSIS-View" schemaVersion="1.7.25" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <component Cclass="CMSIS-View" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="ARM" Cversion="1.6.0" condition="EventRecorder"/>
+        <package name="CMSIS-View" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="1.2.1-dev"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </file>
       <file attr="config" category="source" name="Config\RTX_Config.c" version="5.2.0">
         <instance index="0">RTE\CMSIS\RTX_Config.c</instance>
-        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.8.0" condition="RTX5 NS"/>
-        <package name="CMSIS-RTX" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
+        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.0" condition="RTX5 NS"/>
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
       </file>
       <file attr="config" category="header" name="Config\RTX_Config.h" version="5.6.0">
         <instance index="0">RTE\CMSIS\RTX_Config.h</instance>
-        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.8.0" condition="RTX5 NS"/>
-        <package name="CMSIS-RTX" schemaVersion="1.7.27" url="https://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
+        <component Capiversion="2.3.0" Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source" Cvendor="ARM" Cversion="5.9.0" condition="RTX5 NS"/>
+        <package name="CMSIS-RTX" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="B-U585I-IOT02A"/>
         </targetInfos>
@@ -955,36 +1004,6 @@
         <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="Event Recorder" Cvariant="DAP" Cvendor="Keil" Cversion="1.5.1" condition="Cortex-M Device"/>
         <package name="ARM_Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="Keil" version="1.7.2"/>
         <targetInfos/>
-      </file>
-      <file attr="config" category="source" condition="STM32U585" name="MDK\Device\Source\startup_stm32u585xx.c" version="1.0.0">
-        <instance index="0">RTE\Device\STM32U585AIIx\startup_stm32u585xx.c</instance>
-        <component Cclass="Device" Cgroup="Startup" Cvariant="Source C" Cvendor="Keil" Cversion="1.0.0" condition="STM32U5 CMSIS"/>
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </file>
-      <file attr="config" category="source" condition="STM32U585 ARMCC" name="MDK\Device\Source\arm\startup_stm32u585xx.s" version="1.1.0">
-        <instance index="0" removed="1">RTE\Device\STM32U585AIIx\startup_stm32u585xx.s</instance>
-        <component Cclass="Device" Cgroup="Startup" Cvariant="Source ASM" Cvendor="Keil" Cversion="1.2.0" condition="STM32U5 CMSIS" isDefaultVariant="1"/>
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos/>
-      </file>
-      <file attr="config" category="linkerScript" condition="STM32U585 isNonSecure ARMCC" name="MDK\Device\Source\arm\linker\stm32u585xx_flash_ns.sct" version="2.0.0">
-        <instance index="0">RTE\Device\STM32U585AIIx\stm32u585xx_flash_ns.sct</instance>
-        <component Cclass="Device" Cgroup="Startup" Cvariant="Source C" Cvendor="Keil" Cversion="1.0.0" condition="STM32U5 CMSIS"/>
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
-      </file>
-      <file attr="config" category="source" condition="isNonSecure" name="Drivers\CMSIS\Device\ST\STM32U5xx\Source\Templates\system_stm32u5xx_ns.c" version="1.2.0">
-        <instance index="0">RTE\Device\STM32U585AIIx\system_stm32u5xx_ns.c</instance>
-        <component Cclass="Device" Cgroup="Startup" Cvariant="Source C" Cvendor="Keil" Cversion="1.0.0" condition="STM32U5 CMSIS"/>
-        <package name="STM32U5xx_DFP" schemaVersion="1.7.15" url="https://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
-        <targetInfos>
-          <targetInfo name="B-U585I-IOT02A"/>
-        </targetInfos>
       </file>
     </files>
   </RTE>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -22,6 +22,7 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"eventlist/pkg/eval"
 	"eventlist/pkg/event"
 	"eventlist/pkg/xml/scvd"
 	"fmt"
@@ -603,11 +604,11 @@ func Test_eventProperty_getLast(t *testing.T) {
 }
 
 func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
-	eds0 := make(map[uint16]scvd.Event)
-	eds := make(map[uint16]scvd.Event)
-	eds[0xEF00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds0 := make(scvd.Events)
+	eds := make(scvd.Events)
+	eds[0xEF00] = scvd.EventType{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
-	tds := make(map[string]map[string]map[int16]string)
+	tds := make(eval.Typedefs)
 
 	var s1 = "../../testdata/test1.binary"
 	var s3 = "../../testdata/test3.binary"
@@ -623,8 +624,8 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	}
 	type args struct {
 		file     string
-		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]map[int16]string
+		evdefs   scvd.Events
+		typedefs eval.Typedefs
 	}
 	tests := []struct {
 		name   string
@@ -766,9 +767,9 @@ func Test_escapeGen(t *testing.T) {
 func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	var b bytes.Buffer
 
-	eds := make(map[uint16]scvd.Event)
-	eds[0xFE00] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
-	eds[0xFF03] = scvd.Event{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds := make(scvd.Events)
+	eds[0xFE00] = scvd.EventType{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
+	eds[0xFF03] = scvd.EventType{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
 
 	var s0 = "../../testdata/test0.binary"
 	var s1 = "../../testdata/test1.binary"
@@ -792,8 +793,8 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		out      *bufio.Writer
 		in       *bufio.Reader
-		evdefs   map[uint16]scvd.Event
-		typedefs map[string]map[string]map[int16]string
+		evdefs   scvd.Events
+		typedefs eval.Typedefs
 	}
 	tests := []struct {
 		name    string
@@ -943,8 +944,8 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		out           *bufio.Writer
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		evdefs        scvd.Events
+		typedefs      eval.Typedefs
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1013,8 +1014,8 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		filename      *string
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		evdefs        scvd.Events
+		typedefs      eval.Typedefs
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1039,6 +1040,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 				t.Errorf("Print() error = %v, output file not created", err)
 			}
 			if file != nil {
+				defer file.Close()
 				in := bufio.NewReader(file)
 				var l string
 				end := false
@@ -1078,8 +1080,8 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		filename      *string
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		evdefs        scvd.Events
+		typedefs      eval.Typedefs
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1104,6 +1106,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 				t.Errorf("Print() error = %v, output file not created", err)
 			}
 			if file != nil {
+				defer file.Close()
 				in := bufio.NewReader(file)
 				var l string
 				end := false
@@ -1139,8 +1142,8 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 	type args struct {
 		filename      *string
 		eventFile     *string
-		evdefs        map[uint16]scvd.Event
-		typedefs      map[string]map[string]map[int16]string
+		evdefs        scvd.Events
+		typedefs      eval.Typedefs
 		statBegin     bool
 		showStatistic bool
 	}
@@ -1165,6 +1168,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 				t.Errorf("Print() error = %v, output file not created", err)
 			}
 			if file != nil {
+				defer file.Close()
 				in := bufio.NewReader(file)
 				var l string
 				end := false

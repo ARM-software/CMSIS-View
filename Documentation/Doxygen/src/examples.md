@@ -4,8 +4,8 @@ CMSIS-View provides several example projects that demonstrate the usage of CMSIS
 
 Example Project                                      | Description
 :----------------------------------------------------|:-----------------------------------------
-\subpage scvd_evt_stat "EventStatistic"             | Shows the usage of start/stop events for statistical code profiling using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
-\subpage flt_example_CM7 "Fault/VHT_MPS2_Cortex-M7"  | Shows the usage of the Fault component on a Cortex-M7 [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+\subpage scvd_evt_stat "EventStatistic"              | Shows the usage of start/stop events for statistical code profiling using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
+\subpage flt_example_CM7 "Fault/FVP_MPS2_Cortex-M7"  | Shows the usage of the Fault component on a Cortex-M7 [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation.
 \subpage flt_example_CM33 "Fault/B-U585I-IOT02A"     | Shows the usage of the Fault component on a Cortex-M33 with TrustZone. This example runs on STMicroelectronics [**B-U585I-IOT02A**](https://www.st.com/en/evaluation-tools/b-u585i-iot02a.html) evaluation board.
 
 Other examples with CMSIS-View support can be also found in various CMSIS packs with device support, BSP and software components. For example [CMSIS-RTX](https://arm-software.github.io/CMSIS-RTX/latest/index.html), [MDK Middleware](https://www.keil.com/pack/doc/mw/General/html/index.html) and others, or also in GitHub projects at [https://github.com/Arm-Examples](https://github.com/Arm-Examples).
@@ -16,7 +16,8 @@ The EventStatistics example project shows how to use start/stop events with the 
 
 The start/stop events allow to measure execution times with different slots (0 - 15) in four different groups (A - D). The call to 'EventStart' starts a timer slot; the call to 'EventStop' stops the related timer. A call to EventStop with slot 15 stops the timers of all slots in the specific group.
 
-This example project is located in the `Examples/EventStatistic/` directory. It uses the [CMSIS-Toolbox](https://github.com/Open-CMSIS-Pack/cmsis-toolbox) for project build and runs on [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation and does not require real hardware board.
+This example project is located in the `Examples/EventStatistic/` directory. It uses the [**Arm Keil Studio Pack**](https://marketplace.visualstudio.com/items?itemName=Arm.keil-studio-pack)
+for project build and runs on [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/overview/html/index.html) processor simulation and does not require real hardware board.
 
 **Build and run**
 
@@ -107,13 +108,13 @@ int main (void) {
 }
 ```
 
-\page flt_example_CM7 Fault/VHT_MPS2_Cortex-M7
+\page flt_example_CM7 Fault/FVP_MPS2_Cortex-M7
 
 This example project shows \ref fault on an Arm Cortex-M7 based device, using [Arm Virtual Hardware (AVH)](https://arm-software.github.io/AVH/main/simulation/html/using.html) processor simulation as the target platform.
 
 **Build and run**
 
-Follow the instructions in the [example's README.md](https://github.com/ARM-software/CMSIS-View/blob/main/Examples/Fault/VHT_MPS2_Cortex-M7/README.md) to build and run the project.
+Follow the instructions in the [example's README.md](https://github.com/ARM-software/CMSIS-View/blob/main/Examples/Fault/FVP_MPS2_Cortex-M7/README.md) to build and run the project.
 
 **Screenshots**
 

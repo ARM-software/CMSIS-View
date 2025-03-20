@@ -47,7 +47,7 @@ This user's guide contains the following chapters:
  - \ref SCVD_Format : describes the format of the Software Component View Description (*.SCVD) files that define the content that is displayed.
  - \ref fault : infrastructure and functions to store, record, and analyze the Cortex-M Exception Fault information.
  - \ref ExampleProjects are available demonstrating standard use cases.
- - [**API References**](modules.html) describes the API and the functions of the **Event Recorder** and **Fault** components in details.
+ - [**API References**](topics.html) describes the API and the functions of the **Event Recorder** and **Fault** components in details.
 
 ## License {#license}
 
