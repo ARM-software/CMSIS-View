@@ -331,14 +331,14 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 func TestEventData_EvalLine(t *testing.T) {
 	t.Parallel()
 
-	var ev1 scvd.EventType = scvd.EventType{ID: "id1", Value: "x%%%d[val1]y%u[val2]z"}
-	var ev2 scvd.EventType = scvd.EventType{ID: "id2", Value: "x%T[val1]y%x[val2]z"}
-	var ev3 scvd.EventType = scvd.EventType{ID: "id3", Value: "x%I[val3]y%J[val3]z"}
-	var ev4 scvd.EventType = scvd.EventType{ID: "id4", Value: "x%M[val3]y%S[val3]z"}
-	var evE1 scvd.EventType = scvd.EventType{ID: "idE1", Value: "x%E[val2, typName]y"}
-	var evTD scvd.EventType = scvd.EventType{ID: "idTD", Val1: "v1", Val2: "v2", Val3: "4BY", Val4: "v4", Val5: "v5", Val6: "v6", Value: "x%x[val3.B2]y"}
-	var everr1 scvd.EventType = scvd.EventType{ID: "iderr1", Value: "x%d[;]y"}
-	var everr2 scvd.EventType = scvd.EventType{ID: "iderr2", Value: "x%E[;]y"}
+	var ev1 = scvd.EventType{ID: "id1", Value: "x%%%d[val1]y%u[val2]z"}
+	var ev2 = scvd.EventType{ID: "id2", Value: "x%T[val1]y%x[val2]z"}
+	var ev3 = scvd.EventType{ID: "id3", Value: "x%I[val3]y%J[val3]z"}
+	var ev4 = scvd.EventType{ID: "id4", Value: "x%M[val3]y%S[val3]z"}
+	var evE1 = scvd.EventType{ID: "idE1", Value: "x%E[val2, typName]y"}
+	var evTD = scvd.EventType{ID: "idTD", Val1: "v1", Val2: "v2", Val3: "4BY", Val4: "v4", Val5: "v5", Val6: "v6", Value: "x%x[val3.B2]y"}
+	var everr1 = scvd.EventType{ID: "iderr1", Value: "x%d[;]y"}
+	var everr2 = scvd.EventType{ID: "iderr2", Value: "x%E[;]y"}
 
 	var vals eval.Member
 	vals.Enums = make(map[int64]string)
