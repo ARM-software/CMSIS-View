@@ -63,23 +63,23 @@ type runner struct {
 }
 
 func (r runner) run(command string) {
-	switch {
-	case command == "build":
+	switch command {
+	case "build":
 		versionInfo, err := createResourceInfoFile(r.options.targetArch)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-		info := versionInfo.StringFileInfo.FileVersion + " " + versionInfo.StringFileInfo.LegalCopyright
+		info := versionInfo.StringFileInfo.FileVersion + " " + versionInfo.LegalCopyright
 		if err = r.build(r.options, info); err != nil {
 			fmt.Println(err.Error())
 		}
-	case command == "test":
+	case "test":
 		if err := r.test(); err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-	case command == "coverage":
+	case "coverage":
 		if r.options.covReport == "" {
 			if err := r.coverage(); err != nil {
 				fmt.Println(err.Error())
@@ -91,9 +91,9 @@ func (r runner) run(command string) {
 				return
 			}
 		}
-	case command == "lint":
+	case "lint":
 		r.lint()
-	case command == "format":
+	case "format":
 		r.format()
 	}
 }
@@ -233,7 +233,7 @@ func createResourceInfoFile(arch string) (version goversioninfo.VersionInfo, err
 		ProductVersion:   gitVersion.String(),
 		LegalCopyright:   "Copyright (c) 2022-" + gitYear + " " + legalCopyright,
 	}
-	verInfo.VarFileInfo.Translation = goversioninfo.Translation{
+	verInfo.Translation = goversioninfo.Translation{
 		LangID:    1033,
 		CharsetID: 1200,
 	}
@@ -291,6 +291,7 @@ func newVersion(verStr string) (ver version, err error) {
 	tokens := strings.Split(versionStr, "-")
 	numTokens := len(tokens)
 
+	//nolint:staticcheck // intentional logic for clarity
 	if !(numTokens == 1 || numTokens == 3) {
 		return ver, reportError(ErrVersion, "invalid version string")
 	}
