@@ -1,0 +1,49 @@
+generator-import:
+  for-device: STM32U585AIIx
+  for-board: B-U585I-IOT02A
+  define:
+    - USE_HAL_DRIVER
+    - STM32U585xx
+  add-path:
+    - ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Inc
+    - ./STM32CubeMX/Drivers/CMSIS/Device/ST/STM32U5xx/Include
+    - ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Inc/Legacy
+    - ./STM32CubeMX/NonSecure/Inc
+    - ./STM32CubeMX/Secure_nsclib
+    - ./MX_Device/NonSecure
+  groups:
+    - group: CubeMX
+      files:
+        - file: ./STM32CubeMX/NonSecure/Src/main.c
+        - file: ./STM32CubeMX/NonSecure/Src/stm32u5xx_it.c
+        - file: ./STM32CubeMX/NonSecure/Src/stm32u5xx_hal_msp.c
+        - file: ./STM32CubeMX/NonSecure/Src/stm32u5xx_hal_timebase_tim.c
+        - file: ./STM32CubeMX/MDK-ARM/startup_stm32u585xx.s
+        - file: ./STM32CubeMX/NonSecure/Src/system_stm32u5xx_ns.c
+    - group: STM32 HAL Driver
+      files:
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_ll_utils.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_ll_exti.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_cortex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_gtzc.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_i2c.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_i2c_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_rcc.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_rcc_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_flash.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_flash_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_gpio.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_dma.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_dma_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_exti.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_pwr.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_pwr_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_icache.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_tim.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_tim_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_uart.c
+        - file: ./STM32CubeMX/Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_hal_uart_ex.c
+    - group: CMSE Library
+      files:
+        - file: $cmse-lib(Fault_S)$

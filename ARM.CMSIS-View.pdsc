@@ -2,7 +2,7 @@
 <package schemaVersion="1.7.36" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.36/schema/PACK.xsd">
   <vendor>ARM</vendor>
   <name>CMSIS-View</name>
-  <description>Debugger visualization of software events and statistics</description>
+  <description overview="./Documentation/Overview.md">Debugger visualization of software events and statistics</description>
   <url>https://www.keil.com/pack/</url>
   <license>LICENSE</license>
   <licenseSets>
@@ -18,11 +18,11 @@
       Event Recorder:
       - Add support for CMSIS v6
       - Update conditions to prevent simultaneous selection of CMSIS-View::Event Recorder and Compiler::Event Recorder components
-      - Update Event Statistic example to support CMSIS-Toolbox v2
+      - Update Event Statistic example to support latest tools and packs
       Fault component:
       - Extend section name for fault information, for easier absolute addressing via the linker script
-      - Update Fault example for Cortex-M33 (B-U585I-IOT02A) with improved GCC support and add support for building with CMSIS-Toolbox v2
-      - Update Fault example for AVH Cortex-M7 to support CMSIS-Toolbox v2
+      - Update Fault example for Cortex-M33 (B-U585I-IOT02A) to support latest tools and packs
+      - Update Fault example for AVH Cortex-M7 to support latest tools and packs
     </release>
   </releases>
 
@@ -105,7 +105,7 @@
       <files>
         <file category="header" name="Fault/Include/ARM_Fault.h"/>
         <file category="source" name="Fault/Source/ARM_FaultStorage.c"/>
-        <file category="source" name="Fault/Template/ARM_FaultPrint.c" version="1.0.1" attr="template" select="Output decoded fault information via STDIO"/>
+        <file category="source" name="Fault/Template/ARM_FaultPrint.c" version="1.1.0" attr="template" select="Output decoded fault information via STDIO"/>
         <file category="doc"    name="Documentation/html/fault.html"/>
         <file category="other"  name="Fault/ARM_Fault.scvd"/>
       </files>
@@ -132,11 +132,19 @@
         <environment name="csolution" load="EventStatistic.csolution.yml"/>
       </project>
     </example>
+    <example name="Fault example" folder="Examples/Fault/FVP_MPS2_Cortex-M7" doc="README.md">
+      <description>Example that shows the usage of Fault component on a simulated virtual Cortex-M7 device.</description>
+      <board name="V2M-MPS2" vendor="ARM"/>
+      <project>
+        <environment name="csolution" load="Fault.csolution.yml"/>
+      </project>
+    </example>
     <example name="Fault example" folder="Examples/Fault/B-U585I-IOT02A" doc="README.md">
-      <description>Example that shows the usage of Fault component on an Cortex-M33 with TrustZone.</description>
+      <description>Example that shows the usage of Fault component on the B-U585I-IOT02A board (Cortex-M33) with TrustZone.</description>
       <board name="B-U585I-IOT02A" vendor="STMicroelectronics"/>
       <project>
         <environment name="csolution" load="Fault.csolution.yml"/>
+        <environment name="uv"        load="Fault.uvmpw"/>
       </project>
     </example>
   </examples>

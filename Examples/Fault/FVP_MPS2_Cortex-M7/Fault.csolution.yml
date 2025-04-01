@@ -1,0 +1,25 @@
+solution:
+  description: Fault example (Cortex-M7)
+  created-for: CMSIS-Toolbox@2.6.0
+  cdefault:
+
+  select-compiler:
+    # list of tested compilers that can be selected
+    - compiler: AC6
+    - compiler: GCC
+
+  packs:
+    - pack: Keil::V2M-MPS2_CMx_BSP@^1.8.0
+
+  target-types:
+    - type: FVP_MPS2_Cortex-M7
+      board: ARM::V2M-MPS2:B
+      device: ARM::CMSDK_CM7_SP_VHT
+
+  build-types:
+    - type: Debug
+      debug: on
+      optimize: debug
+
+  projects:
+    - project: Fault.cproject.yml

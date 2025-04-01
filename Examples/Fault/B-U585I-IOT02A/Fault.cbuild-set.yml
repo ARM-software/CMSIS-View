@@ -1,0 +1,5 @@
+cbuild-set:
+  generated-by: vscode-cmsis-csolution version 1.44.0
+  contexts:
+    - context: Fault_S.Debug+B-U585I-IOT02A
+    - context: Fault_NS.Debug+B-U585I-IOT02A

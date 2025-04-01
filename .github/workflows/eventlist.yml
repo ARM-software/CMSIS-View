@@ -31,17 +31,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
 
       - name: Initialize CodeQL
         if: github.event_name != 'release'
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: go
           queries: security-and-quality
@@ -53,7 +53,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: github.event_name != 'release'
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
 
       - name: Build remaining executables
         run: |
@@ -65,7 +65,7 @@ jobs:
         working-directory: ./tools/eventlist
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-linux-amd64
           path: ./tools/eventlist/build/linux-amd64
@@ -73,7 +73,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-linux-arm64
           path: ./tools/eventlist/build/linux-arm64
@@ -81,7 +81,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-darwin-amd64
           path: ./tools/eventlist/build/darwin-amd64
@@ -89,7 +89,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-darwin-arm64
           path: ./tools/eventlist/build/darwin-arm64
@@ -97,7 +97,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-windows-amd64
           path: ./tools/eventlist/build/windows-amd64
@@ -105,7 +105,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eventlist-windows-arm64
           path: ./tools/eventlist/build/windows-arm64
@@ -119,16 +119,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6
         with:
           # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
           version: latest
@@ -140,10 +140,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -182,10 +182,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -204,11 +204,17 @@ jobs:
 
       - name: Run unit test
         run: |
-          go test -v 2>&1 ./... | go-junit-report -set-exit-code > build/evenlistunittest-${{ matrix.os }}.xml
+          go test -v ./... > build/evenlistunittest-${{ matrix.os }}.txt
         working-directory: ./tools/eventlist
 
+      - name: Generate JUnit test report
+        if: always()
+        working-directory: ./tools/eventlist
+        run: |
+          go-junit-report -set-exit-code -in build/evenlistunittest-${{ matrix.os }}.txt -iocopy -out build/evenlistunittest-${{ matrix.os }}.xml
+
       - name: Archive unit test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: unit-test-result-${{ matrix.os }}
           path: ./tools/eventlist/build/evenlistunittest-*.xml
@@ -221,19 +227,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download unit test report windows
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: unit-test-result-windows-latest
           path: testreports/
 
       - name: Download unit test report linux
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: unit-test-result-ubuntu-latest
           path: testreports/
 
       - name: Download unit test report macos
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: unit-test-result-macos-latest
           path: testreports/
@@ -254,10 +260,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -269,15 +275,17 @@ jobs:
       - name: Check coverage
         run: |
           go test ./... -race -coverprofile=build/cover.out -covermode=atomic
-          test `go tool cover -func build/cover.out | tail -1 | awk '{print ($3 + 0)*10}'` -gt 950
+          COVERAGE=$(go tool cover -func build/cover.out | tail -1 | awk '{print $3}' | tr -d '%')
+          echo "Test Coverage: $COVERAGE%"
+          COVERAGE_INT=$(echo "$COVERAGE * 10 / 1" | bc)
+          test "$COVERAGE_INT" -gt 975
         working-directory: ./tools/eventlist
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ./tools/eventlist/build/cover.out
           fail_ci_if_error: true
-          verbose: true
 
   release:
     needs: [ build, test, coverage ]
@@ -285,7 +293,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout devtools
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create distribution folders
         run: |
@@ -315,37 +323,37 @@ jobs:
           cp tools/eventlist/third_party_licenses.md release/eventlist-windows-arm64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: eventlist-linux-amd64
           path: release/eventlist-linux-amd64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: eventlist-linux-arm64
           path: release/eventlist-linux-arm64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: eventlist-darwin-amd64
           path: release/eventlist-darwin-amd64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: eventlist-darwin-arm64
           path: release/eventlist-darwin-arm64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: eventlist-windows-amd64
           path: release/eventlist-windows-amd64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: eventlist-windows-arm64
           path: release/eventlist-windows-arm64/

@@ -1,5 +1,6 @@
-/*
- * Copyright (c) 2023 Arm Limited. All rights reserved.
+/*---------------------------------------------------------------------------
+ * Copyright (c) 2024 Arm Limited (or its affiliates).
+ * All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,32 +17,86 @@
  * limitations under the License.
  *
  *      Name:    retarget_stdio.c
- *      Purpose: Retarget STDIO to USART1
+ *      Purpose: Retarget stdio to CMSIS UART
  *
- */
+ *---------------------------------------------------------------------------*/
 
-#include "RTE_Components.h"
-#include  CMSIS_device_header
+#ifdef   CMSIS_target_header
+#include CMSIS_target_header
+#else
+#include "Driver_USART.h"
+#endif
 
-#define HUARTx            huart1
+#ifndef RETARGET_STDIO_UART
+#error "RETARGET_STDIO_UART not defined!"
+#endif
 
-extern UART_HandleTypeDef HUARTx;
+// Compile-time configuration
+#define UART_BAUDRATE     115200
 
+// Exported functions
+extern int stdio_init     (void);
 extern int stderr_putchar (int ch);
 extern int stdout_putchar (int ch);
 extern int stdin_getchar  (void);
+
+#ifndef CMSIS_target_header
+extern ARM_DRIVER_USART   ARM_Driver_USART_(RETARGET_STDIO_UART);
+#endif
+
+#define ptrUSART          (&ARM_Driver_USART_(RETARGET_STDIO_UART))
+
+/**
+  Initialize stdio
+
+  \return          0 on success, or -1 on error.
+*/
+int stdio_init (void) {
+
+  if (ptrUSART->Initialize(NULL) != ARM_DRIVER_OK) {
+    return -1;
+  }
+
+  if (ptrUSART->PowerControl(ARM_POWER_FULL) != ARM_DRIVER_OK) {
+    return -1;
+  }
+
+  if (ptrUSART->Control(ARM_USART_MODE_ASYNCHRONOUS |
+                        ARM_USART_DATA_BITS_8       |
+                        ARM_USART_PARITY_NONE       |
+                        ARM_USART_STOP_BITS_1       |
+                        ARM_USART_FLOW_CONTROL_NONE,
+                        UART_BAUDRATE) != ARM_DRIVER_OK) {
+    return -1;
+  }
+
+  if (ptrUSART->Control(ARM_USART_CONTROL_RX, 1U) != ARM_DRIVER_OK) {
+    return -1;
+  }
+
+  if (ptrUSART->Control(ARM_USART_CONTROL_TX, 1U) != ARM_DRIVER_OK) {
+    return -1;
+  }
+
+  return 0;
+}
 
 /**
   Put a character to the stderr
 
   \param[in]   ch  Character to output
-  \return          The character written, or -1 on error.
+  \return          The character written, or -1 on write error.
 */
 int stderr_putchar (int ch) {
+  uint8_t buf[1];
 
-  if (HAL_UART_Transmit(&HUARTx, (uint8_t *)&ch, 1U, 1000U) != HAL_OK) {
+  buf[0] = (uint8_t)ch;
+
+  if (ptrUSART->Send(buf, 1U) != ARM_DRIVER_OK) {
     return -1;
   }
+
+  while (ptrUSART->GetStatus().tx_busy != 0U);
 
   return ch;
 }
@@ -53,10 +108,15 @@ int stderr_putchar (int ch) {
   \return          The character written, or -1 on write error.
 */
 int stdout_putchar (int ch) {
+  uint8_t buf[1];
 
-  if (HAL_UART_Transmit(&HUARTx, (uint8_t *)&ch, 1U, 1000U) != HAL_OK) {
+  buf[0] = (uint8_t)ch;
+
+  if (ptrUSART->Send(buf, 1U) != ARM_DRIVER_OK) {
     return -1;
   }
+
+  while (ptrUSART->GetStatus().tx_busy != 0U);
 
   return ch;
 }
@@ -64,19 +124,16 @@ int stdout_putchar (int ch) {
 /**
   Get a character from the stdio
 
-  \return     The next character from the input, or -1 on error.
+  \return     The next character from the input, or -1 on read error.
 */
 int stdin_getchar (void) {
-  uint8_t ch;
-  HAL_StatusTypeDef hal_stat;
+  uint8_t buf[1];
 
-  do {
-    hal_stat = HAL_UART_Receive(&HUARTx, &ch, 1U, 60000U);
-  } while (hal_stat == HAL_TIMEOUT);
-
-  if (hal_stat != HAL_OK) {
+  if (ptrUSART->Receive(buf, 1U) != ARM_DRIVER_OK) {
     return -1;
   }
 
-  return (int)ch;
+  while (ptrUSART->GetStatus().rx_busy != 0U);
+
+  return (int)buf[0];
 }

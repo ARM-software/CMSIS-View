@@ -1,4 +1,4 @@
-# Event Statistic Example
+﻿# Event Statistic Example
 
 This project shows how to use start/stop events with the Event Recorder that allow to measure execution times with:
 
@@ -16,44 +16,45 @@ Refer to [Using Event Statistics](https://arm-software.github.io/CMSIS-View/main
 This demo application does some time consuming calculations that are recorded
 and can be displayed in the Event Statistics window.
 
-> **Note**
-> - This example runs on Arm Virtual Hardware on the [VHT_MPS3_Corstone_SSE-300 model](https://arm-software.github.io/AVH/main/simulation/html/Using.html)
-and does not require any hardware.
+> **Note**  
+> This example runs on the [**Arm Virtual Hardware**](https://www.arm.com/products/development-tools/simulation/virtual-hardware) simulator
+> and does not require any hardware.
 
 ## Prerequisites
 
-Tools:
+### Software
 
- - [**CMSIS-Toolbox v2.0.0**](https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases) or newer
- - [**Keil MDK v5.38**](https://www.keil.com/mdk5) or newer containing:
-   - Arm Compiler 6 (part of MDK)
-   - Arm Virtual Hardware for MPS3 platform with Corstone-300 (part of MDK-Professional)
- - [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/latest) utility from this repository
+- [**Arm Keil Studio for VS Code**](https://marketplace.visualstudio.com/items?itemName=Arm.keil-studio-pack)
+- [**eventlist**](https://github.com/ARM-software/CMSIS-View/releases/tag/tools%2Feventlist%2F1.1.0) **v1.1.0** or newer
 
-As an alternative the example runs also on [**AMI Arm Virtual Hardware**](https://aws.amazon.com/marketplace/search/results?searchTerms=Arm+Virtual+Hardware)
- available via the AWS Marketplace as this image contains all relevant tools.
+## Build and Run
 
-## Compile Project
+To try the example with the **Arm Keil Studio**, follow the steps below:
 
-The following commands convert and build the project with build type `Debug` and target type `AVH`:
+ 1. open the example in the **Visual Studio Code**.
+ 2. in the **Configure Solution** tab select the **AC6** compiler and click on the **OK** button.
+ 3. build the solution (in the **CMSIS** extension view click on the **Build solution** button).
+ 4. run the **FVP model** from the command line by executing the following command:
+    ```shell
+    FVP_Corstone_SSE-300 -f fvp_config.txt --simlimit=60 out/EventStatistic/AVH/Debug/EventStatistic.axf
+    ```
 
-```sh
-cbuild EventStatistic.csolution.yml --update-rte -p -c .Debug+AVH
-```
+    > **Note**  
+    > **The Arm Virtual Hardware executable files have to be in the environment path**.  
+    > You can install **Arm Virtual Hardware** via **Arm Keil Studio** by following these steps:
+    > - click on the **Arm Tools**.
+    > - select **Add Arm Tools Configuration to Workspace**.
+    > - under **Arm Virtual Hardware for Cortex®-M based on Fast Models** select the latest available version.
+    > - save the **vcpkg-configuration.json** file.
 
-## Execute
-
-The following command runs the example for 60 seconds (parameter *--simlimit*) on the VHT simulation model:
-
-```sh
-VHT_MPS3_Corstone_SSE-300 -f vht_config.txt --simlimit=60 out/EventStatistic/AVH/Debug/EventStatistic.axf
-```
+ 5. wait for simulation to stop.
+ 6. the result of example running is an `EventRecorder.log` file that contains events that were generated during the code execution.
 
 ## Analyze Events
 
 This file can be analyzed using the `eventlist` utility with the following command:
 
-```sh
+```bash
 eventlist -s EventRecorder.log
 
    Start/Stop event statistic
@@ -81,7 +82,7 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
 When adding the AXF file and the [SCVD file](https://arm-software.github.io/CMSIS-View/main/SCVD_Format.html) to the `eventlist`
 command the context of the program is shown
 
-```sh
+```bash
 eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I $CMSIS_PACK_ROOT/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 
   :
@@ -115,11 +116,12 @@ C(0)      1     5.17924s    5.17924s    5.17924s    5.17924s    5.17924s    5.17
       Max: Start: 0.00001219 File=./EventStatistic/main.c(87) Stop: 5.17925291 File=./EventStatistic/main.c(103)
 ```
 
-When using Windows Command Prompt use the following command: 
-```sh
-eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/EventRecorder.scvd EventRecorder.log
+When using **Windows Command Prompt** use the following command:
+
+```shell
+eventlist -a out/EventStatistic/AVH/Debug/EventStatistic.axf -I %CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.0/EventRecorder/EventRecorder.scvd EventRecorder.log
 ```
 
-> **Note**
-> If CMSIS-View v1.0.0 pack is not installed, in the previous command replace corresponding path with the path of the latest installed pack
- (for example replace "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.0/EventRecorder/" with "%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.0.1/EventRecorder/")
+> **Note**  
+> If `CMSIS-View v1.2.0` pack is not installed, in the previous command replace the corresponding path with the path of the latest installed pack
+> (for example replace `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.0/EventRecorder/` with `%CMSIS_PACK_ROOT%/ARM/CMSIS-View/1.2.1/EventRecorder/`)

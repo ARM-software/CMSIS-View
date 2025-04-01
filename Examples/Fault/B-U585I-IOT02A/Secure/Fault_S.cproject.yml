@@ -1,49 +1,35 @@
 project:
+  description: Fault example for B-U585I-IOT02A board (Cortex-M33) - secure application
 
   processor:
     trustzone: secure
 
   packs:
-    - pack: ARM::CMSIS@>=6.0.0-0
-    - pack: ARM::CMSIS-Compiler@>=2.0.0-0
-    - pack: ARM::CMSIS-View
+    - pack: ARM::CMSIS-View@^1.2.0-0
+    - pack: ARM::CMSIS@^6.1.0
+    - pack: ARM::CMSIS-Compiler@^2.1.0
+    - pack: ARM::CMSIS-Driver_STM32@^1.0.0
 
   groups:
     - group: Documentation
       files:
         - file: ../README.md
 
-    - group: Interface
-      files:
-        - file: interface.c
-        - file: tz_context.c
-
   components:
     - component: CMSIS:CORE
 
     - component: CMSIS-Compiler:CORE
-    - component: CMSIS-Compiler:STDERR:Breakpoint
-    - component: CMSIS-Compiler:STDOUT:Breakpoint
     - component: CMSIS-Compiler:STDIN:Breakpoint
+    - component: CMSIS-Compiler:STDOUT:Breakpoint
+    - component: CMSIS-Compiler:STDERR:Breakpoint
 
     - component: CMSIS-View:Fault:Storage
 
-    - component: Device:STM32Cube Framework:STM32CubeMX
+    - component: Device:CubeMX
 
-    - component: Device:STM32Cube HAL:Common
-    - component: Device:STM32Cube HAL:Cortex
-    - component: Device:STM32Cube HAL:DMA
-    - component: Device:STM32Cube HAL:Flash
-    - component: Device:STM32Cube HAL:GPIO
-    - component: Device:STM32Cube HAL:GTZC
-    - component: Device:STM32Cube HAL:ICACHE
-    - component: Device:STM32Cube HAL:PWR
-    - component: Device:STM32Cube HAL:RCC
-    - component: Device:STM32Cube HAL:UART
-    - component: Device:STM32Cube LL:Common
-    - component: Device:STM32Cube LL:GPIO
-    - component: Device:STM32Cube LL:PWR
-    - component: Device:STM32Cube LL:RCC
-    - component: Device:STM32Cube LL:UTILS
+  linker:
+    - script: stm32u585xx_flash_s.sct
+      for-compiler: AC6
 
-    - component: Device:Startup&Source C
+    - script: STM32U585AIIXQ_FLASH.ld
+      for-compiler: GCC

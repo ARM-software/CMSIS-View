@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Arm Limited. All rights reserved.
+ * Copyright (c) 2022-2025 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -615,6 +615,61 @@ func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
 			}
 			if !reflect.DeepEqual(*v, tt.want) {
 				t.Errorf("Value.Function() %s = %v, want %v", tt.name, v, tt.want)
+			}
+		})
+	}
+}
+
+func TestValue_Extract(t *testing.T) {
+	t.Parallel()
+
+	type fields struct {
+		t Token
+		I int64
+		F float64
+		s string
+		v *Variable
+		l []Value
+	}
+
+	type args struct {
+		sz        uint32
+		bigEndian bool
+		off       uint32
+	}
+
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    Value
+		wantErr bool
+	}{
+		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 2}, Value{t: Integer, i: 0x90AB}, false},
+		//{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0x5678}, false},
+		{"Extract with offset 0", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
+		//{"Extract with size 1", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 1, bigEndian: false, off: 1}, Value{t: Integer, i: 0xAB}, false},
+		{"Extract non-integer type", fields{t: Floating, F: 123.456}, args{sz: 4, bigEndian: false, off: 2}, Value{t: Floating, f: 123.456}, true},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			v := &Value{
+				t: tt.fields.t,
+				i: tt.fields.I,
+				f: tt.fields.F,
+				s: tt.fields.s,
+				v: tt.fields.v,
+				l: tt.fields.l,
+			}
+			err := v.Extract(tt.args.sz, tt.args.bigEndian, tt.args.off)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Value.Extract() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if !reflect.DeepEqual(*v, tt.want) {
+				t.Errorf("Value.Extract() = %v, want %v", *v, tt.want)
 			}
 		})
 	}

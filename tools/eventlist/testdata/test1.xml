@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<component_viewer schemaVersion="1.0.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="Component_Viewer.xsd">
+
+<component name="EventRecorderStub" version="1.0.0"/>
+  <typedefs>
+    <!-- Event Recorder Parameter Encoded 32-bit Structure -->
+    <typedef name="BY4" info="32-bit structure" size="4">
+      <member name="B0" type="uint8_t" offset="0"/>
+      <member name="B1" type="uint8_t" offset="1"/>
+      <member name="B2" type="uint8_t" offset="2"/>
+      <member name="B3" type="uint8_t" offset="3"/>
+    </typedef>
+  </typedefs>
+
+  <events>
+    <group name="Event Example">
+      <component name="Event Example" prefix="Event" brief="EvExample" no="0x20" info="Event Example"/>
+    </group>
+    <event id="0x2003" level="Op" val1="BY4" property="Data(64 bytes)" value="%x[val1.B0] %x[val1.B1] %x[val1.B2] %x[val1.B3]" info="Hex view of first 4 bytes of 64 data bytes"/>
+  </events>
+
+</component_viewer>
