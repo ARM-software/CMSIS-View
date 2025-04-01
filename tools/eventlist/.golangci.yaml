@@ -1,15 +1,34 @@
+version: "2"
 linters:
-    enable:
-        - errname
-        - errorlint
-        - goerr113
-        - makezero
-        - nilerr
-        - paralleltest
-        - prealloc
-        - predeclared
-        - revive
-        - thelper
-        - unconvert
-        - unparam
-        - wastedassign
+  enable:
+    - err113
+    - errname
+    - errorlint
+    - makezero
+    - nilerr
+    - paralleltest
+    - prealloc
+    - predeclared
+    - revive
+    - thelper
+    - unconvert
+    - unparam
+    - wastedassign
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
