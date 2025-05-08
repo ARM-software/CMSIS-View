@@ -276,7 +276,9 @@ jobs:
           test "$COVERAGE_INT" -gt 975
         working-directory: ./tools/eventlist
 
+      # Temporarily disabled until we move on codeclimate
       - name: Upload coverage to Codecov
+        if: false
         uses: codecov/codecov-action@v5
         with:
           files: ./tools/eventlist/build/cover.out
