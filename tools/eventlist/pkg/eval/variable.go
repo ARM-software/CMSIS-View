@@ -75,7 +75,8 @@ func GetVar(n string) (*Variable, error) {
 //   - i: The integer value to assign to the variable.
 //
 // Returns:
-//   A pointer to the newly created Variable instance.
+//
+//	A pointer to the newly created Variable instance.
 func SetVarI(n string, i int64) *Variable {
 	val := Value{t: Integer, i: i}
 	v := new(Variable)
@@ -99,7 +100,8 @@ func SetVarI(n string, i int64) *Variable {
 //   - val: The value to be assigned to the variable.
 //
 // Returns:
-//   A pointer to the newly created Variable.
+//
+//	A pointer to the newly created Variable.
 func SetVar(n string, val Value) *Variable {
 	v := new(Variable)
 	v.n = n
