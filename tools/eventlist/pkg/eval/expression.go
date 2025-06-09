@@ -660,7 +660,8 @@ func (ex *Expression) lex() (Value, error) {
 			}
 			s0 += string(c)
 			done := false
-			if c == '\\' {
+			switch c {
+			case '\\':
 				var cx byte
 				if c, err = ex.get(); err != nil {
 					return v, syntaxError(fnLex, s0)
@@ -731,10 +732,11 @@ func (ex *Expression) lex() (Value, error) {
 					v.s += string(rune(i))
 					done = true
 				}
-			} else if c == '"' {
+			case '"':
 				v.t = String
 				return v, nil
 			}
+
 			if !done {
 				v.s += string(c)
 			}
