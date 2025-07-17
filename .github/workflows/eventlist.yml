@@ -224,19 +224,19 @@ jobs:
       - name: Download unit test report windows
         uses: actions/download-artifact@v4
         with:
-          name: unit-test-result-windows-latest
+          name: unit-test-result-windows-2022
           path: testreports/
 
       - name: Download unit test report linux
         uses: actions/download-artifact@v4
         with:
-          name: unit-test-result-ubuntu-latest
+          name: unit-test-result-ubuntu-24.04
           path: testreports/
 
       - name: Download unit test report macos
         uses: actions/download-artifact@v4
         with:
-          name: unit-test-result-macos-latest
+          name: unit-test-result-macos-14
           path: testreports/
 
       - name: publish test results
