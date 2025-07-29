@@ -57,6 +57,8 @@ var NAVTREEINDEX0 =
 "er_use.html#Format_Event_Information":[2,3,5],
 "er_use.html#er_filtering":[2,3,8],
 "er_use.html#er_semihosting":[2,3,9],
+"er_use.html#er_semihosting_keil_studio":[2,3,9,1],
+"er_use.html#er_semihosting_uvision":[2,3,9,0],
 "er_use.html#evr_create_mem_ls":[2,3,1,1],
 "er_use.html#evr_create_mem_uv":[2,3,1,2],
 "er_use.html#evr_memory_calc":[2,3,1,0],

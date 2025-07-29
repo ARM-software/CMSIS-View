@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['validation_0',['SCVD file validation',['../SCVD_Format.html#scvd_validate',1,'']]],
-  ['value_20output_1',['Value output',['../value_output.html',1,'SCVD_Format']]],
-  ['values_2',['Enumerator Values',['../scvd_expression.html#enumerator',1,'']]],
-  ['var_3',['/component_viewer/.../.../var',['../elem_var.html',1,'elem_typedefs']]],
-  ['variables_4',['Variables',['../scvd_expression.html#expr_variable',1,'']]],
-  ['variables_5',['Predefined variables',['../scvd_expression.html#predefined_variable',1,'']]],
-  ['variants_6',['Software Component Variants',['../er_use.html#Debug_Variants',1,'']]],
-  ['version_7',['Version',['../group__Fault__Storage.html#ac0c79e9d40198a9419c4a623175f85ef',1,'ARM_FaultInfo_t']]],
-  ['view_8',['Access to CMSIS-View',['../index.html#view_access',1,'']]],
-  ['viewer_9',['Component Viewer',['../cmp_viewer.html',1,'']]],
-  ['viewer_20usage_20example_10',['Component Viewer Usage Example',['../cmp_viewer.html#cv_use',1,'']]]
+  ['u_20format_20specifiers_0',['U format specifiers',['../value_output.html#t_spec',1,'\t, \U format specifiers'],['../todo.html#_todo000005',1,'\t, \U format specifiers']]],
+  ['u585i_20iot02a_1',['Fault/B-U585I-IOT02A',['../flt_example_CM33.html',1,'ExampleProjects']]],
+  ['uninitialized_20memory_2',['uninitialized memory',['../er_use.html#place_uninit_memory',1,'Locate Event Recorder in uninitialized memory'],['../flt_use.html#flt_place_uninit_memory',1,'Locate fault information in uninitialized memory']]],
+  ['usage_20example_3',['Component Viewer Usage Example',['../cmp_viewer.html#cv_use',1,'']]],
+  ['usage_20example_4',['Usage example',['../evntlst.html#evntlst_example',1,'']]],
+  ['using_20µvision_5',['using µVision',['../er_use.html#evr_create_mem_uv',1,'Create memory region using µVision'],['../flt_use.html#flt_create_mem_uv',1,'Create memory region using µVision']]],
+  ['using_20event_20recorder_6',['Using Event Recorder',['../er_use.html',1,'evr']]],
+  ['using_20fault_20component_7',['Using Fault component',['../flt_use.html',1,'fault']]],
+  ['using_20linker_20script_8',['using linker script',['../er_use.html#evr_create_mem_ls',1,'Create memory region using linker script'],['../flt_use.html#flt_create_mem_ls',1,'Create memory region using linker script']]],
+  ['using_20scvd_20files_20in_20a_20debugger_9',['Using SCVD files in a debugger',['../SCVD_Format.html#scvd_in_debug',1,'']]],
+  ['utility_10',['eventlist Utility',['../evntlst.html',1,'']]],
+  ['uvision_11',['Semihosting in uVision',['../er_use.html#er_semihosting_uvision',1,'']]]
 ];

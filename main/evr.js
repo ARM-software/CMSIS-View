@@ -25,6 +25,9 @@ var evr =
       [ "Software Component Variants", "er_use.html#Debug_Variants", null ],
       [ "Redirecting printf output", "er_use.html#printf_redirect", null ],
       [ "Event filtering", "er_use.html#er_filtering", null ],
-      [ "Semihosting", "er_use.html#er_semihosting", null ]
+      [ "Semihosting", "er_use.html#er_semihosting", [
+        [ "Semihosting in uVision", "er_use.html#er_semihosting_uvision", null ],
+        [ "Semihosting in Keil Studio", "er_use.html#er_semihosting_keil_studio", null ]
+      ] ]
     ] ]
 ];
