@@ -222,19 +222,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download unit test report windows
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: unit-test-result-windows-2022
           path: testreports/
 
       - name: Download unit test report linux
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: unit-test-result-ubuntu-24.04
           path: testreports/
 
       - name: Download unit test report macos
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: unit-test-result-macos-14
           path: testreports/
@@ -320,37 +320,37 @@ jobs:
           cp tools/eventlist/third_party_licenses.md release/eventlist-windows-arm64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: eventlist-linux-amd64
           path: release/eventlist-linux-amd64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: eventlist-linux-arm64
           path: release/eventlist-linux-arm64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: eventlist-darwin-amd64
           path: release/eventlist-darwin-amd64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: eventlist-darwin-arm64
           path: release/eventlist-darwin-arm64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: eventlist-windows-amd64
           path: release/eventlist-windows-amd64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: eventlist-windows-arm64
           path: release/eventlist-windows-arm64/
