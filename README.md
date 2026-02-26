@@ -1,3 +1,8 @@
+[![License Apache--2.0](https://img.shields.io/badge/License-Apache--2.0-green?label=License)](https://github.com/Arm-Software/CMSIS-View/blob/main/LICENSE)
+[![Build EventList Utility](https://img.shields.io/github/actions/workflow/status/Arm-Software/CMSIS-View/eventlist.yml?logo=arm&logoColor=0091bd&label=Build%20EventList%20Utility)](./.github/workflows/eventlist.yml)
+[![TIP Check](https://img.shields.io/github/actions/workflow/status/Arm-Software/CMSIS-View/tpip-check.yml?logo=arm&logoColor=0091bd&label=Event%20List)](./.github/workflows/tpip-check.yml)
+[![Build pack](https://img.shields.io/github/actions/workflow/status/Arm-Software/CMSIS-View/pack.yml?logo=arm&logoColor=0091bd&label=Build%20pack)](./.github/workflows/pack.yml)
+
 # CMSIS-View
 
 **CMSIS-View** provides software components and utilities that allow embedded software developers to analyze program execution flows, debug potential issues, and measure code execution times. The data can be observed in real-time in an IDE or can be saved as a log file during program execution.
