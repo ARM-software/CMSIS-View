@@ -399,9 +399,14 @@ func (e *Data) GetValuesAsString() string {
 	value := ""
 	switch e.Typ {
 	case 1: // EventrecordData
-		value = "data=0x"
+		value = "data="
+		first := true
 		for _, d := range *e.Data {
-			value += fmt.Sprintf("%02x", d)
+			if !first {
+				value += " "
+			}
+			first = false
+			value += fmt.Sprintf("0x%02x", d)
 		}
 	case 2: // Eventrecord2
 		value = fmt.Sprintf("val1=0x%08x, val2=0x%08x", uint32(e.Value1), uint32(e.Value2))
@@ -562,9 +567,9 @@ func (e *Data) GetValue(value string, i *int, typedefs eval.Typedefs, tdUsed map
 			ed := *e.Data
 			var ed8 [8]uint8
 			copy(ed8[:8], ed)
-			v := uint32(ed8[0])<<24 | uint32(ed8[1])<<16 | uint32(ed8[2])<<8 | uint32(ed8[3])
+			v := binary.LittleEndian.Uint32(ed8[:4]) // load a byte string from a little-endian source
 			eval.SetVarI("val1", int64(v))
-			v = uint32(ed8[4])<<24 | uint32(ed8[5])<<16 | uint32(ed8[6])<<8 | uint32(ed8[7])
+			v = binary.LittleEndian.Uint32(ed8[4:]) // load a byte string from a little-endian source
 			eval.SetVarI("val2", int64(v))
 			eval.SetVarI("val3", 0)
 			eval.SetVarI("val4", 0)

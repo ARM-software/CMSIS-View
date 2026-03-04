@@ -297,11 +297,12 @@ func (v *Value) Extract(sz uint32, bigEndian bool, off uint32) error {
 	}
 	tmp := uint64(v.i)
 	if bigEndian {
-		tmp = (tmp&0xFF)<<56 | (tmp&0xFF00)<<40 | (tmp&0xFF0000)<<24 | (tmp&0xFF000000)<<8 |
-			(tmp&0xFF00000000)>>8 | (tmp&0xFF0000000000)>>24 | (tmp&0xFF000000000000)>>40 | (tmp&0xFF00000000000000)>>56
+		tmp &= (1 << ((sz - off) * 8)) - 1
+	} else {
+		tmp &= (1 << (sz * 8)) - 1
+		tmp >>= off * 8
 	}
-	tmp &= (1 << (sz * 8)) - 1
-	v.i = int64(tmp >> (off * 8))
+	v.i = int64(tmp)
 	return nil
 }
 
