@@ -396,25 +396,25 @@ func (e *Data) EvalLine(scvdevent scvd.EventType, typedefs eval.Typedefs) (strin
 //   - If Typ is 3 (Eventrecord4), the returned string includes four hexadecimal
 //     values corresponding to Value1, Value2, Value3, and Value4.
 func (e *Data) GetValuesAsString() string {
-	value := ""
 	switch e.Typ {
 	case 1: // EventrecordData
-		value = "data="
-		first := true
-		for _, d := range *e.Data {
-			if !first {
-				value += " "
+		var sb strings.Builder
+		sb.Grow(5 + len(*e.Data)*5) // "data=" + per byte " 0xHH"
+		sb.WriteString("data=")
+		for i, d := range *e.Data {
+			if i > 0 {
+				sb.WriteByte(' ')
 			}
-			first = false
-			value += fmt.Sprintf("0x%02x", d)
+			fmt.Fprintf(&sb, "0x%02x", d)
 		}
+		return sb.String()
 	case 2: // Eventrecord2
-		value = fmt.Sprintf("val1=0x%08x, val2=0x%08x", uint32(e.Value1), uint32(e.Value2))
+		return fmt.Sprintf("val1=0x%08x, val2=0x%08x", uint32(e.Value1), uint32(e.Value2))
 	case 3: // Eventrecord4
-		value = fmt.Sprintf("val1=0x%08x, val2=0x%08x, val3=0x%08x, val4=0x%08x",
+		return fmt.Sprintf("val1=0x%08x, val2=0x%08x, val3=0x%08x, val4=0x%08x",
 			uint32(e.Value1), uint32(e.Value2), uint32(e.Value3), uint32(e.Value4))
 	}
-	return value
+	return ""
 }
 
 type Binary struct {

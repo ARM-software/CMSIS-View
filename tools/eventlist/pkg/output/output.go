@@ -898,7 +898,7 @@ func Print(filename *string, formatType *string, level *string, eventFile *strin
 				buf := bytes.NewBuffer(output)
 				_, err = fmt.Fprint(out, buf)
 				if err == nil {
-					out.Flush()
+					err = out.Flush()
 				}
 			}
 		case "xml":
@@ -907,7 +907,7 @@ func Print(filename *string, formatType *string, level *string, eventFile *strin
 				buf := bytes.NewBuffer(output)
 				_, err = fmt.Fprint(out, buf)
 				if err == nil {
-					out.Flush()
+					err = out.Flush()
 				}
 			}
 		default:

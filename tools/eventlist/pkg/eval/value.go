@@ -295,6 +295,12 @@ func (v *Value) Extract(sz uint32, bigEndian bool, off uint32) error {
 	if v.t != Integer {
 		return typeError("Extract", "")
 	}
+	if sz == 0 || sz > 8 {
+		return typeError("Extract", "invalid size")
+	}
+	if off >= sz {
+		return typeError("Extract", "invalid offset")
+	}
 	tmp := uint64(v.i)
 	if bigEndian {
 		tmp &= (1 << ((sz - off) * 8)) - 1
