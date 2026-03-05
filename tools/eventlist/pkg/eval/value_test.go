@@ -645,6 +645,11 @@ func TestValue_Extract(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
+		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 1}, Value{t: Integer, i: 0xABCDEF}, false},
+		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 1}, Value{t: Integer, i: 0x90ABCD}, false},
+		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
+		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
+		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0xCDEF}, false},
 		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 2}, Value{t: Integer, i: 0x90AB}, false},
 		{"Extract big-endian", fields{t: Integer, I: 0x12345678}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0x5678}, false},
 		{"Extract with offset 0", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
