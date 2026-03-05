@@ -312,7 +312,7 @@ func (v *Value) Extract(sz uint32, bigEndian bool, off uint32) error {
 		tmp = binary.BigEndian.Uint64((*[8]byte)(unsafe.Pointer(&tmp))[:])
 		tmp >>= 64 - sz*8
 	}
-	tmp &= (1 << (sz * 8)) - 1
+	tmp &= (uint64(1) << (sz * 8)) - 1
 	tmp >>= off * 8
 	v.i = int64(tmp)
 	return nil
