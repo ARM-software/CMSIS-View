@@ -645,13 +645,13 @@ func TestValue_Extract(t *testing.T) {
 		want    Value
 		wantErr bool
 	}{
-		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 1}, Value{t: Integer, i: 0xABCDEF}, false},
+		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 1}, Value{t: Integer, i: 0xEFCDAB}, false},
 		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 1}, Value{t: Integer, i: 0x90ABCD}, false},
-		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
+		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 0}, Value{t: Integer, i: 0xEFCDAB90}, false},
 		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
-		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0xCDEF}, false},
+		{"Extract big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0xEFCD}, false},
 		{"Extract little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 2}, Value{t: Integer, i: 0x90AB}, false},
-		{"Extract big-endian", fields{t: Integer, I: 0x12345678}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0x5678}, false},
+		{"Extract big-endian", fields{t: Integer, I: 0x12345678}, args{sz: 4, bigEndian: true, off: 2}, Value{t: Integer, i: 0x7856}, false},
 		{"Extract with offset 0", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 4, bigEndian: false, off: 0}, Value{t: Integer, i: 0x90ABCDEF}, false},
 		{"Extract with size 1 little-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 1, bigEndian: false, off: 0}, Value{t: Integer, i: 0xEF}, false},
 		{"Extract with size 1 big-endian", fields{t: Integer, I: 0x1234567890ABCDEF}, args{sz: 1, bigEndian: true, off: 0}, Value{t: Integer, i: 0xEF}, false},
