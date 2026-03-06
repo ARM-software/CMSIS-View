@@ -1,7 +1,7 @@
 function writeHeader() {
-    document.write('Version 1.2.1-dev24');
+    document.write('Version 1.2.1-dev25');
 };
 
 function writeFooter()  {
-    document.write('Generated on Fri Feb 27 2026 08:42:26 for PROJECT_NAME           = CMSIS-View 1.2.1-dev24+ga0c9729. Copyright &copy; 2026 Arm Limited (or its affiliates). All rights reserved.');
+    document.write('Generated on Fri Mar  6 2026 13:02:48 for PROJECT_NAME           = CMSIS-View 1.2.1-dev25+g87610cb. Copyright &copy; 2026 Arm Limited (or its affiliates). All rights reserved.');
 };
