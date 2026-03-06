@@ -433,7 +433,7 @@ func TestData_GetValuesAsString(t *testing.T) {
 		want   string
 	}{
 		{"GetValuesAsString 0", fields{Typ: 0, Data: &[]uint8{1, 2, 0x80}, Value1: -0x8000, Value2: 0x12345678, Value3: 0xABCDEF, Value4: 0x76543210}, ""},
-		{"GetValuesAsString 1", fields{Typ: 1, Data: &[]uint8{1, 2, 0x80}}, "data=0x010280"},
+		{"GetValuesAsString 1", fields{Typ: 1, Data: &[]uint8{1, 2, 0x80}}, "data=0x01 0x02 0x80"},
 		{"GetValuesAsString 2", fields{Typ: 2, Value1: -0x8000, Value2: 0x12345678}, "val1=0xffff8000, val2=0x12345678"},
 		{"GetValuesAsString 3", fields{Typ: 3, Value1: -0x8000, Value2: 0x12345678, Value3: 0xABCDEF, Value4: 0x76543210}, "val1=0xffff8000, val2=0x12345678, val3=0x00abcdef, val4=0x76543210"},
 	}
@@ -703,7 +703,7 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 			case 1:
 				tt.want.Compose(eval.Integer, 0x300066a8, 0.0, "")
 			case 2:
-				tt.want.Compose(eval.Integer, 0x48656C6C, 0.0, "")
+				tt.want.Compose(eval.Integer, 0x6C6C6548, 0.0, "") // "Hell" as little endian uint32
 			case 3:
 				tt.want.Compose(eval.Integer, 0x00, 0.0, "")
 			}
