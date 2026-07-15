@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           cache-dependency-path: tools/eventlist/go.sum
           go-version-file: tools/eventlist/go.mod
@@ -45,7 +45,7 @@ jobs:
         working-directory: ./tools/eventlist/cmd/eventlist
         
       - name: Archive TPIP report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tpip-report
           path: ./tools/eventlist/${{ env.tpip_report }}
@@ -67,18 +67,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Restore Changes
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: tpip-report
           path: ./tools/eventlist
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: Update TPIP report
           title: ':robot: [TPIP] Automated report updates'
