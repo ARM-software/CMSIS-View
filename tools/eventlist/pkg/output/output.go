@@ -891,25 +891,27 @@ func Print(filename *string, formatType *string, level *string, eventFile *strin
 	out := bufio.NewWriter(file)
 	err = o.print(out, eventFile, evdefs, typedefs, statBegin, showStatistic, &eventsTable)
 	if err == nil {
-		if FormatType == "json" {
-			output, err := json.Marshal(eventsTable)
+		var output []byte
+		switch FormatType {
+		case "json":
+			output, err = json.Marshal(eventsTable)
 			if err == nil {
 				buf := bytes.NewBuffer(output)
 				_, err = fmt.Fprint(out, buf)
 				if err == nil {
-					out.Flush()
+					err = out.Flush()
 				}
 			}
-		} else if FormatType == "xml" {
-			output, err := xml.Marshal(eventsTable)
+		case "xml":
+			output, err = xml.Marshal(eventsTable)
 			if err == nil {
 				buf := bytes.NewBuffer(output)
 				_, err = fmt.Fprint(out, buf)
 				if err == nil {
-					out.Flush()
+					err = out.Flush()
 				}
 			}
-		} else {
+		default:
 			err = out.Flush()
 		}
 	} else {

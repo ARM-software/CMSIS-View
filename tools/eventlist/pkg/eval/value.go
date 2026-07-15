@@ -18,7 +18,11 @@
 
 package eval
 
-import "eventlist/pkg/elf"
+import (
+	"encoding/binary"
+	"eventlist/pkg/elf"
+	"unsafe"
+)
 
 type Value struct {
 	t Token
@@ -278,30 +282,39 @@ func (v *Value) Function(v1 *Value) error {
 	return nil
 }
 
-// Extract extracts a portion of the integer value stored in the Value struct.
-// The size (sz) and offset (off) parameters specify the number of bytes to extract
-// and the starting byte position, respectively. The extracted portion is then
-// right-shifted by the offset and stored back in the Value struct.
+// Extract extracts a sub-field from the integer value stored in the Value struct.
+//
+// The integer value is treated as a byte buffer of sz bytes. When bigEndian is true,
+// the bytes are first converted from big-endian to little-endian order before extraction.
+// The buffer is then masked to sz bytes and right-shifted by off bytes to isolate the
+// desired sub-field. The result is stored back in v.i.
 //
 // Parameters:
-//
-//	sz  - The number of bytes to extract.
-//	off - The starting byte position for extraction.
+//   - sz:        Total size of the field in bytes (valid range: 1–8).
+//   - bigEndian: If true, the value is byte-swapped from big-endian to little-endian before extraction.
+//   - off:       Byte offset within the field to start extraction from (must be < sz).
 //
 // Returns:
-//
-//	An error if the type of the value is not Integer.
+//   - An error if v is not of type Integer, if sz is 0 or greater than 8,
+//     or if off is greater than or equal to sz.
 func (v *Value) Extract(sz uint32, bigEndian bool, off uint32) error {
 	if v.t != Integer {
 		return typeError("Extract", "")
 	}
+	if sz == 0 || sz > 8 {
+		return typeError("Extract", "invalid size")
+	}
+	if off >= sz {
+		return typeError("Extract", "invalid offset")
+	}
 	tmp := uint64(v.i)
 	if bigEndian {
-		tmp = (tmp&0xFF)<<56 | (tmp&0xFF00)<<40 | (tmp&0xFF0000)<<24 | (tmp&0xFF000000)<<8 |
-			(tmp&0xFF00000000)>>8 | (tmp&0xFF0000000000)>>24 | (tmp&0xFF000000000000)>>40 | (tmp&0xFF00000000000000)>>56
+		tmp = binary.BigEndian.Uint64((*[8]byte)(unsafe.Pointer(&tmp))[:])
+		tmp >>= 64 - sz*8
 	}
-	tmp &= (1 << (sz * 8)) - 1
-	v.i = int64(tmp >> (off * 8))
+	tmp &= (uint64(1) << (sz * 8)) - 1
+	tmp >>= off * 8
+	v.i = int64(tmp)
 	return nil
 }
 
@@ -394,7 +407,7 @@ func (v *Value) Not() error {
 			v.i = 0
 		}
 	default:
-		return typeError("Compl", "")
+		return typeError("Not", "")
 	}
 	return nil
 }
