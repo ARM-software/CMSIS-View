@@ -261,7 +261,7 @@ func (ep *eventProperty) getAddCount(idx uint16) string {
 // Returns:
 //
 //	A string representing the value `v` with the appropriate unit prefix.
-func convertUnit(v float64, unit string) string { //nolint:golint,unparam
+func convertUnit(v float64, unit string) string { //nolint:unparam
 	switch {
 	case v >= 1e9:
 		unit = "G" + unit
@@ -619,7 +619,7 @@ func escapeGen(s string) string {
 			t += "\\v"
 		default:
 			if c < ' ' {
-				t += fmt.Sprintf("\\%03o", byte(c))
+				t += fmt.Sprintf("\\%03o", c)
 			} else {
 				t += string(c)
 			}

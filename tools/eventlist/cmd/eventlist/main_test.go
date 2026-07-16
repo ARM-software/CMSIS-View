@@ -84,7 +84,7 @@ func Test_includes_Set(t *testing.T) {
 	}
 }
 
-func Test_infoOpt(t *testing.T) { //nolint:golint,paralleltest
+func Test_infoOpt(t *testing.T) { //nolint:paralleltest
 	type args struct {
 		sopt string
 		lopt string
@@ -119,7 +119,7 @@ func Test_infoOpt(t *testing.T) { //nolint:golint,paralleltest
 			"  -a, --cd arg        unknown option\n"},
 	}
 	_ = flag.Set("test.run", "yy")
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			oldOut := os.Stdout
 			restore := func() {
@@ -138,7 +138,7 @@ func Test_infoOpt(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func Test_main(t *testing.T) { //nolint:golint,paralleltest
+func Test_main(t *testing.T) { //nolint:paralleltest
 	outFile := "out.out"
 
 	lines1 :=
@@ -202,7 +202,7 @@ func Test_main(t *testing.T) { //nolint:golint,paralleltest
 		{"-I", []string{"-I", "../../testdata/nix", "xxx"}, ".*: open ../../testdata/nix: (no such file or directory|The system cannot find the file specified.)\\n", ""},
 	}
 	savedArgs := os.Args
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			oldOut := os.Stdout
 			restore := func() {

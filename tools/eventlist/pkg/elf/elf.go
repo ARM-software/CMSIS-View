@@ -103,8 +103,13 @@ func (s *sections) Readelf(name *string) error {
 func (s *sections) GetString(addr uint64) string {
 	for _, es := range s.sections {
 		if addr >= es.addr && addr < es.addr+uint64(len(es.data)) {
-			l := strings.IndexByte(string(es.data[addr-es.addr:]), 0)
-			return string(es.data[addr-es.addr : addr-es.addr+uint64(l)])
+			start := addr - es.addr
+			data := es.data[start:]
+			l := strings.IndexByte(string(data), 0)
+			if l < 0 {
+				return string(data)
+			}
+			return string(data[:l])
 		}
 	}
 	return ""

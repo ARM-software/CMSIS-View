@@ -34,7 +34,7 @@ import (
 	"testing"
 )
 
-func TestTimeInSecs(t *testing.T) { //nolint:golint,paralleltest
+func TestTimeInSecs(t *testing.T) { //nolint:paralleltest
 	type args struct {
 		time uint64
 	}
@@ -47,7 +47,7 @@ func TestTimeInSecs(t *testing.T) { //nolint:golint,paralleltest
 		{"clear", args{77}, true, 4e-8 * 77},
 		{"set", args{47}, false, 2.0 * 47},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.clear {
 				TimeFactor = nil
@@ -603,7 +603,7 @@ func Test_eventProperty_getLast(t *testing.T) {
 	}
 }
 
-func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
+func TestOutput_buildStatistic(t *testing.T) { //nolint:paralleltest
 	eds0 := make(scvd.Events)
 	eds := make(scvd.Events)
 	eds[0xEF00] = scvd.EventType{Brief: "briefbriefbrief", Property: "propertypropertyproperty", Value: "value"}
@@ -643,7 +643,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 		{"test7a", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, eds0, tds}, 1, 9, 14, 0.25},
 		{"test7b", fields{[4]eventProperty{}, []string{"Index", "Time (s)", "Component", "Event Property", "Value"}, 0, 0}, args{s7, eds, tds}, 1, 15, 24, 0.25},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			o := &Output{
 				evProps:       tt.fields.evProps,
@@ -668,7 +668,7 @@ func TestOutput_buildStatistic(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestOutput_printStatistic(t *testing.T) { //nolint:golint,paralleltest
+func TestOutput_printStatistic(t *testing.T) { //nolint:paralleltest
 	var b bytes.Buffer
 
 	props0 := [4]eventProperty{}
@@ -706,7 +706,7 @@ func TestOutput_printStatistic(t *testing.T) { //nolint:golint,paralleltest
 		Events:     []EventRecord{},
 		Statistics: []EventRecordStatistic{},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
 			o := &Output{
@@ -764,7 +764,7 @@ func Test_escapeGen(t *testing.T) {
 	}
 }
 
-func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
+func TestOutput_printEvents(t *testing.T) { //nolint:paralleltest
 	var b bytes.Buffer
 
 	eds := make(scvd.Events)
@@ -815,7 +815,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 		Events:     []EventRecord{},
 		Statistics: []EventRecordStatistic{},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
 
@@ -843,7 +843,7 @@ func TestOutput_printEvents(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestOutput_printHeader(t *testing.T) { //nolint:golint,paralleltest
+func TestOutput_printHeader(t *testing.T) { //nolint:paralleltest
 	var b bytes.Buffer
 
 	type fields struct {
@@ -864,7 +864,7 @@ func TestOutput_printHeader(t *testing.T) { //nolint:golint,paralleltest
 	}{
 		{"test", fields{columns: []string{"a", "b", "c", "d", "e"}, componentSize: 15, propertySize: 20}, args{}, "c", "d"},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
 			o := &Output{
@@ -906,7 +906,7 @@ func TestOutput_printHeader(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
+func TestOutput_print(t *testing.T) { //nolint:paralleltest
 	var b bytes.Buffer
 
 	//	var e0 = "../../testdata/test.xml"
@@ -965,7 +965,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 		Events:     []EventRecord{},
 		Statistics: []EventRecordStatistic{},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			tt.args.out = bufio.NewWriter(&b)
 
@@ -991,7 +991,7 @@ func TestOutput_print(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestPrint(t *testing.T) { //nolint:golint,paralleltest
+func TestPrint(t *testing.T) { //nolint:paralleltest
 	o1 := "testOutput.out"
 
 	var s10 = "../../testdata/test10.binary"
@@ -1028,7 +1028,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 	}{
 		{"test", args{filename: &o1, eventFile: &s10}, false},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
@@ -1068,7 +1068,7 @@ func TestPrint(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
+func TestPrintJSON(t *testing.T) { //nolint:paralleltest
 	o1 := "testOutput.json"
 
 	var s10 = "../../testdata/test10.binary"
@@ -1094,7 +1094,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	}{
 		{"test1", args{filename: &o1, eventFile: &s10}, false},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)
@@ -1130,7 +1130,7 @@ func TestPrintJSON(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
+func TestPrintXML(t *testing.T) { //nolint:paralleltest
 	o1 := "testOutput.xml"
 
 	var s10 = "../../testdata/test10.binary"
@@ -1156,7 +1156,7 @@ func TestPrintXML(t *testing.T) { //nolint:golint,paralleltest
 	}{
 		{"test", args{filename: &o1, eventFile: &s10}, false},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			TimeFactor = nil
 			defer os.Remove(*tt.args.filename)

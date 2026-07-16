@@ -28,7 +28,7 @@ import (
 	"testing"
 )
 
-func Test_getEnum(t *testing.T) { //nolint:golint,paralleltest
+func Test_getEnum(t *testing.T) { //nolint:paralleltest
 	var vals eval.Member
 	vals.Enums = make(map[int64]string)
 	var td eval.ITypedef
@@ -63,7 +63,7 @@ func Test_getEnum(t *testing.T) { //nolint:golint,paralleltest
 		{"enum err6", args{tds, 47, "typName:enumName]", &i}, "", 8, true},
 		{"enum err7", args{tds, 4711, "typName]", &i}, "enum", 8, false},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			i = 0
 			got, err := getEnum(tt.args.typedefs, tt.args.val, tt.args.value, tt.args.i)
@@ -168,7 +168,7 @@ func TestInfo_SplitID(t *testing.T) {
 	}
 }
 
-func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,paralleltest
+func TestEventData_calculateExpression(t *testing.T) { //nolint:paralleltest
 	var i int
 
 	fileTest := "../../testdata/elftest.elf"
@@ -223,7 +223,7 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 		t.Errorf("Data.calculateExpression() cannot open %s", fileTest)
 		return
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			e := &Data{
 				Time:   tt.fields.Time,
@@ -250,7 +250,7 @@ func TestEventData_calculateExpression(t *testing.T) { //nolint:golint,parallelt
 	}
 }
 
-func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paralleltest
+func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:paralleltest
 	var vals eval.Member
 	vals.Enums = make(map[int64]string)
 	var td eval.ITypedef
@@ -301,7 +301,7 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 		{"enumExpr err3", ed1, args{tds, "E[val3, xxx]", &i}, "", 12, true},
 		{"enumExpr err4", ed1, args{tds, "S[val3, xxx]", &i}, "", 7, true},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			e := &Data{
 				Time:   tt.fields.Time,
@@ -331,14 +331,14 @@ func TestEventData_calculateEnumExpression(t *testing.T) { //nolint:golint,paral
 func TestEventData_EvalLine(t *testing.T) {
 	t.Parallel()
 
-	var ev1 scvd.EventType = scvd.EventType{ID: "id1", Value: "x%%%d[val1]y%u[val2]z"}
-	var ev2 scvd.EventType = scvd.EventType{ID: "id2", Value: "x%T[val1]y%x[val2]z"}
-	var ev3 scvd.EventType = scvd.EventType{ID: "id3", Value: "x%I[val3]y%J[val3]z"}
-	var ev4 scvd.EventType = scvd.EventType{ID: "id4", Value: "x%M[val3]y%S[val3]z"}
-	var evE1 scvd.EventType = scvd.EventType{ID: "idE1", Value: "x%E[val2, typName]y"}
-	var evTD scvd.EventType = scvd.EventType{ID: "idTD", Val1: "v1", Val2: "v2", Val3: "4BY", Val4: "v4", Val5: "v5", Val6: "v6", Value: "x%x[val3.B2]y"}
-	var everr1 scvd.EventType = scvd.EventType{ID: "iderr1", Value: "x%d[;]y"}
-	var everr2 scvd.EventType = scvd.EventType{ID: "iderr2", Value: "x%E[;]y"}
+	var ev1 = scvd.EventType{ID: "id1", Value: "x%%%d[val1]y%u[val2]z"}
+	var ev2 = scvd.EventType{ID: "id2", Value: "x%T[val1]y%x[val2]z"}
+	var ev3 = scvd.EventType{ID: "id3", Value: "x%I[val3]y%J[val3]z"}
+	var ev4 = scvd.EventType{ID: "id4", Value: "x%M[val3]y%S[val3]z"}
+	var evE1 = scvd.EventType{ID: "idE1", Value: "x%E[val2, typName]y"}
+	var evTD = scvd.EventType{ID: "idTD", Val1: "v1", Val2: "v2", Val3: "4BY", Val4: "v4", Val5: "v5", Val6: "v6", Value: "x%x[val3.B2]y"}
+	var everr1 = scvd.EventType{ID: "iderr1", Value: "x%d[;]y"}
+	var everr2 = scvd.EventType{ID: "iderr2", Value: "x%E[;]y"}
 
 	var vals eval.Member
 	vals.Enums = make(map[int64]string)
@@ -625,7 +625,7 @@ func TestEventData_Read(t *testing.T) {
 	}
 }
 
-func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
+func TestData_GetValue(t *testing.T) { //nolint:paralleltest
 	type fields struct {
 		Time   uint64
 		Value1 int32
@@ -686,7 +686,7 @@ func TestData_GetValue(t *testing.T) { //nolint:golint,paralleltest
 		{"nixvar", ed2, args{"xx", &i, tds}, 42, eval.Value{}, true},
 		{"valxxx", ed1, args{"[valxxx]", &i, tds}, 42, eval.Value{}, true},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			i = 0
 			e := &Data{

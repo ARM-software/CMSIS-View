@@ -23,7 +23,7 @@ import (
 	"testing"
 )
 
-func Test_sections_Readelf(t *testing.T) { //nolint:golint,paralleltest
+func Test_sections_Readelf(t *testing.T) { //nolint:paralleltest
 	fileTest := "../../testdata/elftest.elf"
 	fileNix := "../../testdata/nix.elf"
 	fileSym := "../../testdata/elfsym.elf"
@@ -43,7 +43,7 @@ func Test_sections_Readelf(t *testing.T) { //nolint:golint,paralleltest
 		{"test", &sections{}, args{name: &fileTest}, 0, false},
 		{"errName", &sections{}, args{name: &fileNix}, 0, true},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			var err error
 			if err = tt.s.Readelf(tt.args.name); (err != nil) != tt.wantErr {

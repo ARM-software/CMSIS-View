@@ -21,6 +21,8 @@ package eval
 import (
 	"encoding/binary"
 	"eventlist/pkg/elf"
+	"math"
+	"unicode/utf8"
 	"unsafe"
 )
 
@@ -31,6 +33,45 @@ type Value struct {
 	s string
 	v *Variable
 	l []Value
+}
+
+func int64FromUint64(value uint64) int64 {
+	return *(*int64)(unsafe.Pointer(&value))
+}
+
+func uint64FromInt64(value int64) uint64 {
+	return *(*uint64)(unsafe.Pointer(&value))
+}
+
+func uint32FromInt64(value int64) (uint32, bool) {
+	if value < 0 || value > math.MaxUint32 {
+		return 0, false
+	}
+	return uint32(value), true
+}
+
+func uint64Low(value int64, bits uint) uint64 {
+	return uint64FromInt64(value) & ((uint64(1) << bits) - 1)
+}
+
+func int64FromSmallUint(value uint64) int64 {
+	return int64FromUint64(value)
+}
+
+func int64FromUint(value int64, bits uint) int64 {
+	unsigned := uint64Low(value, bits)
+	result := int64FromSmallUint(unsigned)
+	if result >= int64FromSmallUint(uint64(1)<<(bits-1)) {
+		result -= int64FromSmallUint(uint64(1) << bits)
+	}
+	return result
+}
+
+func runeFromUint32(value uint32) rune {
+	if value > utf8.MaxRune {
+		return utf8.RuneError
+	}
+	return rune(value)
 }
 
 // Compose sets the fields of the Value struct with the provided parameters.
@@ -121,7 +162,7 @@ func (v *Value) GetInt() int64 {
 func (v *Value) GetUInt() uint64 {
 	switch v.t {
 	case Integer:
-		return uint64(v.i)
+		return uint64FromInt64(v.i)
 	case Floating:
 		return uint64(v.f)
 	}
@@ -267,14 +308,14 @@ func (v *Value) Function(v1 *Value) error {
 	case OFFSETOF:
 		a, _, flag := elf.Symbols.GetAddrSize(v1.GetList()[0].s)
 		if flag {
-			*v = Value{t: f.ret, i: int64(a)}
+			*v = Value{t: f.ret, i: int64FromUint64(a)}
 		} else {
 			*v = Value{t: f.ret, i: 0}
 		}
 	case SIZEOF:
 		_, s, flag := elf.Symbols.GetAddrSize(v1.GetList()[0].s)
 		if flag {
-			*v = Value{t: f.ret, i: int64(s)}
+			*v = Value{t: f.ret, i: int64FromUint64(s)}
 		} else {
 			*v = Value{t: f.ret, i: 0}
 		}
@@ -307,14 +348,14 @@ func (v *Value) Extract(sz uint32, bigEndian bool, off uint32) error {
 	if off >= sz {
 		return typeError("Extract", "invalid offset")
 	}
-	tmp := uint64(v.i)
+	tmp := uint64FromInt64(v.i)
 	if bigEndian {
 		tmp = binary.BigEndian.Uint64((*[8]byte)(unsafe.Pointer(&tmp))[:])
 		tmp >>= 64 - sz*8
 	}
 	tmp &= (uint64(1) << (sz * 8)) - 1
 	tmp >>= off * 8
-	v.i = int64(tmp)
+	v.i = int64FromUint64(tmp)
 	return nil
 }
 
@@ -438,7 +479,7 @@ func (v *Value) Cast(ty Type) error {
 	case Uint8:
 		switch v.t {
 		case Integer:
-			v.i = int64(uint8(v.i))
+			v.i = int64FromSmallUint(uint64Low(v.i, 8))
 		case Floating:
 			v.i = int64(uint8(v.f))
 			v.t = Integer
@@ -449,7 +490,7 @@ func (v *Value) Cast(ty Type) error {
 	case Int8:
 		switch v.t {
 		case Integer:
-			v.i = int64(int8(v.i))
+			v.i = int64FromUint(v.i, 8)
 		case Floating:
 			v.i = int64(int8(v.f))
 			v.t = Integer
@@ -460,7 +501,7 @@ func (v *Value) Cast(ty Type) error {
 	case Uint16:
 		switch v.t {
 		case Integer:
-			v.i = int64(uint16(v.i))
+			v.i = int64FromSmallUint(uint64Low(v.i, 16))
 		case Floating:
 			v.i = int64(uint16(v.f))
 			v.t = Integer
@@ -471,7 +512,7 @@ func (v *Value) Cast(ty Type) error {
 	case Int16:
 		switch v.t {
 		case Integer:
-			v.i = int64(int16(v.i))
+			v.i = int64FromUint(v.i, 16)
 		case Floating:
 			v.i = int64(int16(v.f))
 			v.t = Integer
@@ -482,7 +523,7 @@ func (v *Value) Cast(ty Type) error {
 	case Uint32:
 		switch v.t {
 		case Integer:
-			v.i = int64(uint32(v.i))
+			v.i = int64FromSmallUint(uint64Low(v.i, 32))
 		case Floating:
 			v.i = int64(uint32(v.f))
 			v.t = Integer
@@ -493,7 +534,7 @@ func (v *Value) Cast(ty Type) error {
 	case Int32:
 		switch v.t {
 		case Integer:
-			v.i = int64(int32(v.i))
+			v.i = int64FromUint(v.i, 32)
 		case Floating:
 			v.i = int64(int32(v.f))
 			v.t = Integer
@@ -504,9 +545,9 @@ func (v *Value) Cast(ty Type) error {
 	case Uint64:
 		switch v.t {
 		case Integer:
-			v.i = int64(uint64(v.i))
+			// already stored as the two's-complement bit pattern
 		case Floating:
-			v.i = int64(uint64(v.f))
+			v.i = int64FromUint64(uint64(v.f))
 			v.t = Integer
 			v.f = 0
 		default:
