@@ -31,10 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -119,19 +119,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
           # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
           version: latest
+          skip-cache: true
           working-directory: ./tools/eventlist
 
   format:
@@ -140,10 +141,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -182,10 +183,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -222,19 +223,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download unit test report windows
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: unit-test-result-windows-2022
           path: testreports/
 
       - name: Download unit test report linux
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: unit-test-result-ubuntu-24.04
           path: testreports/
 
       - name: Download unit test report macos
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: unit-test-result-macos-14
           path: testreports/
@@ -255,10 +256,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
           check-latest: true
@@ -290,7 +291,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout devtools
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Create distribution folders
         run: |
@@ -320,37 +321,37 @@ jobs:
           cp tools/eventlist/third_party_licenses.md release/eventlist-windows-arm64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-linux-amd64
           path: release/eventlist-linux-amd64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-linux-arm64
           path: release/eventlist-linux-arm64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-darwin-amd64
           path: release/eventlist-darwin-amd64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-darwin-arm64
           path: release/eventlist-darwin-arm64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-windows-amd64
           path: release/eventlist-windows-amd64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-windows-arm64
           path: release/eventlist-windows-arm64/
