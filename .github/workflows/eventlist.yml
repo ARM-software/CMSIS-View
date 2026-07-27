@@ -279,7 +279,7 @@ jobs:
       # Temporarily disabled until we move on codeclimate
       - name: Upload coverage to Codecov
         if: false
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: ./tools/eventlist/build/cover.out
           fail_ci_if_error: true
