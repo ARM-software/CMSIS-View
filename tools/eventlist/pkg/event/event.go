@@ -30,7 +30,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"unsafe"
 )
 
 var errEnum = errors.New("invalid enum")
@@ -38,11 +37,11 @@ var errEnum = errors.New("invalid enum")
 var errFormat = errors.New("invalid format expression")
 
 func uint32FromInt32(value int32) uint32 {
-	return *(*uint32)(unsafe.Pointer(&value))
+	return uint32(value) //nolint:gosec // preserve the two's-complement bit pattern
 }
 
 func int32FromUint32(value uint32) int32 {
-	return *(*int32)(unsafe.Pointer(&value))
+	return int32(value) //nolint:gosec // preserve the two's-complement bit pattern
 }
 
 // enumError creates and returns a pointer to an eval.NumError struct.

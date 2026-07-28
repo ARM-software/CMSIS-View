@@ -221,7 +221,7 @@ func getOne(filename *string, events Events, typedefs eval.Typedefs) error {
 				}
 				if len(members) > 0 {
 					if typedef.Size > math.MaxUint32 {
-						return eval.ErrEof
+						return eval.ErrRange
 					}
 					typedefs[typedef.Name] = eval.ITypedef{Size: uint32(typedef.Size), BigEndian: typedef.Endian == "B" || typedef.Endian == "b", Members: members}
 				}

@@ -721,7 +721,11 @@ func (ex *Expression) lex() (Value, error) {
 						return v, syntaxError(fnLex, s0)
 					}
 					s0 += s
-					v.s += string(rune(i))
+					r := rune(i)
+					if !utf8.ValidRune(r) {
+						r = utf8.RuneError
+					}
+					v.s += string(r)
 					done = true
 				case 'U':
 					var s string

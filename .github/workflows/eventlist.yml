@@ -278,7 +278,7 @@ jobs:
           COVERAGE=$(go tool cover -func build/cover.out | tail -1 | awk '{print $3}' | tr -d '%')
           echo "Test Coverage: $COVERAGE%"
           COVERAGE_INT=$(echo "$COVERAGE * 10 / 1" | bc)
-          test "$COVERAGE_INT" -gt 92
+          test "$COVERAGE_INT" -ge 920
         working-directory: ./tools/eventlist
 
       # Temporarily disabled until we move on codeclimate

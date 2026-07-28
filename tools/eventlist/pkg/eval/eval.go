@@ -87,7 +87,7 @@ func GetIdValue(id string, typedefs Typedefs) (uint16, error) { //nolint:revive
 	}
 	value := n.GetInt()
 	if value < 0 || value > math.MaxUint16 {
-		return 0, typeError("ID", "")
+		return 0, rangeError("ID", id)
 	}
 	return uint16(value), nil
 }
