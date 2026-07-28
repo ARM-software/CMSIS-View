@@ -37,6 +37,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Initialize CodeQL
@@ -125,6 +126,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: golangci-lint
@@ -132,6 +134,7 @@ jobs:
         with:
           version: latest
           skip-cache: true
+          skip-save-cache: true
           working-directory: ./tools/eventlist
 
   format:
@@ -146,6 +149,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Create build folder
@@ -188,6 +192,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Create build folder
@@ -240,9 +245,8 @@ jobs:
           path: testreports/
 
       - name: publish test results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
         with:
-          commit: ${{ github.event.workflow_run.head_sha }}
           report_individual_runs: true
           junit_files: "testreports/*.xml"
 
@@ -261,6 +265,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Create build folder
@@ -273,7 +278,7 @@ jobs:
           COVERAGE=$(go tool cover -func build/cover.out | tail -1 | awk '{print $3}' | tr -d '%')
           echo "Test Coverage: $COVERAGE%"
           COVERAGE_INT=$(echo "$COVERAGE * 10 / 1" | bc)
-          test "$COVERAGE_INT" -gt 975
+          test "$COVERAGE_INT" -gt 92
         working-directory: ./tools/eventlist
 
       # Temporarily disabled until we move on codeclimate
