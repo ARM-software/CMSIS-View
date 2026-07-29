@@ -18,7 +18,11 @@
 
 package eval
 
-import "eventlist/pkg/elf"
+import (
+	"encoding/binary"
+	"eventlist/pkg/elf"
+	"unsafe"
+)
 
 type Value struct {
 	t Token
@@ -61,10 +65,12 @@ func (v *Value) getValue() (Value, error) {
 // the assignment process.
 //
 // Parameters:
-//   v1 - The Value to be assigned to the receiver.
+//
+//	v1 - The Value to be assigned to the receiver.
 //
 // Returns:
-//   An error if the assignment fails or if the receiver is not a variable.
+//
+//	An error if the assignment fails or if the receiver is not a variable.
 func (v *Value) setValue(v1 *Value) error {
 	if v.v == nil {
 		return typeError("not a variable", "")
@@ -78,10 +84,12 @@ func (v *Value) setValue(v1 *Value) error {
 // If the receiver Value is not of type List, it returns a type error.
 //
 // Parameters:
-//   v1 - The Value to be added to the list.
+//
+//	v1 - The Value to be added to the list.
 //
 // Returns:
-//   An error if the receiver Value is not of type List, otherwise nil.
+//
+//	An error if the receiver Value is not of type List, otherwise nil.
 func (v *Value) addList(v1 Value) error {
 	if v.t == Nix {
 		v.t = List
@@ -274,28 +282,39 @@ func (v *Value) Function(v1 *Value) error {
 	return nil
 }
 
-// Extract extracts a portion of the integer value stored in the Value struct.
-// The size (sz) and offset (off) parameters specify the number of bytes to extract
-// and the starting byte position, respectively. The extracted portion is then
-// right-shifted by the offset and stored back in the Value struct.
+// Extract extracts a sub-field from the integer value stored in the Value struct.
+//
+// The integer value is treated as a byte buffer of sz bytes. When bigEndian is true,
+// the bytes are first converted from big-endian to little-endian order before extraction.
+// The buffer is then masked to sz bytes and right-shifted by off bytes to isolate the
+// desired sub-field. The result is stored back in v.i.
 //
 // Parameters:
-//   sz  - The number of bytes to extract.
-//   off - The starting byte position for extraction.
+//   - sz:        Total size of the field in bytes (valid range: 1–8).
+//   - bigEndian: If true, the value is byte-swapped from big-endian to little-endian before extraction.
+//   - off:       Byte offset within the field to start extraction from (must be < sz).
 //
 // Returns:
-//   An error if the type of the value is not Integer.
+//   - An error if v is not of type Integer, if sz is 0 or greater than 8,
+//     or if off is greater than or equal to sz.
 func (v *Value) Extract(sz uint32, bigEndian bool, off uint32) error {
 	if v.t != Integer {
 		return typeError("Extract", "")
 	}
+	if sz == 0 || sz > 8 {
+		return typeError("Extract", "invalid size")
+	}
+	if off >= sz {
+		return typeError("Extract", "invalid offset")
+	}
 	tmp := uint64(v.i)
 	if bigEndian {
-		tmp = (tmp&0xFF)<<56 | (tmp&0xFF00)<<40 | (tmp&0xFF0000)<<24 | (tmp&0xFF000000)<<8 |
-			(tmp&0xFF00000000)>>8 | (tmp&0xFF0000000000)>>24 | (tmp&0xFF000000000000)>>40 | (tmp&0xFF00000000000000)>>56
+		tmp = binary.BigEndian.Uint64((*[8]byte)(unsafe.Pointer(&tmp))[:])
+		tmp >>= 64 - sz*8
 	}
-	tmp &= (1 << (sz * 8)) - 1
-	v.i = int64(tmp >> (off * 8))
+	tmp &= (uint64(1) << (sz * 8)) - 1
+	tmp >>= off * 8
+	v.i = int64(tmp)
 	return nil
 }
 
@@ -388,7 +407,7 @@ func (v *Value) Not() error {
 			v.i = 0
 		}
 	default:
-		return typeError("Compl", "")
+		return typeError("Not", "")
 	}
 	return nil
 }
@@ -659,10 +678,12 @@ func (v *Value) Mod(v1 *Value) error {
 // compatible, a typeError is returned.
 //
 // Parameters:
-//   v1 - The value to be added to the receiver.
+//
+//	v1 - The value to be added to the receiver.
 //
 // Returns:
-//   An error if the types are not compatible for addition, otherwise nil.
+//
+//	An error if the types are not compatible for addition, otherwise nil.
 func (v *Value) Add(v1 *Value) error {
 	switch v.t {
 	case Integer:
@@ -750,10 +771,12 @@ func (v *Value) Shl(v1 *Value) error {
 // it returns a typeError.
 //
 // Parameters:
-//   v1 - The Value containing the integer by which the receiver's integer value will be shifted.
+//
+//	v1 - The Value containing the integer by which the receiver's integer value will be shifted.
 //
 // Returns:
-//   An error if either value is not of type Integer, otherwise nil.
+//
+//	An error if either value is not of type Integer, otherwise nil.
 func (v *Value) Shr(v1 *Value) error {
 	if v.t != Integer || v1.t != Integer {
 		return typeError("shr", "")
@@ -885,10 +908,12 @@ func (v *Value) LessEqual(v1 *Value) error {
 // The resulting type always is forced to be Integer.
 //
 // Parameters:
-//   v1 *Value - The Value to compare with the current Value.
+//
+//	v1 *Value - The Value to compare with the current Value.
 //
 // Returns:
-//   error - Returns a type error if the types of the Values are incompatible for comparison, otherwise returns nil.
+//
+//	error - Returns a type error if the types of the Values are incompatible for comparison, otherwise returns nil.
 func (v *Value) Greater(v1 *Value) error {
 	switch v.t {
 	case Integer:
@@ -999,10 +1024,12 @@ func (v *Value) GreaterEqual(v1 *Value) error {
 // The resulting type always is forced to be Integer.
 //
 // Parameters:
-//   v1 - The Value object to compare with the current Value object.
+//
+//	v1 - The Value object to compare with the current Value object.
 //
 // Returns:
-//   error - An error if the types are not supported for comparison, otherwise nil.
+//
+//	error - An error if the types are not supported for comparison, otherwise nil.
 func (v *Value) Equal(v1 *Value) error {
 	switch v.t {
 	case Integer:
@@ -1057,10 +1084,12 @@ func (v *Value) Equal(v1 *Value) error {
 // The resulting type always is forced to be Integer.
 //
 // Parameters:
-//   v1 (*Value): The Value object to compare with.
+//
+//	v1 (*Value): The Value object to compare with.
 //
 // Returns:
-//   error: An error if the types are incompatible, otherwise nil.
+//
+//	error: An error if the types are incompatible, otherwise nil.
 func (v *Value) NotEqual(v1 *Value) error {
 	switch v.t {
 	case Integer:
@@ -1112,10 +1141,12 @@ func (v *Value) NotEqual(v1 *Value) error {
 // The result of the operation is stored in the current Value.
 //
 // Parameters:
-//   v1 - The Value to perform the bitwise AND operation with.
+//
+//	v1 - The Value to perform the bitwise AND operation with.
 //
 // Returns:
-//   An error if either Value is not of Integer type, otherwise nil.
+//
+//	An error if either Value is not of Integer type, otherwise nil.
 func (v *Value) And(v1 *Value) error {
 	if v.t != Integer || v1.t != Integer {
 		return typeError("And", "")
@@ -1130,10 +1161,12 @@ func (v *Value) And(v1 *Value) error {
 // receiver's integer field.
 //
 // Parameters:
-//   v1 - The Value to XOR with the receiver.
+//
+//	v1 - The Value to XOR with the receiver.
 //
 // Returns:
-//   An error if either Value is not of type Integer, otherwise nil.
+//
+//	An error if either Value is not of type Integer, otherwise nil.
 func (v *Value) Xor(v1 *Value) error {
 	if v.t != Integer || v1.t != Integer {
 		return typeError("Xor", "")
@@ -1165,10 +1198,12 @@ func (v *Value) Or(v1 *Value) error {
 // as an Integer (1 for true, 0 for false).
 //
 // Parameters:
-//   v1 - The Value to perform the logical AND operation with.
+//
+//	v1 - The Value to perform the logical AND operation with.
 //
 // Returns:
-//   error - Returns a typeError if either Value is not of type Integer or Floating.
+//
+//	error - Returns a typeError if either Value is not of type Integer or Floating.
 func (v *Value) LogAnd(v1 *Value) error {
 	if v.t != Integer && v.t != Floating || v1.t != Integer && v1.t != Floating {
 		return typeError("LogAnd", "")
@@ -1189,10 +1224,12 @@ func (v *Value) LogAnd(v1 *Value) error {
 // otherwise, the result is 0 (false). The result is stored in the current Value (v) as an Integer type.
 //
 // Parameters:
-//   v1 - The Value to perform the logical OR operation with.
+//
+//	v1 - The Value to perform the logical OR operation with.
 //
 // Returns:
-//   error - Returns a typeError if either Value is not of type Integer or Floating.
+//
+//	error - Returns a typeError if either Value is not of type Integer or Floating.
 func (v *Value) LogOr(v1 *Value) error {
 	if v.t != Integer && v.t != Floating || v1.t != Integer && v1.t != Floating {
 		return typeError("LogOr", "")

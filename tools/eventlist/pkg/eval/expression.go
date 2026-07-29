@@ -1092,7 +1092,9 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 				if err = v.Cast(member.IType); err != nil {
 					return v, err
 				}
-				return v, nil
+				left = v
+				ex.next, err = ex.lex()
+				return left, err
 			}
 		}
 		if ex.next, err = ex.lex(); err != nil {
