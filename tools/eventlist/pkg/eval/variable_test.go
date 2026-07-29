@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-//nolint:golint,paralleltest
+//nolint:paralleltest
 package eval
 
 import (

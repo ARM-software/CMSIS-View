@@ -20,6 +20,7 @@ package eval
 
 import (
 	"errors"
+	"math"
 )
 
 type Member struct {
@@ -79,10 +80,14 @@ func GetValue(value string, typedefs Typedefs) (int64, error) {
 // GetIdValue evaluates the ID and returns its value as an IDType(uint16).
 // If an error occurs during evaluation, it returns 0 and the error.
 // It ignores eval.ErrEof.
-func GetIdValue(id string, typedefs Typedefs) (uint16, error) { //nolint:golint,revive
+func GetIdValue(id string, typedefs Typedefs) (uint16, error) { //nolint:revive
 	n, err := Eval(&id, typedefs, nil)
 	if err != nil && !errors.Is(err, ErrEof) {
 		return 0, err
 	}
-	return uint16(n.GetInt()), nil
+	value := n.GetInt()
+	if value < 0 || value > math.MaxUint16 {
+		return 0, rangeError("ID", id)
+	}
+	return uint16(value), nil
 }

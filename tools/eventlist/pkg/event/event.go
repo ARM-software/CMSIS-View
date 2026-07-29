@@ -36,6 +36,14 @@ var errEnum = errors.New("invalid enum")
 
 var errFormat = errors.New("invalid format expression")
 
+func uint32FromInt32(value int32) uint32 {
+	return uint32(value) //nolint:gosec // preserve the two's-complement bit pattern
+}
+
+func int32FromUint32(value uint32) int32 {
+	return int32(value) //nolint:gosec // preserve the two's-complement bit pattern
+}
+
 // enumError creates and returns a pointer to an eval.NumError struct.
 // The function takes two string parameters: fn and str, which represent
 // the function name and the string that caused the error, respectively.
@@ -409,10 +417,10 @@ func (e *Data) GetValuesAsString() string {
 		}
 		return sb.String()
 	case 2: // Eventrecord2
-		return fmt.Sprintf("val1=0x%08x, val2=0x%08x", uint32(e.Value1), uint32(e.Value2))
+		return fmt.Sprintf("val1=0x%08x, val2=0x%08x", uint32FromInt32(e.Value1), uint32FromInt32(e.Value2))
 	case 3: // Eventrecord4
 		return fmt.Sprintf("val1=0x%08x, val2=0x%08x, val3=0x%08x, val4=0x%08x",
-			uint32(e.Value1), uint32(e.Value2), uint32(e.Value3), uint32(e.Value4))
+			uint32FromInt32(e.Value1), uint32FromInt32(e.Value2), uint32FromInt32(e.Value3), uint32FromInt32(e.Value4))
 	}
 	return ""
 }
@@ -529,16 +537,16 @@ func (e *Data) Read(in *bufio.Reader) error {
 		if len(data) < 20 {
 			return eval.ErrEof
 		}
-		e.Value1 = int32(convert32(data[12:16]))
-		e.Value2 = int32(convert32(data[16:20]))
+		e.Value1 = int32FromUint32(convert32(data[12:16]))
+		e.Value2 = int32FromUint32(convert32(data[16:20]))
 	case 3: // Eventrecord4
 		if len(data) < 28 {
 			return eval.ErrEof
 		}
-		e.Value1 = int32(convert32(data[12:16]))
-		e.Value2 = int32(convert32(data[16:20]))
-		e.Value3 = int32(convert32(data[20:24]))
-		e.Value4 = int32(convert32(data[24:28]))
+		e.Value1 = int32FromUint32(convert32(data[12:16]))
+		e.Value2 = int32FromUint32(convert32(data[16:20]))
+		e.Value3 = int32FromUint32(convert32(data[20:24]))
+		e.Value4 = int32FromUint32(convert32(data[24:28]))
 	}
 	return nil
 }

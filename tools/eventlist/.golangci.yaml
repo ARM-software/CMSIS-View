@@ -1,15 +1,21 @@
+version: "2"
+run:
+  build-tags:
+    - integration
 linters:
-    enable:
-        - errname
-        - errorlint
-        - goerr113
-        - makezero
-        - nilerr
-        - paralleltest
-        - prealloc
-        - predeclared
-        - revive
-        - thelper
-        - unconvert
-        - unparam
-        - wastedassign
+  default: none
+  enable:
+    - bodyclose
+    - errcheck
+    - gosec
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling

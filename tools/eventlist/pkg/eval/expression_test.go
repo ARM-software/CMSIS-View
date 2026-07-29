@@ -778,7 +778,7 @@ func TestExpression_arguments(t *testing.T) {
 	}
 }
 
-func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
+func TestExpression_postfix(t *testing.T) { //nolint:paralleltest
 	var s0 = "++ +"
 	var s1 = "++$"
 	var s2 = "++"
@@ -873,7 +873,7 @@ func TestExpression_postfix(t *testing.T) { //nolint:golint,paralleltest
 		{"Index_name_err", fields{&s27, 0, Value{t: Identifier, s: "name"}, nil, nil}, Value{t: Identifier, s: "name"}, false, true},
 	}
 
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			ex := &Expression{
 				in:       tt.fields.in,

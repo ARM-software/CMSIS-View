@@ -21,6 +21,7 @@ package scvd
 import (
 	"encoding/xml"
 	"eventlist/pkg/eval"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -219,6 +220,9 @@ func getOne(filename *string, events Events, typedefs eval.Typedefs) error {
 					members[member.Name] = mem
 				}
 				if len(members) > 0 {
+					if typedef.Size > math.MaxUint32 {
+						return eval.ErrRange
+					}
 					typedefs[typedef.Name] = eval.ITypedef{Size: uint32(typedef.Size), BigEndian: typedef.Endian == "B" || typedef.Endian == "b", Members: members}
 				}
 			}

@@ -22,6 +22,7 @@ import (
 	"errors"
 	"math"
 	"strings"
+	"unicode/utf8"
 )
 
 const maxUint64 = 1<<64 - 1
@@ -170,7 +171,7 @@ var ErrSyntax = errors.New("syntax error")
 
 var ErrType = errors.New("value type error")
 
-var ErrEof = errors.New("eof") //nolint:golint,revive
+var ErrEof = errors.New("eof") //nolint:revive
 
 type NumError struct {
 	Func string // failing function
@@ -281,7 +282,7 @@ func (ex *Expression) parseUint() (uint64, error) {
 		if c, err = ex.get(); err != nil {
 			// err could only be an EOF which is corrrect here
 			// only a '0'
-			return 0, nil //nolint:golint,nilerr
+			return 0, nil //nolint:nilerr
 		}
 		if lower(c) == 'x' {
 			s0 += string(c)
@@ -630,7 +631,7 @@ func (ex *Expression) lex() (Value, error) {
 			}
 			return Value{t: Floating, f: f}, nil
 		}
-		return Value{t: Integer, i: int64(ui)}, nil
+		return Value{t: Integer, i: int64FromUint64(ui)}, nil
 
 	} else if 'a' <= lower(c) && lower(c) <= 'z' {
 	loop:
@@ -660,7 +661,8 @@ func (ex *Expression) lex() (Value, error) {
 			}
 			s0 += string(c)
 			done := false
-			if c == '\\' {
+			switch c {
+			case '\\':
 				var cx byte
 				if c, err = ex.get(); err != nil {
 					return v, syntaxError(fnLex, s0)
@@ -719,7 +721,11 @@ func (ex *Expression) lex() (Value, error) {
 						return v, syntaxError(fnLex, s0)
 					}
 					s0 += s
-					v.s += string(rune(i))
+					r := rune(i)
+					if !utf8.ValidRune(r) {
+						r = utf8.RuneError
+					}
+					v.s += string(r)
 					done = true
 				case 'U':
 					var s string
@@ -728,10 +734,14 @@ func (ex *Expression) lex() (Value, error) {
 						return v, syntaxError(fnLex, s0)
 					}
 					s0 += s
-					v.s += string(rune(i))
+					r := runeFromUint32(i)
+					if !utf8.ValidRune(r) {
+						r = utf8.RuneError
+					}
+					v.s += string(r)
 					done = true
 				}
-			} else if c == '"' {
+			case '"':
 				v.t = String
 				return v, nil
 			}
@@ -1086,7 +1096,11 @@ func (ex *Expression) postfix() (Value, error) { // TODO: not finished yet
 				if !right.IsInteger() {
 					return right, syntaxError("integer offset expected", "")
 				}
-				if err = v.Extract(members.Size, members.BigEndian, uint32(right.i)); err != nil {
+				offset, ok := uint32FromInt64(right.i)
+				if !ok {
+					return right, typeError("Extract", "invalid offset")
+				}
+				if err = v.Extract(members.Size, members.BigEndian, offset); err != nil {
 					return v, err
 				}
 				if err = v.Cast(member.IType); err != nil {

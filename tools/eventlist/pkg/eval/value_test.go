@@ -70,7 +70,7 @@ func TestValue_Compose(t *testing.T) {
 	}
 }
 
-func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
+func TestValue_getValue(t *testing.T) { //nolint:paralleltest
 	vari := Variable{"v1_getValue", Value{t: Integer, i: 456}}
 
 	type fields struct {
@@ -93,7 +93,7 @@ func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
 		{"test_error1", fields{t: Integer, v: &vari}, true, Value{}, true},
 	}
 
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			v := &Value{
 				t: tt.fields.t,
@@ -120,7 +120,7 @@ func TestValue_getValue(t *testing.T) { //nolint:golint,paralleltest
 	}
 }
 
-func TestValue_setValue(t *testing.T) { //nolint:golint,paralleltest
+func TestValue_setValue(t *testing.T) { //nolint:paralleltest
 	vari := Variable{"v1_setValue", Value{t: Integer, i: 456}}
 	val1 := Value{t: Integer, i: 123}
 
@@ -147,7 +147,7 @@ func TestValue_setValue(t *testing.T) { //nolint:golint,paralleltest
 		{"test_error", fields{t: Identifier}, args{&val1}, true, &Value{}, true},
 		{"test_error1", fields{t: Identifier, v: &vari}, args{&val1}, true, &Value{}, true},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			v := &Value{
 				t: tt.fields.t,
@@ -556,7 +556,7 @@ func TestValue_IsList(t *testing.T) {
 	}
 }
 
-func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
+func TestValue_Function(t *testing.T) { //nolint:paralleltest
 	calcMemUsedArgs := Value{t: List, l: []Value{{t: Integer, i: 1}, {t: Integer, i: 2}, {t: Integer, i: 3}, {t: Integer, i: 4}}}
 	calcMemUsedArgs1 := Value{t: List, l: []Value{{t: String}, {t: Integer, i: 2}, {t: Integer, i: 3}, {t: Integer, i: 4}}}
 	getRegValArgs := Value{t: List, l: []Value{{t: String, s: "reg"}}}
@@ -600,7 +600,7 @@ func TestValue_Function(t *testing.T) { //nolint:golint,paralleltest
 		{"wrongCnt", fields{t: Identifier, s: "__CalcMemUsed"}, args{&getRegValArgs}, Value{t: Identifier, s: "__CalcMemUsed"}, true},
 		{"wrongType", fields{t: Identifier, s: "__CalcMemUsed"}, args{&calcMemUsedArgs1}, Value{t: Identifier, s: "__CalcMemUsed"}, true},
 	}
-	for _, tt := range tests { //nolint:golint,paralleltest
+	for _, tt := range tests { //nolint:paralleltest
 		t.Run(tt.name, func(t *testing.T) {
 			v := &Value{
 				t: tt.fields.t,

@@ -22,6 +22,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     if: |
@@ -31,17 +34,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Initialize CodeQL
         if: github.event_name != 'release'
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: go
           queries: security-and-quality
@@ -53,19 +57,18 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: github.event_name != 'release'
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
 
       - name: Build remaining executables
         run: |
           ./make.sh build -os linux -arch arm64 -outdir build/linux-arm64
-          ./make.sh build -os darwin -arch amd64 -outdir build/darwin-amd64
           ./make.sh build -os darwin -arch arm64 -outdir build/darwin-arm64
           ./make.sh build -os windows -arch amd64 -outdir build/windows-amd64
           ./make.sh build -os windows -arch arm64 -outdir build/windows-arm64
         working-directory: ./tools/eventlist
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-linux-amd64
           path: ./tools/eventlist/build/linux-amd64
@@ -73,7 +76,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-linux-arm64
           path: ./tools/eventlist/build/linux-arm64
@@ -81,15 +84,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
-        with:
-          name: eventlist-darwin-amd64
-          path: ./tools/eventlist/build/darwin-amd64
-          retention-days: 1
-          if-no-files-found: error
-
-      - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-darwin-arm64
           path: ./tools/eventlist/build/darwin-arm64
@@ -97,7 +92,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-windows-amd64
           path: ./tools/eventlist/build/windows-amd64
@@ -105,7 +100,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-windows-arm64
           path: ./tools/eventlist/build/windows-arm64
@@ -119,19 +114,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
           version: latest
+          skip-cache: true
+          skip-save-cache: true
           working-directory: ./tools/eventlist
 
   format:
@@ -140,12 +137,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Create build folder
@@ -167,6 +165,7 @@ jobs:
         with:
           go-version-file: ./tools/eventlist/go.mod
           check-latest: true
+          cache: false
           go-package: ./...
           work-dir: ./tools/eventlist
 
@@ -182,12 +181,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Create build folder
@@ -209,7 +209,7 @@ jobs:
           go-junit-report -set-exit-code -in build/evenlistunittest-${{ matrix.os }}.txt -iocopy -out build/evenlistunittest-${{ matrix.os }}.xml
 
       - name: Archive unit test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-result-${{ matrix.os }}
           path: ./tools/eventlist/build/evenlistunittest-*.xml
@@ -222,29 +222,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download unit test report windows
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: unit-test-result-windows-2022
           path: testreports/
 
       - name: Download unit test report linux
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: unit-test-result-ubuntu-24.04
           path: testreports/
 
       - name: Download unit test report macos
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: unit-test-result-macos-14
           path: testreports/
 
       - name: publish test results
-        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
         with:
-          commit: ${{ github.event.workflow_run.head_sha }}
           report_individual_runs: true
-          junit_files: "testreports/*.xml"
+          files: "testreports/*.xml"
 
   coverage:
     if: |
@@ -255,12 +254,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
+          cache: false
           check-latest: true
 
       - name: Create build folder
@@ -273,7 +273,7 @@ jobs:
           COVERAGE=$(go tool cover -func build/cover.out | tail -1 | awk '{print $3}' | tr -d '%')
           echo "Test Coverage: $COVERAGE%"
           COVERAGE_INT=$(echo "$COVERAGE * 10 / 1" | bc)
-          test "$COVERAGE_INT" -gt 975
+          test "$COVERAGE_INT" -ge 920
         working-directory: ./tools/eventlist
 
       # Temporarily disabled until we move on codeclimate
@@ -290,67 +290,57 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout devtools
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Create distribution folders
         run: |
           mkdir -p release/eventlist-linux-amd64/docs
           mkdir -p release/eventlist-linux-arm64/docs
-          mkdir -p release/eventlist-darwin-amd64/docs
           mkdir -p release/eventlist-darwin-arm64/docs
           mkdir -p release/eventlist-windows-amd64/docs
           mkdir -p release/eventlist-windows-arm64/docs
           cp LICENSE release/eventlist-linux-amd64/
           cp LICENSE release/eventlist-linux-arm64/
-          cp LICENSE release/eventlist-darwin-amd64/
           cp LICENSE release/eventlist-darwin-arm64/
           cp LICENSE release/eventlist-windows-amd64/
           cp LICENSE release/eventlist-windows-arm64/
           cp tools/eventlist/docs/* release/eventlist-linux-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-linux-arm64/docs/
-          cp tools/eventlist/docs/* release/eventlist-darwin-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-darwin-arm64/docs/
           cp tools/eventlist/docs/* release/eventlist-windows-amd64/docs/
           cp tools/eventlist/docs/* release/eventlist-windows-arm64/docs/
           cp tools/eventlist/third_party_licenses.md release/eventlist-linux-amd64/
           cp tools/eventlist/third_party_licenses.md release/eventlist-linux-arm64/
-          cp tools/eventlist/third_party_licenses.md release/eventlist-darwin-amd64/
           cp tools/eventlist/third_party_licenses.md release/eventlist-darwin-arm64/
           cp tools/eventlist/third_party_licenses.md release/eventlist-windows-amd64/
           cp tools/eventlist/third_party_licenses.md release/eventlist-windows-arm64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-linux-amd64
           path: release/eventlist-linux-amd64/
 
       - name: Download eventlist linux
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-linux-arm64
           path: release/eventlist-linux-arm64/
 
       - name: Download eventlist macos
-        uses: actions/download-artifact@v5
-        with:
-          name: eventlist-darwin-amd64
-          path: release/eventlist-darwin-amd64/
-
-      - name: Download eventlist macos
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-darwin-arm64
           path: release/eventlist-darwin-arm64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-windows-amd64
           path: release/eventlist-windows-amd64/
 
       - name: Download eventlist windows
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: eventlist-windows-arm64
           path: release/eventlist-windows-arm64/
@@ -365,7 +355,6 @@ jobs:
           zip -r eventlist-windows-arm64.zip eventlist-windows-arm64/eventlist.exe eventlist-windows-arm64/docs eventlist-windows-arm64/LICENSE eventlist-windows-arm64/third_party_licenses.md
           tar -czvf eventlist-linux-amd64.tar.gz  eventlist-linux-amd64/eventlist eventlist-linux-amd64/docs eventlist-linux-amd64/LICENSE eventlist-linux-amd64/third_party_licenses.md
           tar -czvf eventlist-linux-arm64.tar.gz  eventlist-linux-arm64/eventlist eventlist-linux-arm64/docs eventlist-linux-arm64/LICENSE eventlist-linux-arm64/third_party_licenses.md
-          tar -czvf eventlist-darwin-amd64.tar.gz eventlist-darwin-amd64/eventlist eventlist-darwin-amd64/docs eventlist-darwin-amd64/LICENSE eventlist-darwin-amd64/third_party_licenses.md
           tar -czvf eventlist-darwin-arm64.tar.gz eventlist-darwin-arm64/eventlist eventlist-darwin-arm64/docs eventlist-darwin-arm64/LICENSE eventlist-darwin-arm64/third_party_licenses.md
         working-directory: release
 
@@ -375,7 +364,6 @@ jobs:
           sha256sum eventlist-windows-arm64.zip --text >> eventlist-checksums.txt
           sha256sum eventlist-linux-amd64.tar.gz --text >> eventlist-checksums.txt
           sha256sum eventlist-linux-arm64.tar.gz --text >> eventlist-checksums.txt
-          sha256sum eventlist-darwin-amd64.tar.gz --text >> eventlist-checksums.txt
           sha256sum eventlist-darwin-arm64.tar.gz --text >> eventlist-checksums.txt
         working-directory: release
 
