@@ -22,6 +22,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     if: |
@@ -34,7 +37,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
           cache: false
@@ -42,7 +45,7 @@ jobs:
 
       - name: Initialize CodeQL
         if: github.event_name != 'release'
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: go
           queries: security-and-quality
@@ -54,7 +57,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: github.event_name != 'release'
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
 
       - name: Build remaining executables
         run: |
@@ -66,7 +69,7 @@ jobs:
         working-directory: ./tools/eventlist
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-linux-amd64
           path: ./tools/eventlist/build/linux-amd64
@@ -74,7 +77,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-linux-arm64
           path: ./tools/eventlist/build/linux-arm64
@@ -82,7 +85,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-darwin-amd64
           path: ./tools/eventlist/build/darwin-amd64
@@ -90,7 +93,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-darwin-arm64
           path: ./tools/eventlist/build/darwin-arm64
@@ -98,7 +101,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-windows-amd64
           path: ./tools/eventlist/build/windows-amd64
@@ -106,7 +109,7 @@ jobs:
           if-no-files-found: error
 
       - name: Archive eventlist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: eventlist-windows-arm64
           path: ./tools/eventlist/build/windows-arm64
@@ -123,7 +126,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
           cache: false
@@ -146,7 +149,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
           cache: false
@@ -171,6 +174,7 @@ jobs:
         with:
           go-version-file: ./tools/eventlist/go.mod
           check-latest: true
+          cache: false
           go-package: ./...
           work-dir: ./tools/eventlist
 
@@ -189,7 +193,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
           cache: false
@@ -214,7 +218,7 @@ jobs:
           go-junit-report -set-exit-code -in build/evenlistunittest-${{ matrix.os }}.txt -iocopy -out build/evenlistunittest-${{ matrix.os }}.xml
 
       - name: Archive unit test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unit-test-result-${{ matrix.os }}
           path: ./tools/eventlist/build/evenlistunittest-*.xml
@@ -248,7 +252,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action/linux@v2
         with:
           report_individual_runs: true
-          junit_files: "testreports/*.xml"
+          files: "testreports/*.xml"
 
   coverage:
     if: |
@@ -262,7 +266,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with:
           go-version-file: tools/eventlist/go.mod
           cache: false
