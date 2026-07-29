@@ -68,7 +68,7 @@ The steps below demonstrate how to build and create an executable:
     for e.g.
 
     ```bash
-    ./make.sh build -arch amd64 -os darwin -outdir "Path/to/output/dir"
+    ./make.sh build -arch arm64 -os darwin -outdir "Path/to/output/dir"
     ```
 
 ## Run Tests
