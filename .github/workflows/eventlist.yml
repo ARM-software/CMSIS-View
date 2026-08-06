@@ -220,6 +220,9 @@ jobs:
     name: "Publish Tests Results"
     needs: [ test ]
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - name: Download unit test report windows
         uses: actions/download-artifact@v8
